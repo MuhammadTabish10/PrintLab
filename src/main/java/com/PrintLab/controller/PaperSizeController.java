@@ -32,7 +32,7 @@ public class PaperSizeController
     }
 
     @PostMapping("/{paper-size-id}/uping-paper-size")
-    public ResponseEntity<UpingPaperSize> saveUpingPaperSize(@PathVariable Long paperSizeId, @RequestBody UpingPaperSize upingPaperSize) {
+    public ResponseEntity<UpingPaperSize> saveUpingPaperSize(@PathVariable("paper-size-id") Long paperSizeId, @RequestBody UpingPaperSize upingPaperSize) {
         UpingPaperSize saveUpingPaperSize = paperSizeService.addUpingPaperSize(paperSizeId, upingPaperSize);
         return ResponseEntity.ok(saveUpingPaperSize);
     }
@@ -67,9 +67,9 @@ public class PaperSizeController
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PaperSizeDto> updatePaperSize(@PathVariable Long id, @RequestBody PaperSize paperSize) {
+    public ResponseEntity<PaperSizeDto> updatePaperSize(@PathVariable Long id, @RequestBody PaperSizeDto paperSizeDto) {
         try {
-            PaperSizeDto updatedPsDto = paperSizeService.updatePaperSize(id, paperSize);
+            PaperSizeDto updatedPsDto = paperSizeService.updatePaperSize(id, paperSizeDto);
             return ResponseEntity.ok(updatedPsDto);
         }
         catch (Exception e) {

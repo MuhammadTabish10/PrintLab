@@ -12,7 +12,7 @@ public interface PaperSizeService
     List<PaperSizeDto> getAll();
     PaperSizeDto findById(Long id) throws Exception;
     String deleteById(Long id);
-    PaperSizeDto updatePaperSize(Long id, PaperSize paperSize);
+    PaperSizeDto updatePaperSize(Long id, PaperSizeDto paperSizeDto);
     UpingPaperSize addUpingPaperSize(Long paperSizeId, UpingPaperSize upingPaperSize);
     void deleteUpingPaperSizeById(Long id, Long upingPaperSizeId);
 }

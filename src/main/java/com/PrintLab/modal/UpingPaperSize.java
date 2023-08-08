@@ -1,5 +1,6 @@
 package com.PrintLab.modal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,10 +20,12 @@ public class UpingPaperSize
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "uping_id")
     private Uping uping;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "paper_size_id")
     private PaperSize paperSize;
