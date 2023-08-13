@@ -17,6 +17,4 @@ public class PaperSizeDto
     private Long id;
     private String label;
     private String status;
-    private List<UpingPaperSizeDto> upingPaperSize;
-
 }

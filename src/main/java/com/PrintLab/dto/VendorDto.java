@@ -1,28 +1,22 @@
-package com.PrintLab.modal;
+package com.PrintLab.dto;
 
+import com.PrintLab.modal.ProductFieldValues;
+import com.PrintLab.modal.VendorProcess;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-@Table(name = "vendor")
-public class Vendor
+public class VendorDto
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private LocalDate date;
     private String contactName;
@@ -30,6 +24,5 @@ public class Vendor
     private String address;
     private String notes;
 
-    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
-    private List<VendorProcess> vendorProcessList;
+    private List<VendorProcessDto> vendorProcessList;
 }

@@ -25,7 +25,4 @@ public class PaperSize {
 
     @OneToMany(mappedBy = "paperSize", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PressMachineSize> pressMachineSize;
-
-    @OneToMany(mappedBy = "paperSize", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<UpingPaperSize> upingPaperSize;
 }

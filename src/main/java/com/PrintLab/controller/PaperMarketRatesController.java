@@ -3,7 +3,6 @@ package com.PrintLab.controller;
 import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.modal.PaperMarketRates;
 import com.PrintLab.service.PaperMarketRatesService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,19 +13,13 @@ import java.util.List;
 public class PaperMarketRatesController
 {
     private final PaperMarketRatesService marketRatesService;
-
     public PaperMarketRatesController(PaperMarketRatesService marketRatesService) {
         this.marketRatesService = marketRatesService;
     }
 
     @PostMapping
     public ResponseEntity<PaperMarketRatesDto> createPaperMarketRates(@RequestBody PaperMarketRatesDto paperMarketRatesDto) {
-        try {
-            return ResponseEntity.ok(marketRatesService.save(paperMarketRatesDto));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(marketRatesService.save(paperMarketRatesDto));
     }
 
     @GetMapping
@@ -37,13 +30,8 @@ public class PaperMarketRatesController
 
     @GetMapping("/{id}")
     public ResponseEntity<PaperMarketRatesDto> getPaperMarketRatesById(@PathVariable Long id) {
-        try {
-            PaperMarketRatesDto paperMarketRatesDto = marketRatesService.findById(id);
-            return ResponseEntity.ok(paperMarketRatesDto);
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        PaperMarketRatesDto paperMarketRatesDto = marketRatesService.findById(id);
+        return ResponseEntity.ok(paperMarketRatesDto);
     }
 
     @DeleteMapping("/{id}")
@@ -54,12 +42,7 @@ public class PaperMarketRatesController
 
     @PutMapping("/{id}")
     public ResponseEntity<PaperMarketRatesDto> updatePaperMarketRates(@PathVariable Long id, @RequestBody PaperMarketRates paperMarketRates) {
-        try {
-            PaperMarketRatesDto updatedPmrDto = marketRatesService.updatePaperMarketRates(id, paperMarketRates);
-            return ResponseEntity.ok(updatedPmrDto);
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        PaperMarketRatesDto updatedPmrDto = marketRatesService.updatePaperMarketRates(id, paperMarketRates);
+        return ResponseEntity.ok(updatedPmrDto);
     }
 }

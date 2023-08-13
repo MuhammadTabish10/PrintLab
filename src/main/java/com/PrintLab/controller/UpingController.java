@@ -1,9 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.UpingDto;
-import com.PrintLab.modal.Uping;
-import com.PrintLab.service.impl.UpingServiceImpl;
-import org.springframework.http.HttpStatus;
+import com.PrintLab.service.UpingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,20 +11,14 @@ import java.util.List;
 @RequestMapping("/api/uping")
 public class UpingController
 {
-    public final UpingServiceImpl upingService;
-
-    public UpingController(UpingServiceImpl upingService) {
+    public final UpingService upingService;
+    public UpingController(UpingService upingService) {
         this.upingService = upingService;
     }
 
     @PostMapping
     public ResponseEntity<UpingDto> createUping(@RequestBody UpingDto upingDto) {
-        try {
-            return ResponseEntity.ok(upingService.save(upingDto));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(upingService.save(upingDto));
     }
 
     @GetMapping
@@ -37,13 +29,8 @@ public class UpingController
 
     @GetMapping("/{id}")
     public ResponseEntity<UpingDto> getUpingById(@PathVariable Long id) {
-        try {
-            UpingDto upingDto = upingService.findById(id);
-            return ResponseEntity.ok(upingDto);
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        UpingDto upingDto = upingService.findById(id);
+        return ResponseEntity.ok(upingDto);
     }
 
     @DeleteMapping("/{id}")
@@ -52,14 +39,15 @@ public class UpingController
         return ResponseEntity.ok("Uping with ID " + id + " has been deleted.");
     }
 
+    @DeleteMapping("/{id}/{uping-paper-size-id}")
+    public ResponseEntity<String> deleteUpingPaperSize(@PathVariable Long id, @PathVariable(name = "uping-paper-size-id") Long upingPaperSizeId) {
+        upingService.deleteUpingPaperSizeById(id, upingPaperSizeId);
+        return ResponseEntity.ok("Uping Paper Size with ID " + upingPaperSizeId + "has been Deleted");
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<UpingDto> updateUping(@PathVariable Long id, @RequestBody Uping uping) {
-        try {
-            UpingDto updatedUpingDto = upingService.updateUping(id, uping);
-            return ResponseEntity.ok(updatedUpingDto);
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<UpingDto> updateUping(@PathVariable Long id, @RequestBody UpingDto upingDto) {
+        UpingDto updatedUpingDto = upingService.updateUping(id, upingDto);
+        return ResponseEntity.ok(updatedUpingDto);
     }
 }

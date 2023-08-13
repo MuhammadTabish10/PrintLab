@@ -13,22 +13,24 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "product_definition_field")
-public class ProductDefinitionField {
-
+@Table(name = "vendor_process")
+public class VendorProcess
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long value;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id")
+    private Vendor vendor;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_field_id")
-    private ProductField productField;
+    @JoinColumn(name = "product_process_id")
+    private ProductProcess productProcess;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_definition_id")
-    private ProductDefinition productDefinition;
+    private String materialType;
+    private Double rateSqft;
+    private String notes;
 }

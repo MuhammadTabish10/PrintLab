@@ -1,11 +1,8 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.ProductFieldDto;
-import com.PrintLab.dto.ProductFieldValuesDto;
 import com.PrintLab.modal.ProductField;
-import com.PrintLab.modal.ProductFieldValues;
 import com.PrintLab.service.ProductFieldService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,18 +20,7 @@ public class ProductFieldController {
 
     @PostMapping
     public ResponseEntity<ProductFieldDto> createProductField(@RequestBody ProductFieldDto productFieldDto) {
-        try {
-            return ResponseEntity.ok(productFieldService.save(productFieldDto));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @PostMapping("/{productFieldId}/productFieldValues")
-    public ResponseEntity<ProductFieldValues> saveProductFieldValue(@PathVariable Long productFieldId, @RequestBody ProductFieldValues productFieldValues) {
-        ProductFieldValues saveProductFieldValue = productFieldService.addProductFieldValues(productFieldId, productFieldValues);
-        return ResponseEntity.ok(saveProductFieldValue);
+        return ResponseEntity.ok(productFieldService.save(productFieldDto));
     }
 
     @GetMapping
@@ -45,13 +31,8 @@ public class ProductFieldController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductFieldDto> getProductFieldById(@PathVariable Long id) {
-        try {
-            ProductFieldDto productFieldDto = productFieldService.findById(id);
-            return ResponseEntity.ok(productFieldDto);
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        ProductFieldDto productFieldDto = productFieldService.findById(id);
+        return ResponseEntity.ok(productFieldDto);
     }
 
     @DeleteMapping("/{id}")
@@ -68,13 +49,7 @@ public class ProductFieldController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductFieldDto> updateProductField(@PathVariable Long id, @RequestBody ProductField productField) {
-        try {
-            ProductFieldDto updatedPfDto = productFieldService.updatedProductField(id, productField);
-            return ResponseEntity.ok(updatedPfDto);
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        ProductFieldDto updatedPfDto = productFieldService.updatedProductField(id, productField);
+        return ResponseEntity.ok(updatedPfDto);
     }
-
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PressMachineSizeDto {
-    private Long paperSizeId;
+    private Long id;
+    private Long paperSize;
     private Long value;
 }

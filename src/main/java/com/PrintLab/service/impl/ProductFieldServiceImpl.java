@@ -1,6 +1,7 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductFieldDto;
+import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.ProductField;
 import com.PrintLab.modal.ProductFieldValues;
 import com.PrintLab.repository.ProductFieldRepository;
@@ -8,6 +9,7 @@ import com.PrintLab.repository.ProductFieldValuesRepository;
 import com.PrintLab.service.ProductFieldService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -15,7 +17,6 @@ import java.util.*;
 public class ProductFieldServiceImpl implements ProductFieldService {
 
     private final ProductFieldRepository productFieldRepository;
-
     private final ProductFieldValuesRepository productFieldValuesRepository;
 
     public ProductFieldServiceImpl(ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository) {
@@ -23,12 +24,13 @@ public class ProductFieldServiceImpl implements ProductFieldService {
         this.productFieldValuesRepository = productFieldValuesRepository;
     }
 
+    @Transactional
     @Override
     public ProductFieldDto save(ProductFieldDto productFieldDto) {
         if(productFieldDto.getCreated_at() == null) {
             productFieldDto.setCreated_at(LocalDate.now());
         }
-            ProductField productField = toEntity(productFieldDto);
+        ProductField productField = toEntity(productFieldDto);
         ProductField createdProductField = productFieldRepository.save(productField);
 
         List<ProductFieldValues> productFieldValuesList = productField.getProductFieldValuesList();
@@ -40,7 +42,6 @@ public class ProductFieldServiceImpl implements ProductFieldService {
             createdProductField.setProductFieldValuesList(productFieldValuesList);
             productFieldRepository.save(createdProductField);
         }
-
         return toDto(createdProductField);
     }
 
@@ -57,7 +58,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
     }
 
     @Override
-    public ProductFieldDto findById(Long id) throws Exception {
+    public ProductFieldDto findById(Long id){
         Optional<ProductField> optionalProductField = productFieldRepository.findById(id);
 
         if(optionalProductField.isPresent()) {
@@ -65,7 +66,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
             return toDto(productField);
         }
         else {
-            throw new Exception("Product Field not found with ID " + id);
+            throw new RecordNotFoundException(String.format("Product Field not found for id => %d", id));
         }
     }
 
@@ -78,14 +79,16 @@ public class ProductFieldServiceImpl implements ProductFieldService {
             productFieldRepository.deleteById(id);
         }
         else {
-            throw new IllegalArgumentException("Product Field not found with ID " + id);
+            throw new RecordNotFoundException(String.format("Product Field not found for id => %d", id));
         }
         return null;
     }
 
+    @Transactional
     @Override
     public ProductFieldDto updatedProductField(Long id, ProductField productField) {
         Optional<ProductField> optionalProductField = productFieldRepository.findById(id);
+        int count = 0;
 
         if(optionalProductField.isPresent()) {
             ProductField existingPf = optionalProductField.get();
@@ -95,6 +98,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
 
             List<ProductFieldValues> existingPfValues = existingPf.getProductFieldValuesList();
             List<ProductFieldValues> newPfValues = productField.getProductFieldValuesList();
+            List<ProductFieldValues> newValuesToAdd = new ArrayList<>();
 
             for(ProductFieldValues newValue : newPfValues) {
                 Optional<ProductFieldValues> existingValue = existingPfValues.stream()
@@ -106,27 +110,32 @@ public class ProductFieldServiceImpl implements ProductFieldService {
                 }
                 else {
                     newValue.setProductField(existingPf);
-                    existingPfValues.add(newValue);
+                    newValuesToAdd.add(newValue);
+                    count++;
                 }
+            }
+
+            if (count > 0) {
+                existingPfValues.addAll(newValuesToAdd);
             }
 
             ProductField updatedPf = productFieldRepository.save(existingPf);
             return toDto(updatedPf);
         }
         else {
-            throw new IllegalArgumentException("Product Field not found with ID"+ id);
+            throw new RecordNotFoundException(String.format("Product Field not found for id => %d", id));
         }
     }
 
-    @Override
-    public ProductFieldValues addProductFieldValues(Long productFieldId, ProductFieldValues productFieldValues) {
-        Optional<ProductField> productField = productFieldRepository.findById(productFieldId);
-        if(productField.isPresent()) {
-            productFieldValues.setProductField(productField.get());
-            return productFieldValuesRepository.save(productFieldValues);
-        }
-        throw new RuntimeException("Product Field not found ");
-    }
+//    @Override
+//    public ProductFieldValues addProductFieldValues(Long productFieldId, ProductFieldValues productFieldValues) {
+//        Optional<ProductField> productField = productFieldRepository.findById(productFieldId);
+//        if(productField.isPresent()) {
+//            productFieldValues.setProductField(productField.get());
+//            return productFieldValuesRepository.save(productFieldValues);
+//        }
+//        throw new RuntimeException("Product Field not found ");
+//    }
 
     @Override
     public void deleteProductFieldValuesById(Long id, Long pfvId) {
@@ -150,9 +159,11 @@ public class ProductFieldServiceImpl implements ProductFieldService {
 
                 // Save the updated ProductField entity to reflect the changes in the database
                 productFieldRepository.save(productField);
+            } else{
+                throw new RecordNotFoundException("Product Field Value not found");
             }
         } else {
-            throw new RuntimeException("Product Field not found.");
+            throw new RecordNotFoundException(String.format("Product Field not found for id => %d", id));
 
         }
     }
@@ -181,6 +192,4 @@ public class ProductFieldServiceImpl implements ProductFieldService {
                 .productFieldValuesList(productFieldDto.getProductFieldValuesList())
                 .build();
     }
-
-
 }

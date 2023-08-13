@@ -1,11 +1,10 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PressMachineDto;
-
 import com.PrintLab.dto.PressMachineSizeDto;
-import com.PrintLab.modal.PaperSize;
-import com.PrintLab.modal.PressMachine;
-import com.PrintLab.modal.PressMachineSize;
+import com.PrintLab.exception.RecordNotFoundException;
+import com.PrintLab.modal.*;
+import com.PrintLab.repository.PaperSizeRepository;
 import com.PrintLab.repository.PressMachineRepository;
 import com.PrintLab.repository.PressMachineSizeRepository;
 import com.PrintLab.service.PressMachineService;
@@ -18,40 +17,61 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class PressMachineImpl implements PressMachineService
-{
+public class PressMachineServiceImpl implements PressMachineService {
     private final PressMachineRepository pressMachineRepository;
     private final PressMachineSizeRepository pressMachineSizeRepository;
+    private final PaperSizeRepository paperSizeRepository;
 
-    public PressMachineImpl(PressMachineRepository pressMachineRepository, PressMachineSizeRepository pressMachineSizeRepository) {
+    public PressMachineServiceImpl(PressMachineRepository pressMachineRepository, PressMachineSizeRepository pressMachineSizeRepository, PaperSizeRepository paperSizeRepository) {
         this.pressMachineRepository = pressMachineRepository;
         this.pressMachineSizeRepository = pressMachineSizeRepository;
+        this.paperSizeRepository = paperSizeRepository;
     }
 
+
+//    @Transactional
+//    @Override
+//    public PressMachineDto save(PressMachineDto pressMachineDto) {
+//
+//        PressMachine pressMachine = toEntity(pressMachineDto);
+//        PressMachine createdPressMachine = pressMachineRepository.save(pressMachine);
+//        List<PressMachineSize> pressMachineSizeList = new ArrayList<>();
+//        for(PressMachineSizeDto data : pressMachineDto.getPressMachineSize()){
+//            PaperSize paperSize = new PaperSize();
+//            paperSize.setId(data.getPaperSizeId());
+//            PressMachineSize pm = PressMachineSize.builder()
+//                    .pressMachine(pressMachine)
+//                    .paperSize(paperSize)
+//                    .value(data.getValue().intValue())
+//                    .build();
+//
+//            pressMachineSizeList.add(pm);
+//        }
+//       pressMachineSizeRepository.saveAll(pressMachineSizeList);
+//
+//        return toDto(createdPressMachine);
+//    }
 
     @Transactional
     @Override
     public PressMachineDto save(PressMachineDto pressMachineDto) {
-
         PressMachine pressMachine = toEntity(pressMachineDto);
         PressMachine createdPressMachine = pressMachineRepository.save(pressMachine);
-        List<PressMachineSize> pressMachineSizeList = new ArrayList<>();
-        for(PressMachineSizeDto data : pressMachineDto.getPressMachineSize()){
-            PaperSize paperSize = new PaperSize();
-            paperSize.setId(data.getPaperSizeId());
-            PressMachineSize pm = PressMachineSize.builder()
-                    .pressMachine(pressMachine)
-                    .paperSize(paperSize)
-                    .value(data.getValue().intValue())
-                    .build();
 
-            pressMachineSizeList.add(pm);
+        List<PressMachineSize> pressMachineSize = pressMachine.getPressMachineSize();
+        if (pressMachineSize != null && !pressMachineSize.isEmpty()) {
+            for (PressMachineSize pms : pressMachineSize) {
+                pms.setPressMachine(createdPressMachine);
+                pms.setPaperSize(paperSizeRepository.findById(pms.getPaperSize().getId())
+                        .orElseThrow(() -> new RecordNotFoundException(String.format("Paper Size not found for id => %d", pms.getPaperSize().getId()))));
+                pressMachineSizeRepository.save(pms);
+            }
+            createdPressMachine.setPressMachineSize(pressMachineSize);
+            pressMachineRepository.save(createdPressMachine);
         }
-       pressMachineSizeRepository.saveAll(pressMachineSizeList);
-
-
         return toDto(createdPressMachine);
     }
+
 
     @Override
     public List<PressMachineDto> getAll() {
@@ -66,15 +86,14 @@ public class PressMachineImpl implements PressMachineService
     }
 
     @Override
-    public PressMachineDto findById(Long id) throws Exception {
+    public PressMachineDto findById(Long id){
         Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(id);
 
-        if(optionalPressMachine.isPresent()) {
+        if (optionalPressMachine.isPresent()) {
             PressMachine pressMachine = optionalPressMachine.get();
             return toDto(pressMachine);
-        }
-        else {
-            throw new Exception("Press Machine not found with ID " + id);
+        } else {
+            throw new RecordNotFoundException(String.format("Press Machine not found for id => %d", id));
         }
     }
 
@@ -82,58 +101,54 @@ public class PressMachineImpl implements PressMachineService
     public String deleteById(Long id) {
         Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(id);
 
-        if(optionalPressMachine.isPresent()) {
+        if (optionalPressMachine.isPresent()) {
             PressMachine pressMachine = optionalPressMachine.get();
             pressMachineRepository.deleteById(id);
-        }
-        else {
-            throw new IllegalArgumentException("Press Machine not found with ID " + id);
+        } else {
+            throw new RecordNotFoundException(String.format("Press Machine not found for id => %d", id));
         }
         return null;
     }
 
+    @Transactional
     @Override
-    public PressMachineDto updatePressMachine(Long id, PressMachine pressMachine) {
+    public PressMachineDto updatePressMachine(Long id, PressMachineDto pressMachineDto) {
+        PressMachine pressMachine = toEntity(pressMachineDto);
         Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(id);
+        int count = 0;
 
-        if(optionalPressMachine.isPresent()) {
-            PressMachine existingPm = optionalPressMachine.get();
-            existingPm.setName(pressMachine.getName());
-            existingPm.setCtp_rate(pressMachine.getCtp_rate());
-            existingPm.setImpression_1000_rate(pressMachine.getImpression_1000_rate());
+        if (optionalPressMachine.isPresent()) {
+            PressMachine existingPressMachine = optionalPressMachine.get();
+            existingPressMachine.setName(pressMachine.getName());
+            existingPressMachine.setCtp_rate(pressMachine.getCtp_rate());
+            existingPressMachine.setImpression_1000_rate(pressMachine.getImpression_1000_rate());
 
-            List<PressMachineSize> existingPressMachineSize = existingPm.getPressMachineSize();
-            List<PressMachineSize> newPressMachineSize = pressMachine.getPressMachineSize();
+            List<PressMachineSize> existingPmsValues = existingPressMachine.getPressMachineSize();
+            List<PressMachineSize> newPmsValues = pressMachine.getPressMachineSize();
+            List<PressMachineSize> newValuesToAdd = new ArrayList<>();
 
-            for(PressMachineSize newValue : newPressMachineSize) {
-                Optional<PressMachineSize> existingValue = existingPressMachineSize.stream()
+            for (PressMachineSize newValue : newPmsValues) {
+                Optional<PressMachineSize> existingValue = existingPmsValues.stream()
                         .filter(pmValue -> pmValue.getId().equals(newValue.getId())).findFirst();
-                if(existingValue.isPresent()) {
-                    PressMachineSize existingPMS = existingValue.get();
-                    existingPMS.setValue(newValue.getValue());
-                }
-                else {
-                    newValue.setPressMachine(existingPm);
-                    existingPressMachineSize.add(newValue);
+                if (existingValue.isPresent()) {
+                    PressMachineSize existingPmsValue = existingValue.get();
+                    existingPmsValue.setValue(newValue.getValue());
+                    existingPmsValue.setPaperSize(paperSizeRepository.findById(newValue.getPaperSize().getId())
+                            .orElseThrow(() -> new RecordNotFoundException(String.format("Paper Size not found for id => %d", newValue.getPaperSize().getId()))));
+                } else {
+                    newValue.setPressMachine(existingPressMachine);
+                    newValuesToAdd.add(newValue);
+                    count++;
                 }
             }
-
-            PressMachine updatedPm = pressMachineRepository.save(existingPm);
+            if(count > 0){
+                existingPmsValues.addAll(newValuesToAdd);
+            }
+            PressMachine updatedPm = pressMachineRepository.save(existingPressMachine);
             return toDto(updatedPm);
+        } else {
+            throw new RecordNotFoundException(String.format("Press Machine not found for id => %d", id));
         }
-        else {
-            throw new IllegalArgumentException("Press Machine not found with ID"+ id);
-        }
-    }
-
-    @Override
-    public PressMachineSize addPressMachineSize(Long pressMachineId, PressMachineSize pressMachineSize) {
-        Optional<PressMachine> pressMachine = pressMachineRepository.findById(pressMachineId);
-        if(pressMachine.isPresent()) {
-            pressMachineSize.setPressMachine(pressMachine.get());
-            return pressMachineSizeRepository.save(pressMachineSize);
-        }
-        throw new RuntimeException("Press Machine not found ");
     }
 
     @Override
@@ -158,30 +173,22 @@ public class PressMachineImpl implements PressMachineService
 
                 // Save the updated pressMachine entity to reflect the changes in the database
                 pressMachineRepository.save(pressMachine);
+            } else{
+                throw new RecordNotFoundException("Press Machine Size not found");
             }
         } else {
-            throw new RuntimeException("Press Machine not found.");
+            throw new RecordNotFoundException(String.format("Press Machine not found for id => %d", id));
 
         }
     }
-
-//    public PressMachineDto toDto(PressMachine pressMachine) {
-//        return PressMachineDto.builder()
-//                .id(pressMachine.getId())
-//                .name(pressMachine.getName())
-//                .ctp_rate(pressMachine.getCtp_rate())
-//                .impression_1000_rate(pressMachine.getImpression_1000_rate())
-//                .pressMachineSize(pressMachine.getPressMachineSize())
-//                .build();
-//    }
 
     public PressMachineDto toDto(PressMachine pressMachine) {
         List<PressMachineSizeDto> pressMachineSizeDtos = pressMachine.getPressMachineSize().stream()
                 .map(pmSize -> {
                     PressMachineSizeDto pmSizeDto = new PressMachineSizeDto();
-                    pmSizeDto.setPaperSizeId(pmSize.getPaperSize().getId());
+                    pmSizeDto.setPaperSize(pmSize.getPaperSize().getId());
                     pmSizeDto.setValue(Long.valueOf(pmSize.getValue()));
-                    // You can set other fields in the PressMachineSizeDto if needed
+                    pmSizeDto.setId(pmSize.getId());
                     return pmSizeDto;
                 })
                 .collect(Collectors.toList());
@@ -201,13 +208,11 @@ public class PressMachineImpl implements PressMachineService
                 .map(pmSizeDto -> {
                     PressMachineSize pressMachineSize = new PressMachineSize();
                     PaperSize paperSize = new PaperSize();
-                    paperSize.setId(pmSizeDto.getPaperSizeId());
-                    // You can set other fields in the PaperSize entity if needed
+                    paperSize.setId(pmSizeDto.getPaperSize());
 
+                    pressMachineSize.setId(pmSizeDto.getId());
                     pressMachineSize.setPaperSize(paperSize);
-                    pressMachineSize.setValue(pmSizeDto.getValue().intValue()); // Convert Long to Integer
-                    // You can set other fields in the PressMachineSize entity if needed
-
+                    pressMachineSize.setValue(pmSizeDto.getValue().intValue());
                     return pressMachineSize;
                 })
                 .collect(Collectors.toList());
@@ -220,24 +225,4 @@ public class PressMachineImpl implements PressMachineService
                 .pressMachineSize(pressMachineSizes)
                 .build();
     }
-
-
-
-//    public PressMachine toEntity(PressMachineDto pressMachineDto) {
-//        return PressMachine.builder()
-//                .id(pressMachineDto.getId())
-//                .name(pressMachineDto.getName())
-//                .ctp_rate(pressMachineDto.getCtp_rate())
-//                .impression_1000_rate(pressMachineDto.getImpression_1000_rate())
-//                .pressMachineSize(pressMachineDto.getPressMachineSize())
-//                .build();
-//    }
-
-
-
-
-
-
-
-
 }

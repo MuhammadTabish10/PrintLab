@@ -1,6 +1,7 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
+import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.PaperMarketRates;
 
 import com.PrintLab.repository.PaperMarketRatesRepository;
@@ -39,7 +40,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
-    public PaperMarketRatesDto findById(Long id) throws Exception {
+    public PaperMarketRatesDto findById(Long id) {
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);
 
         if(optionalPaperMarketRates.isPresent()) {
@@ -47,7 +48,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             return toDto(paperMarketRates);
         }
         else {
-            throw new Exception("Paper Market Rates not found with ID " + id);
+            throw new RecordNotFoundException(String.format("Paper Market Rate not found for id => %d", id));
         }
     }
 
@@ -60,7 +61,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             paperMarketRatesRepository.deleteById(id);
         }
         else{
-            throw new IllegalArgumentException("Paper Market Rates not found with ID " + id);
+            throw new RecordNotFoundException(String.format("Paper Market Rate not found for id => %d", id));
         }
         return null;
     }
@@ -84,7 +85,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             return toDto(updatedPmr);
         }
         else {
-            throw new IllegalArgumentException("Paper Market Rates not found with ID"+ id);
+            throw new RecordNotFoundException(String.format("Paper Market Rate not found for id => %d", id));
         }
     }
 

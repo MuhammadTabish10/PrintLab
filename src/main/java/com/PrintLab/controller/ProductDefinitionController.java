@@ -1,11 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.ProductDefinitionDto;
-import com.PrintLab.modal.ProductDefinition;
-import com.PrintLab.modal.ProductDefinitionField;
-import com.PrintLab.modal.ProductField;
 import com.PrintLab.service.ProductDefinitionService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,18 +20,7 @@ public class ProductDefinitionController {
 
     @PostMapping
     public ResponseEntity<ProductDefinitionDto> saveProductionDefinition(@RequestBody ProductDefinitionDto productDefinitionDto) {
-        try {
-            return ResponseEntity.ok(productDefinitionService.save(productDefinitionDto));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @PostMapping("/{productDefinitionId}/productField")
-    public ResponseEntity<ProductField> saveProductFieldWithProductDefinition(@PathVariable Long productDefinitionId, @RequestBody ProductField productField) {
-        ProductField savedProductField = productDefinitionService.addProductField(productDefinitionId, productField);
-        return ResponseEntity.ok(savedProductField);
+        return ResponseEntity.ok(productDefinitionService.save(productDefinitionDto));
     }
 
     @GetMapping
@@ -51,8 +36,8 @@ public class ProductDefinitionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDefinitionDto> updateProductDefinition(@PathVariable Long id, @RequestBody ProductDefinition productDefinition) {
-        ProductDefinitionDto updateProductDefinitionDto = productDefinitionService.updateProductDefinition(id, productDefinition);
+    public ResponseEntity<ProductDefinitionDto> updateProductDefinition(@PathVariable Long id, @RequestBody ProductDefinitionDto productDefinitionDto) {
+        ProductDefinitionDto updateProductDefinitionDto = productDefinitionService.updateProductDefinition(id, productDefinitionDto);
         return ResponseEntity.ok(updateProductDefinitionDto);
     }
 
@@ -62,4 +47,15 @@ public class ProductDefinitionController {
         return ResponseEntity.ok("Product Definition with ID " + id + "has been deleted");
     }
 
+    @DeleteMapping("/{id}/{pdfId}/product-definition-field")
+    public ResponseEntity<String> deleteProductDefinitionField(@PathVariable Long id, @PathVariable Long pdfId) {
+        productDefinitionService.deleteProductDefinitionFieldById(id,pdfId);
+        return ResponseEntity.ok("Product Definition Field with ID " + pdfId + "has been deleted");
+    }
+
+    @DeleteMapping("/{id}/{pdpId}/product-definition-process")
+    public ResponseEntity<String> deleteProductDefinitionProcess(@PathVariable Long id, @PathVariable Long pdpId) {
+        productDefinitionService.deleteProductDefinitionProcessById(id,pdpId);
+        return ResponseEntity.ok("Product Definition Process with ID " + pdpId + "has been deleted");
+    }
 }

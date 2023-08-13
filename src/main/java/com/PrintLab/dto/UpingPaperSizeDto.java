@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class UpingPaperSizeDto
 {
-    private Long upingId;
+    private Long id;
+    private Long paperSize;
     private Integer value;
 }
