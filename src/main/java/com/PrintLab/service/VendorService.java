@@ -9,6 +9,7 @@ public interface VendorService
 {
     VendorDto save(VendorDto vendorDto);
     List<VendorDto> getAll();
+    List<VendorDto> getVendorByProcessId(Long productProcessId);
     VendorDto findById(Long id);
     String deleteById(Long id);
     VendorDto updateVendor(Long id, VendorDto vendorDto);

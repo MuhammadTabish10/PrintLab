@@ -63,6 +63,23 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
+    public List<VendorDto> getVendorByProcessId(Long productProcessId) {
+        Optional<List<Vendor>> optionalVendorList = Optional.ofNullable(vendorRepository.findByVendorProcessList_ProductProcess_Id(productProcessId));
+        if(optionalVendorList.isPresent()){
+            List<Vendor> vendorList = optionalVendorList.get();
+            List<VendorDto> vendorDtoList = new ArrayList<>();
+
+            for (Vendor vendor : vendorList) {
+                VendorDto vendorDto = toDto(vendor);
+                vendorDtoList.add(vendorDto);
+            }
+            return vendorDtoList;
+        } else{
+            throw new RecordNotFoundException(String.format("Vendor not found on Product process id => %d", productProcessId));
+        }
+    }
+
+    @Override
     public VendorDto findById(Long id){
         Optional<Vendor> optionalVendor = vendorRepository.findById(id);
 

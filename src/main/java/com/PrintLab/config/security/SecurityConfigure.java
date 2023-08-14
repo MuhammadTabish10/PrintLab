@@ -66,6 +66,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/api/vendor").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/vendor").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/vendor/{id}").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/vendor/{id}/product-process").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/vendor/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/vendor/{id}/{vendor-process-id}").permitAll()
                 .antMatchers(HttpMethod.PUT,"/api/vendor/{id}").permitAll()

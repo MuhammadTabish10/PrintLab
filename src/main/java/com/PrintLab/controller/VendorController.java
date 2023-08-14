@@ -33,6 +33,12 @@ public class VendorController
         return ResponseEntity.ok(vendorDto);
     }
 
+    @GetMapping("/{id}/product-process")
+    public ResponseEntity<List<VendorDto>> getVendorByProductProcessId(@PathVariable Long id) {
+        List<VendorDto> vendorDtoList = vendorService.getVendorByProcessId(id);
+        return ResponseEntity.ok(vendorDtoList);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteVendor(@PathVariable Long id) {
         vendorService.deleteById(id);
