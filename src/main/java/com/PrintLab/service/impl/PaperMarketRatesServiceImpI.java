@@ -80,6 +80,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             existingPmr.setQty(paperMarketRates.getQty());
             existingPmr.setRatePkr(paperMarketRates.getRatePkr());
             existingPmr.setVerified(paperMarketRates.getVerified());
+            existingPmr.setNotes(paperMarketRates.getNotes());
 
             PaperMarketRates updatedPmr = paperMarketRatesRepository.save(existingPmr);
             return toDto(updatedPmr);
@@ -101,6 +102,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
                 .qty(paperMarketRates.getQty())
                 .ratePkr(paperMarketRates.getRatePkr())
                 .verified(paperMarketRates.getVerified())
+                .notes(paperMarketRates.getNotes())
                 .build();
     }
 
@@ -116,6 +118,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
                 .qty(paperMarketRatesDto.getQty())
                 .ratePkr(paperMarketRatesDto.getRatePkr())
                 .verified(paperMarketRatesDto.getVerified())
+                .notes(paperMarketRatesDto.getNotes())
                 .build();
     }
 

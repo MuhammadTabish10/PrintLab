@@ -23,4 +23,5 @@ public class PaperMarketRatesDto
     private Integer qty;
     private Double ratePkr;
     private Boolean verified;
+    private String notes;
 }
