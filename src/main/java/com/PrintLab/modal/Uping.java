@@ -1,6 +1,5 @@
 package com.PrintLab.modal;
 
-import com.PrintLab.dto.UpingPaperSizeDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

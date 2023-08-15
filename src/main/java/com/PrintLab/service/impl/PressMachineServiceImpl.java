@@ -2,7 +2,6 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.PressMachineSizeDto;
-import com.PrintLab.dto.UpingDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.*;
 import com.PrintLab.repository.PaperSizeRepository;
@@ -28,30 +27,6 @@ public class PressMachineServiceImpl implements PressMachineService {
         this.pressMachineSizeRepository = pressMachineSizeRepository;
         this.paperSizeRepository = paperSizeRepository;
     }
-
-
-//    @Transactional
-//    @Override
-//    public PressMachineDto save(PressMachineDto pressMachineDto) {
-//
-//        PressMachine pressMachine = toEntity(pressMachineDto);
-//        PressMachine createdPressMachine = pressMachineRepository.save(pressMachine);
-//        List<PressMachineSize> pressMachineSizeList = new ArrayList<>();
-//        for(PressMachineSizeDto data : pressMachineDto.getPressMachineSize()){
-//            PaperSize paperSize = new PaperSize();
-//            paperSize.setId(data.getPaperSizeId());
-//            PressMachineSize pm = PressMachineSize.builder()
-//                    .pressMachine(pressMachine)
-//                    .paperSize(paperSize)
-//                    .value(data.getValue().intValue())
-//                    .build();
-//
-//            pressMachineSizeList.add(pm);
-//        }
-//       pressMachineSizeRepository.saveAll(pressMachineSizeList);
-//
-//        return toDto(createdPressMachine);
-//    }
 
     @Transactional
     @Override
@@ -140,6 +115,7 @@ public class PressMachineServiceImpl implements PressMachineService {
             existingPressMachine.setName(pressMachine.getName());
             existingPressMachine.setCtp_rate(pressMachine.getCtp_rate());
             existingPressMachine.setImpression_1000_rate(pressMachine.getImpression_1000_rate());
+            existingPressMachine.setIs_selected(pressMachine.getIs_selected());
 
             List<PressMachineSize> existingPmsValues = existingPressMachine.getPressMachineSize();
             List<PressMachineSize> newPmsValues = pressMachine.getPressMachineSize();
@@ -216,6 +192,7 @@ public class PressMachineServiceImpl implements PressMachineService {
                 .name(pressMachine.getName())
                 .ctp_rate(pressMachine.getCtp_rate())
                 .impression_1000_rate(pressMachine.getImpression_1000_rate())
+                .is_selected(pressMachine.getIs_selected())
                 .pressMachineSize(pressMachineSizeDtos)
                 .build();
     }
@@ -240,6 +217,7 @@ public class PressMachineServiceImpl implements PressMachineService {
                 .name(pressMachineDto.getName())
                 .ctp_rate(pressMachineDto.getCtp_rate())
                 .impression_1000_rate(pressMachineDto.getImpression_1000_rate())
+                .is_selected(pressMachineDto.getIs_selected())
                 .pressMachineSize(pressMachineSizes)
                 .build();
     }

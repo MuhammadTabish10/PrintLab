@@ -24,6 +24,7 @@ public class PressMachine {
     private String name;
     private Double ctp_rate;
     private Double impression_1000_rate;
+    private Boolean is_selected;
 
 
     @OneToMany(mappedBy = "pressMachine", cascade = CascadeType.ALL)
