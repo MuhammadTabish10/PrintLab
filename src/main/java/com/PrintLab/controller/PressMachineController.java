@@ -1,7 +1,9 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.PressMachineDto;
+import com.PrintLab.dto.UpingDto;
 import com.PrintLab.service.PressMachineService;
+import com.sun.applet2.preloader.event.PreloaderEvent;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,13 @@ public class PressMachineController
         PressMachineDto pressMachineDto = pressMachineService.findById(id);
         return ResponseEntity.ok(pressMachineDto);
     }
+
+    @GetMapping("/{id}/paper-size")
+    public ResponseEntity<List<PressMachineDto>> getPressMachineByPaperSizeId(@PathVariable Long id) {
+        List<PressMachineDto> pressMachineDtoList = pressMachineService.getPressMachineByPaperSizeId(id);
+        return ResponseEntity.ok(pressMachineDtoList);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePressMachine(@PathVariable Long id) {

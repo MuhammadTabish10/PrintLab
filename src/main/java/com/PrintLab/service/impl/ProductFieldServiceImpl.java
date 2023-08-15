@@ -1,9 +1,11 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductFieldDto;
+import com.PrintLab.dto.UpingDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.ProductField;
 import com.PrintLab.modal.ProductFieldValues;
+import com.PrintLab.modal.Uping;
 import com.PrintLab.repository.ProductFieldRepository;
 import com.PrintLab.repository.ProductFieldValuesRepository;
 import com.PrintLab.service.ProductFieldService;
@@ -67,6 +69,23 @@ public class ProductFieldServiceImpl implements ProductFieldService {
         }
         else {
             throw new RecordNotFoundException(String.format("Product Field not found for id => %d", id));
+        }
+    }
+
+    @Override
+    public List<ProductFieldDto> getProductFieldByProductFieldValueId(Long productFieldValueId) {
+        Optional<List<ProductField>> optionalProductFieldList = Optional.ofNullable(productFieldRepository.findByProductFieldValuesList_Id(productFieldValueId));
+        if(optionalProductFieldList.isPresent()){
+            List<ProductField> productFieldList = optionalProductFieldList.get();
+            List<ProductFieldDto> productFieldDtoList = new ArrayList<>();
+
+            for (ProductField productField : productFieldList) {
+                ProductFieldDto productFieldDto = toDto(productField);
+                productFieldDtoList.add(productFieldDto);
+            }
+            return productFieldDtoList;
+        } else{
+            throw new RecordNotFoundException(String.format("ProductField not found on Product Field Value id => %d", productFieldValueId));
         }
     }
 

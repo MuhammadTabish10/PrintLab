@@ -2,6 +2,7 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.PressMachineSizeDto;
+import com.PrintLab.dto.UpingDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.*;
 import com.PrintLab.repository.PaperSizeRepository;
@@ -94,6 +95,23 @@ public class PressMachineServiceImpl implements PressMachineService {
             return toDto(pressMachine);
         } else {
             throw new RecordNotFoundException(String.format("Press Machine not found for id => %d", id));
+        }
+    }
+
+    @Override
+    public List<PressMachineDto> getPressMachineByPaperSizeId(Long paperSizeId) {
+        Optional<List<PressMachine>> optionalPressMachineList = Optional.ofNullable(pressMachineRepository.findByPressMachineSize_PaperSize_Id(paperSizeId));
+        if(optionalPressMachineList.isPresent()){
+            List<PressMachine> pressMachineList = optionalPressMachineList.get();
+            List<PressMachineDto> pressMachineDtoList = new ArrayList<>();
+
+            for (PressMachine pressMachine : pressMachineList) {
+                PressMachineDto pressMachineDto = toDto(pressMachine);
+                pressMachineDtoList.add(pressMachineDto);
+            }
+            return pressMachineDtoList;
+        } else{
+            throw new RecordNotFoundException(String.format("PressMachine not found on Paper Size id => %d", paperSizeId));
         }
     }
 

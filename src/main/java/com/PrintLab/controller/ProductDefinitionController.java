@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.ProductDefinitionDto;
+import com.PrintLab.dto.UpingDto;
 import com.PrintLab.service.ProductDefinitionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,24 @@ public class ProductDefinitionController {
     public ResponseEntity<ProductDefinitionDto> getProductDefinitionById(@PathVariable Long id) {
         ProductDefinitionDto productDefinitionDto = productDefinitionService.findById(id);
         return ResponseEntity.ok(productDefinitionDto);
+    }
+
+    @GetMapping("/{id}/product-field")
+    public ResponseEntity<List<ProductDefinitionDto>> getProductDefinitionByProductFieldId(@PathVariable Long id) {
+        List<ProductDefinitionDto> productDefinitionDtoList = productDefinitionService.getProductDefinitionByProductFieldId(id);
+        return ResponseEntity.ok(productDefinitionDtoList);
+    }
+
+    @GetMapping("/{id}/product-process")
+    public ResponseEntity<List<ProductDefinitionDto>> getProductDefinitionByProductProcessId(@PathVariable Long id) {
+        List<ProductDefinitionDto> productDefinitionDtoList = productDefinitionService.getProductDefinitionByProductProcessId(id);
+        return ResponseEntity.ok(productDefinitionDtoList);
+    }
+
+    @GetMapping("/{id}/vendor")
+    public ResponseEntity<List<ProductDefinitionDto>> getProductDefinitionByVendorId(@PathVariable Long id) {
+        List<ProductDefinitionDto> productDefinitionDtoList = productDefinitionService.getProductDefinitionByVendorId(id);
+        return ResponseEntity.ok(productDefinitionDtoList);
     }
 
     @PutMapping("/{id}")

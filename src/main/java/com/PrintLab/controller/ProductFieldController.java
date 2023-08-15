@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.ProductFieldDto;
+import com.PrintLab.dto.UpingDto;
 import com.PrintLab.modal.ProductField;
 import com.PrintLab.service.ProductFieldService;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,13 @@ public class ProductFieldController {
         ProductFieldDto productFieldDto = productFieldService.findById(id);
         return ResponseEntity.ok(productFieldDto);
     }
+
+    @GetMapping("/{id}/product-field-value")
+    public ResponseEntity<List<ProductFieldDto>> getProductFieldByProductFieldValueId(@PathVariable Long id) {
+        List<ProductFieldDto> productFieldDtoList = productFieldService.getProductFieldByProductFieldValueId(id);
+        return ResponseEntity.ok(productFieldDtoList);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductField(@PathVariable Long id) {

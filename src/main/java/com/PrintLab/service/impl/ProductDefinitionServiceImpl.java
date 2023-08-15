@@ -98,6 +98,57 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     }
 
     @Override
+    public List<ProductDefinitionDto> getProductDefinitionByProductFieldId(Long productFieldId) {
+        Optional<List<ProductDefinition>> optionalProductDefinitionList = Optional.ofNullable(productDefinitionRepository.findByProductDefinitionFieldList_ProductField_Id(productFieldId));
+        if(optionalProductDefinitionList.isPresent()){
+            List<ProductDefinition> productDefinitionList = optionalProductDefinitionList.get();
+            List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
+
+            for (ProductDefinition productDefinition : productDefinitionList) {
+                ProductDefinitionDto productDefinitionDto = toDto(productDefinition);
+                productDefinitionDtoList.add(productDefinitionDto);
+            }
+            return productDefinitionDtoList;
+        } else{
+            throw new RecordNotFoundException(String.format("ProductDefinition not found on ProductField id => %d", productFieldId));
+        }
+    }
+
+    @Override
+    public List<ProductDefinitionDto> getProductDefinitionByProductProcessId(Long productProcessId) {
+        Optional<List<ProductDefinition>> optionalProductDefinitionList = Optional.ofNullable(productDefinitionRepository.findByProductDefinitionProcessList_ProductProcess_Id(productProcessId));
+        if(optionalProductDefinitionList.isPresent()){
+            List<ProductDefinition> productDefinitionList = optionalProductDefinitionList.get();
+            List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
+
+            for (ProductDefinition productDefinition : productDefinitionList) {
+                ProductDefinitionDto productDefinitionDto = toDto(productDefinition);
+                productDefinitionDtoList.add(productDefinitionDto);
+            }
+            return productDefinitionDtoList;
+        } else{
+            throw new RecordNotFoundException(String.format("ProductDefinition not found on ProductProcess id => %d", productProcessId));
+        }
+    }
+
+    @Override
+    public List<ProductDefinitionDto> getProductDefinitionByVendorId(Long vendorId) {
+        Optional<List<ProductDefinition>> optionalProductDefinitionList = Optional.ofNullable(productDefinitionRepository.findByProductDefinitionProcessList_Vendor_Id(vendorId));
+        if(optionalProductDefinitionList.isPresent()){
+            List<ProductDefinition> productDefinitionList = optionalProductDefinitionList.get();
+            List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
+
+            for (ProductDefinition productDefinition : productDefinitionList) {
+                ProductDefinitionDto productDefinitionDto = toDto(productDefinition);
+                productDefinitionDtoList.add(productDefinitionDto);
+            }
+            return productDefinitionDtoList;
+        } else{
+            throw new RecordNotFoundException(String.format("ProductDefinition not found on Vendor id => %d", vendorId));
+        }
+    }
+
+    @Override
     public ProductDefinitionDto updateProductDefinition(Long id, ProductDefinitionDto productDefinitionDto) {
         ProductDefinition productDefinition = toEntity(productDefinitionDto);
         Optional<ProductDefinition> optionalProductDefinition = productDefinitionRepository.findById(id);

@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.UpingDto;
+import com.PrintLab.dto.VendorDto;
 import com.PrintLab.service.UpingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,12 @@ public class UpingController
     public ResponseEntity<UpingDto> getUpingById(@PathVariable Long id) {
         UpingDto upingDto = upingService.findById(id);
         return ResponseEntity.ok(upingDto);
+    }
+
+    @GetMapping("/{id}/paper-size")
+    public ResponseEntity<List<UpingDto>> getUpingByPaperSizeId(@PathVariable Long id) {
+        List<UpingDto> upingDtoList = upingService.getUpingByPaperSizeId(id);
+        return ResponseEntity.ok(upingDtoList);
     }
 
     @DeleteMapping("/{id}")

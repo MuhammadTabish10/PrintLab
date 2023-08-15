@@ -2,6 +2,7 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.dto.UpingPaperSizeDto;
+import com.PrintLab.dto.VendorDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.*;
 import com.PrintLab.repository.PaperSizeRepository;
@@ -70,6 +71,23 @@ public class UpingServiceImpl implements UpingService {
             return toDto(uping);
         } else {
             throw new RecordNotFoundException(String.format("Uping not found for id => %d", id));
+        }
+    }
+
+    @Override
+    public List<UpingDto> getUpingByPaperSizeId(Long paperSizeId) {
+        Optional<List<Uping>> optionalUpingList = Optional.ofNullable(upingRepository.findByUpingPaperSize_PaperSize_Id(paperSizeId));
+        if(optionalUpingList.isPresent()){
+            List<Uping> upingList = optionalUpingList.get();
+            List<UpingDto> upingDtoList = new ArrayList<>();
+
+            for (Uping uping : upingList) {
+                UpingDto upingDto = toDto(uping);
+                upingDtoList.add(upingDto);
+            }
+            return upingDtoList;
+        } else{
+            throw new RecordNotFoundException(String.format("Uping not found on Paper Size id => %d", paperSizeId));
         }
     }
 
