@@ -1,10 +1,7 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.dto.PressMachineDto;
-import com.PrintLab.dto.UpingDto;
 import com.PrintLab.service.PressMachineService;
-import com.sun.applet2.preloader.event.PreloaderEvent;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
