@@ -13,6 +13,7 @@ public interface ProductFieldValuesService {
     ProductFieldValuesDto save(ProductFieldValuesDto productFieldValuesDto);
 
     List<ProductFieldValuesDto> getAll();
+    List<ProductFieldValuesDto> getProductFieldValuesByProductFieldId(Long productFieldId);
 
     ProductFieldValuesDto findById(Long id) throws Exception;
 

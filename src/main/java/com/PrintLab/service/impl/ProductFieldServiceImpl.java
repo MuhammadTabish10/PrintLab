@@ -1,12 +1,10 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductFieldDto;
-import com.PrintLab.dto.ProductProcessDto;
-import com.PrintLab.dto.UpingDto;
+import com.PrintLab.dto.projectEnums.Type;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.ProductField;
 import com.PrintLab.modal.ProductFieldValues;
-import com.PrintLab.modal.ProductProcess;
 import com.PrintLab.repository.ProductFieldRepository;
 import com.PrintLab.repository.ProductFieldValuesRepository;
 import com.PrintLab.service.ProductFieldService;
@@ -125,55 +123,47 @@ public class ProductFieldServiceImpl implements ProductFieldService {
     @Override
     public ProductFieldDto updatedProductField(Long id, ProductField productField) {
         Optional<ProductField> optionalProductField = productFieldRepository.findById(id);
-        int count = 0;
 
-        if(optionalProductField.isPresent()) {
+        if (optionalProductField.isPresent()) {
             ProductField existingPf = optionalProductField.get();
             existingPf.setName(productField.getName());
             existingPf.setStatus(productField.getStatus());
             existingPf.setType(productField.getType());
             existingPf.setSequence(productField.getSequence());
 
-            List<ProductFieldValues> existingPfValues = existingPf.getProductFieldValuesList();
-            List<ProductFieldValues> newPfValues = productField.getProductFieldValuesList();
-            List<ProductFieldValues> newValuesToAdd = new ArrayList<>();
-
-            for(ProductFieldValues newValue : newPfValues) {
-                Optional<ProductFieldValues> existingValue = existingPfValues.stream()
-                        .filter(pfValue -> pfValue.getId().equals(newValue.getId())).findFirst();
-                if(existingValue.isPresent()) {
-                    ProductFieldValues existingPfValue = existingValue.get();
-                    existingPfValue.setName(newValue.getName());
-                    existingPfValue.setStatus(newValue.getStatus());
+            if (Type.TOGGLE.equals(productField.getType()) || Type.TEXTFIELD.equals(productField.getType())) {
+                for(ProductFieldValues productFieldValues : existingPf.getProductFieldValuesList()){
+                    productFieldValuesRepository.deleteById(productFieldValues.getId());
                 }
-                else {
-                    newValue.setProductField(existingPf);
-                    newValuesToAdd.add(newValue);
-                    count++;
-                }
-            }
+                existingPf.getProductFieldValuesList().clear();
+            } else {
+                List<ProductFieldValues> existingPfValues = existingPf.getProductFieldValuesList();
+                List<ProductFieldValues> newPfValues = productField.getProductFieldValuesList();
+                List<ProductFieldValues> newValuesToAdd = new ArrayList<>();
 
-            if (count > 0) {
+                for (ProductFieldValues newValue : newPfValues) {
+                    Optional<ProductFieldValues> existingValue = existingPfValues.stream()
+                            .filter(pfValue -> pfValue.getId().equals(newValue.getId())).findFirst();
+                    if (existingValue.isPresent()) {
+                        ProductFieldValues existingPfValue = existingValue.get();
+                        existingPfValue.setName(newValue.getName());
+                        existingPfValue.setStatus(newValue.getStatus());
+                    } else {
+                        newValue.setProductField(existingPf);
+                        newValuesToAdd.add(newValue);
+                    }
+                }
+
                 existingPfValues.addAll(newValuesToAdd);
             }
 
             ProductField updatedPf = productFieldRepository.save(existingPf);
             return toDto(updatedPf);
-        }
-        else {
+        } else {
             throw new RecordNotFoundException(String.format("Product Field not found for id => %d", id));
         }
     }
 
-//    @Override
-//    public ProductFieldValues addProductFieldValues(Long productFieldId, ProductFieldValues productFieldValues) {
-//        Optional<ProductField> productField = productFieldRepository.findById(productFieldId);
-//        if(productField.isPresent()) {
-//            productFieldValues.setProductField(productField.get());
-//            return productFieldValuesRepository.save(productFieldValues);
-//        }
-//        throw new RuntimeException("Product Field not found ");
-//    }
 
     @Override
     public void deleteProductFieldValuesById(Long id, Long pfvId) {

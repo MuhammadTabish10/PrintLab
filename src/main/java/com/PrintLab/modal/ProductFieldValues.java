@@ -23,6 +23,4 @@ public class ProductFieldValues {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_field_id")
     private ProductField productField;
-
-
 }

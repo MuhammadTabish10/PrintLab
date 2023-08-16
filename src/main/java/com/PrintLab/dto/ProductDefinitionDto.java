@@ -1,8 +1,5 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.modal.ProductDefinitionField;
-import com.PrintLab.modal.ProductDefinitionProcess;
-import com.PrintLab.modal.ProductField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +16,7 @@ public class ProductDefinitionDto {
     private Long id;
     private String title;
     private String status;
+    private Boolean is_public;
     private List<ProductDefinitionFieldDto> productDefinitionFieldList = new ArrayList<>();
     private List<ProductDefinitionProcessDto> productDefinitionProcessDtoList = new ArrayList<>();
 }
