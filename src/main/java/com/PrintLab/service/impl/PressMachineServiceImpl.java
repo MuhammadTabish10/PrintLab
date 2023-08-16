@@ -1,6 +1,5 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.PressMachineSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
@@ -22,12 +21,15 @@ public class PressMachineServiceImpl implements PressMachineService {
     private final PressMachineRepository pressMachineRepository;
     private final PressMachineSizeRepository pressMachineSizeRepository;
     private final PaperSizeRepository paperSizeRepository;
+    private final PaperSizeServiceImpl paperSizeService;
 
-    public PressMachineServiceImpl(PressMachineRepository pressMachineRepository, PressMachineSizeRepository pressMachineSizeRepository, PaperSizeRepository paperSizeRepository) {
+    public PressMachineServiceImpl(PressMachineRepository pressMachineRepository, PressMachineSizeRepository pressMachineSizeRepository, PaperSizeRepository paperSizeRepository, PaperSizeServiceImpl paperSizeService) {
         this.pressMachineRepository = pressMachineRepository;
         this.pressMachineSizeRepository = pressMachineSizeRepository;
         this.paperSizeRepository = paperSizeRepository;
+        this.paperSizeService = paperSizeService;
     }
+
 
     @Transactional
     @Override
@@ -198,7 +200,8 @@ public class PressMachineServiceImpl implements PressMachineService {
         List<PressMachineSizeDto> pressMachineSizeDtos = pressMachine.getPressMachineSize().stream()
                 .map(pmSize -> {
                     PressMachineSizeDto pmSizeDto = new PressMachineSizeDto();
-                    pmSizeDto.setPaperSize(pmSize.getPaperSize().getId());
+                    pmSizeDto.setPaperSize(paperSizeService.toDto(paperSizeRepository.findById(pmSize.getPaperSize().getId())
+                            .orElseThrow(()-> new RecordNotFoundException("Paper Size not found"))));
                     pmSizeDto.setValue(Long.valueOf(pmSize.getValue()));
                     pmSizeDto.setId(pmSize.getId());
                     return pmSizeDto;
@@ -221,7 +224,9 @@ public class PressMachineServiceImpl implements PressMachineService {
                 .map(pmSizeDto -> {
                     PressMachineSize pressMachineSize = new PressMachineSize();
                     PaperSize paperSize = new PaperSize();
-                    paperSize.setId(pmSizeDto.getPaperSize());
+                    paperSize.setId(pmSizeDto.getPaperSize().getId());
+                    paperSize.setLabel(pmSizeDto.getPaperSize().getLabel());
+                    paperSize.setStatus(pmSizeDto.getPaperSize().getStatus());
 
                     pressMachineSize.setId(pmSizeDto.getId());
                     pressMachineSize.setPaperSize(paperSize);

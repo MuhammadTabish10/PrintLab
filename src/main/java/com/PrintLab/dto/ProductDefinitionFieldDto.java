@@ -14,6 +14,6 @@ public class ProductDefinitionFieldDto
 {
     private Long id;
     private Long value;
-    private Long productField;
-    private Long productFieldValues;
+    private ProductFieldDto productField;
+    private ProductFieldValuesDto productFieldValues;
 }

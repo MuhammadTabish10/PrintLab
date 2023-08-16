@@ -1,9 +1,7 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.SettingDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.dto.UpingPaperSizeDto;
-import com.PrintLab.dto.VendorDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.*;
 import com.PrintLab.repository.PaperSizeRepository;
@@ -22,11 +20,13 @@ public class UpingServiceImpl implements UpingService {
     private final UpingRepository upingRepository;
     private final UpingPaperSizeRepository upingPaperSizeRepository;
     private final PaperSizeRepository paperSizeRepository;
+    private final PaperSizeServiceImpl paperSizeService;
 
-    public UpingServiceImpl(UpingRepository upingRepository, UpingPaperSizeRepository upingPaperSizeRepository, PaperSizeRepository paperSizeRepository) {
+    public UpingServiceImpl(UpingRepository upingRepository, UpingPaperSizeRepository upingPaperSizeRepository, PaperSizeRepository paperSizeRepository, PaperSizeServiceImpl paperSizeService) {
         this.upingRepository = upingRepository;
         this.upingPaperSizeRepository = upingPaperSizeRepository;
         this.paperSizeRepository = paperSizeRepository;
+        this.paperSizeService = paperSizeService;
     }
 
 
@@ -193,8 +193,9 @@ public class UpingServiceImpl implements UpingService {
         for (UpingPaperSize upingPaperSize : uping.getUpingPaperSize()) {
             UpingPaperSizeDto upingDto = UpingPaperSizeDto.builder()
                     .id(upingPaperSize.getId())
-                    .paperSize(upingPaperSize.getPaperSize().getId())
                     .value(upingPaperSize.getValue())
+                    .paperSize(paperSizeService.toDto(paperSizeRepository.findById(upingPaperSize.getPaperSize().getId())
+                            .orElseThrow(()-> new RecordNotFoundException("Paper Size not found"))))
                     .build();
             upingPaperSizeDto.add(upingDto);
         }
@@ -216,7 +217,9 @@ public class UpingServiceImpl implements UpingService {
         List<UpingPaperSize> upingPaperSizes = new ArrayList<>();
         for (UpingPaperSizeDto Dto : upingDto.getUpingPaperSize()) {
             PaperSize paperSize = PaperSize.builder()
-                    .id(Dto.getPaperSize())
+                    .id(Dto.getPaperSize().getId())
+                    .label(Dto.getPaperSize().getLabel())
+                    .status(Dto.getPaperSize().getStatus())
                     .build();
 
             UpingPaperSize upingPaperSize = UpingPaperSize.builder()

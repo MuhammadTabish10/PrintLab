@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class ProductDefinitionProcessDto
 {
     private Long id;
-    private Long productProcess;
-    private Long vendor;
+    private ProductProcessDto productProcess;
+    private VendorDto vendor;
 }

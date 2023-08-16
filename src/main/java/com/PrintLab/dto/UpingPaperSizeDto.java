@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class UpingPaperSizeDto
 {
     private Long id;
-    private Long paperSize;
+    private PaperSizeDto paperSize;
     private Integer value;
 }

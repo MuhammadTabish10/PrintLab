@@ -1,6 +1,5 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.VendorDto;
 import com.PrintLab.dto.VendorProcessDto;
 import com.PrintLab.exception.RecordNotFoundException;
@@ -22,11 +21,13 @@ public class VendorServiceImpl implements VendorService {
     private final VendorRepository vendorRepository;
     private final VendorProcessRepository vendorProcessRepository;
     private final ProductProcessRepository productProcessRepository;
+    private final ProductProcessServiceImpl productProcessService;
 
-    public VendorServiceImpl(VendorRepository vendorRepository, VendorProcessRepository vendorProcessRepository, ProductProcessRepository productProcessRepository) {
+    public VendorServiceImpl(VendorRepository vendorRepository, VendorProcessRepository vendorProcessRepository, ProductProcessRepository productProcessRepository, ProductProcessServiceImpl productProcessService) {
         this.vendorRepository = vendorRepository;
         this.vendorProcessRepository = vendorProcessRepository;
         this.productProcessRepository = productProcessRepository;
+        this.productProcessService = productProcessService;
     }
 
 
@@ -201,10 +202,11 @@ public class VendorServiceImpl implements VendorService {
         for (VendorProcess vendorProcess : vendor.getVendorProcessList()) {
             VendorProcessDto dto = VendorProcessDto.builder()
                     .id(vendorProcess.getId())
-                    .productProcessId(vendorProcess.getProductProcess().getId())
                     .materialType(vendorProcess.getMaterialType())
                     .rateSqft(vendorProcess.getRateSqft())
                     .notes(vendorProcess.getNotes())
+                    .productProcess(productProcessService.toDto(productProcessRepository.findById(vendorProcess.getProductProcess().getId())
+                            .orElseThrow(()-> new RecordNotFoundException("Product Process Not Found"))))
                     .build();
             vendorProcessDto.add(dto);
         }
@@ -236,7 +238,7 @@ public class VendorServiceImpl implements VendorService {
         List<VendorProcess> vendorProcessList = new ArrayList<>();
         for (VendorProcessDto dto : vendorDto.getVendorProcessList()) {
             ProductProcess productProcess = ProductProcess.builder()
-                    .id(dto.getProductProcessId())
+                    .id(dto.getProductProcess().getId())
                     .build();
 
             VendorProcess vendorProcess = VendorProcess.builder()

@@ -21,7 +21,12 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     private final ProductFieldRepository productFieldRepository;
     private final ProductFieldValuesRepository productFieldValuesRepository;
     private final VendorRepository vendorRepository;
-    public ProductDefinitionServiceImpl(ProductDefinitionRepository productDefinitionRepository, ProductDefinitionFieldRepository productDefinitionFieldRepository, ProductDefinitionProcessRepository productDefinitionProcessRepository, ProductProcessRepository productProcessRepository, ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository, VendorRepository vendorRepository) {
+    private final ProductFieldServiceImpl productFieldService;
+    private final ProductFieldValuesServiceImpl productFieldValuesService;
+    private final ProductProcessServiceImpl productProcessService;
+    private final VendorServiceImpl vendorService;
+
+    public ProductDefinitionServiceImpl(ProductDefinitionRepository productDefinitionRepository, ProductDefinitionFieldRepository productDefinitionFieldRepository, ProductDefinitionProcessRepository productDefinitionProcessRepository, ProductProcessRepository productProcessRepository, ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository, VendorRepository vendorRepository, ProductFieldServiceImpl productFieldService, ProductFieldValuesServiceImpl productFieldValuesService, ProductProcessServiceImpl productProcessService, VendorServiceImpl vendorService) {
         this.productDefinitionRepository = productDefinitionRepository;
         this.productDefinitionFieldRepository = productDefinitionFieldRepository;
         this.productDefinitionProcessRepository = productDefinitionProcessRepository;
@@ -29,6 +34,10 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         this.productFieldRepository = productFieldRepository;
         this.productFieldValuesRepository = productFieldValuesRepository;
         this.vendorRepository = vendorRepository;
+        this.productFieldService = productFieldService;
+        this.productFieldValuesService = productFieldValuesService;
+        this.productProcessService = productProcessService;
+        this.vendorService = vendorService;
     }
 
 
@@ -293,9 +302,11 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         for (ProductDefinitionField productDefinitionField : productDefinition.getProductDefinitionFieldList()) {
             ProductDefinitionFieldDto dto = ProductDefinitionFieldDto.builder()
                     .id(productDefinitionField.getId())
-                    .productField(productDefinitionField.getProductField().getId())
-                    .productFieldValues(productDefinitionField.getProductFieldValues().getId())
                     .value(productDefinitionField.getValue())
+                    .productField(productFieldService.toDto(productFieldRepository.findById(productDefinitionField.getProductField().getId())
+                            .orElseThrow(()-> new RecordNotFoundException("Product Field not found"))))
+                    .productFieldValues(productFieldValuesService.toDto(productFieldValuesRepository.findById(productDefinitionField.getProductFieldValues().getId())
+                            .orElseThrow(()-> new RecordNotFoundException("Product Field Value not found"))))
                     .build();
             productDefinitionFieldDto.add(dto);
         }
@@ -304,8 +315,10 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         for(ProductDefinitionProcess productDefinitionProcess : productDefinition.getProductDefinitionProcessList()) {
             ProductDefinitionProcessDto dto = ProductDefinitionProcessDto.builder()
                     .id(productDefinitionProcess.getId())
-                    .productProcess(productDefinitionProcess.getProductProcess().getId())
-                    .vendor(productDefinitionProcess.getVendor().getId())
+                    .productProcess(productProcessService.toDto(productProcessRepository.findById(productDefinitionProcess.getProductProcess().getId())
+                            .orElseThrow(()-> new RecordNotFoundException("Product Process not found"))))
+                    .vendor(vendorService.toDto(vendorRepository.findById(productDefinitionProcess.getVendor().getId())
+                            .orElseThrow(()-> new RecordNotFoundException("Vendor not found"))))
                     .build();
             productDefinitionProcessDto.add(dto);
         }
@@ -332,10 +345,10 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         List<ProductDefinitionField> productDefinitionFieldList = new ArrayList<>();
         for (ProductDefinitionFieldDto dto : productDefinitionDto.getProductDefinitionFieldList()) {
             ProductField productField = ProductField.builder()
-                    .id(dto.getProductField())
+                    .id(dto.getProductField().getId())
                     .build();
             ProductFieldValues productFieldValues = ProductFieldValues.builder()
-                    .id(dto.getProductFieldValues())
+                    .id(dto.getProductFieldValues().getId())
                     .build();
 
             ProductDefinitionField productDefinitionField = ProductDefinitionField.builder()
@@ -352,11 +365,11 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         List<ProductDefinitionProcess> productDefinitionProcessList = new ArrayList<>();
         for (ProductDefinitionProcessDto dto : productDefinitionDto.getProductDefinitionProcessDtoList()) {
             Vendor vendor = Vendor.builder()
-                    .id(dto.getVendor())
+                    .id(dto.getVendor().getId())
                     .build();
 
             ProductProcess productProcess = ProductProcess.builder()
-                    .id(dto.getProductProcess())
+                    .id(dto.getProductProcess().getId())
                     .build();
 
             ProductDefinitionProcess productDefinitionProcess = ProductDefinitionProcess.builder()

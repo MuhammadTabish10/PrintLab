@@ -1,5 +1,6 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.modal.PaperSize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PressMachineSizeDto {
     private Long id;
-    private Long paperSize;
+    private PaperSizeDto paperSize;
     private Long value;
 }

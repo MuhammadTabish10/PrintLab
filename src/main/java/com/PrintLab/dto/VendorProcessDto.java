@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class VendorProcessDto
 {
     private Long id;
-    private Long productProcessId;
+    private ProductProcessDto productProcess;
     private String materialType;
     private Double rateSqft;
     private String notes;
