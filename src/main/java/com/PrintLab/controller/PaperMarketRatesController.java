@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/paperMarketRates")
+@RequestMapping("/api/paper-market-rates")
 public class PaperMarketRatesController
 {
     private final PaperMarketRatesService marketRatesService;
@@ -34,10 +34,16 @@ public class PaperMarketRatesController
         return ResponseEntity.ok(paperMarketRatesDto);
     }
 
+    @GetMapping("/paper-stock/{stock}")
+    public ResponseEntity<List<PaperMarketRatesDto>> getPaperMarketRatesByPaperStock(@PathVariable String stock) {
+        List<PaperMarketRatesDto> paperMarketRatesDto = marketRatesService.findByPaperStock(stock);
+        return ResponseEntity.ok(paperMarketRatesDto);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePaperMarketRates(@PathVariable Long id) {
         marketRatesService.deleteById(id);
-        return ResponseEntity.ok("Paper Market Rates with ID " + id + " has been deleted.");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.dto.VendorDto;
 import com.PrintLab.service.VendorService;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,12 @@ public class VendorController
         return ResponseEntity.ok(vendorDto);
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<VendorDto>> getVendorByName(@PathVariable String name) {
+        List<VendorDto> vendorDtoList = vendorService.findByName(name);
+        return ResponseEntity.ok(vendorDtoList);
+    }
+
     @GetMapping("/{id}/product-process")
     public ResponseEntity<List<VendorDto>> getVendorByProductProcessId(@PathVariable Long id) {
         List<VendorDto> vendorDtoList = vendorService.getVendorByProcessId(id);
@@ -42,13 +49,13 @@ public class VendorController
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteVendor(@PathVariable Long id) {
         vendorService.deleteById(id);
-        return ResponseEntity.ok("Vendor with ID " + id + " has been deleted.");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/{vendor-process-id}")
     public ResponseEntity<String> deleteVendorProcess(@PathVariable Long id, @PathVariable(name = "vendor-process-id") Long pvId) {
         vendorService.deleteVendorProcessById(id,pvId);
-        return ResponseEntity.ok("Vendor Process with ID " + pvId + " has been deleted.");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")

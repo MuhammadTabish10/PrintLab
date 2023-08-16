@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.dto.VendorDto;
 import com.PrintLab.service.UpingService;
@@ -43,13 +44,19 @@ public class UpingController
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUping(@PathVariable Long id) {
         upingService.deleteById(id);
-        return ResponseEntity.ok("Uping with ID " + id + " has been deleted.");
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/product-size/{size}")
+    public ResponseEntity<List<UpingDto>> getUpingByProductSize(@PathVariable String size) {
+        List<UpingDto> upingDtoList = upingService.findByProductSize(size);
+        return ResponseEntity.ok(upingDtoList);
     }
 
     @DeleteMapping("/{id}/{uping-paper-size-id}")
     public ResponseEntity<String> deleteUpingPaperSize(@PathVariable Long id, @PathVariable(name = "uping-paper-size-id") Long upingPaperSizeId) {
         upingService.deleteUpingPaperSizeById(id, upingPaperSizeId);
-        return ResponseEntity.ok("Uping Paper Size with ID " + upingPaperSizeId + "has been Deleted");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")

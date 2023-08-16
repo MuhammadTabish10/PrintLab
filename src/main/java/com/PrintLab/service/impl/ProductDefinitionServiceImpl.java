@@ -98,6 +98,23 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     }
 
     @Override
+    public List<ProductDefinitionDto> findByTitle(String title) {
+        Optional<List<ProductDefinition>> productDefinitionList = Optional.ofNullable(productDefinitionRepository.findByTitle(title));
+        List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
+
+        if(productDefinitionList.isPresent()){
+            for (ProductDefinition productDefinition : productDefinitionList.get()) {
+                ProductDefinitionDto productDefinitionDto = toDto(productDefinition);
+                productDefinitionDtoList.add(productDefinitionDto);
+            }
+            return productDefinitionDtoList;
+        }
+        else {
+            throw new RecordNotFoundException(String.format("ProductDefinition not found at => %s", title));
+        }
+    }
+
+    @Override
     public List<ProductDefinitionDto> getProductDefinitionByProductFieldId(Long productFieldId) {
         Optional<List<ProductDefinition>> optionalProductDefinitionList = Optional.ofNullable(productDefinitionRepository.findByProductDefinitionFieldList_ProductField_Id(productFieldId));
         if(optionalProductDefinitionList.isPresent()){

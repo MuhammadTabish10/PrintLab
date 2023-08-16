@@ -1,7 +1,7 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.ProductDefinitionDto;
-import com.PrintLab.dto.UpingDto;
 import com.PrintLab.service.ProductDefinitionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/productDefinition")
+@RequestMapping("/api/product-definition")
 public class ProductDefinitionController {
 
     private final ProductDefinitionService productDefinitionService;
@@ -34,6 +34,12 @@ public class ProductDefinitionController {
     public ResponseEntity<ProductDefinitionDto> getProductDefinitionById(@PathVariable Long id) {
         ProductDefinitionDto productDefinitionDto = productDefinitionService.findById(id);
         return ResponseEntity.ok(productDefinitionDto);
+    }
+
+    @GetMapping("/title/{title}")
+    public ResponseEntity<List<ProductDefinitionDto>> getProductDefinitionByTitle(@PathVariable String title) {
+        List<ProductDefinitionDto> productDefinitionDtoList = productDefinitionService.findByTitle(title);
+        return ResponseEntity.ok(productDefinitionDtoList);
     }
 
     @GetMapping("/{id}/product-field")
@@ -63,18 +69,18 @@ public class ProductDefinitionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductDefinition(@PathVariable Long id) {
         productDefinitionService.deleteProductDefinition(id);
-        return ResponseEntity.ok("Product Definition with ID " + id + "has been deleted");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/{pdfId}/product-definition-field")
     public ResponseEntity<String> deleteProductDefinitionField(@PathVariable Long id, @PathVariable Long pdfId) {
         productDefinitionService.deleteProductDefinitionFieldById(id,pdfId);
-        return ResponseEntity.ok("Product Definition Field with ID " + pdfId + "has been deleted");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/{pdpId}/product-definition-process")
     public ResponseEntity<String> deleteProductDefinitionProcess(@PathVariable Long id, @PathVariable Long pdpId) {
         productDefinitionService.deleteProductDefinitionProcessById(id,pdpId);
-        return ResponseEntity.ok("Product Definition Process with ID " + pdpId + "has been deleted");
+        return ResponseEntity.ok().build();
     }
 }

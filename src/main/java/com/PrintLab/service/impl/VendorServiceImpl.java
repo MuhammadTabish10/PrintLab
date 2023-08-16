@@ -1,5 +1,6 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.VendorDto;
 import com.PrintLab.dto.VendorProcessDto;
 import com.PrintLab.exception.RecordNotFoundException;
@@ -89,6 +90,23 @@ public class VendorServiceImpl implements VendorService {
         }
         else {
             throw new RecordNotFoundException(String.format("Vendor not found for id => %d", id));
+        }
+    }
+
+    @Override
+    public List<VendorDto> findByName(String name) {
+        Optional<List<Vendor>> vendorList = Optional.ofNullable(vendorRepository.findByName(name));
+        List<VendorDto> vendorDtoList = new ArrayList<>();
+
+        if(vendorList.isPresent()){
+            for (Vendor vendor : vendorList.get()) {
+                VendorDto vendorDto = toDto(vendor);
+                vendorDtoList.add(vendorDto);
+            }
+            return vendorDtoList;
+        }
+        else {
+            throw new RecordNotFoundException(String.format("Vendor not found at => %s", name));
         }
     }
 

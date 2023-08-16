@@ -1,11 +1,12 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductFieldDto;
+import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.ProductField;
 import com.PrintLab.modal.ProductFieldValues;
-import com.PrintLab.modal.Uping;
+import com.PrintLab.modal.ProductProcess;
 import com.PrintLab.repository.ProductFieldRepository;
 import com.PrintLab.repository.ProductFieldValuesRepository;
 import com.PrintLab.service.ProductFieldService;
@@ -73,6 +74,23 @@ public class ProductFieldServiceImpl implements ProductFieldService {
     }
 
     @Override
+    public List<ProductFieldDto> findByName(String name) {
+        Optional<List<ProductField>> productFieldList = Optional.ofNullable(productFieldRepository.findByName(name));
+        List<ProductFieldDto> productFieldDtoList = new ArrayList<>();
+
+        if(productFieldList.isPresent()){
+            for (ProductField productField : productFieldList.get()) {
+                ProductFieldDto productFieldDto = toDto(productField);
+                productFieldDtoList.add(productFieldDto);
+            }
+            return productFieldDtoList;
+        }
+        else {
+            throw new RecordNotFoundException(String.format("ProductField not found at => %s", name));
+        }
+    }
+
+    @Override
     public List<ProductFieldDto> getProductFieldByProductFieldValueId(Long productFieldValueId) {
         Optional<List<ProductField>> optionalProductFieldList = Optional.ofNullable(productFieldRepository.findByProductFieldValuesList_Id(productFieldValueId));
         if(optionalProductFieldList.isPresent()){
@@ -114,6 +132,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
             existingPf.setName(productField.getName());
             existingPf.setStatus(productField.getStatus());
             existingPf.setType(productField.getType());
+            existingPf.setSequence(productField.getSequence());
 
             List<ProductFieldValues> existingPfValues = existingPf.getProductFieldValuesList();
             List<ProductFieldValues> newPfValues = productField.getProductFieldValuesList();

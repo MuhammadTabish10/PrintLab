@@ -10,4 +10,5 @@ import java.util.List;
 public interface PressMachineRepository extends JpaRepository<PressMachine,Long>
 {
     List<PressMachine> findByPressMachineSize_PaperSize_Id(Long paperSizeId);
+    List<PressMachine> findByName(String name);
 }

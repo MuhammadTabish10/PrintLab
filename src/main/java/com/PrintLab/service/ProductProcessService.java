@@ -1,5 +1,6 @@
 package com.PrintLab.service;
 
+import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.modal.ProductProcess;
 
@@ -10,6 +11,7 @@ public interface ProductProcessService
     ProductProcessDto save(ProductProcessDto productProcessDto);
     List<ProductProcessDto> getAll();
     ProductProcessDto findById(Long id);
+    List<ProductProcessDto> findByName(String name);
     String deleteById(Long id);
     ProductProcessDto updateProductProcess(Long id, ProductProcess productProcess);
 }

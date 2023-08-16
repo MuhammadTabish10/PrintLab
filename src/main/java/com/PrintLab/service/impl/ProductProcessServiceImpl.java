@@ -1,8 +1,10 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductProcessDto;
+import com.PrintLab.dto.VendorDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.ProductProcess;
+import com.PrintLab.modal.Vendor;
 import com.PrintLab.repository.ProductProcessRepository;
 import com.PrintLab.service.ProductProcessService;
 import org.springframework.stereotype.Service;
@@ -48,6 +50,23 @@ public class ProductProcessServiceImpl implements ProductProcessService
         }
         else {
             throw new RecordNotFoundException(String.format("Product Process not found for id => %d", id));
+        }
+    }
+
+    @Override
+    public List<ProductProcessDto> findByName(String name) {
+        Optional<List<ProductProcess>> productProcessList = Optional.ofNullable(productProcessRepository.findByName(name));
+        List<ProductProcessDto> productProcessDtoList = new ArrayList<>();
+
+        if(productProcessList.isPresent()){
+            for (ProductProcess productProcess : productProcessList.get()) {
+                ProductProcessDto productProcessDto = toDto(productProcess);
+                productProcessDtoList.add(productProcessDto);
+            }
+            return productProcessDtoList;
+        }
+        else {
+            throw new RecordNotFoundException(String.format("ProductProcess not found at => %s", name));
         }
     }
 

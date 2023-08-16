@@ -1,7 +1,6 @@
 package com.PrintLab.service;
 
 import com.PrintLab.dto.ProductFieldDto;
-import com.PrintLab.dto.UpingDto;
 import com.PrintLab.modal.ProductField;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +11,8 @@ public interface ProductFieldService {
     ProductFieldDto save(ProductFieldDto productFieldDto);
     List<ProductFieldDto> getAll();
     ProductFieldDto findById(Long id);
+    List<ProductFieldDto> findByName(String name);
+
     List<ProductFieldDto> getProductFieldByProductFieldValueId(Long productFieldValueId);
     String deleteById(Long id);
     ProductFieldDto updatedProductField(Long id, ProductField productField);

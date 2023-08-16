@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.service.impl.PaperSizeServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +35,16 @@ public class PaperSizeController
         return ResponseEntity.ok(paperSizeDto);
     }
 
+    @GetMapping("/label/{label}")
+    public ResponseEntity<List<PaperSizeDto>> getPaperSizeByLabel(@PathVariable String label) {
+        List<PaperSizeDto> paperSizeDtoList = paperSizeService.findByLabel(label);
+        return ResponseEntity.ok(paperSizeDtoList);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePaperSize(@PathVariable Long id) {
         paperSizeService.deleteById(id);
-        return ResponseEntity.ok("Paper Size with ID " + id + " has been deleted.");
-    }
+        return ResponseEntity.ok().build();    }
 
     @PutMapping("/{id}")
     public ResponseEntity<PaperSizeDto> updatePaperSize(@PathVariable Long id, @RequestBody PaperSizeDto paperSizeDto) {

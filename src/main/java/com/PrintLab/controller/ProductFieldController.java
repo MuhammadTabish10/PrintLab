@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.modal.ProductField;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/productField")
+@RequestMapping("/api/product-field")
 public class ProductFieldController {
 
     private final ProductFieldService productFieldService;
@@ -36,6 +37,12 @@ public class ProductFieldController {
         return ResponseEntity.ok(productFieldDto);
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<ProductFieldDto>> getProductFieldByName(@PathVariable String name) {
+        List<ProductFieldDto> productFieldDtoList = productFieldService.findByName(name);
+        return ResponseEntity.ok(productFieldDtoList);
+    }
+
     @GetMapping("/{id}/product-field-value")
     public ResponseEntity<List<ProductFieldDto>> getProductFieldByProductFieldValueId(@PathVariable Long id) {
         List<ProductFieldDto> productFieldDtoList = productFieldService.getProductFieldByProductFieldValueId(id);
@@ -46,13 +53,13 @@ public class ProductFieldController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductField(@PathVariable Long id) {
         productFieldService.deleteById(id);
-        return ResponseEntity.ok("Product Field with ID " + id + " has been deleted.");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/{pfvId}")
     public ResponseEntity<String> deleteProductionFieldValues(@PathVariable Long id, @PathVariable Long pfvId) {
         productFieldService.deleteProductFieldValuesById(id, pfvId);
-        return ResponseEntity.ok("Product Field Values with ID " + pfvId + "has been Deleted");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.PrintLab.service;
 
+import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.dto.ProductDefinitionDto;
 import com.PrintLab.dto.ProductFieldDto;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ public interface ProductDefinitionService {
     ProductDefinitionDto save(ProductDefinitionDto productDefinitionDto);
     List<ProductDefinitionDto> getAll();
     ProductDefinitionDto findById(Long id);
+    List<ProductDefinitionDto> findByTitle(String title);
+
     List<ProductDefinitionDto> getProductDefinitionByProductFieldId(Long productFieldId);
     List<ProductDefinitionDto> getProductDefinitionByProductProcessId(Long productProcessId);
     List<ProductDefinitionDto> getProductDefinitionByVendorId(Long vendorId);

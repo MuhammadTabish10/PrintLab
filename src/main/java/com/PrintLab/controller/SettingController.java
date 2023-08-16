@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.SettingDto;
 import com.PrintLab.service.SettingService;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +34,16 @@ public class SettingController {
         return ResponseEntity.ok(settingDto);
     }
 
+    @GetMapping("/key/{key}")
+    public ResponseEntity<List<SettingDto>> getSettingByKey(@PathVariable String key) {
+        List<SettingDto> settingDtoList = settingService.findByKey(key);
+        return ResponseEntity.ok(settingDtoList);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSetting(@PathVariable Long id) {
         settingService.deleteById(id);
-        return ResponseEntity.ok("setting with ID " + id + " has been deleted.");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")

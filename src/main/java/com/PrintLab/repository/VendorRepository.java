@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface VendorRepository extends JpaRepository<Vendor,Long> {
     List<Vendor> findByVendorProcessList_ProductProcess_Id(Long productProcessId);
+    List<Vendor> findByName(String name);
 }

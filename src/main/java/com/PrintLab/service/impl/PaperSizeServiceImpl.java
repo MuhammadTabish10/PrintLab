@@ -1,5 +1,6 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.*;
@@ -45,6 +46,23 @@ public class PaperSizeServiceImpl implements PaperSizeService {
             return toDto(paperSize);
         } else {
             throw new RecordNotFoundException(String.format("Paper Size not found for id => %d", id));
+        }
+    }
+
+    @Override
+    public List<PaperSizeDto> findByLabel(String label) {
+        Optional<List<PaperSize>> paperSizeList = Optional.ofNullable(paperSizeRepository.findByLabel(label));
+        List<PaperSizeDto> paperSizeDtoList = new ArrayList<>();
+
+        if(paperSizeList.isPresent()){
+            for (PaperSize paperSize : paperSizeList.get()) {
+                PaperSizeDto paperSizeDto = toDto(paperSize);
+                paperSizeDtoList.add(paperSizeDto);
+            }
+            return paperSizeDtoList;
+        }
+        else {
+            throw new RecordNotFoundException(String.format("Paper Size not found at => %s", label));
         }
     }
 

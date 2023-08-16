@@ -1,5 +1,6 @@
 package com.PrintLab.service;
 
+import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.dto.VendorDto;
 import com.PrintLab.modal.PressMachineSize;
@@ -13,6 +14,7 @@ public interface UpingService
     UpingDto save(UpingDto upingDto);
     List<UpingDto> getAll();
     UpingDto findById(Long id);
+    List<UpingDto> findByProductSize(String productSize);
     List<UpingDto> getUpingByPaperSizeId(Long paperSizeId);
     String deleteById(Long id);
     UpingDto updateUping(Long id, UpingDto upingDto);

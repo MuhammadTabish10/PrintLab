@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.service.PressMachineService;
@@ -40,17 +41,22 @@ public class PressMachineController
         return ResponseEntity.ok(pressMachineDtoList);
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<PressMachineDto>> getPressMachineByName(@PathVariable String name) {
+        List<PressMachineDto> pressMachineDtoList = pressMachineService.findByName(name);
+        return ResponseEntity.ok(pressMachineDtoList);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePressMachine(@PathVariable Long id) {
         pressMachineService.deleteById(id);
-        return ResponseEntity.ok("Press Machine with ID " + id + " has been deleted.");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/{pmId}")
     public ResponseEntity<String> deletePressMachineSize(@PathVariable Long id, @PathVariable Long pmId) {
         pressMachineService.deletePressMachineSizeById(id, pmId);
-        return ResponseEntity.ok("Press Machine Size with ID " + pmId + "has been Deleted");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
