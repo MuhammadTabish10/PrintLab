@@ -19,16 +19,21 @@ public class CalculatorServiceImpl implements CalculatorService {
     private final PaperSizeRepository paperSizeRepository;
     private final PaperMarketRatesRepository paperMarketRatesRepository;
     private final SettingRepository settingRepository;
+    private final ProductFieldRepository productFieldRepository;
+    private final ProductFieldValuesRepository productFieldValuesRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(CalculatorServiceImpl.class);
 
-    public CalculatorServiceImpl(PressMachineRepository pressMachineRepository, UpingRepository upingRepository, PaperSizeRepository paperSizeRepository, PaperMarketRatesRepository paperMarketRatesRepository, SettingRepository settingRepository) {
+    public CalculatorServiceImpl(PressMachineRepository pressMachineRepository, UpingRepository upingRepository, PaperSizeRepository paperSizeRepository, PaperMarketRatesRepository paperMarketRatesRepository, SettingRepository settingRepository, ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository) {
         this.pressMachineRepository = pressMachineRepository;
         this.upingRepository = upingRepository;
         this.paperSizeRepository = paperSizeRepository;
         this.paperMarketRatesRepository = paperMarketRatesRepository;
         this.settingRepository = settingRepository;
+        this.productFieldRepository = productFieldRepository;
+        this.productFieldValuesRepository = productFieldValuesRepository;
     }
+
 
     @Override
     public String Calculate(Calculator calculator)
@@ -151,10 +156,47 @@ public class CalculatorServiceImpl implements CalculatorService {
         Double slicing = sheetCeil * cuttingRates;
         logger.info("Slicing value: " + slicing);
 
+
+
+//        // CALCULATION OF CTP
+//        Double ctp = 1.0;
+//
+//        // Checking provided jobColor(Front) in database.
+//        Optional<ProductFieldValues> optionalJobColorFront = Optional.ofNullable(productFieldValuesRepository.findByName(calculator.getJobColorsFront()));
+//        if(!optionalJobColorFront.isPresent()){
+//            throw new RecordNotFoundException("JobColor(Front) not found");
+//        }
+//        Double jobColorFront = Double.valueOf(optionalJobColorFront.get().getName());
+//        logger.info("JobColorFront Found: " + jobColorFront);
+//
+//        if(calculator.getSideOptionValue().equalsIgnoreCase("Double Sided") && calculator.getImpositionValue().equalsIgnoreCase("Not Applied"))
+//        {
+//            logger.info("Side Option is Double Sided and Imposition is Not Applied");
+//            // Checking provided jobColor(Back) in database.
+//            Optional<ProductFieldValues> optionalJobColorBack = Optional.ofNullable(productFieldValuesRepository.findByName(calculator.getJobColorsBack()));
+//            if(!optionalJobColorBack.isPresent()){
+//                throw new RecordNotFoundException("JobColor(Back) not found");
+//            }
+//            Double jobColorBack = Double.valueOf(optionalJobColorBack.get().getName());
+//            logger.info("JobColorBack Found: " + jobColorBack);
+//
+//
+//            // Get CTP by Adding Front and Back Job color and Multiplying them with selected pressMachine ctp rate.
+//            ctp = (jobColorFront + jobColorBack) * pressMachine.getCtp_rate();
+//            logger.info("Ctp: " + ctp);
+//        }
+//        else {
+//            logger.info("Side Option is Double Sided and Imposition is Applied OR Side option is Single Sided");
+//            // Get CTP by Adding Front Job color and Multiplying it with selected pressMachine ctp rate.
+//            ctp = jobColorFront * pressMachine.getCtp_rate();
+//            logger.info("Ctp: " + ctp);
+//        }
+
         return  "ProductQty: " + productQty + "\n" +
                 "Sheets: " + sheets + "\n" +
                 "PaperMart: " + paperMart + "\n" +
                 "Slicing: " + slicing;
+//                "Ctp: " + ctp;
     }
 
 }

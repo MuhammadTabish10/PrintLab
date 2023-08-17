@@ -11,9 +11,7 @@ import com.PrintLab.service.VendorService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -67,19 +65,24 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public List<VendorDto> getVendorByProcessId(Long productProcessId) {
         Optional<List<Vendor>> optionalVendorList = Optional.ofNullable(vendorRepository.findByVendorProcessList_ProductProcess_Id(productProcessId));
-        if(optionalVendorList.isPresent()){
+
+        if (optionalVendorList.isPresent()) {
             List<Vendor> vendorList = optionalVendorList.get();
+            Set<Vendor> uniqueVendors = new HashSet<>();
             List<VendorDto> vendorDtoList = new ArrayList<>();
 
             for (Vendor vendor : vendorList) {
-                VendorDto vendorDto = toDto(vendor);
-                vendorDtoList.add(vendorDto);
+                if (uniqueVendors.add(vendor)) { // Add vendor to set, returns false if vendor is already in set
+                    VendorDto vendorDto = toDto(vendor);
+                    vendorDtoList.add(vendorDto);
+                }
             }
             return vendorDtoList;
-        } else{
+        } else {
             throw new RecordNotFoundException(String.format("Vendor not found on Product process id => %d", productProcessId));
         }
     }
+
 
     @Override
     public VendorDto findById(Long id){
