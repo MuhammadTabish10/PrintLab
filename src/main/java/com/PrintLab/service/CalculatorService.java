@@ -1,4 +1,7 @@
 package com.PrintLab.service;
 
-public interface CalculatorService {
+import com.PrintLab.modal.Calculator;
+public interface CalculatorService
+{
+    public String Calculate(Calculator calculator);
 }

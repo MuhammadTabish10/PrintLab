@@ -40,16 +40,11 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
-    public List<PaperMarketRatesDto> findByPaperStock(String paperStock) {
-        Optional<List<PaperMarketRates>> paperMarketRatesList = Optional.ofNullable(paperMarketRatesRepository.findByPaperStock(paperStock));
-        List<PaperMarketRatesDto> paperMarketRatesDtoList = new ArrayList<>();
-
-        if(paperMarketRatesList.isPresent()){
-            for (PaperMarketRates paperMarketRates : paperMarketRatesList.get()) {
-                PaperMarketRatesDto paperMarketRatesDto = toDto(paperMarketRates);
-                paperMarketRatesDtoList.add(paperMarketRatesDto);
-            }
-            return paperMarketRatesDtoList;
+    public PaperMarketRatesDto findByPaperStock(String paperStock) {
+        Optional<PaperMarketRates> paperMarketRates = Optional.ofNullable(paperMarketRatesRepository.findByPaperStock(paperStock));
+        if(paperMarketRates.isPresent()){
+            PaperMarketRates pmr = paperMarketRates.get();
+            return toDto(pmr);
         }
         else {
             throw new RecordNotFoundException(String.format("Paper Market Rate not found at => %s", paperStock));

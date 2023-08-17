@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PaperSizeRepository extends JpaRepository<PaperSize,Long> {
-    List<PaperSize> findByLabel(String label);
+    PaperSize findByLabel(String label);
 }

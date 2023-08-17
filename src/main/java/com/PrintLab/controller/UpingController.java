@@ -48,9 +48,9 @@ public class UpingController
     }
 
     @GetMapping("/product-size/{size}")
-    public ResponseEntity<List<UpingDto>> getUpingByProductSize(@PathVariable String size) {
-        List<UpingDto> upingDtoList = upingService.findByProductSize(size);
-        return ResponseEntity.ok(upingDtoList);
+    public ResponseEntity<UpingDto> getUpingByProductSize(@PathVariable String size) {
+        UpingDto upingDto = upingService.findByProductSize(size);
+        return ResponseEntity.ok(upingDto);
     }
 
     @DeleteMapping("/{id}/{uping-paper-size-id}")

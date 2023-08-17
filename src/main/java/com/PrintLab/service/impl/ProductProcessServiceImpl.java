@@ -54,16 +54,12 @@ public class ProductProcessServiceImpl implements ProductProcessService
     }
 
     @Override
-    public List<ProductProcessDto> findByName(String name) {
-        Optional<List<ProductProcess>> productProcessList = Optional.ofNullable(productProcessRepository.findByName(name));
-        List<ProductProcessDto> productProcessDtoList = new ArrayList<>();
+    public ProductProcessDto findByName(String name) {
+        Optional<ProductProcess> productProcessOptional = Optional.ofNullable(productProcessRepository.findByName(name));
 
-        if(productProcessList.isPresent()){
-            for (ProductProcess productProcess : productProcessList.get()) {
-                ProductProcessDto productProcessDto = toDto(productProcess);
-                productProcessDtoList.add(productProcessDto);
-            }
-            return productProcessDtoList;
+        if(productProcessOptional.isPresent()){
+            ProductProcess productProcess = productProcessOptional.get();
+            return toDto(productProcess);
         }
         else {
             throw new RecordNotFoundException(String.format("ProductProcess not found at => %s", name));

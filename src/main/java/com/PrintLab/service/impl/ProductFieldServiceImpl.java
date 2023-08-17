@@ -1,10 +1,12 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductFieldDto;
+import com.PrintLab.dto.ProductFieldValuesDto;
+import com.PrintLab.dto.VendorDto;
+import com.PrintLab.dto.VendorProcessDto;
 import com.PrintLab.dto.projectEnums.Type;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.ProductField;
-import com.PrintLab.modal.ProductFieldValues;
+import com.PrintLab.modal.*;
 import com.PrintLab.repository.ProductFieldRepository;
 import com.PrintLab.repository.ProductFieldValuesRepository;
 import com.PrintLab.service.ProductFieldService;
@@ -19,11 +21,14 @@ public class ProductFieldServiceImpl implements ProductFieldService {
 
     private final ProductFieldRepository productFieldRepository;
     private final ProductFieldValuesRepository productFieldValuesRepository;
+    private final ProductFieldValuesServiceImpl productFieldValueService;
 
-    public ProductFieldServiceImpl(ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository) {
+    public ProductFieldServiceImpl(ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository, ProductFieldValuesServiceImpl productFieldValueService) {
         this.productFieldRepository = productFieldRepository;
         this.productFieldValuesRepository = productFieldValuesRepository;
+        this.productFieldValueService = productFieldValueService;
     }
+
 
     @Transactional
     @Override
@@ -48,7 +53,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
 
     @Override
     public List<ProductFieldDto> getAll() {
-        List<ProductField> productFieldList = productFieldRepository.findAll();
+        List<ProductField> productFieldList = productFieldRepository.findAllByOrderBySequenceAsc();
         List<ProductFieldDto> productFieldDtoList = new ArrayList<>();
 
         for (ProductField productField : productFieldList) {
@@ -72,16 +77,12 @@ public class ProductFieldServiceImpl implements ProductFieldService {
     }
 
     @Override
-    public List<ProductFieldDto> findByName(String name) {
-        Optional<List<ProductField>> productFieldList = Optional.ofNullable(productFieldRepository.findByName(name));
-        List<ProductFieldDto> productFieldDtoList = new ArrayList<>();
+    public ProductFieldDto findByName(String name) {
+        Optional<ProductField> productFieldOptional = Optional.ofNullable(productFieldRepository.findByName(name));
 
-        if(productFieldList.isPresent()){
-            for (ProductField productField : productFieldList.get()) {
-                ProductFieldDto productFieldDto = toDto(productField);
-                productFieldDtoList.add(productFieldDto);
-            }
-            return productFieldDtoList;
+        if(productFieldOptional.isPresent()){
+            ProductField productField = productFieldOptional.get();
+            return toDto(productField);
         }
         else {
             throw new RecordNotFoundException(String.format("ProductField not found at => %s", name));
@@ -198,26 +199,50 @@ public class ProductFieldServiceImpl implements ProductFieldService {
 
 
     public ProductFieldDto toDto(ProductField productField) {
-       return ProductFieldDto.builder()
-               .id(productField.getId())
-               .name(productField.getName())
-               .status(productField.getStatus())
-               .created_at(productField.getCreated_at())
-               .sequence(productField.getSequence())
-               .type(productField.getType())
-               .productFieldValuesList(productField.getProductFieldValuesList())
-               .build();
+        List<ProductFieldValuesDto> productFieldValuesDtoList = new ArrayList<>();
+        for (ProductFieldValues productFieldValues : productField.getProductFieldValuesList()) {
+            ProductFieldValuesDto dto = ProductFieldValuesDto.builder()
+                    .id(productFieldValues.getId())
+                    .name(productFieldValues.getName())
+                    .status(productFieldValues.getStatus())
+                    .build();
+            productFieldValuesDtoList.add(dto);
+        }
+
+        return ProductFieldDto.builder()
+                .id(productField.getId())
+                .name(productField.getName())
+                .status(productField.getStatus())
+                .created_at(productField.getCreated_at())
+                .sequence(productField.getSequence())
+                .type(productField.getType())
+                .productFieldValuesList(productFieldValuesDtoList)
+                .build();
     }
 
     public ProductField toEntity(ProductFieldDto productFieldDto) {
-        return ProductField.builder()
+        ProductField productField = ProductField.builder()
                 .id(productFieldDto.getId())
                 .name(productFieldDto.getName())
                 .status(productFieldDto.getStatus())
                 .created_at(productFieldDto.getCreated_at())
                 .sequence(productFieldDto.getSequence())
                 .type(productFieldDto.getType())
-                .productFieldValuesList(productFieldDto.getProductFieldValuesList())
                 .build();
+
+        List<ProductFieldValues> productFieldValuesList = new ArrayList<>();
+        for (ProductFieldValuesDto dto : productFieldDto.getProductFieldValuesList()) {
+            ProductFieldValues productFieldValues = ProductFieldValues.builder()
+                    .id(dto.getId())
+                    .name(dto.getName())
+                    .status(dto.getStatus())
+                    .build();
+
+            productFieldValuesList.add(productFieldValues);
+        }
+
+        productField.setProductFieldValuesList(productFieldValuesList);
+        return productField;
     }
+
 }

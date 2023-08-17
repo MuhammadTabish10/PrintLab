@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface UpingRepository extends JpaRepository<Uping,Long> {
     List<Uping> findByUpingPaperSize_PaperSize_Id(Long paperSizeId);
-    List<Uping> findByProductSize(String productSize);
+    Uping findByProductSize(String productSize);
 }

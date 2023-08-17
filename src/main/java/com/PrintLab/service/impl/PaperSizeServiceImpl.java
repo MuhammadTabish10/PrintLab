@@ -50,16 +50,12 @@ public class PaperSizeServiceImpl implements PaperSizeService {
     }
 
     @Override
-    public List<PaperSizeDto> findByLabel(String label) {
-        Optional<List<PaperSize>> paperSizeList = Optional.ofNullable(paperSizeRepository.findByLabel(label));
-        List<PaperSizeDto> paperSizeDtoList = new ArrayList<>();
+    public PaperSizeDto findByLabel(String label) {
+        Optional<PaperSize> paperSizeOptional = Optional.ofNullable(paperSizeRepository.findByLabel(label));
 
-        if(paperSizeList.isPresent()){
-            for (PaperSize paperSize : paperSizeList.get()) {
-                PaperSizeDto paperSizeDto = toDto(paperSize);
-                paperSizeDtoList.add(paperSizeDto);
-            }
-            return paperSizeDtoList;
+        if(paperSizeOptional.isPresent()){
+            PaperSize paperSize = paperSizeOptional.get();
+            return toDto(paperSize);
         }
         else {
             throw new RecordNotFoundException(String.format("Paper Size not found at => %s", label));

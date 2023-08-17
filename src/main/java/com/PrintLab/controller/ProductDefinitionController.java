@@ -37,9 +37,9 @@ public class ProductDefinitionController {
     }
 
     @GetMapping("/title/{title}")
-    public ResponseEntity<List<ProductDefinitionDto>> getProductDefinitionByTitle(@PathVariable String title) {
-        List<ProductDefinitionDto> productDefinitionDtoList = productDefinitionService.findByTitle(title);
-        return ResponseEntity.ok(productDefinitionDtoList);
+    public ResponseEntity<ProductDefinitionDto> getProductDefinitionByTitle(@PathVariable String title) {
+        ProductDefinitionDto productDefinitionDto = productDefinitionService.findByTitle(title);
+        return ResponseEntity.ok(productDefinitionDto);
     }
 
     @GetMapping("/{id}/product-field")

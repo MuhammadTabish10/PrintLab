@@ -12,7 +12,7 @@ public interface VendorService
     List<VendorDto> getAll();
     List<VendorDto> getVendorByProcessId(Long productProcessId);
     VendorDto findById(Long id);
-    List<VendorDto> findByName(String name);
+    VendorDto findByName(String name);
     String deleteById(Long id);
     VendorDto updateVendor(Long id, VendorDto vendorDto);
     void deleteVendorProcessById(Long id, Long vendorProcessId);

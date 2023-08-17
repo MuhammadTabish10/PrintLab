@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SettingRepository extends JpaRepository<Setting,Long> {
-    List<Setting> findByKey(String key);
+    Setting findByKey(String key);
 }

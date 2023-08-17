@@ -37,9 +37,9 @@ public class ProductProcessController
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<ProductProcessDto>> getProductProcessByName(@PathVariable String name) {
-        List<ProductProcessDto> productProcessDtoList = productProcessService.findByName(name);
-        return ResponseEntity.ok(productProcessDtoList);
+    public ResponseEntity<ProductProcessDto> getProductProcessByName(@PathVariable String name) {
+        ProductProcessDto productProcessDto = productProcessService.findByName(name);
+        return ResponseEntity.ok(productProcessDto);
     }
 
     @DeleteMapping("/{id}")

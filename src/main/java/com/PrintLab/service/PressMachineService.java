@@ -10,7 +10,7 @@ public interface PressMachineService
     PressMachineDto save(PressMachineDto pressMachineDto);
     List<PressMachineDto> getAll();
     PressMachineDto findById(Long id);
-    List<PressMachineDto> findByName(String name);
+    PressMachineDto findByName(String name);
 
     List<PressMachineDto> getPressMachineByPaperSizeId(Long paperSizeId);
     String deleteById(Long id);

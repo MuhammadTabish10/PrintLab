@@ -38,9 +38,9 @@ public class ProductFieldController {
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<ProductFieldDto>> getProductFieldByName(@PathVariable String name) {
-        List<ProductFieldDto> productFieldDtoList = productFieldService.findByName(name);
-        return ResponseEntity.ok(productFieldDtoList);
+    public ResponseEntity<ProductFieldDto> getProductFieldByName(@PathVariable String name) {
+        ProductFieldDto productFieldDto = productFieldService.findByName(name);
+        return ResponseEntity.ok(productFieldDto);
     }
 
     @GetMapping("/{id}/product-field-value")

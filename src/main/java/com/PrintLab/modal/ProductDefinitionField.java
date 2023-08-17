@@ -29,11 +29,6 @@ public class ProductDefinitionField {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_field_value_id")
-    private ProductFieldValues productFieldValues;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_definition_id")
     private ProductDefinition productDefinition;
 }

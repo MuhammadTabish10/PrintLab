@@ -95,16 +95,12 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public List<VendorDto> findByName(String name) {
-        Optional<List<Vendor>> vendorList = Optional.ofNullable(vendorRepository.findByName(name));
-        List<VendorDto> vendorDtoList = new ArrayList<>();
+    public VendorDto findByName(String name) {
+        Optional<Vendor> vendorOptional = Optional.ofNullable(vendorRepository.findByName(name));
 
-        if(vendorList.isPresent()){
-            for (Vendor vendor : vendorList.get()) {
-                VendorDto vendorDto = toDto(vendor);
-                vendorDtoList.add(vendorDto);
-            }
-            return vendorDtoList;
+        if(vendorOptional.isPresent()){
+            Vendor vendor = vendorOptional.get();
+            return toDto(vendor);
         }
         else {
             throw new RecordNotFoundException(String.format("Vendor not found at => %s", name));

@@ -53,16 +53,12 @@ public class SettingServiceImpl implements SettingService
     }
 
     @Override
-    public List<SettingDto> findByKey(String key) {
-        Optional<List<Setting>> settingList = Optional.ofNullable(settingRepository.findByKey(key));
-        List<SettingDto> settingDtoList = new ArrayList<>();
+    public SettingDto findByKey(String key) {
+        Optional<Setting> settingOptional = Optional.ofNullable(settingRepository.findByKey(key));
 
-        if(settingList.isPresent()){
-            for (Setting setting : settingList.get()) {
-                SettingDto settingDto = toDto(setting);
-                settingDtoList.add(settingDto);
-            }
-            return settingDtoList;
+        if(settingOptional.isPresent()){
+            Setting setting = settingOptional.get();
+            return toDto(setting);
         }
         else {
             throw new RecordNotFoundException(String.format("Setting not found at => %s", key));

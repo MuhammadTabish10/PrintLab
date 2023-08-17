@@ -77,16 +77,12 @@ public class PressMachineServiceImpl implements PressMachineService {
     }
 
     @Override
-    public List<PressMachineDto> findByName(String name) {
-        Optional<List<PressMachine>> pressMachineList = Optional.ofNullable(pressMachineRepository.findByName(name));
-        List<PressMachineDto> pressMachineDtoList = new ArrayList<>();
+    public PressMachineDto findByName(String name) {
+        Optional<PressMachine> pressMachineOptional = Optional.ofNullable(pressMachineRepository.findByName(name));
 
-        if(pressMachineList.isPresent()){
-            for (PressMachine pressMachine : pressMachineList.get()) {
-                PressMachineDto pressMachineDto = toDto(pressMachine);
-                pressMachineDtoList.add(pressMachineDto);
-            }
-            return pressMachineDtoList;
+        if(pressMachineOptional.isPresent()){
+            PressMachine pressMachine = pressMachineOptional.get();
+            return toDto(pressMachine);
         }
         else {
             throw new RecordNotFoundException(String.format("Press Machine not found at => %s", name));

@@ -35,8 +35,8 @@ public class PaperMarketRatesController
     }
 
     @GetMapping("/paper-stock/{stock}")
-    public ResponseEntity<List<PaperMarketRatesDto>> getPaperMarketRatesByPaperStock(@PathVariable String stock) {
-        List<PaperMarketRatesDto> paperMarketRatesDto = marketRatesService.findByPaperStock(stock);
+    public ResponseEntity<PaperMarketRatesDto> getPaperMarketRatesByPaperStock(@PathVariable String stock) {
+        PaperMarketRatesDto paperMarketRatesDto = marketRatesService.findByPaperStock(stock);
         return ResponseEntity.ok(paperMarketRatesDto);
     }
 

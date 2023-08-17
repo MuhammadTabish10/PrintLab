@@ -76,16 +76,12 @@ public class UpingServiceImpl implements UpingService {
     }
 
     @Override
-    public List<UpingDto> findByProductSize(String productSize) {
-        Optional<List<Uping>> upingList = Optional.ofNullable(upingRepository.findByProductSize(productSize));
-        List<UpingDto> upingDtoList = new ArrayList<>();
+    public UpingDto findByProductSize(String productSize) {
+        Optional<Uping> upingOptional = Optional.ofNullable(upingRepository.findByProductSize(productSize));
 
-        if(upingList.isPresent()){
-            for (Uping uping : upingList.get()) {
-                UpingDto upingDto = toDto(uping);
-                upingDtoList.add(upingDto);
-            }
-            return upingDtoList;
+        if(upingOptional.isPresent()){
+            Uping uping = upingOptional.get();
+            return toDto(uping);
         }
         else {
             throw new RecordNotFoundException(String.format("Uping not found at => %s", productSize));

@@ -9,7 +9,7 @@ public interface PaperMarketRatesService
 {
     PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto);
     List<PaperMarketRatesDto> getAll();
-    List<PaperMarketRatesDto> findByPaperStock(String paperStock);
+    PaperMarketRatesDto findByPaperStock(String paperStock);
     PaperMarketRatesDto findById(Long id);
     String deleteById(Long id);
     PaperMarketRatesDto updatePaperMarketRates(Long id, PaperMarketRates paperMarketRates);

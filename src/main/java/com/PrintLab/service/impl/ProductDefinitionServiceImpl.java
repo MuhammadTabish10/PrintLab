@@ -19,23 +19,19 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     private final ProductDefinitionProcessRepository productDefinitionProcessRepository;
     private final ProductProcessRepository productProcessRepository;
     private final ProductFieldRepository productFieldRepository;
-    private final ProductFieldValuesRepository productFieldValuesRepository;
     private final VendorRepository vendorRepository;
     private final ProductFieldServiceImpl productFieldService;
-    private final ProductFieldValuesServiceImpl productFieldValuesService;
     private final ProductProcessServiceImpl productProcessService;
     private final VendorServiceImpl vendorService;
 
-    public ProductDefinitionServiceImpl(ProductDefinitionRepository productDefinitionRepository, ProductDefinitionFieldRepository productDefinitionFieldRepository, ProductDefinitionProcessRepository productDefinitionProcessRepository, ProductProcessRepository productProcessRepository, ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository, VendorRepository vendorRepository, ProductFieldServiceImpl productFieldService, ProductFieldValuesServiceImpl productFieldValuesService, ProductProcessServiceImpl productProcessService, VendorServiceImpl vendorService) {
+    public ProductDefinitionServiceImpl(ProductDefinitionRepository productDefinitionRepository, ProductDefinitionFieldRepository productDefinitionFieldRepository, ProductDefinitionProcessRepository productDefinitionProcessRepository, ProductProcessRepository productProcessRepository, ProductFieldRepository productFieldRepository, VendorRepository vendorRepository, ProductFieldServiceImpl productFieldService, ProductProcessServiceImpl productProcessService, VendorServiceImpl vendorService) {
         this.productDefinitionRepository = productDefinitionRepository;
         this.productDefinitionFieldRepository = productDefinitionFieldRepository;
         this.productDefinitionProcessRepository = productDefinitionProcessRepository;
         this.productProcessRepository = productProcessRepository;
         this.productFieldRepository = productFieldRepository;
-        this.productFieldValuesRepository = productFieldValuesRepository;
         this.vendorRepository = vendorRepository;
         this.productFieldService = productFieldService;
-        this.productFieldValuesService = productFieldValuesService;
         this.productProcessService = productProcessService;
         this.vendorService = vendorService;
     }
@@ -52,8 +48,6 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             for (ProductDefinitionField productDefinitionField : productDefinitionFieldList) {
                 productDefinitionField.setProductField(productFieldRepository.findById(productDefinitionField.getProductField().getId())
                         .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field not found for id => %d", productDefinitionField.getProductField().getId()))));
-                productDefinitionField.setProductFieldValues(productFieldValuesRepository.findById(productDefinitionField.getProductFieldValues().getId())
-                        .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field Value not found for id => %d",productDefinitionField.getProductFieldValues().getId()))));
                 productDefinitionField.setProductDefinition(createdProductDefinition);
                 productDefinitionFieldRepository.save(productDefinitionField);
             }
@@ -100,16 +94,12 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     }
 
     @Override
-    public List<ProductDefinitionDto> findByTitle(String title) {
-        Optional<List<ProductDefinition>> productDefinitionList = Optional.ofNullable(productDefinitionRepository.findByTitle(title));
-        List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
+    public ProductDefinitionDto findByTitle(String title) {
+        Optional<ProductDefinition> productDefinitionOptional = Optional.ofNullable(productDefinitionRepository.findByTitle(title));
 
-        if(productDefinitionList.isPresent()){
-            for (ProductDefinition productDefinition : productDefinitionList.get()) {
-                ProductDefinitionDto productDefinitionDto = toDto(productDefinition);
-                productDefinitionDtoList.add(productDefinitionDto);
-            }
-            return productDefinitionDtoList;
+        if(productDefinitionOptional.isPresent()){
+            ProductDefinition productDefinition = productDefinitionOptional.get();
+            return toDto(productDefinition);
         }
         else {
             throw new RecordNotFoundException(String.format("ProductDefinition not found at => %s", title));
@@ -192,8 +182,6 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                     existingPdfValue.setValue(newValue.getValue());
                     existingPdfValue.setProductField(productFieldRepository.findById(newValue.getProductField().getId())
                             .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field not found for id => %d", newValue.getProductField().getId()))));
-                    existingPdfValue.setProductFieldValues(productFieldValuesRepository.findById(newValue.getProductFieldValues().getId())
-                            .orElseThrow(()-> new RecordNotFoundException(String.format("Product Field Value not found for id => %d", newValue.getProductFieldValues().getId()))));
                 } else {
                     newValue.setProductDefinition(existingProductDefinition);
                     newValuesOfPdfToAdd.add(newValue);
@@ -305,8 +293,6 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                     .value(productDefinitionField.getValue())
                     .productField(productFieldService.toDto(productFieldRepository.findById(productDefinitionField.getProductField().getId())
                             .orElseThrow(()-> new RecordNotFoundException("Product Field not found"))))
-                    .productFieldValues(productFieldValuesService.toDto(productFieldValuesRepository.findById(productDefinitionField.getProductFieldValues().getId())
-                            .orElseThrow(()-> new RecordNotFoundException("Product Field Value not found"))))
                     .build();
             productDefinitionFieldDto.add(dto);
         }
@@ -347,15 +333,11 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             ProductField productField = ProductField.builder()
                     .id(dto.getProductField().getId())
                     .build();
-            ProductFieldValues productFieldValues = ProductFieldValues.builder()
-                    .id(dto.getProductFieldValues().getId())
-                    .build();
 
             ProductDefinitionField productDefinitionField = ProductDefinitionField.builder()
                     .id(dto.getId())
                     .productDefinition(productDefinition)
                     .productField(productField)
-                    .productFieldValues(productFieldValues)
                     .value(dto.getValue())
                     .build();
 

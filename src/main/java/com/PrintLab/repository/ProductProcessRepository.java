@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ProductProcessRepository extends JpaRepository<ProductProcess,Long>
 {
-    List<ProductProcess> findByName(String name);
+    ProductProcess findByName(String name);
 }

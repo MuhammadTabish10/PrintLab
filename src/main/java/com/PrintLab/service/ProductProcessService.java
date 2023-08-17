@@ -11,7 +11,7 @@ public interface ProductProcessService
     ProductProcessDto save(ProductProcessDto productProcessDto);
     List<ProductProcessDto> getAll();
     ProductProcessDto findById(Long id);
-    List<ProductProcessDto> findByName(String name);
+    ProductProcessDto findByName(String name);
     String deleteById(Long id);
     ProductProcessDto updateProductProcess(Long id, ProductProcess productProcess);
 }

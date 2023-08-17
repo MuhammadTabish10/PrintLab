@@ -19,6 +19,6 @@ public class ProductFieldDto {
     private Integer sequence;
     private Type type;
 
-    private List<ProductFieldValues> productFieldValuesList;
+    private List<ProductFieldValuesDto> productFieldValuesList;
 
 }

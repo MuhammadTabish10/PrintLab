@@ -24,6 +24,16 @@ public class GlobalExceptionHandler
         return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = PressMachineIsNotSelected.class)
+    public ResponseEntity<ErrorMessage<Object>> pressMachineNotSelectedException(PressMachineIsNotSelected ex)
+    {
+        ErrorMessage<Object> errorMessage = ErrorMessage.builder()
+                .error(ex.getMessage())
+                .time(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();

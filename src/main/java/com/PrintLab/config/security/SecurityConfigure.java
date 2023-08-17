@@ -102,6 +102,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/setting/key/{key}").permitAll()
                 .antMatchers(HttpMethod.PUT,"/api/setting/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/setting/{id}").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/printlab-calculator").permitAll()
                 .antMatchers(HttpMethod.GET, "/test").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated()

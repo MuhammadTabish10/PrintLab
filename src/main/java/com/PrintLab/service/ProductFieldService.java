@@ -11,8 +11,7 @@ public interface ProductFieldService {
     ProductFieldDto save(ProductFieldDto productFieldDto);
     List<ProductFieldDto> getAll();
     ProductFieldDto findById(Long id);
-    List<ProductFieldDto> findByName(String name);
-
+    ProductFieldDto findByName(String name);
     List<ProductFieldDto> getProductFieldByProductFieldValueId(Long productFieldValueId);
     String deleteById(Long id);
     ProductFieldDto updatedProductField(Long id, ProductField productField);

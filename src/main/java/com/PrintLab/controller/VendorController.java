@@ -35,9 +35,9 @@ public class VendorController
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<VendorDto>> getVendorByName(@PathVariable String name) {
-        List<VendorDto> vendorDtoList = vendorService.findByName(name);
-        return ResponseEntity.ok(vendorDtoList);
+    public ResponseEntity<VendorDto> getVendorByName(@PathVariable String name) {
+        VendorDto vendorDto = vendorService.findByName(name);
+        return ResponseEntity.ok(vendorDto);
     }
 
     @GetMapping("/{id}/product-process")

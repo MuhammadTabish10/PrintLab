@@ -35,9 +35,9 @@ public class SettingController {
     }
 
     @GetMapping("/key/{key}")
-    public ResponseEntity<List<SettingDto>> getSettingByKey(@PathVariable String key) {
-        List<SettingDto> settingDtoList = settingService.findByKey(key);
-        return ResponseEntity.ok(settingDtoList);
+    public ResponseEntity<SettingDto> getSettingByKey(@PathVariable String key) {
+        SettingDto settingDto = settingService.findByKey(key);
+        return ResponseEntity.ok(settingDto);
     }
 
     @DeleteMapping("/{id}")

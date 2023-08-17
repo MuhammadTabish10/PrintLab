@@ -11,8 +11,7 @@ public interface ProductDefinitionService {
     ProductDefinitionDto save(ProductDefinitionDto productDefinitionDto);
     List<ProductDefinitionDto> getAll();
     ProductDefinitionDto findById(Long id);
-    List<ProductDefinitionDto> findByTitle(String title);
-
+    ProductDefinitionDto findByTitle(String title);
     List<ProductDefinitionDto> getProductDefinitionByProductFieldId(Long productFieldId);
     List<ProductDefinitionDto> getProductDefinitionByProductProcessId(Long productProcessId);
     List<ProductDefinitionDto> getProductDefinitionByVendorId(Long vendorId);

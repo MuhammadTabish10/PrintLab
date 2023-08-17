@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface PaperMarketRatesRepository extends JpaRepository<PaperMarketRates,Long> {
-    List<PaperMarketRates> findByPaperStock(String paperStock);
+    PaperMarketRates findByPaperStock(String paperStock);
+    List<PaperMarketRates> findByPaperStockAndGSMOrderByDateDesc(String paperStock, Integer gsm);
 }

@@ -11,7 +11,4 @@ public class ProductFieldValuesDto {
     private Long id;
     private String name;
     private String status;
-
-    private ProductField productField;
-
 }

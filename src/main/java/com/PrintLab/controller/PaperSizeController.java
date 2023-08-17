@@ -36,8 +36,8 @@ public class PaperSizeController
     }
 
     @GetMapping("/label/{label}")
-    public ResponseEntity<List<PaperSizeDto>> getPaperSizeByLabel(@PathVariable String label) {
-        List<PaperSizeDto> paperSizeDtoList = paperSizeService.findByLabel(label);
+    public ResponseEntity<PaperSizeDto> getPaperSizeByLabel(@PathVariable String label) {
+        PaperSizeDto paperSizeDtoList = paperSizeService.findByLabel(label);
         return ResponseEntity.ok(paperSizeDtoList);
     }
 

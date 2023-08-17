@@ -39,8 +39,8 @@ public class PressMachineController
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<PressMachineDto>> getPressMachineByName(@PathVariable String name) {
-        List<PressMachineDto> pressMachineDtoList = pressMachineService.findByName(name);
+    public ResponseEntity<PressMachineDto> getPressMachineByName(@PathVariable String name) {
+        PressMachineDto pressMachineDtoList = pressMachineService.findByName(name);
         return ResponseEntity.ok(pressMachineDtoList);
     }
 
