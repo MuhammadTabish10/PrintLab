@@ -23,7 +23,6 @@ public class ProductDefinition {
 
     private String title;
     private String status;
-    private Boolean is_public;
 
     @OneToMany(mappedBy = "productDefinition", cascade = CascadeType.ALL)
     private List<ProductDefinitionField> productDefinitionFieldList = new ArrayList<>();

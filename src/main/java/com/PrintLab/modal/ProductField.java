@@ -37,6 +37,4 @@ public class ProductField {
     @OneToMany(mappedBy = "productField", cascade = CascadeType.ALL)
     private List<ProductDefinitionField> productDefinitionFieldList = new ArrayList<>();
 
-    public void setProductDefinition(ProductDefinition productDefinition) {
-    }
 }

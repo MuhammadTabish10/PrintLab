@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -21,6 +22,7 @@ public class ProductDefinitionField {
     private Long id;
 
     private Long value;
+    private Boolean is_public;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

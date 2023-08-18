@@ -35,6 +35,10 @@ public class PressMachineServiceImpl implements PressMachineService {
     @Override
     public PressMachineDto save(PressMachineDto pressMachineDto) {
         PressMachine pressMachine = toEntity(pressMachineDto);
+        if (pressMachine.getIs_selected()) {
+            // If the new press machine is selected, unselect all other machines
+            pressMachineRepository.unselectAllPressMachines();
+        }
         PressMachine createdPressMachine = pressMachineRepository.save(pressMachine);
 
         List<PressMachineSize> pressMachineSize = pressMachine.getPressMachineSize();
@@ -131,6 +135,11 @@ public class PressMachineServiceImpl implements PressMachineService {
             existingPressMachine.setName(pressMachine.getName());
             existingPressMachine.setCtp_rate(pressMachine.getCtp_rate());
             existingPressMachine.setImpression_1000_rate(pressMachine.getImpression_1000_rate());
+
+            if (pressMachine.getIs_selected()) {
+                // If the new press machine is selected, unselect all other machines
+                pressMachineRepository.unselectAllPressMachines();
+            }
             existingPressMachine.setIs_selected(pressMachine.getIs_selected());
 
             List<PressMachineSize> existingPmsValues = existingPressMachine.getPressMachineSize();

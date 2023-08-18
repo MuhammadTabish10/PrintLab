@@ -1,9 +1,10 @@
 package com.PrintLab.service.impl;
 import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.ProductFieldValuesDto;
+import com.PrintLab.dto.VendorDto;
+import com.PrintLab.dto.VendorProcessDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.ProductField;
-import com.PrintLab.modal.ProductFieldValues;
+import com.PrintLab.modal.*;
 import com.PrintLab.repository.ProductFieldValuesRepository;
 import com.PrintLab.service.ProductFieldValuesService;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductFieldValuesServiceImpl implements ProductFieldValuesService {
@@ -104,6 +106,18 @@ public class ProductFieldValuesServiceImpl implements ProductFieldValuesService 
         productFieldValuesDto.setName(productFieldValues.getName());
         productFieldValuesDto.setStatus(productFieldValues.getStatus());
         return productFieldValuesDto;
+    }
+
+    public List<ProductFieldValuesDto> toDtoList(List<ProductFieldValues> productFieldValuesList) {
+        return productFieldValuesList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductFieldValues> toEntityList(List<ProductFieldValuesDto> productFieldValuesDtoList) {
+        return productFieldValuesDtoList.stream()
+                .map(this::toEntity)
+                .collect(Collectors.toList());
     }
 
     public ProductFieldValues toEntity(ProductFieldValuesDto productFieldValuesDto) {

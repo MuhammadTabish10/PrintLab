@@ -11,14 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 public class Calculator
 {
-    private String selectedPressMachine;
     private String selectedProductValue;
-    private String jobColorsFront;
+    private Long jobColorsFront;
     private String sizeValue;
-    private String selectedPaper;
-    private String selectedGsm;
-    private String selectedSheetSizeValue;
+    private String paper;
+    private Long gsm;
+    private String sheetSizeValue;
     private String sideOptionValue;
     private String impositionValue;
-    private String jobColorsBack;
+    private Long jobColorsBack;
 }

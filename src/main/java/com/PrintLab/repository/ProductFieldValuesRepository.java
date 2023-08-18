@@ -11,4 +11,6 @@ import java.util.List;
 public interface ProductFieldValuesRepository extends JpaRepository<ProductFieldValues, Long> {
     List<ProductFieldValues> findByproductField_Id(Long productFieldId);
     ProductFieldValues findByName(String name);
+    ProductFieldValues findByProductFieldAndName(ProductField productField, String name);
+
 }

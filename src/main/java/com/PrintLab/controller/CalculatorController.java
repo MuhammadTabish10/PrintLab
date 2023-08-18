@@ -16,8 +16,8 @@ public class CalculatorController {
         this.calculatorService = calculatorService;
     }
     @PostMapping("/printlab-calculator")
-    public ResponseEntity<String> calculate(@RequestBody Calculator calculator) {
-        String result = calculatorService.Calculate(calculator);
+    public ResponseEntity<Double> calculateMoq(@RequestBody Calculator calculator) {
+        Double result = calculatorService.CalculateMoq(calculator);
         return ResponseEntity.ok(result);
     }
 }

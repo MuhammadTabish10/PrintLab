@@ -16,7 +16,6 @@ public class ProductDefinitionDto {
     private Long id;
     private String title;
     private String status;
-    private Boolean is_public;
     private List<ProductDefinitionFieldDto> productDefinitionFieldList = new ArrayList<>();
     private List<ProductDefinitionProcessDto> productDefinitionProcessDtoList = new ArrayList<>();
 }
