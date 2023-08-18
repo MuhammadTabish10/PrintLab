@@ -191,7 +191,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 if (existingValue.isPresent()) {
                     ProductDefinitionField existingPdfValue = existingValue.get();
                     existingPdfValue.setValue(newValue.getValue());
-                    existingPdfValue.setIs_public(newValue.getIs_public());
+                    existingPdfValue.setIsPublic(newValue.getIsPublic());
                     existingPdfValue.setProductField(productFieldRepository.findById(newValue.getProductField().getId())
                             .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field not found for id => %d", newValue.getProductField().getId()))));
                 } else {
@@ -303,7 +303,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             ProductDefinitionFieldDto dto = ProductDefinitionFieldDto.builder()
                     .id(productDefinitionField.getId())
                     .value(productDefinitionField.getValue())
-                    .is_public(productDefinitionField.getIs_public())
+                    .isPublic(productDefinitionField.getIsPublic())
                     .productField(productFieldService.toDto(productFieldRepository.findById(productDefinitionField.getProductField().getId())
                             .orElseThrow(()-> new RecordNotFoundException("Product Field not found"))))
                     .build();
@@ -350,7 +350,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                     .productDefinition(productDefinition)
                     .productField(productField)
                     .value(dto.getValue())
-                    .is_public(dto.getIs_public())
+                    .isPublic(dto.getIsPublic())
                     .build();
 
             productDefinitionFieldList.add(productDefinitionField);

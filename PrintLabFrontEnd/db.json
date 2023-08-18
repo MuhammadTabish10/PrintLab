@@ -1,0 +1,1109 @@
+{
+  "dashboard-cards": [
+    {
+      "id": 1,
+      "icon": "fa-solid fa-dollar-sign",
+      "title": "Revenue",
+      "price": "$13,456.5",
+      "text": "Shipping fees are not included"
+    },
+    {
+      "id": 2,
+      "icon": "fa-solid fa-cart-shopping",
+      "title": "Orders",
+      "price": "$13,456.5",
+      "text": "Shipping fees are not included"
+    },
+    {
+      "id": 3,
+      "icon": "fa-solid fa-bag-shopping",
+      "title": "Products",
+      "price": "$13,456.5",
+      "text": "Shipping fees are not included"
+    },
+    {
+      "id": 4,
+      "icon": "fa-solid fa-coins",
+      "title": "Earning",
+      "price": "$13,456.5",
+      "text": "Shipping fees are not included"
+    }
+  ],
+  "orders": [],
+  "productField": [
+    {
+      "id": 1,
+      "name": "Title",
+      "type": "TEXTFIELD",
+      "seq": 1
+    },
+    {
+      "id": 2,
+      "name": "Paper Stock",
+      "type": "MULTISELECT",
+      "seq": 1,
+      "productFieldValuesList": [
+        {
+          "id": 1,
+          "name": "Uncoated"
+        },
+        {
+          "id": 2,
+          "name": "Offset"
+        },
+        {
+          "id": 3,
+          "name": "Carbonless"
+        },
+        {
+          "id": 4,
+          "name": "Art paper"
+        },
+        {
+          "id": 5,
+          "name": "Matte paper"
+        },
+        {
+          "id": 6,
+          "name": "Bleach card"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Size",
+      "type": "MULTISELECT",
+      "seq": 2,
+      "productFieldValuesList": [
+        {
+          "id": 1,
+          "name": "DL"
+        },
+        {
+          "id": 2,
+          "name": "A5"
+        },
+        {
+          "id": 3,
+          "name": "A4"
+        },
+        {
+          "id": 4,
+          "name": "A3"
+        },
+        {
+          "id": 5,
+          "name": "A2"
+        },
+        {
+          "id": 6,
+          "name": "A1"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "GSM",
+      "type": "MULTISELECT",
+      "seq": 3,
+      "productFieldValuesList": [
+        {
+          "id": 1,
+          "name": "90"
+        },
+        {
+          "id": 2,
+          "name": "113"
+        },
+        {
+          "id": 3,
+          "name": "128"
+        },
+        {
+          "id": 4,
+          "name": "150"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "QTY",
+      "type": "MULTISELECT",
+      "seq": 4,
+      "productFieldValuesList": [
+        {
+          "id": 1,
+          "name": 1500
+        },
+        {
+          "id": 2,
+          "name": 3000
+        },
+        {
+          "id": 3,
+          "name": 6000
+        },
+        {
+          "id": 4,
+          "name": 9000
+        },
+        {
+          "id": 5,
+          "name": 12000
+        },
+        {
+          "id": 6,
+          "name": 24000
+        },
+        {
+          "id": 7,
+          "name": 70000
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Print side",
+      "type": "MULTISELECT",
+      "seq": 5,
+      "productFieldValuesList": [
+        {
+          "id": 1,
+          "name": "Single side"
+        },
+        {
+          "id": 2,
+          "name": "Double side"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Job color (Front)",
+      "type": "MULTISELECT",
+      "seq": 4,
+      "productFieldValuesList": [
+        {
+          "id": 1,
+          "name": 1
+        },
+        {
+          "id": 2,
+          "name": 2
+        },
+        {
+          "id": 3,
+          "name": 3
+        },
+        {
+          "id": 4,
+          "name": 4
+        },
+        {
+          "id": 5,
+          "name": 5
+        },
+        {
+          "id": 6,
+          "name": 6
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Job color (Back)",
+      "type": "MULTISELECT",
+      "seq": 4,
+      "productFieldValuesList": [
+        {
+          "id": 1,
+          "name": 1
+        },
+        {
+          "id": 2,
+          "name": 2
+        },
+        {
+          "id": 3,
+          "name": 3
+        },
+        {
+          "id": 4,
+          "name": 4
+        },
+        {
+          "id": 5,
+          "name": 5
+        },
+        {
+          "id": 6,
+          "name": 6
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Imposition",
+      "type": "TOGGLE",
+      "seq": 4
+    }
+  ],
+  "productDefinition": [
+    {
+      "productDefinitionField": [
+        {
+          "id": 1,
+          "name": "Title",
+          "value": "Flyer"
+        },
+        {
+          "id": 2,
+          "name": "Paper Stock",
+          "productFieldValuesList": [
+            {
+              "id": 1,
+              "name": "Uncoated"
+            },
+            {
+              "id": 4,
+              "name": "Art paper"
+            },
+            {
+              "id": 2,
+              "name": "Offset"
+            }
+          ],
+          "public": true
+        },
+        {
+          "id": 3,
+          "name": "Size",
+          "productFieldValuesList": [
+            {
+              "id": 3,
+              "name": "A4"
+            },
+            {
+              "id": 2,
+              "name": "A5"
+            }
+          ],
+          "public": true
+        },
+        {
+          "id": 5,
+          "name": "QTY",
+          "productFieldValuesList": [
+            {
+              "id": 3,
+              "name": 6000
+            }
+          ],
+          "public": false
+        },
+        {
+          "id": 6,
+          "name": "Print side",
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": "Double side"
+            }
+          ],
+          "public": false
+        },
+        {
+          "id": 7,
+          "name": "Job color (Front)",
+          "productFieldValuesList": [
+            {
+              "id": 3,
+              "name": 3
+            }
+          ],
+          "public": true
+        },
+        {
+          "id": 8,
+          "name": "Job color (Back)",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 3,
+              "name": 3
+            },
+            {
+              "id": 4,
+              "name": 4
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "Imposition",
+          "value": "Yes"
+        }
+      ],
+      "process": [
+        {
+          "product": {
+            "name": "Lamination",
+            "status": "Active",
+            "id": 3
+          },
+          "vendor": {
+            "name": "Shakeel cutting",
+            "date": "2023-08-01",
+            "contactName": "Shakeel",
+            "contactNumber": 123123,
+            "rate": 30,
+            "address": "Karachi",
+            "notes": "Hello World",
+            "id": 1
+          }
+        },
+        {
+          "product": {
+            "name": "Lamination",
+            "status": "Active",
+            "id": 3
+          },
+          "vendor": {
+            "name": "Shakeel cutting",
+            "date": "2023-08-01",
+            "contactName": "Shakeel",
+            "contactNumber": 123123,
+            "rate": 30,
+            "address": "Karachi",
+            "notes": "Hello World",
+            "id": 1
+          }
+        },
+        {
+          "product": {
+            "name": "Lamination",
+            "status": "Active",
+            "id": 3
+          },
+          "vendor": {
+            "name": "Shakeel cutting",
+            "date": "2023-08-01",
+            "contactName": "Shakeel",
+            "contactNumber": 123123,
+            "rate": 30,
+            "address": "Karachi",
+            "notes": "Hello World",
+            "id": 1
+          }
+        }
+      ],
+      "id": 1
+    },
+    {
+      "productDefinitionField": [
+        {
+          "id": 1,
+          "name": "Title",
+          "value": "BCards"
+        },
+        {
+          "id": 2,
+          "name": "Paper Stock",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 1,
+              "name": "Uncoated"
+            },
+            {
+              "id": 3,
+              "name": "Carbonless"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Size",
+          "public": false,
+          "productFieldValuesList": [
+            {
+              "id": 3,
+              "name": "A4"
+            },
+            {
+              "id": 4,
+              "name": "A3"
+            },
+            {
+              "id": 1,
+              "name": "DL"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "GSM",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": "113"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "QTY",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": 3000
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "Job color (Back)",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 1,
+              "name": 1
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "Imposition",
+          "value": "No"
+        }
+      ],
+      "process": [],
+      "id": 2
+    },
+    {
+      "productDefinitionField": [
+        {
+          "id": 1,
+          "name": "Title",
+          "value": "flyer-b"
+        },
+        {
+          "id": 2,
+          "name": "Paper Stock",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 1,
+              "name": "Uncoated"
+            },
+            {
+              "id": 2,
+              "name": "Offset"
+            },
+            {
+              "id": 4,
+              "name": "Art paper"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Size",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 3,
+              "name": "A4"
+            },
+            {
+              "id": 1,
+              "name": "DL"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "GSM",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 1,
+              "name": "90"
+            },
+            {
+              "id": 3,
+              "name": "128"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "QTY",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 1,
+              "name": 1500
+            },
+            {
+              "id": 2,
+              "name": 3000
+            },
+            {
+              "id": 4,
+              "name": 9000
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "Imposition",
+          "value": "Yes"
+        }
+      ],
+      "process": [
+        {
+          "product": {
+            "name": "CTP",
+            "status": "Active",
+            "id": 2
+          },
+          "vendor": {
+            "name": "Abdullah Paper Mart",
+            "date": "2023-08-04",
+            "contactName": "Abdullah",
+            "contactNumber": 528937589237,
+            "rate": 15,
+            "address": "Multan",
+            "notes": "New vendor",
+            "id": 3
+          }
+        }
+      ],
+      "id": 3
+    },
+    {
+      "productDefinitionField": [
+        {
+          "id": 1,
+          "name": "Title",
+          "value": "Vcards"
+        },
+        {
+          "id": 2,
+          "name": "Paper Stock",
+          "public": false,
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": "Offset"
+            },
+            {
+              "id": 1,
+              "name": "Uncoated"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Size",
+          "public": false,
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": "A5"
+            },
+            {
+              "id": 3,
+              "name": "A4"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "GSM",
+          "public": false,
+          "productFieldValuesList": [
+            {
+              "id": 3,
+              "name": "128"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Job color (Front)",
+          "public": false,
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": 2
+            },
+            {
+              "id": 1,
+              "name": 1
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "Imposition",
+          "value": "Yes"
+        }
+      ],
+      "process": [
+        {
+          "product": {
+            "name": "Lamination",
+            "status": "Active",
+            "id": 3
+          },
+          "vendor": {
+            "name": "Shakeel cutting",
+            "date": "2023-08-01",
+            "contactName": "Shakeel",
+            "contactNumber": 123123,
+            "rate": 30,
+            "address": "Karachi",
+            "notes": "Hello World",
+            "id": 1
+          }
+        },
+        {
+          "product": {
+            "name": "Lamination",
+            "status": "Active",
+            "id": 3
+          },
+          "vendor": {
+            "name": "Abdullah Paper Mart",
+            "date": "2023-08-04",
+            "contactName": "Abdullah",
+            "contactNumber": 528937589237,
+            "rate": 15,
+            "address": "Multan",
+            "notes": "New vendor",
+            "id": 3
+          }
+        }
+      ],
+      "id": 4
+    },
+    {
+      "productDefinitionField": [
+        {
+          "id": 1,
+          "name": "Title",
+          "value": "Flyer-c"
+        },
+        {
+          "id": 2,
+          "name": "Paper Stock",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 3,
+              "name": "Carbonless"
+            },
+            {
+              "id": 1,
+              "name": "Uncoated"
+            },
+            {
+              "id": 2,
+              "name": "Offset"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Size",
+          "public": false,
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": "A5"
+            },
+            {
+              "id": 4,
+              "name": "A3"
+            },
+            {
+              "id": 3,
+              "name": "A4"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "GSM",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": "113"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "QTY",
+          "public": false,
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": 3000
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Print side",
+          "public": true,
+          "productFieldValuesList": [
+            {
+              "id": 1,
+              "name": "Single side"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Job color (Front)",
+          "public": false,
+          "productFieldValuesList": [
+            {
+              "id": 1,
+              "name": 1
+            },
+            {
+              "id": 3,
+              "name": 3
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "Job color (Back)",
+          "public": false,
+          "productFieldValuesList": [
+            {
+              "id": 2,
+              "name": 2
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "Imposition",
+          "value": "Yes"
+        }
+      ],
+      "process": [
+        {
+          "product": {
+            "name": "CTP",
+            "status": "Active",
+            "id": 2
+          },
+          "vendor": {
+            "name": "Asghar Press",
+            "date": "2023-08-03",
+            "contactName": "Asghar",
+            "contactNumber": 4857236,
+            "rate": 23,
+            "address": "Lahore",
+            "notes": "New Vendor",
+            "id": 2
+          }
+        }
+      ],
+      "id": 5
+    }
+  ],
+  "paperMarket": [
+    {
+      "date": "2023-05-04",
+      "paperStock": "Art paper",
+      "gsm": 1,
+      "length": 1,
+      "width": 1,
+      "dimensions": "1'1",
+      "quantity": 1100,
+      "rate": 100,
+      "verified": "No",
+      "notes": "Hello world here",
+      "id": 1
+    },
+    {
+      "date": "2023-07-04",
+      "paperStock": "Offset",
+      "gsm": 99,
+      "length": 6,
+      "width": 4,
+      "dimensions": "6\" x 4\"",
+      "quantity": 45,
+      "rate": 500,
+      "verified": "Yes",
+      "notes": "New Paper rate here",
+      "id": 2
+    }
+  ],
+  "paperSize": [
+    {
+      "label": "18\" x 23\"",
+      "status": "Active",
+      "id": 1
+    },
+    {
+      "label": "23\" x 67\"",
+      "status": "Active",
+      "id": 2
+    },
+    {
+      "label": "12\" x 90\"",
+      "status": "Active",
+      "id": 3
+    },
+    {
+      "label": "18\"x30\"",
+      "status": "Active",
+      "id": 4
+    },
+    {
+      "label": "25\"x36\"",
+      "status": "Active",
+      "id": 5
+    }
+  ],
+  "pressMachine": [
+    {
+      "name": "Held-Berg",
+      "ctpRate": 56.3,
+      "impression1000Rate": 500,
+      "pressMachineSize": [
+        {
+          "label": "18\" x 23\"",
+          "status": "Active",
+          "id": 1,
+          "value": 12
+        },
+        {
+          "label": "23\" x 67\"",
+          "status": "Active",
+          "id": 2,
+          "value": 10
+        },
+        {
+          "label": "12\" x 90\"",
+          "status": "Active",
+          "id": 3,
+          "value": 56
+        }
+      ],
+      "id": 1
+    },
+    {
+      "name": "Solna",
+      "ctpRate": 34.1,
+      "impression1000Rate": 300,
+      "pressMachineSize": [
+        {
+          "label": "12\" x 90\"",
+          "status": "Active",
+          "id": 3,
+          "value": 45
+        }
+      ],
+      "id": 2
+    },
+    {
+      "name": "solar",
+      "ctpRate": 100,
+      "impression1000Rate": 500,
+      "pressMachineSize": [
+        {
+          "label": "25\"x36\"",
+          "status": "Active",
+          "id": 5,
+          "value": 4
+        },
+        {
+          "label": "12\" x 90\"",
+          "status": "Active",
+          "id": 3,
+          "value": 2
+        }
+      ],
+      "id": 3
+    },
+    {
+      "name": "New ",
+      "ctpRate": 90,
+      "impression1000Rate": 77,
+      "pressMachineSize": [
+        {
+          "id": 6,
+          "label": "20x30",
+          "status": "Inactive",
+          "value": 90
+        }
+      ],
+      "id": 4
+    }
+  ],
+  "uping": [
+    {
+      "productSize": "DL",
+      "upingSize": [
+        {
+          "label": "23\" x 67\"",
+          "status": "Active",
+          "id": 2,
+          "value": 1
+        },
+        {
+          "label": "12\" x 90\"",
+          "status": "Active",
+          "id": 3
+        }
+      ],
+      "id": 1
+    },
+    {
+      "productSize": "A4",
+      "upingSize": [
+        {
+          "label": "23\" x 67\"",
+          "status": "Active",
+          "id": 2,
+          "value": 12
+        },
+        {
+          "label": "18\" x 23\"",
+          "status": "Active",
+          "id": 1,
+          "value": 45
+        }
+      ],
+      "id": 2
+    },
+    {
+      "productSize": "A4",
+      "upingSize": [
+        {
+          "label": "18\" x 23\"",
+          "status": "Active",
+          "id": 1,
+          "value": 4
+        },
+        {
+          "label": "25\"x36\"",
+          "status": "Active",
+          "id": 5,
+          "value": 8
+        }
+      ],
+      "id": 3
+    }
+  ],
+  "vendor": [
+    {
+      "name": "Shakeel cutting",
+      "date": "2023-08-01",
+      "contactName": "Shakeel",
+      "contactNumber": 123123,
+      "rate": 30,
+      "address": "Karachi",
+      "notes": "Hello World",
+      "id": 1
+    },
+    {
+      "name": "Asghar Press",
+      "date": "2023-08-03",
+      "contactName": "Asghar",
+      "contactNumber": 4857236,
+      "rate": 23,
+      "address": "Lahore",
+      "notes": "New Vendor",
+      "id": 2
+    },
+    {
+      "name": "Abdullah Paper Mart",
+      "date": "2023-08-04",
+      "contactName": "Abdullah",
+      "contactNumber": 528937589237,
+      "rate": 15,
+      "address": "Multan",
+      "notes": "New vendor",
+      "id": 3
+    },
+    {
+      "name": "",
+      "date": "",
+      "contactName": "",
+      "contactNumber": "",
+      "address": "",
+      "notes": "",
+      "id": 4
+    }
+  ],
+  "productProcess": [
+    {
+      "name": "Slicing",
+      "status": "Active",
+      "id": 1
+    },
+    {
+      "name": "CTP",
+      "status": "Active",
+      "id": 2
+    },
+    {
+      "name": "Lamination",
+      "status": "Active",
+      "id": 3
+    },
+    {
+      "name": "Paper & Board",
+      "status": "Active",
+      "id": 4
+    }
+  ],
+  "customer": [
+    {
+      "name": "Ali Raza",
+      "business": "salon",
+      "id": 1
+    },
+    {
+      "name": "Syed Anas",
+      "business": "Rent a car",
+      "id": 2
+    },
+    {
+      "name": "Ahsan",
+      "business": "Resturant",
+      "id": 3
+    },
+    {
+      "name": "Taha",
+      "business": "Pharmacy",
+      "id": 4
+    }
+  ],
+  "settings": [
+    {
+      "key": "Margin",
+      "value": "0.5555",
+      "id": 1
+    },
+    {
+      "key": "Profit",
+      "value": "20",
+      "id": 2
+    }
+  ]
+}

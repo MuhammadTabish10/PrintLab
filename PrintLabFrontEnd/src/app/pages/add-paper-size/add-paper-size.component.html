@@ -1,0 +1,34 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
+
+    <div class="main-container">
+        <div>
+            <h4>{{buttonName}} Paper Size</h4>
+        </div>
+
+        <div class="order-body py-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Label</label>
+                        <input type="text" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="labelValue" style="border:1px solid #ced4da;" placeholder="Enter Label">
+                    </div>
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Status</label><br>
+                        <label class="switch mt-2">
+                            <input type="checkbox" [checked]="statusFlag" (click)="getstatusValue()">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="col-12 my-3 d-flex justify-content-center mx-0">
+                        <button type="submit" class="btn order-table-btn btn-search-panel w-25"
+                            (click)="addPaperSize()">{{buttonName}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

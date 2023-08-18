@@ -1,0 +1,127 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
+    <div style="background-color: #f8f9fa;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <div class="main-container">
+                        <div>
+                            <h4>Add Order</h4>
+                        </div>
+                        <div class="order-body py-2 px-3">
+                            <div class="my-3">
+                                <label class="add-order-label m-0">Product</label>
+                                <p-dropdown styleClass="w-100" [options]="titleArray" optionLabel="value"
+                                    (onChange)="toggleFields($event.value)" placeholder="Select Product"></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="main-container">
+                        <div class="order-body py-2 px-3">
+                            <div *ngFor="let product of productDefArray;let i = index" class="my-3">
+                                <label class="add-order-label m-0">{{product.name}}</label>
+                                <p-dropdown styleClass="w-100" [options]="product.productFieldValuesList"
+                                    (onChange)="selectProductDef(product,$event.value)" optionLabel="name"
+                                    placeholder="Select Product"></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="main-container">
+                        <div class="order-body py-2 px-3">
+                            <div class="my-3">
+                                <label class="add-order-label m-0">Customer Name</label>
+                                <p-dropdown styleClass="w-100" [options]="customersArray" optionLabel="name"
+                                    (onChange)="toggleCustomer($event.value)"
+                                    placeholder="Select Customer Name"></p-dropdown>
+                            </div>
+                            <div class="my-3" *ngIf="selectedCustomer.business">
+                                <label class="add-order-label m-0">Business Name</label>
+                                <span class="order-search form-control m-0 w-100"
+                                    style="border: 1px solid #ced4da;">{{selectedCustomer.business}}</span>
+                            </div>
+                            <button type="submit" class="btn order-table-btn btn-search-panel w-100"
+                                routerLink='/addCustomer'>Add New Customer
+                            </button>
+                        </div>
+                    </div>
+
+
+
+                    <div class="main-container">
+                        <div class="order-body upload-section">
+                            <div class="text-center" style="padding: 27% 0;">
+                                <button type="submit" class="btn order-table-btn btn-search-panel m-0">Upload Files Here
+                                    &nbsp;&nbsp;<i class="fa-solid fa-upload"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <input type="radio" name="selectDesign"> &nbsp;&nbsp; Will provide Design Later
+                            <br>
+                            <input type="radio" name="selectDesign"> &nbsp;&nbsp; Design by PrintLab
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-6 mt-5 p-3 h-100 invoice">
+                    <h4 class="text-center">Order Summary</h4>
+
+
+                    <div class="my-3">
+                        <h5 class="text-decoration-underline">Order Summary:</h5>
+                        <div>
+                            <span>Product Name: </span>
+                            <span>{{productName}}</span>
+                        </div>
+                        <div *ngFor="let product of selectedProdDefArray">
+                            <span>{{product.name}}: </span>
+                            <span *ngFor="let element of product.productField
+                            ">{{element.name}}</span>
+                        </div>
+                        <div class="mt-4">
+                            <span>Total: </span>
+                            <h6 class="d-inline-block">Rs,</h6>
+                        </div>
+                    </div>
+
+
+
+                    <div class="my-3">
+                        <h5 class="text-decoration-underline">Design Information:</h5>
+                        <span>Customer will provide the design</span>
+                    </div>
+
+                    <div class="my-3">
+                        <h5 class="text-decoration-underline">Customer Information:</h5>
+                        <div>
+                            <div>
+                                <span>Client's Name: </span>
+                                <span>{{selectedCustomer.name}}</span>
+                                <!-- [(ngModel)]="selectedCustomer[0].name" *ngIf="selectedCustomer.length>0" -->
+                            </div>
+                            <div>
+                                <span>Business Name: </span>
+                                <span>{{selectedCustomer.business}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class=" my-3">
+                        <h5 class="text-decoration-underline">Estimated Delivery Date:</h5>
+                        <span class="text-danger">Monday, July 17, 2023</span>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

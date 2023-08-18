@@ -1,0 +1,32 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
+
+    <div class="main-container">
+        <div>
+            <h4>{{buttonName}} Customer</h4>
+        </div>
+
+        <div class="order-body py-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Name</label>
+                        <input type="text" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="nameValue" style="border:1px solid #ced4da;" placeholder="Enter Name">
+                    </div>
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Business Name</label>
+                        <input type="text" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="businessValue" style="border:1px solid #ced4da;" placeholder="Enter Business Name">
+                    </div>
+                    <div class="col-12 my-3 d-flex justify-content-center mx-0">
+                        <button type="submit" class="btn order-table-btn btn-search-panel w-25"
+                            (click)="addCustomer()">{{buttonName}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

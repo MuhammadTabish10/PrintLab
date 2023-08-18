@@ -1,0 +1,53 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
+    <div class="main-container">
+        <div>
+            <h4>Settings</h4>
+        </div>
+
+        <div class="order-body">
+            <div class="order-search-panel">
+                <input type="text" placeholder="Search by Key" class="order-search form-control"
+                    (keyup)="searchSettings($event.target)">
+                <div>
+                    <button type="button" class="btn order-table-btn btn-search-panel" routerLink="/addSettings">
+                        <i class="fa-solid fa-plus"></i>&nbsp;Add
+                    </button>
+                </div>
+            </div>
+            <div class="order-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="w-50 text-lg-center">Key</th>
+                            <th scope="col" class="w-25 text-lg-center">Value</th>
+                            <th scope="col" class="w-25 text-lg-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="order-table-404" colspan="3" *ngIf="tableData">No record
+                                found</td>
+                        </tr>
+                        <tr *ngFor="let setting of settingsArray">
+                            <td scope="col" class="text-lg-center">{{setting.key}}</td>
+                            <td scope="col" class="text-lg-center">{{setting.value}}</td>
+                            <td scope="col" class="text-lg-center">
+                                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                    <button type="button" class="btn order-table-btn"
+                                        (click)="editSettings(setting.id)">
+                                        <i class="fa-solid fa-pen"></i>&nbsp;Edit</button>
+                                    <button type="button" class="btn order-table-btn"
+                                        (click)="deleteSettings(setting.id)">
+                                        <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
+    <div class="main-container">
+        <div>
+            <h4>Orders</h4>
+        </div>
+        <div class="order-body">
+            <div class="order-search-panel">
+                <input type="text" placeholder="Search Order ID" class="order-search form-control"
+                    (keyup)="searchOrder($event.target)">
+                <div>
+                    <div class="dropdown" style="float: right;">
+                        <button class="dropbtn">Status</button>
+                        <div class="dropdown-content">
+                            <span (click)="getOrders()">All</span>
+                            <span (click)="statusSorting(pending)">{{pending}}</span>
+                            <span (click)="statusSorting(recieved)">{{recieved}}</span>
+                            <span (click)="statusSorting(canceled)">{{canceled}}</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn order-table-btn btn-search-panel" (click)="addOrder()">
+                        <i class="fa-solid fa-plus"></i>&nbsp;Add
+                    </button>
+                </div>
+            </div>
+            <div class="order-table">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="order-table-404" colspan="7" *ngIf="tableData">No record
+                                found</td>
+                        </tr>
+                        <tr *ngFor="let order of ordersArray" class="order-table-row-hover">
+                            <th scope="row" class="tracking-id">{{order.id}}</th>
+                            <td>{{order.name}}</td>
+                            <td>{{order.email}}</td>
+                            <td>${{order.price}}</td>
+                            <td>
+                                <span [ngClass]="{'order-table-status-pending': order.status=='Pending',
+                                    'order-table-status-recieved': order.status== 'Recieved',
+                                    'order-table-status-canceled': order.status=='Canceled'}">{{order.status}}</span>
+                            </td>
+                            <td>{{order.date}}</td>
+                            <td class="order-table-btns-container">
+                                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                    <button type="button" class="btn order-table-btn"
+                                        routerLink="/editOrder/{{order.id}}">
+                                        <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                                    </button>
+                                    <!-- <button type="button" class="btn order-table-btn">
+                                        </button> -->
+                                    <button type="button" class="btn order-table-btn" (click)="deleteOrder(order.id)">
+                                        <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

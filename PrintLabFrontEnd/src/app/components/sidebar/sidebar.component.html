@@ -1,0 +1,35 @@
+<nav class="main-menu" style="overflow-y:visible;">
+    <ul>
+        <!-- <li>
+            <span class="px-4" (click)="dashboard()">
+                <img class="w-75 nav-text" src="../../../assets/images/print-lab-logo.png" alt="">
+            </span>
+        </li> -->
+        <li *ngFor="let option of options">
+            <span class="sidebar-list-hover" routerLink="/{{option.link}}">
+                <i class="{{option.icon}}"></i>
+                <h6 class="nav-text">
+                    {{option.name}}
+                </h6>
+            </span>
+        </li>
+        <li>
+            <span class="sidebar-list-hover" (click)="toggleSettings()">
+                <i class="fa fa-bars fa-2x"></i>
+                <span class="nav-text">
+                    Configuration
+                    <i class="fa-solid fa-chevron-down dd-icon-settings" *ngIf="settingFlag == false"></i>
+                    <i class="fa-solid fa-chevron-up dd-icon-settings" *ngIf="settingFlag == true"></i>
+                </span>
+            </span>
+        </li>
+        <li class="settingOptions" *ngFor="let el of configurationOptions">
+            <span routerLink="/{{el.link}}" *ngIf="settingFlag == true" class="sidebar-list-hover-settings">
+                <i class="fa fa-gear fa-2x"></i>
+                <span class="nav-text">
+                    {{el.name}}
+                </span>
+            </span>
+        </li>
+      </ul>
+</nav>

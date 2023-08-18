@@ -32,9 +32,5 @@ public class ProductField {
     private Type type;
 
     @OneToMany(mappedBy = "productField", cascade = CascadeType.ALL)
-    private List<ProductFieldValues> productFieldValuesList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "productField", cascade = CascadeType.ALL)
-    private List<ProductDefinitionField> productDefinitionFieldList = new ArrayList<>();
-
+    private List<ProductFieldValues> productFieldValuesList;
 }

@@ -1,0 +1,77 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
+
+    <div class="main-container">
+        <div>
+            <h4>{{buttonName}} Paper Market</h4>
+        </div>
+
+        <div class="order-body py-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Date</label>
+                        <input type="date" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="dateValue" style="border:1px solid #ced4da;" placeholder="Enter Date">
+                    </div>
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Paper Stock</label>
+                        <input type="text" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="paperStockValue" style="border:1px solid #ced4da;"
+                            placeholder="Enter Paper Stock">
+                    </div>
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">GSM (Grams)</label>
+                        <input type="number" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="gsmValue" style="border:1px solid #ced4da;" placeholder="Enter GSM">
+                    </div>
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Length</label>
+                        <input type="number" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="lengthValue" style="border:1px solid #ced4da;" placeholder="Enter Length">
+                    </div>
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Width</label>
+                        <input type="number" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="widthValue" style="border:1px solid #ced4da;" placeholder="Enter Width">
+                    </div>
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Dimensions</label>
+                        <input type="text" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="dimensionValue" style="border:1px solid #ced4da;"
+                            placeholder="Enter Dimensions">
+                    </div>
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">QTY</label>
+                        <input type="number" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="qtyValue" style="border:1px solid #ced4da;" placeholder="Enter Quantity">
+                    </div>
+                    <div class="col-6 my-3">
+                        <label class="add-order-label m-0">Rate (PKR)</label>
+                        <input type="number" class="order-search form-control order-form-input m-0"
+                            [(ngModel)]="rateValue" style="border:1px solid #ced4da;" placeholder="Enter Rate">
+                    </div>
+                    <div class="col-12 my-3">
+                        <label class="add-order-label m-0">Notes</label>
+                        <textarea class="order-search form-control order-form-input m-0" [(ngModel)]="noteValue"
+                            style="border:1px solid #ced4da;" placeholder="Enter Notes" rows="7"></textarea>
+                    </div>
+                    <div class="col-2 my-3">
+                        <label class="add-order-label m-0">Verified</label><br>
+                        <label class="switch mt-2">
+                            <input type="checkbox" [checked]="verifiedValue" (click)="getVerifiedValue()">
+                            <!--  -->
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="col-10 my-3 d-flex justify-content-center mx-0">
+                        <button type="submit" class="btn order-table-btn btn-search-panel w-25"
+                            (click)="addPapermarketRate()">{{buttonName}} 
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
+
+    <div class="main-container">
+        <div>
+            <h4>Product Definition fields</h4>
+        </div>
+
+        <div *ngFor="let product of productToView">
+            <div class="order-body p-3 my-3">
+                <h3 class="mb-3">Product Definition</h3>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div *ngFor="let field of product.productDefinitionField" class="col-6 my-2">
+                            <div *ngIf="field.name=='Title'">
+                                <h4>{{field.name}}</h4>
+                                <div>{{field.value}}</div>
+                            </div>
+                            <div *ngIf="field.name!='Title' && field.name!='Imposition'">
+                                <h4 class="d-inline-block me-2">{{field.name}}</h4>
+                                <span *ngIf="field.public==true" class="text-danger">Public</span><br>
+                                <span *ngFor="let value of field.productFieldValuesList; let last = last">{{value.name}}
+                                    <ng-container *ngIf="!last">, </ng-container>
+                                </span>
+
+                            </div>
+                            <div *ngIf="field.name=='Imposition'">
+                                <h4>{{field.name}}</h4>
+                                <div>{{field.value}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-body p-3 my-3">
+                <h3 class="mb-3">Process</h3>
+                <div class="container">
+                    <div class="row">
+                        <div *ngFor="let process of product.process" class="col-5 m-2 border border-dark">
+                            <div>Product : {{process.product.name}}</div>
+                            <div>Vendor : {{process.vendor.name}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
