@@ -36,6 +36,9 @@ public class ProductFieldServiceImpl implements ProductFieldService {
         if(productFieldDto.getCreated_at() == null) {
             productFieldDto.setCreated_at(LocalDate.now());
         }
+        if (Type.TOGGLE.equals(productFieldDto.getType()) || Type.TEXTFIELD.equals(productFieldDto.getType())) {
+            productFieldDto.getProductFieldValuesList().clear();
+        }
         ProductField productField = toEntity(productFieldDto);
         ProductField createdProductField = productFieldRepository.save(productField);
 
