@@ -231,6 +231,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
 
                         }
                         newValue.setSelectedValues(selectedValuesToAdd);
+                        productDefinitionFieldRepository.save(newValue);
                     }
 
                 } else {
