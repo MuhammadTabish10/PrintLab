@@ -1,6 +1,5 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.modal.ProductDefinitionField;
 import com.PrintLab.modal.ProductFieldValues;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +14,5 @@ public class ProductDefinitionSelectedValuesDto
 {
     private Long id;
     private String value;
-    private ProductDefinitionField productDefinitionField;
     private ProductFieldValues productFieldValue;
 }

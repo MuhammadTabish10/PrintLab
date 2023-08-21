@@ -200,12 +200,30 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 if (existingValue.isPresent()) {
                     ProductDefinitionField existingPdfValue = existingValue.get();
                     existingPdfValue.setIsPublic(newValue.getIsPublic());
+
                     existingPdfValue.setProductField(productFieldRepository.findById(newValue.getProductField().getId())
                             .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field not found for id => %d", newValue.getProductField().getId()))));
                     List<ProductDefinitionSelectedValues> selectedValuesList = newValue.getSelectedValues();
                     if (selectedValuesList != null && !selectedValuesList.isEmpty()) {
                         List<ProductDefinitionSelectedValues> selectedValuesToAdd = new ArrayList<>();
+
+//                        Optional<ProductDefinitionSelectedValues> productDefinitionSelectedValues = productDefinitionSelectedValuesRepository
+//                                .findById(existingPdfValue.getSelectedValues().getId());
+
+
+
+
                         for (ProductDefinitionSelectedValues selectedValue : selectedValuesList) {
+
+                            Optional<ProductDefinitionSelectedValues> existingProductDefinitionSelectedValuesOptional = productDefinitionSelectedValuesRepository
+                                    .findById(selectedValue.getId());
+
+                            if(existingProductDefinitionSelectedValuesOptional.isPresent()){
+                                ProductDefinitionSelectedValues existingProductDefinitionSelectedValues = existingProductDefinitionSelectedValuesOptional.get();
+                             //   existingProductDefinitionSelectedValues.s
+                            }
+
+
                             if (selectedValue.getValue() == null || selectedValue.getValue().equalsIgnoreCase("")) {
                                 if (selectedValue.getId() != null) {
                                     ProductDefinitionSelectedValues existingSelectedValue = productDefinitionSelectedValuesRepository
@@ -348,14 +366,12 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                             .value(selectedValue.getValue())
                             .productFieldValue(productFieldValuesRepository.findById(selectedValue.getProductFieldValue().getId())
                                     .orElseThrow(() -> new RecordNotFoundException("Selected Product Field Value not found")))
-                            .productDefinitionField(selectedValue.getProductDefinitionField())
                             .build();
 
                 } else {
                     selectedValueDto = ProductDefinitionSelectedValuesDto.builder()
                             .id(selectedValue.getId())
                             .value(selectedValue.getValue())
-                            .productDefinitionField(selectedValue.getProductDefinitionField())
                             .build();
                 }
                 selectedValuesDtoList.add(selectedValueDto);
@@ -410,21 +426,18 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             for (ProductDefinitionSelectedValuesDto selectedValueDto : dto.getSelectedValues()) {
 
                 Optional<ProductFieldValues> productFieldValue = Optional.ofNullable(selectedValueDto.getProductFieldValue());
-                ProductDefinitionField productDefinitionField = selectedValueDto.getProductDefinitionField();
 
                 if (productFieldValue.isPresent()) {
                     ProductDefinitionSelectedValues selectedValue = ProductDefinitionSelectedValues.builder()
                             .id(selectedValueDto.getId())
                             .value(selectedValueDto.getValue())
                             .productFieldValue(productFieldValue.get())
-                            .productDefinitionField(productDefinitionField)
                             .build();
                     selectedValuesList.add(selectedValue);
                 } else {
                     ProductDefinitionSelectedValues selectedValue = ProductDefinitionSelectedValues.builder()
                             .id(selectedValueDto.getId())
                             .value(selectedValueDto.getValue())
-                            .productDefinitionField(productDefinitionField)
                             .build();
                     selectedValuesList.add(selectedValue);
                 }
