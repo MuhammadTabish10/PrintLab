@@ -223,7 +223,6 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                                 ProductDefinitionSelectedValues existingProductDefinitionSelectedValues = existingProductDefinitionSelectedValuesOptional.get();
                                 existingProductDefinitionSelectedValues.setValue(selectedValue.getValue());
                                 existingProductDefinitionSelectedValues.setProductFieldValue(selectedValue.getProductFieldValue());
-                                selectedValuesToAdd.add(existingProductDefinitionSelectedValues);
                                 productDefinitionSelectedValuesRepository.save(existingProductDefinitionSelectedValues);
                             } else {
                                 ProductDefinitionSelectedValues newSelectedValue = ProductDefinitionSelectedValues.builder()
