@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface PaperMarketRatesRepository extends JpaRepository<PaperMarketRates,Long> {
     PaperMarketRates findByPaperStock(String paperStock);
-    List<PaperMarketRates> findByPaperStockAndGSMOrderByDateDesc(String paperStock, Integer gsm);
+    List<PaperMarketRates> findByPaperStockAndGSMAndDimensionOrderByDateDesc(String paperStock, Integer gsm, String dimension);
 }

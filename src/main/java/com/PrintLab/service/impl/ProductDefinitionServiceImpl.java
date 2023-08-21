@@ -19,68 +19,78 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     private final ProductDefinitionProcessRepository productDefinitionProcessRepository;
     private final ProductProcessRepository productProcessRepository;
     private final ProductFieldRepository productFieldRepository;
+    private final ProductDefinitionSelectedValuesRepository productDefinitionSelectedValuesRepository;
     private final ProductFieldValuesRepository productFieldValuesRepository;
-    private final ProductFieldValuesServiceImpl productFieldValuesService;
     private final VendorRepository vendorRepository;
     private final ProductFieldServiceImpl productFieldService;
     private final ProductProcessServiceImpl productProcessService;
     private final VendorServiceImpl vendorService;
 
-    public ProductDefinitionServiceImpl(ProductDefinitionRepository productDefinitionRepository, ProductDefinitionFieldRepository productDefinitionFieldRepository, ProductDefinitionProcessRepository productDefinitionProcessRepository, ProductProcessRepository productProcessRepository, ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository, ProductFieldValuesServiceImpl productFieldValuesService, VendorRepository vendorRepository, ProductFieldServiceImpl productFieldService, ProductProcessServiceImpl productProcessService, VendorServiceImpl vendorService) {
+    public ProductDefinitionServiceImpl(ProductDefinitionRepository productDefinitionRepository, ProductDefinitionFieldRepository productDefinitionFieldRepository, ProductDefinitionProcessRepository productDefinitionProcessRepository, ProductProcessRepository productProcessRepository, ProductFieldRepository productFieldRepository, ProductDefinitionSelectedValuesRepository productDefinitionSelectedValuesRepository, ProductFieldValuesRepository productFieldValuesRepository, VendorRepository vendorRepository, ProductFieldServiceImpl productFieldService, ProductProcessServiceImpl productProcessService, VendorServiceImpl vendorService) {
         this.productDefinitionRepository = productDefinitionRepository;
         this.productDefinitionFieldRepository = productDefinitionFieldRepository;
         this.productDefinitionProcessRepository = productDefinitionProcessRepository;
         this.productProcessRepository = productProcessRepository;
         this.productFieldRepository = productFieldRepository;
+        this.productDefinitionSelectedValuesRepository = productDefinitionSelectedValuesRepository;
         this.productFieldValuesRepository = productFieldValuesRepository;
-        this.productFieldValuesService = productFieldValuesService;
         this.vendorRepository = vendorRepository;
         this.productFieldService = productFieldService;
         this.productProcessService = productProcessService;
         this.vendorService = vendorService;
     }
 
-
     @Transactional
     @Override
     public ProductDefinitionDto save(ProductDefinitionDto productDefinitionDto) {
-        try {
-            ProductDefinition productDefinition = toEntity(productDefinitionDto);
-            ProductDefinition createdProductDefinition = productDefinitionRepository.save(productDefinition);
+        ProductDefinition productDefinition = toEntity(productDefinitionDto);
+        ProductDefinition createdProductDefinition = productDefinitionRepository.save(productDefinition);
 
-            List<ProductDefinitionField> productDefinitionFieldList = productDefinition.getProductDefinitionFieldList();
-            if (productDefinitionFieldList != null && !productDefinitionFieldList.isEmpty()) {
-                for (ProductDefinitionField productDefinitionField : productDefinitionFieldList) {
-                    productDefinitionField.setProductField(productFieldRepository.findById(productDefinitionField.getProductField().getId())
-                            .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field not found for id => %d", productDefinitionField.getProductField().getId()))));
-                    productDefinitionField.setProductDefinition(createdProductDefinition);
-                    productDefinitionFieldRepository.save(productDefinitionField);
+        List<ProductDefinitionField> productDefinitionFieldList = createdProductDefinition.getProductDefinitionFieldList();
+        for (ProductDefinitionField productDefinitionField : createdProductDefinition.getProductDefinitionFieldList()) {
+            ProductField productField = productFieldRepository.findById(productDefinitionField.getProductField().getId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field not found for id => %d", productDefinitionField.getProductField().getId())));
+
+            productDefinitionField.setProductDefinition(createdProductDefinition);
+            productDefinitionField.setProductField(productField);
+
+            for (ProductDefinitionSelectedValues selectedValue : productDefinitionField.getSelectedValues()) {
+                ProductFieldValues productFieldValue = productFieldValuesRepository.findById(selectedValue.getProductFieldValue().getId())
+                        .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field Value is not found for id => %d", selectedValue.getProductFieldValue().getId())));
+
+                if (selectedValue.getValue() == null || selectedValue.getValue().equalsIgnoreCase("")) {
+                    if (productDefinitionField.getProductField().getProductFieldValuesList().contains(productFieldValue)) {
+                        selectedValue.setProductDefinitionField(productDefinitionField);
+                        selectedValue.setProductFieldValue(productFieldValue);
+                        productDefinitionSelectedValuesRepository.save(selectedValue);
+                    } else {
+                        throw new RecordNotFoundException("Selected ProductFieldValue not found in ProductField");
+                    }
+                } else {
+                    selectedValue.setProductDefinitionField(productDefinitionField);
+                    createdProductDefinition.getProductDefinitionFieldList().forEach(pDF -> pDF.getSelectedValues().forEach(s -> s.setValue(selectedValue.getValue())));
+                    productDefinitionSelectedValuesRepository.save(selectedValue);
                 }
             }
-
-            List<ProductDefinitionProcess> productDefinitionProcessList = productDefinition.getProductDefinitionProcessList();
-            if (productDefinitionProcessList != null && !productDefinitionProcessList.isEmpty()) {
-                for (ProductDefinitionProcess productDefinitionProcess : productDefinitionProcessList) {
-                    productDefinitionProcess.setProductProcess(productProcessRepository.findById(productDefinitionProcess.getProductProcess().getId())
-                            .orElseThrow(() -> new RecordNotFoundException(String.format("Product Process not found for id => %d", productDefinitionProcess.getProductProcess().getId()))));
-                    productDefinitionProcess.setVendor(vendorRepository.findById(productDefinitionProcess.getVendor().getId())
-                            .orElseThrow(() -> new RecordNotFoundException(String.format("Vendor not found for id => %d", productDefinitionProcess.getVendor().getId()))));
-                    productDefinitionProcess.setProductDefinition(createdProductDefinition);
-                    productDefinitionProcessRepository.save(productDefinitionProcess);
-                }
-            }
-            createdProductDefinition.setProductDefinitionFieldList(productDefinitionFieldList);
-            createdProductDefinition.setProductDefinitionProcessList(productDefinitionProcessList);
-            productDefinitionRepository.save(createdProductDefinition);
-
-            return toDto(createdProductDefinition);
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
-        return productDefinitionDto;
+
+        List<ProductDefinitionProcess> productDefinitionProcessList = productDefinition.getProductDefinitionProcessList();
+        if (productDefinitionProcessList != null && !productDefinitionProcessList.isEmpty()) {
+            for (ProductDefinitionProcess productDefinitionProcess : productDefinitionProcessList) {
+                productDefinitionProcess.setProductProcess(productProcessRepository.findById(productDefinitionProcess.getProductProcess().getId())
+                        .orElseThrow(() -> new RecordNotFoundException(String.format("Product Process not found for id => %d", productDefinitionProcess.getProductProcess().getId()))));
+                productDefinitionProcess.setVendor(vendorRepository.findById(productDefinitionProcess.getVendor().getId())
+                        .orElseThrow(() -> new RecordNotFoundException(String.format("Vendor not found for id => %d", productDefinitionProcess.getVendor().getId()))));
+                productDefinitionProcess.setProductDefinition(createdProductDefinition);
+                productDefinitionProcessRepository.save(productDefinitionProcess);
+            }
+        }
+        createdProductDefinition.setProductDefinitionFieldList(productDefinitionFieldList);
+        createdProductDefinition.setProductDefinitionProcessList(productDefinitionProcessList);
+        ProductDefinition newProductDefinition = productDefinitionRepository.save(createdProductDefinition);
+
+        return toDto(newProductDefinition);
     }
-
-
 
 
     @Override
@@ -109,11 +119,10 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     public ProductDefinitionDto findByTitle(String title) {
         Optional<ProductDefinition> productDefinitionOptional = Optional.ofNullable(productDefinitionRepository.findByTitle(title));
 
-        if(productDefinitionOptional.isPresent()){
+        if (productDefinitionOptional.isPresent()) {
             ProductDefinition productDefinition = productDefinitionOptional.get();
             return toDto(productDefinition);
-        }
-        else {
+        } else {
             throw new RecordNotFoundException(String.format("ProductDefinition not found at => %s", title));
         }
     }
@@ -121,7 +130,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     @Override
     public List<ProductDefinitionDto> getProductDefinitionByProductFieldId(Long productFieldId) {
         Optional<List<ProductDefinition>> optionalProductDefinitionList = Optional.ofNullable(productDefinitionRepository.findByProductDefinitionFieldList_ProductField_Id(productFieldId));
-        if(optionalProductDefinitionList.isPresent()){
+        if (optionalProductDefinitionList.isPresent()) {
             List<ProductDefinition> productDefinitionList = optionalProductDefinitionList.get();
             List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
 
@@ -130,7 +139,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 productDefinitionDtoList.add(productDefinitionDto);
             }
             return productDefinitionDtoList;
-        } else{
+        } else {
             throw new RecordNotFoundException(String.format("ProductDefinition not found on ProductField id => %d", productFieldId));
         }
     }
@@ -138,7 +147,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     @Override
     public List<ProductDefinitionDto> getProductDefinitionByProductProcessId(Long productProcessId) {
         Optional<List<ProductDefinition>> optionalProductDefinitionList = Optional.ofNullable(productDefinitionRepository.findByProductDefinitionProcessList_ProductProcess_Id(productProcessId));
-        if(optionalProductDefinitionList.isPresent()){
+        if (optionalProductDefinitionList.isPresent()) {
             List<ProductDefinition> productDefinitionList = optionalProductDefinitionList.get();
             List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
 
@@ -147,7 +156,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 productDefinitionDtoList.add(productDefinitionDto);
             }
             return productDefinitionDtoList;
-        } else{
+        } else {
             throw new RecordNotFoundException(String.format("ProductDefinition not found on ProductProcess id => %d", productProcessId));
         }
     }
@@ -155,7 +164,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     @Override
     public List<ProductDefinitionDto> getProductDefinitionByVendorId(Long vendorId) {
         Optional<List<ProductDefinition>> optionalProductDefinitionList = Optional.ofNullable(productDefinitionRepository.findByProductDefinitionProcessList_Vendor_Id(vendorId));
-        if(optionalProductDefinitionList.isPresent()){
+        if (optionalProductDefinitionList.isPresent()) {
             List<ProductDefinition> productDefinitionList = optionalProductDefinitionList.get();
             List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
 
@@ -164,7 +173,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 productDefinitionDtoList.add(productDefinitionDto);
             }
             return productDefinitionDtoList;
-        } else{
+        } else {
             throw new RecordNotFoundException(String.format("ProductDefinition not found on Vendor id => %d", vendorId));
         }
     }
@@ -190,10 +199,40 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                         .filter(value -> value.getId().equals(newValue.getId())).findFirst();
                 if (existingValue.isPresent()) {
                     ProductDefinitionField existingPdfValue = existingValue.get();
-                    existingPdfValue.setValue(newValue.getValue());
                     existingPdfValue.setIsPublic(newValue.getIsPublic());
                     existingPdfValue.setProductField(productFieldRepository.findById(newValue.getProductField().getId())
                             .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field not found for id => %d", newValue.getProductField().getId()))));
+                    List<ProductDefinitionSelectedValues> selectedValuesList = newValue.getSelectedValues();
+                    if (selectedValuesList != null && !selectedValuesList.isEmpty()) {
+                        List<ProductDefinitionSelectedValues> selectedValuesToAdd = new ArrayList<>();
+                        for (ProductDefinitionSelectedValues selectedValue : selectedValuesList) {
+                            if (selectedValue.getValue() == null || selectedValue.getValue().equalsIgnoreCase("")) {
+                                if (selectedValue.getId() != null) {
+                                    ProductDefinitionSelectedValues existingSelectedValue = productDefinitionSelectedValuesRepository
+                                            .findById(selectedValue.getProductFieldValue().getId())
+                                            .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field Value not found for id => %d", selectedValue.getProductFieldValue().getId())));
+
+                                    existingSelectedValue.setProductFieldValue(selectedValue.getProductFieldValue());
+
+                                    productDefinitionSelectedValuesRepository.save(selectedValue);
+                                } else {
+                                    ProductDefinitionSelectedValues newSelectedValue = ProductDefinitionSelectedValues.builder()
+                                            .value(selectedValue.getValue())
+                                            .productFieldValue(selectedValue.getProductFieldValue())
+                                            .productDefinitionField(selectedValue.getProductDefinitionField())
+                                            .build();
+                                    selectedValuesToAdd.add(newSelectedValue);
+                                    productDefinitionSelectedValuesRepository.save(newSelectedValue);
+                                }
+
+                            } else {
+                                productDefinitionSelectedValuesRepository.deleteById(selectedValue.getId());
+                            }
+
+                        }
+                        newValue.setSelectedValues(selectedValuesToAdd);
+                    }
+
                 } else {
                     newValue.setProductDefinition(existingProductDefinition);
                     newValuesOfPdfToAdd.add(newValue);
@@ -242,8 +281,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         if (optionalProductDefinition.isPresent()) {
             ProductDefinition productDefinition = optionalProductDefinition.get();
             productDefinitionRepository.deleteById(id);
-        }
-        else{
+        } else {
             throw new RecordNotFoundException(String.format("Product Definition not found for id => %d", id));
         }
     }
@@ -264,7 +302,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 productDefinition.getProductDefinitionFieldList().remove(productDefinitionFieldToDelete);
                 productDefinitionFieldRepository.delete(productDefinitionFieldToDelete);
                 productDefinitionRepository.save(productDefinition);
-            } else{
+            } else {
                 throw new RecordNotFoundException("Product Definition Field not found");
             }
         } else {
@@ -288,7 +326,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 productDefinition.getProductDefinitionProcessList().remove(productDefinitionProcessToDelete);
                 productDefinitionProcessRepository.delete(productDefinitionProcessToDelete);
                 productDefinitionRepository.save(productDefinition);
-            } else{
+            } else {
                 throw new RecordNotFoundException("Product Definition Process not found");
             }
         } else {
@@ -296,28 +334,50 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         }
     }
 
-    public ProductDefinitionDto toDto(ProductDefinition productDefinition)
-    {
+    public ProductDefinitionDto toDto(ProductDefinition productDefinition) {
         List<ProductDefinitionFieldDto> productDefinitionFieldDto = new ArrayList<>();
         for (ProductDefinitionField productDefinitionField : productDefinition.getProductDefinitionFieldList()) {
+
+            List<ProductDefinitionSelectedValuesDto> selectedValuesDtoList = new ArrayList<>();
+            for (ProductDefinitionSelectedValues selectedValue : productDefinitionField.getSelectedValues()) {
+                ProductDefinitionSelectedValuesDto selectedValueDto;
+                if (selectedValue.getValue() == null || selectedValue.getValue().equalsIgnoreCase("")) {
+                    selectedValueDto = ProductDefinitionSelectedValuesDto.builder()
+                            .id(selectedValue.getId())
+                            .value(selectedValue.getValue())
+                            .productFieldValue(productFieldValuesRepository.findById(selectedValue.getProductFieldValue().getId())
+                                    .orElseThrow(() -> new RecordNotFoundException("Selected Product Field Value not found")))
+                            .productDefinitionField(selectedValue.getProductDefinitionField())
+                            .build();
+
+                } else {
+                    selectedValueDto = ProductDefinitionSelectedValuesDto.builder()
+                            .id(selectedValue.getId())
+                            .value(selectedValue.getValue())
+                            .productDefinitionField(selectedValue.getProductDefinitionField())
+                            .build();
+                }
+                selectedValuesDtoList.add(selectedValueDto);
+            }
+
             ProductDefinitionFieldDto dto = ProductDefinitionFieldDto.builder()
                     .id(productDefinitionField.getId())
-                    .value(productDefinitionField.getValue())
                     .isPublic(productDefinitionField.getIsPublic())
                     .productField(productFieldService.toDto(productFieldRepository.findById(productDefinitionField.getProductField().getId())
-                            .orElseThrow(()-> new RecordNotFoundException("Product Field not found"))))
+                            .orElseThrow(() -> new RecordNotFoundException("Product Field not found"))))
+                    .selectedValues(selectedValuesDtoList)
                     .build();
             productDefinitionFieldDto.add(dto);
         }
 
         List<ProductDefinitionProcessDto> productDefinitionProcessDto = new ArrayList<>();
-        for(ProductDefinitionProcess productDefinitionProcess : productDefinition.getProductDefinitionProcessList()) {
+        for (ProductDefinitionProcess productDefinitionProcess : productDefinition.getProductDefinitionProcessList()) {
             ProductDefinitionProcessDto dto = ProductDefinitionProcessDto.builder()
                     .id(productDefinitionProcess.getId())
                     .productProcess(productProcessService.toDto(productProcessRepository.findById(productDefinitionProcess.getProductProcess().getId())
-                            .orElseThrow(()-> new RecordNotFoundException("Product Process not found"))))
+                            .orElseThrow(() -> new RecordNotFoundException("Product Process not found"))))
                     .vendor(vendorService.toDto(vendorRepository.findById(productDefinitionProcess.getVendor().getId())
-                            .orElseThrow(()-> new RecordNotFoundException("Vendor not found"))))
+                            .orElseThrow(() -> new RecordNotFoundException("Vendor not found"))))
                     .build();
             productDefinitionProcessDto.add(dto);
         }
@@ -327,7 +387,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 .title(productDefinition.getTitle())
                 .status(productDefinition.getStatus())
                 .productDefinitionFieldList(productDefinitionFieldDto)
-                .productDefinitionProcessDtoList(productDefinitionProcessDto)
+                .productDefinitionProcessList(productDefinitionProcessDto)
                 .build();
     }
 
@@ -345,19 +405,44 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                     .id(dto.getProductField().getId())
                     .build();
 
+            List<ProductDefinitionSelectedValues> selectedValuesList = new ArrayList<>();
+            for (ProductDefinitionSelectedValuesDto selectedValueDto : dto.getSelectedValues()) {
+
+                Optional<ProductFieldValues> productFieldValue = Optional.ofNullable(selectedValueDto.getProductFieldValue());
+                ProductDefinitionField productDefinitionField = selectedValueDto.getProductDefinitionField();
+
+                if (productFieldValue.isPresent()) {
+                    ProductDefinitionSelectedValues selectedValue = ProductDefinitionSelectedValues.builder()
+                            .id(selectedValueDto.getId())
+                            .value(selectedValueDto.getValue())
+                            .productFieldValue(productFieldValue.get())
+                            .productDefinitionField(productDefinitionField)
+                            .build();
+                    selectedValuesList.add(selectedValue);
+                } else {
+                    ProductDefinitionSelectedValues selectedValue = ProductDefinitionSelectedValues.builder()
+                            .id(selectedValueDto.getId())
+                            .value(selectedValueDto.getValue())
+                            .productDefinitionField(productDefinitionField)
+                            .build();
+                    selectedValuesList.add(selectedValue);
+                }
+            }
+
             ProductDefinitionField productDefinitionField = ProductDefinitionField.builder()
                     .id(dto.getId())
                     .productDefinition(productDefinition)
                     .productField(productField)
-                    .value(dto.getValue())
                     .isPublic(dto.getIsPublic())
+                    .selectedValues(selectedValuesList)
                     .build();
 
             productDefinitionFieldList.add(productDefinitionField);
         }
+        productDefinition.setProductDefinitionFieldList(productDefinitionFieldList);
 
         List<ProductDefinitionProcess> productDefinitionProcessList = new ArrayList<>();
-        for (ProductDefinitionProcessDto dto : productDefinitionDto.getProductDefinitionProcessDtoList()) {
+        for (ProductDefinitionProcessDto dto : productDefinitionDto.getProductDefinitionProcessList()) {
             Vendor vendor = Vendor.builder()
                     .id(dto.getVendor().getId())
                     .build();
@@ -375,9 +460,9 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
 
             productDefinitionProcessList.add(productDefinitionProcess);
         }
-
-        productDefinition.setProductDefinitionFieldList(productDefinitionFieldList);
         productDefinition.setProductDefinitionProcessList(productDefinitionProcessList);
+
         return productDefinition;
     }
+
 }

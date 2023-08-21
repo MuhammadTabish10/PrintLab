@@ -2,8 +2,6 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.ProductFieldValuesDto;
-import com.PrintLab.dto.VendorDto;
-import com.PrintLab.dto.VendorProcessDto;
 import com.PrintLab.dto.projectEnums.Type;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.*;
@@ -21,12 +19,10 @@ public class ProductFieldServiceImpl implements ProductFieldService {
 
     private final ProductFieldRepository productFieldRepository;
     private final ProductFieldValuesRepository productFieldValuesRepository;
-    private final ProductFieldValuesServiceImpl productFieldValueService;
 
-    public ProductFieldServiceImpl(ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository, ProductFieldValuesServiceImpl productFieldValueService) {
+    public ProductFieldServiceImpl(ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository) {
         this.productFieldRepository = productFieldRepository;
         this.productFieldValuesRepository = productFieldValuesRepository;
-        this.productFieldValueService = productFieldValueService;
     }
 
 

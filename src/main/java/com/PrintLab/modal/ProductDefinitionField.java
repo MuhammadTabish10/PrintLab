@@ -18,7 +18,6 @@ public class ProductDefinitionField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long value;
     private Boolean isPublic;
 
     @JsonIgnore
@@ -26,10 +25,11 @@ public class ProductDefinitionField {
     @JoinColumn(name = "product_definition_id")
     private ProductDefinition productDefinition;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_field_id")
     private ProductField productField;
 
-    @OneToMany(mappedBy = "productDefinitionField", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productDefinitionField")
     private List<ProductDefinitionSelectedValues> selectedValues;
 }

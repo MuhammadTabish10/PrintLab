@@ -131,16 +131,16 @@ public class CalculatorServiceImpl implements CalculatorService {
 
 
         // CALCULATIONS OF PAPER MART
-        // Searching Paper Market Rates by PaperStock, GSM and getting the latest Paper Market Rates
-        Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMOrderByDateDesc(calculator.getPaper(), Math.toIntExact(calculator.getGsm()))
+        // Searching Paper Market Rates by PaperStock, GSM and Dimension and getting the latest Paper Market Rates
+        Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMAndDimensionOrderByDateDesc(calculator.getPaper(), Math.toIntExact(calculator.getGsm()), calculator.getSheetSizeValue())
                                                             .stream().findFirst();
         if(!optionalPaperMarketRates.isPresent()){
-            throw new RecordNotFoundException("Paper Market Rates not found for paper: " + calculator.getPaper());
+            throw new RecordNotFoundException("Paper Market Rates not found for paper, gsm, sheetsize: " + calculator.getPaper() + ", " + calculator.getGsm() + ", " + calculator.getSheetSizeValue());
         }
         logger.info("Paper Market Rates found");
 
         PaperMarketRates paperMarketRates = optionalPaperMarketRates.get();
-        logger.info("date and name and gsm: " + paperMarketRates.getDate() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM());
+        logger.info("date and name and gsm and sheetsize: " + paperMarketRates.getDate() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM() + " " + paperMarketRates.getDimension());
 
 
         // Dividing paper rate with qty and multiplying with sheets

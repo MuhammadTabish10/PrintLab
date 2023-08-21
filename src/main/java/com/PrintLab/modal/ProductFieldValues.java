@@ -24,3 +24,4 @@ public class ProductFieldValues {
     @JoinColumn(name = "product_field_id")
     private ProductField productField;
 }
+

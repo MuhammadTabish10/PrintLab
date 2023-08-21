@@ -15,8 +15,7 @@ import java.util.List;
 public class ProductDefinitionFieldDto
 {
     private Long id;
-    private Long value;
     private Boolean isPublic;
     private ProductFieldDto productField;
-    private List<ProductFieldValuesDto> productFieldValues;
+    private List<ProductDefinitionSelectedValuesDto> selectedValues;
 }

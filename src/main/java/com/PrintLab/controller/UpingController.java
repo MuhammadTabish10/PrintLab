@@ -1,8 +1,6 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.UpingDto;
-import com.PrintLab.dto.VendorDto;
 import com.PrintLab.service.UpingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

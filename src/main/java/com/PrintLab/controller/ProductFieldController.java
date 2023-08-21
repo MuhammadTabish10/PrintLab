@@ -1,8 +1,6 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.ProductFieldDto;
-import com.PrintLab.dto.UpingDto;
 import com.PrintLab.modal.ProductField;
 import com.PrintLab.service.ProductFieldService;
 import org.springframework.http.ResponseEntity;

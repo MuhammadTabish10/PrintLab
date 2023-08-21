@@ -1,8 +1,6 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.ProductFieldValuesDto;
-import com.PrintLab.modal.ProductField;
 import com.PrintLab.modal.ProductFieldValues;
 import com.PrintLab.service.ProductFieldValuesService;
 import org.springframework.http.HttpStatus;

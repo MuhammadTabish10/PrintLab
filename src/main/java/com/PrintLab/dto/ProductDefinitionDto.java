@@ -14,7 +14,7 @@ import java.util.List;
 public class ProductDefinitionDto {
     private Long id;
     private String title;
-    private String status;
+    private Boolean status;
     private List<ProductDefinitionFieldDto> productDefinitionFieldList;
-    private List<ProductDefinitionProcessDto> productDefinitionProcessDtoList;
+    private List<ProductDefinitionProcessDto> productDefinitionProcessList;
 }

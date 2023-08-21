@@ -1,5 +1,6 @@
 package com.PrintLab.modal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,11 +20,13 @@ public class ProductDefinitionSelectedValues
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_definition_field_id")
     private ProductDefinitionField productDefinitionField;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne()
     @JoinColumn(name = "product_field_values_id")
     private ProductFieldValues productFieldValue;
 

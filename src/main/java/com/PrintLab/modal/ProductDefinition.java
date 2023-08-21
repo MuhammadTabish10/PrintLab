@@ -22,7 +22,7 @@ public class ProductDefinition {
     private Long id;
 
     private String title;
-    private String status;
+    private Boolean status;
 
     @OneToMany(mappedBy = "productDefinition", cascade = CascadeType.ALL)
     private List<ProductDefinitionField> productDefinitionFieldList = new ArrayList<>();
