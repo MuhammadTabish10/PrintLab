@@ -200,6 +200,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 if (existingValue.isPresent()) {
                     ProductDefinitionField existingPdfValue = existingValue.get();
                     existingPdfValue.setIsPublic(newValue.getIsPublic());
+                    existingPdfValue.setSelectedValues(newValue.getSelectedValues());
 
                     existingPdfValue.setProductField(productFieldRepository.findById(newValue.getProductField().getId())
                             .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field not found for id => %d", newValue.getProductField().getId()))));
@@ -220,32 +221,40 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
 
                             if(existingProductDefinitionSelectedValuesOptional.isPresent()){
                                 ProductDefinitionSelectedValues existingProductDefinitionSelectedValues = existingProductDefinitionSelectedValuesOptional.get();
-                             //   existingProductDefinitionSelectedValues.s
-                            }
-
-
-                            if (selectedValue.getValue() == null || selectedValue.getValue().equalsIgnoreCase("")) {
-                                if (selectedValue.getId() != null) {
-                                    ProductDefinitionSelectedValues existingSelectedValue = productDefinitionSelectedValuesRepository
-                                            .findById(selectedValue.getProductFieldValue().getId())
-                                            .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field Value not found for id => %d", selectedValue.getProductFieldValue().getId())));
-
-                                    existingSelectedValue.setProductFieldValue(selectedValue.getProductFieldValue());
-
-                                    productDefinitionSelectedValuesRepository.save(selectedValue);
-                                } else {
-                                    ProductDefinitionSelectedValues newSelectedValue = ProductDefinitionSelectedValues.builder()
-                                            .value(selectedValue.getValue())
-                                            .productFieldValue(selectedValue.getProductFieldValue())
-                                            .productDefinitionField(selectedValue.getProductDefinitionField())
-                                            .build();
-                                    selectedValuesToAdd.add(newSelectedValue);
-                                    productDefinitionSelectedValuesRepository.save(newSelectedValue);
-                                }
-
+                                existingProductDefinitionSelectedValues.setValue(selectedValue.getValue());
+                                existingProductDefinitionSelectedValues.setProductFieldValue(selectedValue.getProductFieldValue());
+                                selectedValuesToAdd.add(existingProductDefinitionSelectedValues);
+                                productDefinitionSelectedValuesRepository.save(existingProductDefinitionSelectedValues);
                             } else {
-                                productDefinitionSelectedValuesRepository.deleteById(selectedValue.getId());
+                                ProductDefinitionSelectedValues newSelectedValue = ProductDefinitionSelectedValues.builder()
+                                        .value(selectedValue.getValue())
+                                        .productFieldValue(selectedValue.getProductFieldValue())
+                                        .build();
+                                selectedValuesToAdd.add(newSelectedValue);
+                                productDefinitionSelectedValuesRepository.save(newSelectedValue);
                             }
+
+//                            if (selectedValue.getValue() == null || selectedValue.getValue().equalsIgnoreCase("")) {
+//                                if (selectedValue.getId() != null) {
+//                                    ProductDefinitionSelectedValues existingSelectedValue = productDefinitionSelectedValuesRepository
+//                                            .findById(selectedValue.getProductFieldValue().getId())
+//                                            .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field Value not found for id => %d", selectedValue.getProductFieldValue().getId())));
+//
+//                                    existingSelectedValue.setProductFieldValue(selectedValue.getProductFieldValue());
+//
+//                                    productDefinitionSelectedValuesRepository.save(selectedValue);
+//                                } else {
+//                                    ProductDefinitionSelectedValues newSelectedValue = ProductDefinitionSelectedValues.builder()
+//                                            .value(selectedValue.getValue())
+//                                            .productFieldValue(selectedValue.getProductFieldValue())
+//                                            .build();
+//                                    selectedValuesToAdd.add(newSelectedValue);
+//                                    productDefinitionSelectedValuesRepository.save(newSelectedValue);
+//                                }
+//
+//                            } else {
+//                                productDefinitionSelectedValuesRepository.deleteById(selectedValue.getId());
+//                            }
 
                         }
                         newValue.setSelectedValues(selectedValuesToAdd);

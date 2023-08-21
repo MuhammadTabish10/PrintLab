@@ -30,6 +30,6 @@ public class ProductDefinitionField {
     @JoinColumn(name = "product_field_id")
     private ProductField productField;
 
-    @OneToMany(mappedBy = "productDefinitionField")
+    @OneToMany(mappedBy = "productDefinitionField", cascade = CascadeType.ALL)
     private List<ProductDefinitionSelectedValues> selectedValues;
 }
