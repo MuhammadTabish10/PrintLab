@@ -28,7 +28,7 @@ public class ProductProcessServiceImpl implements ProductProcessService
 
     @Override
     public List<ProductProcessDto> getAll() {
-        List<ProductProcess> productProcessesList = productProcessRepository.findAll();
+        List<ProductProcess> productProcessesList = productProcessRepository.findByStatus("Active");
         List<ProductProcessDto> productProcessDtoList = new ArrayList<>();
 
         for (ProductProcess productProcess : productProcessesList) {

@@ -29,7 +29,7 @@ public class ProductFieldValuesServiceImpl implements ProductFieldValuesService 
 
     @Override
     public List<ProductFieldValuesDto> getAll() {
-        List<ProductFieldValues> productFieldValuesList = productFieldValuesRepository.findAll();
+        List<ProductFieldValues> productFieldValuesList = productFieldValuesRepository.findByStatus("Active");
         List<ProductFieldValuesDto> productFieldValuesDtoList = new ArrayList<>();
 
         for (ProductFieldValues productFieldValues : productFieldValuesList) {

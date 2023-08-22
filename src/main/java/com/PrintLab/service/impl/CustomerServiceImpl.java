@@ -22,7 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDto> findAll() {
-        return customerRepository.findAll().stream()
+        return customerRepository.findByStatus("Active").stream()
                 .map(this::toDto).collect(Collectors.toList());
     }
 

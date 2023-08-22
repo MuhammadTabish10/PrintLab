@@ -26,7 +26,7 @@ public class PaperSizeServiceImpl implements PaperSizeService {
 
     @Override
     public List<PaperSizeDto> getAll() {
-        List<PaperSize> paperSizeList = paperSizeRepository.findAll();
+        List<PaperSize> paperSizeList = paperSizeRepository.findByStatus("Active");
         List<PaperSizeDto> paperSizeDtoList = new ArrayList<>();
 
         for (PaperSize paperSize : paperSizeList) {

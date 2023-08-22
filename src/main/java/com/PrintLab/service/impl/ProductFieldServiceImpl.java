@@ -52,7 +52,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
 
     @Override
     public List<ProductFieldDto> getAll() {
-        List<ProductField> productFieldList = productFieldRepository.findAllByOrderBySequenceAsc();
+        List<ProductField> productFieldList = productFieldRepository.findAllByStatusOrderBySequenceAsc("Active");
         List<ProductFieldDto> productFieldDtoList = new ArrayList<>();
 
         for (ProductField productField : productFieldList) {
