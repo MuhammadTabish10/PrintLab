@@ -1,40 +1,38 @@
 package com.PrintLab.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.PrintLab.service.ImageService;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api")
 public class ImageController
 {
-    @Value("${image.upload.path}")
-    private String imageUploadPath;
+    private final ImageService imageService;
+    public ImageController(ImageService imageService) {
+        this.imageService = imageService;
+    }
 
     @PostMapping("/image")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Please upload a file.");
-        }
+        String imageUrl = imageService.uploadImage(file);
+        return ResponseEntity.ok(imageUrl);
+    }
+    @GetMapping("/image/{fileName}")
+    public ResponseEntity<Resource> getImageUrl(@PathVariable String fileName) {
+        Resource imageResource = imageService.getImage(fileName);
 
-        try {
-            byte[] bytes = file.getBytes();
-            String fileName = file.getOriginalFilename();
-            Path imagePath = Paths.get(imageUploadPath + fileName);
-            Files.write(imagePath, bytes);
+        if (imageResource != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
 
-            return ResponseEntity.ok("Image uploaded successfully.");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Failed to upload image: " + e.getMessage());
+            return ResponseEntity.ok().headers(headers).body(imageResource);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
