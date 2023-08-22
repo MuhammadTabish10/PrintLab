@@ -62,6 +62,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                     if (productDefinitionField.getProductField().getProductFieldValuesList().contains(productFieldValue)) {
                         selectedValue.setProductDefinitionField(productDefinitionField);
                         selectedValue.setProductFieldValue(productFieldValue);
+                        selectedValue.setValue(null);
                         productDefinitionSelectedValuesRepository.save(selectedValue);
                     } else {
                         throw new RecordNotFoundException("Selected ProductFieldValue not found in ProductField");
