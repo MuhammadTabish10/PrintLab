@@ -129,10 +129,9 @@ public class CalculatorServiceImpl implements CalculatorService {
         Double sheets = productQty/upingValue;
         logger.info("Sheets value: " + sheets);
 
-
         // CALCULATIONS OF PAPER MART
         // Searching Paper Market Rates by PaperStock, GSM and Dimension and getting the latest Paper Market Rates
-        Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMAndDimensionOrderByDateDesc(calculator.getPaper(), Math.toIntExact(calculator.getGsm()), calculator.getSheetSizeValue())
+        Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMAndDimensionOrderByDateDesc(calculator.getPaper(), Double.valueOf(String.valueOf(calculator.getGsm())), calculator.getSheetSizeValue())
                                                             .stream().findFirst();
         if(!optionalPaperMarketRates.isPresent()){
             throw new RecordNotFoundException("Paper Market Rates not found for paper, gsm, sheetsize: " + calculator.getPaper() + ", " + calculator.getGsm() + ", " + calculator.getSheetSizeValue());

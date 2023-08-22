@@ -95,7 +95,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
 
     @Override
     public List<ProductDefinitionDto> getAll() {
-        List<ProductDefinition> productDefinitionList = productDefinitionRepository.findAll();
+        List<ProductDefinition> productDefinitionList = productDefinitionRepository.findByStatus(true);
         List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
 
         for (ProductDefinition productDefinition : productDefinitionList) {
@@ -200,60 +200,36 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 if (existingValue.isPresent()) {
                     ProductDefinitionField existingPdfValue = existingValue.get();
                     existingPdfValue.setIsPublic(newValue.getIsPublic());
-                    existingPdfValue.setSelectedValues(newValue.getSelectedValues());
 
                     existingPdfValue.setProductField(productFieldRepository.findById(newValue.getProductField().getId())
                             .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field not found for id => %d", newValue.getProductField().getId()))));
+
                     List<ProductDefinitionSelectedValues> selectedValuesList = newValue.getSelectedValues();
                     if (selectedValuesList != null && !selectedValuesList.isEmpty()) {
                         List<ProductDefinitionSelectedValues> selectedValuesToAdd = new ArrayList<>();
 
-//                        Optional<ProductDefinitionSelectedValues> productDefinitionSelectedValues = productDefinitionSelectedValuesRepository
-//                                .findById(existingPdfValue.getSelectedValues().getId());
-
-
-
 
                         for (ProductDefinitionSelectedValues selectedValue : selectedValuesList) {
-
-                            Optional<ProductDefinitionSelectedValues> existingProductDefinitionSelectedValuesOptional = productDefinitionSelectedValuesRepository
-                                    .findById(selectedValue.getId());
+                            Optional<ProductDefinitionSelectedValues> existingProductDefinitionSelectedValuesOptional = Optional.empty();
+                            if(!(selectedValue.getId() == null)){
+                                existingProductDefinitionSelectedValuesOptional = productDefinitionSelectedValuesRepository.findById(selectedValue.getId());
+                            }
 
                             if(existingProductDefinitionSelectedValuesOptional.isPresent()){
                                 ProductDefinitionSelectedValues existingProductDefinitionSelectedValues = existingProductDefinitionSelectedValuesOptional.get();
                                 existingProductDefinitionSelectedValues.setValue(selectedValue.getValue());
                                 existingProductDefinitionSelectedValues.setProductFieldValue(selectedValue.getProductFieldValue());
+                                selectedValuesToAdd.add(existingProductDefinitionSelectedValues);
                                 productDefinitionSelectedValuesRepository.save(existingProductDefinitionSelectedValues);
                             } else {
                                 ProductDefinitionSelectedValues newSelectedValue = ProductDefinitionSelectedValues.builder()
                                         .value(selectedValue.getValue())
+                                        .productDefinitionField(existingPdfValue)
                                         .productFieldValue(selectedValue.getProductFieldValue())
                                         .build();
                                 selectedValuesToAdd.add(newSelectedValue);
                                 productDefinitionSelectedValuesRepository.save(newSelectedValue);
                             }
-
-//                            if (selectedValue.getValue() == null || selectedValue.getValue().equalsIgnoreCase("")) {
-//                                if (selectedValue.getId() != null) {
-//                                    ProductDefinitionSelectedValues existingSelectedValue = productDefinitionSelectedValuesRepository
-//                                            .findById(selectedValue.getProductFieldValue().getId())
-//                                            .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field Value not found for id => %d", selectedValue.getProductFieldValue().getId())));
-//
-//                                    existingSelectedValue.setProductFieldValue(selectedValue.getProductFieldValue());
-//
-//                                    productDefinitionSelectedValuesRepository.save(selectedValue);
-//                                } else {
-//                                    ProductDefinitionSelectedValues newSelectedValue = ProductDefinitionSelectedValues.builder()
-//                                            .value(selectedValue.getValue())
-//                                            .productFieldValue(selectedValue.getProductFieldValue())
-//                                            .build();
-//                                    selectedValuesToAdd.add(newSelectedValue);
-//                                    productDefinitionSelectedValuesRepository.save(newSelectedValue);
-//                                }
-//
-//                            } else {
-//                                productDefinitionSelectedValuesRepository.deleteById(selectedValue.getId());
-//                            }
 
                         }
                         newValue.setSelectedValues(selectedValuesToAdd);
@@ -301,6 +277,9 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             throw new RecordNotFoundException(String.format("Product Definition not found for id => %d", id));
         }
     }
+
+
+
 
     @Override
     public void deleteProductDefinition(Long id) {

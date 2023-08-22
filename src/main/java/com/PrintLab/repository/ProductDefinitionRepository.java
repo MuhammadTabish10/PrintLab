@@ -12,4 +12,5 @@ public interface ProductDefinitionRepository extends JpaRepository<ProductDefini
     List<ProductDefinition> findByProductDefinitionProcessList_ProductProcess_Id(Long productDefinitionProcessId);
     List<ProductDefinition> findByProductDefinitionProcessList_Vendor_Id(Long productDefinitionProcessId);
     ProductDefinition findByTitle(String title);
+    List<ProductDefinition> findByStatus(Boolean status);
 }

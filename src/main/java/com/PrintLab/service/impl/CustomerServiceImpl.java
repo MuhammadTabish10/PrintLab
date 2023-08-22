@@ -23,7 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerDto> findAll() {
         return customerRepository.findAll().stream()
-                .map(c->toDto(c)).collect(Collectors.toList());
+                .map(this::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -85,13 +85,12 @@ public class CustomerServiceImpl implements CustomerService {
                     .build();
     }
     public CustomerDto toDto(Customer customer){
-        CustomerDto customerDto = CustomerDto.builder()
+        return CustomerDto.builder()
                 .id(customer.getId())
                 .name(customer.getName())
                 .createdAt(customer.getCreatedAt())
                 .businessName(customer.getBusinessName())
                 .status(customer.getStatus())
                 .build();
-        return customerDto;
     }
 }
