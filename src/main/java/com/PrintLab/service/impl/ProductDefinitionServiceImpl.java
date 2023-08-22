@@ -55,10 +55,10 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             productDefinitionField.setProductField(productField);
 
             for (ProductDefinitionSelectedValues selectedValue : productDefinitionField.getSelectedValues()) {
-                ProductFieldValues productFieldValue = productFieldValuesRepository.findById(selectedValue.getProductFieldValue().getId())
-                        .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field Value is not found for id => %d", selectedValue.getProductFieldValue().getId())));
+                if(selectedValue.getProductFieldValue() != null){
+                    ProductFieldValues productFieldValue = productFieldValuesRepository.findById(selectedValue.getProductFieldValue().getId())
+                            .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field Value is not found for id => %d", selectedValue.getProductFieldValue().getId())));
 
-                if (selectedValue.getValue() == null || selectedValue.getValue().equalsIgnoreCase("")) {
                     if (productDefinitionField.getProductField().getProductFieldValuesList().contains(productFieldValue)) {
                         selectedValue.setProductDefinitionField(productDefinitionField);
                         selectedValue.setProductFieldValue(productFieldValue);
@@ -66,7 +66,8 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                     } else {
                         throw new RecordNotFoundException("Selected ProductFieldValue not found in ProductField");
                     }
-                } else {
+                }
+                else{
                     selectedValue.setProductDefinitionField(productDefinitionField);
                     createdProductDefinition.getProductDefinitionFieldList().forEach(pDF -> pDF.getSelectedValues().forEach(s -> s.setValue(selectedValue.getValue())));
                     productDefinitionSelectedValuesRepository.save(selectedValue);
@@ -278,15 +279,13 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         }
     }
 
-
-
-
+    @Transactional
     @Override
     public void deleteProductDefinition(Long id) {
         Optional<ProductDefinition> optionalProductDefinition = productDefinitionRepository.findById(id);
         if (optionalProductDefinition.isPresent()) {
             ProductDefinition productDefinition = optionalProductDefinition.get();
-            productDefinitionRepository.deleteById(id);
+            productDefinitionRepository.setStatusInactive(id);
         } else {
             throw new RecordNotFoundException(String.format("Product Definition not found for id => %d", id));
         }
@@ -347,7 +346,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             List<ProductDefinitionSelectedValuesDto> selectedValuesDtoList = new ArrayList<>();
             for (ProductDefinitionSelectedValues selectedValue : productDefinitionField.getSelectedValues()) {
                 ProductDefinitionSelectedValuesDto selectedValueDto;
-                if (selectedValue.getValue() == null || selectedValue.getValue().equalsIgnoreCase("")) {
+                if (selectedValue.getProductFieldValue() != null) {
                     selectedValueDto = ProductDefinitionSelectedValuesDto.builder()
                             .id(selectedValue.getId())
                             .value(selectedValue.getValue())
