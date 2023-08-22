@@ -92,7 +92,6 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         return toDto(newProductDefinition);
     }
 
-
     @Override
     public List<ProductDefinitionDto> getAll() {
         List<ProductDefinition> productDefinitionList = productDefinitionRepository.findByStatus(true);
