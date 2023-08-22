@@ -62,7 +62,6 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                     if (productDefinitionField.getProductField().getProductFieldValuesList().contains(productFieldValue)) {
                         selectedValue.setProductDefinitionField(productDefinitionField);
                         selectedValue.setProductFieldValue(productFieldValue);
-                        selectedValue.setValue(null);
                         productDefinitionSelectedValuesRepository.save(selectedValue);
                     } else {
                         throw new RecordNotFoundException("Selected ProductFieldValue not found in ProductField");
@@ -70,7 +69,6 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 }
                 else{
                     selectedValue.setProductDefinitionField(productDefinitionField);
-                    createdProductDefinition.getProductDefinitionFieldList().forEach(pDF -> pDF.getSelectedValues().forEach(s -> s.setValue(selectedValue.getValue())));
                     productDefinitionSelectedValuesRepository.save(selectedValue);
                 }
             }
