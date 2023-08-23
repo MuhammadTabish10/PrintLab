@@ -189,6 +189,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
+INSERT INTO `setting` VALUES (1,'cuttingImpression','500'),(2,'cutting','70'),(3,'margin','50'),(4,'setupFee','5000');
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 

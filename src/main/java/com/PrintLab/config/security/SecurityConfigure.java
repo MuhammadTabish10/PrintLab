@@ -100,6 +100,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT,"/api/product-definition/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/product-definition/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/product-definition/{id}/{pdfId}/product-definition-field").permitAll()
+                .antMatchers(HttpMethod.DELETE,"/api/product-definition/{id}/{pdfId}/product-definition-field/{svId}/selected-value").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/product-definition/{id}/{pdpId}/product-definition-process").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/setting").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/setting").permitAll()

@@ -77,6 +77,12 @@ public class ProductDefinitionController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}/{pdfId}/product-definition-field/{svId}/selected-value")
+    public ResponseEntity<String> deleteSelectedValue(@PathVariable Long id, @PathVariable Long pdfId, @PathVariable Long svId) {
+        productDefinitionService.deleteSelectedValueById(id,pdfId,svId);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}/{pdpId}/product-definition-process")
     public ResponseEntity<String> deleteProductDefinitionProcess(@PathVariable Long id, @PathVariable Long pdpId) {
         productDefinitionService.deleteProductDefinitionProcessById(id,pdpId);

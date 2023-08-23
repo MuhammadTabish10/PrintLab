@@ -314,6 +314,41 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     }
 
     @Override
+    public void deleteSelectedValueById(Long id, Long productDefinitionFieldId, Long selectedValueId) {
+        Optional<ProductDefinition> optionalProductDefinition = productDefinitionRepository.findById(id);
+        if (optionalProductDefinition.isPresent()) {
+            ProductDefinition productDefinition = optionalProductDefinition.get();
+
+            Optional<ProductDefinitionField> optionalProductDefinitionField = productDefinition.getProductDefinitionFieldList()
+                    .stream()
+                    .filter(pdf -> pdf.getId().equals(productDefinitionFieldId))
+                    .findFirst();
+
+            if (optionalProductDefinitionField.isPresent()) {
+                ProductDefinitionField productDefinitionField = optionalProductDefinitionField.get();
+                Optional<ProductDefinitionSelectedValues> optionalProductDefinitionSelectedValues = productDefinitionField.getSelectedValues()
+                        .stream()
+                        .filter(sv -> sv.getId().equals(selectedValueId))
+                        .findFirst();
+
+                if(optionalProductDefinitionSelectedValues.isPresent()){
+                    ProductDefinitionSelectedValues productDefinitionSelectedValuesToDelete = optionalProductDefinitionSelectedValues.get();
+                    productDefinitionField.getSelectedValues().remove(productDefinitionSelectedValuesToDelete);
+                    productDefinitionSelectedValuesRepository.delete(productDefinitionSelectedValuesToDelete);
+                    productDefinitionFieldRepository.save(productDefinitionField);
+                } else {
+                    throw new RecordNotFoundException("Selected Value not found");
+                }
+
+            } else {
+                throw new RecordNotFoundException("Product Definition Field not found");
+            }
+        } else {
+            throw new RecordNotFoundException(String.format("Product Definition not found for id => %d", id));
+        }
+    }
+
+    @Override
     public void deleteProductDefinitionProcessById(Long id, Long productDefinitionProcessId) {
         Optional<ProductDefinition> optionalProductDefinition = productDefinitionRepository.findById(id);
         if (optionalProductDefinition.isPresent()) {

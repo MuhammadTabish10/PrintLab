@@ -18,6 +18,7 @@ public interface ProductDefinitionService {
     ProductDefinitionDto updateProductDefinition(Long id, ProductDefinitionDto productDefinitionDto);
     void deleteProductDefinition(Long id);
     void deleteProductDefinitionFieldById(Long id, Long productDefinitionFieldId);
+    void deleteSelectedValueById(Long id, Long productDefinitionFieldId, Long selectedValueId);
     void deleteProductDefinitionProcessById(Long id, Long productDefinitionProcessId);
 
 }
