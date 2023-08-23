@@ -39,7 +39,42 @@ UNLOCK TABLES;
 
 LOCK TABLES `paper_market_rates` WRITE;
 /*!40000 ALTER TABLE `paper_market_rates` DISABLE KEYS */;
-INSERT INTO `paper_market_rates` VALUES (1,250,'2022-08-06','25\" x 36\"',25,'Junaid went there to get the rates.','Art card',100,6400,_binary '',36),(2,300,'2022-08-06','25\" x 36\"',25,'Junaid went there to get the rates.','Art card',100,7800,_binary '',36),(3,350,'2022-08-06','25\" x 36\"',25,'Junaid went there to get the rates.','Art card',100,9000,_binary '',36),(4,250,'2022-08-06','23\" x 36\"',23,'Junaid went there to get the rates.','Art card',100,5900,_binary '',36),(5,300,'2022-08-06','23\" x 36\"',23,'Junaid went there to get the rates.','Art card',100,7100,_binary '',36),(6,350,'2022-08-06','23\" x 36\"',23,'Junaid went there to get the rates.','Art card',500,8250,_binary '',36),(7,90,'2022-09-08','25\" x 36\"',25,'Junaid on WhatsApp','Art Paper / Matte',500,10000,_binary '',36),(8,250,'2022-08-06','25\" x 36\"',25,'Junaid went there to get the rates.','Bleach card',100,5700,_binary '',36),(9,300,'2022-08-06','25\" x 36\"',25,'Junaid went there to get the rates.','Bleach card',100,6800,_binary '',36),(10,350,'2022-08-06','25\" x 36\"',25,'Junaid went there to get the rates.','Bleach card',100,7949,_binary '',36),(11,250,'2022-08-06','23\" x 36\"',23,'Junaid went there to get the rates.','Bleach card',100,5210,_binary '',36),(12,300,'2022-08-06','23\" x 36\"',23,'Junaid went there to get the rates.','Bleach card',100,6250,_binary '',36),(13,350,'2022-08-06','23\" x 36\"',23,'Junaid went there to get the rates.','Bleach card',100,7300,_binary '',36),(14,48,'2022-05-27','18\" x 23\"',18,'Purchased from Abdullah paper mart','Caarbonless',500,2800,_binary '',23),(15,48,'2022-05-27','25\" x 36\"',25,'','Carbonless',500,5400,_binary '\0',36),(16,48,'2022-05-26','18\" x 23\"',18,'Purchased from Abdullah paper mart','Carbonless',500,2750,_binary '',23),(17,113,'2022-06-14','25\" x 36\"',25,'Abdullah paper mart via call','Glossy / Art Paper',500,12000,_binary '',36),(18,128,'2022-06-14','25\" x 36\"',25,'Abdullah paper mart via call','Glossy / Art Paper',500,13600,_binary '',36),(20,150,'2022-06-14','25\" x 36\"',25,'Abdullah paper mart via call','Glossy / Art Paper',500,16120,_binary '',36),(21,128,'2022-08-24','23\" x 36\"',23,'Wasi called paper mart','Matte Paper',500,13150,_binary '\0',36),(22,128,'2022-08-24','25\" x 36\"',25,'Wasi called paper mart','Matte Paper',500,14150,_binary '\0',36),(23,113,'2022-06-16','25\" x 36\"',25,'Abdullah paper mart via call','Matte Paper',500,12500,_binary '',36),(24,128,'2022-06-16','25\" x 36\"',25,'Abdullah paper mart via call','Matte Paper',500,13150,_binary '',36),(25,150,'2022-06-16','25\" x 36\"',25,'Abdullah paper mart via call','Matte Paper',500,16620,_binary '',36),(26,48,'2022-08-24','25\" x 36\"',25,'Junaid asked from Rafay','News Paper',500,2200,_binary '\0',36),(27,120,'2022-09-08','25\" x 36\"',25,'Junaid went there to get the rates.','Uncoated / Offset',500,12300,_binary '',36),(28,70,'2022-06-25','25\" x 36\"',25,'Junaid went there to get the rates.','Uncoated  / Offset',500,8650,_binary '',36),(29,80,'2022-06-25','25\" x 36\"',25,'Junaid went there to get the rates.','Uncoated / Offset',500,9900,_binary '',36),(30,100,'2022-06-25','25\" x 36\"',25,'Junaid went there to get the rates.','Uncoated / Offset',500,12300,_binary '',36),(31,70,'2022-06-25','23\" x 36\"',23,'Junaid went there to get the rates.','Uncoated / Offset',500,8050,_binary '',36),(32,80,'2022-06-25','23\" x 36\"',23,'Junaid went there to get the rates.','Uncoated / Offset',500,9200,_binary '',36),(33,100,'2022-06-25','23\" x 36\"',23,'Junaid went there to get the rates.','Uncoated / Offset',500,11500,_binary '',36),(34,70,'2022-05-27','25\" x 35.5\"',25,'Purchased from Abdullah paper mart','Uncoated / Offset',500,7820,_binary '',35),(35,100,'2022-09-08','8.5\" x 12\"',8.5,'','White Linen',500,3400,_binary '',12),(36,100,'2022-09-08','17\" x 24\"',17,'','Yellow Laid',500,8400,_binary '',24);
+INSERT INTO `paper_market_rates` VALUES
+(1,250,'2022-08-06','25\"x36\"',25,'Junaid went there to get the rates.','Art card',100,6400,_binary '',36),
+(2,300,'2022-08-06','25\"x36\"',25,'Junaid went there to get the rates.','Art card',100,7800,_binary '',36),
+(3,350,'2022-08-06','25\"x36\"',25,'Junaid went there to get the rates.','Art card',100,9000,_binary '',36),
+(4,250,'2022-08-06','23\"x36\"',23,'Junaid went there to get the rates.','Art card',100,5900,_binary '',36),
+(5,300,'2022-08-06','23\"x36\"',23,'Junaid went there to get the rates.','Art card',100,7100,_binary '',36),
+(6,350,'2022-08-06','23\"x36\"',23,'Junaid went there to get the rates.','Art card',500,8250,_binary '',36),
+(7,90,'2022-09-08','25\"x36\"',25,'Junaid on WhatsApp','Art Paper / Matte',500,10000,_binary '',36),
+(8,250,'2022-08-06','25\"x36\"',25,'Junaid went there to get the rates.','Bleach card',100,5700,_binary '',36),
+(9,300,'2022-08-06','25\"x36\"',25,'Junaid went there to get the rates.','Bleach card',100,6800,_binary '',36),
+(10,350,'2022-08-06','25\"x36\"',25,'Junaid went there to get the rates.','Bleach card',100,7949,_binary '',36),
+(11,250,'2022-08-06','23\"x36\"',23,'Junaid went there to get the rates.','Bleach card',100,5210,_binary '',36),
+(12,300,'2022-08-06','23\"x36\"',23,'Junaid went there to get the rates.','Bleach card',100,6250,_binary '',36),
+(13,350,'2022-08-06','23\"x36\"',23,'Junaid went there to get the rates.','Bleach card',100,7300,_binary '',36),
+(14,48,'2022-05-27','18\"x23\"',18,'Purchased from Abdullah paper mart','Carbonless',500,2800,_binary '',23),
+(15,48,'2022-05-27','25\"x36\"',25,'','Carbonless',500,5400,_binary '\0',36),
+(16,48,'2022-05-26','18\"x23\"',18,'Purchased from Abdullah paper mart','Carbonless',500,2750,_binary '',23),
+(17,113,'2022-06-14','25\"x36\"',25,'Abdullah paper mart via call','Glossy / Art Paper',500,12000,_binary '',36),
+(18,128,'2022-06-14','25\"x36\"',25,'Abdullah paper mart via call','Glossy / Art Paper',500,13600,_binary '',36),
+(20,150,'2022-06-14','25\"x36\"',25,'Abdullah paper mart via call','Glossy / Art Paper',500,16120,_binary '',36),
+(21,128,'2022-08-24','23\"x36\"',23,'Wasi called paper mart','Matte Paper',500,13150,_binary '\0',36),
+(22,128,'2022-08-24','25\"x36\"',25,'Wasi called paper mart','Matte Paper',500,14150,_binary '\0',36),
+(23,113,'2022-06-16','25\"x36\"',25,'Abdullah paper mart via call','Matte Paper',500,12500,_binary '',36),
+(24,128,'2022-06-16','25\"x36\"',25,'Abdullah paper mart via call','Matte Paper',500,13150,_binary '',36),
+(25,150,'2022-06-16','25\"x36\"',25,'Abdullah paper mart via call','Matte Paper',500,16620,_binary '',36),
+(26,48,'2022-08-24','25\"x36\"',25,'Junaid asked from Rafay','News Paper',500,2200,_binary '\0',36),
+(27,120,'2022-09-08','25\"x36\"',25,'Junaid went there to get the rates.','Uncoated / Offset',500,12300,_binary '',36),
+(28,70,'2022-06-25','25\"x36\"',25,'Junaid went there to get the rates.','Uncoated  / Offset',500,8650,_binary '',36),
+(29,80,'2022-06-25','25\"x36\"',25,'Junaid went there to get the rates.','Uncoated / Offset',500,9900,_binary '',36),
+(30,100,'2022-06-25','25\"x36\"',25,'Junaid went there to get the rates.','Uncoated / Offset',500,12300,_binary '',36),
+(31,70,'2022-06-25','23\"x36\"',23,'Junaid went there to get the rates.','Uncoated / Offset',500,8050,_binary '',36),
+(32,80,'2022-06-25','23\"x36\"',23,'Junaid went there to get the rates.','Uncoated / Offset',500,9200,_binary '',36),
+(33,100,'2022-06-25','23\"x36\"',23,'Junaid went there to get the rates.','Uncoated / Offset',500,11500,_binary '',36),
+(34,70,'2022-05-27','25\"x35.5\"',25,'Purchased from Abdullah paper mart','Uncoated / Offset',500,7820,_binary '',35),
+(35,100,'2022-09-08','8.5\"x12\"',8.5,'','White Linen',500,3400,_binary '',12),
+(36,100,'2022-09-08','17\"x24\"',17,'','Yellow Laid',500,8400,_binary '',24);
 /*!40000 ALTER TABLE `paper_market_rates` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +170,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `product_process` WRITE;
 /*!40000 ALTER TABLE `product_process` DISABLE KEYS */;
-INSERT INTO `product_process` VALUES (1,'CTP','Active'),(2,'SLICING','Active');
+INSERT INTO `product_process` VALUES (1,'Lamination','Active'),(2,'Ctp','Active'),(3,'Slicing','Active');
 /*!40000 ALTER TABLE `product_process` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,7 +236,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `vendor` WRITE;
 /*!40000 ALTER TABLE `vendor` DISABLE KEYS */;
-INSERT INTO `vendor` VALUES (1,'','','',NULL,'MUTAHIR TRADDERS','');
+INSERT INTO `vendor` VALUES (1,'Gulistan','Contact1','03334215643','2023-02-12','MUTAHIR TRADERS','These are notes');
 /*!40000 ALTER TABLE `vendor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -211,7 +246,8 @@ UNLOCK TABLES;
 
 LOCK TABLES `vendor_process` WRITE;
 /*!40000 ALTER TABLE `vendor_process` DISABLE KEYS */;
-INSERT INTO `vendor_process` VALUES (1,'MATTE',NULL,12,2,1);
+INSERT INTO `vendor_process` VALUES (1,'MATTE','These are new notesss',2.2,1,1),(2,'GLOSSY','These are new notesss',1.8,1,1),(3,'GLOSSY','These are new notesss',1.5,2,1),(4,'MATTE','These are new notesss',1.8,2,1);
+
 /*!40000 ALTER TABLE `vendor_process` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
