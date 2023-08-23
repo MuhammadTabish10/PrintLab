@@ -30,7 +30,7 @@ public class ImageServiceImpl implements ImageService {
             String fileName = file.getOriginalFilename();
             Path imagePath = Paths.get(imageUploadPath).resolve(fileName);
             Files.copy(inputStream, imagePath);
-            return ("/api/image/"+fileName);
+            return ("/image/"+fileName);
         } catch (IOException e) {
             return ("Failed to upload image: " + e.getMessage());
         }
