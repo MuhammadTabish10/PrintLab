@@ -13,10 +13,8 @@ import java.util.Optional;
 @Service
 public class CalculatorServiceImpl implements CalculatorService {
 
-    private static final String DOUBLE_SIDED = "Double Sided";
-    private static final String SINGLE_SIDED = "Single Sided";
-    private static final String IMPOSITION_APPLIED = "Applied";
-    private static final String IMPOSITION_NOT_APPLIED = "Not Applied";
+    private static final String DOUBLE_SIDED = "DoubleSided";
+    private static final String SINGLE_SIDED = "SingleSided";
     private static final String PREDEFINED_CUTTING_RATES_IN_SETTINGS = "cutting";
     private static final String PREDEFINED_CUTTING_IMPRESSION_IN_SETTINGS = "cuttingImpression";
     private static final String PREDEFINED_MARGIN_IN_SETTINGS = "margin";
@@ -109,7 +107,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         productQty = productQty * 1000;
 
         // If Side Option is double-sided and imposition is applied
-        if(calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equalsIgnoreCase(IMPOSITION_APPLIED)){
+        if(calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equals(true)){
             logger.info("SideOption is DoubleSided and Imposition is Applied");
 
             // Again divide by 2
@@ -117,7 +115,7 @@ public class CalculatorServiceImpl implements CalculatorService {
             logger.info("Product Qty value: " + productQty);
 
         }
-        else if ((calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equalsIgnoreCase(IMPOSITION_NOT_APPLIED)) || calculator.getSideOptionValue().equalsIgnoreCase(SINGLE_SIDED))
+        else if ((calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equals(false)) || calculator.getSideOptionValue().equalsIgnoreCase(SINGLE_SIDED))
         {
             logger.info("Product Qty Value: " + productQty);
         }
@@ -131,7 +129,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 
         // CALCULATIONS OF PAPER MART
         // Searching Paper Market Rates by PaperStock, GSM and Dimension and getting the latest Paper Market Rates
-        Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMAndDimensionOrderByDateDesc(calculator.getPaper(), Double.valueOf(String.valueOf(calculator.getGsm())), calculator.getSheetSizeValue())
+        Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMAndDimensionOrderByDateDesc(calculator.getPaper(), calculator.getGsm(), calculator.getSheetSizeValue())
                                                             .stream().findFirst();
         if(!optionalPaperMarketRates.isPresent()){
             throw new RecordNotFoundException("Paper Market Rates not found for paper, gsm, sheetsize: " + calculator.getPaper() + ", " + calculator.getGsm() + ", " + calculator.getSheetSizeValue());
@@ -193,7 +191,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         Double jobColorFront = Double.valueOf(optionalJobColorFrontValue.get().getName());
         logger.info("JobColorFront Vaklue Found: " + jobColorFront);
 
-        if(calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equalsIgnoreCase(IMPOSITION_NOT_APPLIED))
+        if(calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equals(false))
         {
             logger.info("Side Option is Double Sided and Imposition is Not Applied");
             // Checking provided jobColor(Back) in database.
@@ -220,7 +218,7 @@ public class CalculatorServiceImpl implements CalculatorService {
             press = (jobColorFront + jobColorBack) * pressMachine.getImpression_1000_rate();
             logger.info("Press: " + press);
         }
-        else if ((calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equalsIgnoreCase(IMPOSITION_APPLIED)) || calculator.getSideOptionValue().equalsIgnoreCase(SINGLE_SIDED)) {
+        else if ((calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equals(true)) || calculator.getSideOptionValue().equalsIgnoreCase(SINGLE_SIDED)) {
             logger.info("Side Option is Double Sided and Imposition is Applied OR Side option is Single Sided");
             // Get CTP by Adding Front Job color and Multiplying it with selected pressMachine ctp rate.
             ctp = jobColorFront * pressMachine.getCtp_rate();
@@ -278,4 +276,6 @@ public class CalculatorServiceImpl implements CalculatorService {
 
         return totalProfit;
     }
+
+    
 }

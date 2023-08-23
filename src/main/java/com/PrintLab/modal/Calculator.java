@@ -15,9 +15,9 @@ public class Calculator
     private Long jobColorsFront;
     private String sizeValue;
     private String paper;
-    private Double gsm;
+    private Integer gsm;
     private String sheetSizeValue;
     private String sideOptionValue;
-    private String impositionValue;
+    private Boolean impositionValue;
     private Long jobColorsBack;
 }
