@@ -27,7 +27,7 @@ public class Order
     private Boolean providedDesign;
     private String url;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "customer_id")
     private Customer customer;
 }
