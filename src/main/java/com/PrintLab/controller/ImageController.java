@@ -27,8 +27,18 @@ public class ImageController
         Resource imageResource = imageService.getImage(fileName);
 
         if (imageResource != null) {
+            MediaType contentType = MediaType.IMAGE_JPEG;
+
+            if (fileName.endsWith(".png")) {
+                contentType = MediaType.IMAGE_PNG;
+            } else if (fileName.endsWith(".gif")) {
+                contentType = MediaType.IMAGE_GIF;
+            } else if (fileName.endsWith(".pdf")){
+                contentType = MediaType.APPLICATION_PDF;
+            }
+
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG);
+            headers.setContentType(contentType);
 
             return ResponseEntity.ok().headers(headers).body(imageResource);
         } else {
