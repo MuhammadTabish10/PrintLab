@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 import com.PrintLab.dto.CustomerDto;
+import com.PrintLab.dto.OrderDto;
 import com.PrintLab.modal.Customer;
 import com.PrintLab.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class CustomerController {
     public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id) {
         CustomerDto customerDto = customerService.findById(id);
         return ResponseEntity.ok(customerDto);
+    }
+
+    @GetMapping("/customers/{name}")
+    public ResponseEntity<List<CustomerDto>> getAllCustomersByName(@PathVariable String name) {
+        List<CustomerDto> customerDtoList = customerService.searchByName(name);
+        return ResponseEntity.ok(customerDtoList);
     }
 
     @DeleteMapping("/customer/{id}")
