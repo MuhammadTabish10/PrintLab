@@ -39,6 +39,7 @@ export class AddOrderComponent implements OnInit {
   orderToUpdate: any
   productToUpdate: any
   valuesToUpdate: any = []
+  jobBack: any = {}
 
   constructor(private orderService: OrdersService, private router: Router, private productService: ProductService, private route: ActivatedRoute, private customerService: CustomerService) { }
 
@@ -106,6 +107,8 @@ export class AddOrderComponent implements OnInit {
     this.orderService.calculations(obj).subscribe(res => {
       debugger
       this.totalAmount = res
+    }, error => {
+      alert(error.error.error)
     })
     console.log(obj);
   }
@@ -166,18 +169,20 @@ export class AddOrderComponent implements OnInit {
       this.selectedProduct.forEach((el: any) => {
         if (el.productField.name == 'JobColor(Back)') {
           let i = this.selectedProduct.indexOf(el)
+          this.jobBack = this.selectedProduct[i]
           this.selectedProduct.splice(i, 1)
         }
       })
-    } else if (product.productField.name == 'Print Side' && productDef.productFieldValue.name == 'Double Side' && this.impositionValue) {
+    } else if (product.productField.name == 'Print Side' && productDef.productFieldValue.name == 'DoubleSided' && this.impositionValue == "true") {
       this.selectedProduct.forEach((el: any) => {
         if (el.productField.name == 'JobColor(Back)') {
           let i = this.selectedProduct.indexOf(el)
+          this.jobBack = this.selectedProduct[i]
           this.selectedProduct.splice(i, 1)
         }
       })
-    } else if (product.productField.name == 'Print Side' && productDef.productFieldValue.name == 'Double Side' && this.impositionValue) {
-
+    } else if (product.productField.name == 'Print Side' && productDef.productFieldValue.name == 'DoubleSided' && this.impositionValue == "false") {
+      this.jobBack ? this.selectedProduct.push(this.jobBack) : null
     }
     let obj = {
       id: product.id,
