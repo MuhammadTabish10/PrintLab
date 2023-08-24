@@ -35,7 +35,7 @@ public class OrderController
         return ResponseEntity.ok(orderDto);
     }
 
-    @GetMapping("/products/{product}")
+    @GetMapping("order/products/{product}")
     public ResponseEntity<List<OrderDto>> getAllOrdersByProduct(@PathVariable String product) {
         List<OrderDto> orderDtoList = orderService.searchByProduct(product);
         return ResponseEntity.ok(orderDtoList);
