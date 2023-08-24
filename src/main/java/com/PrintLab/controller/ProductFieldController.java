@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.ProductDefinitionDto;
 import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.modal.ProductField;
 import com.PrintLab.service.ProductFieldService;
@@ -39,6 +40,12 @@ public class ProductFieldController {
     public ResponseEntity<ProductFieldDto> getProductFieldByName(@PathVariable String name) {
         ProductFieldDto productFieldDto = productFieldService.findByName(name);
         return ResponseEntity.ok(productFieldDto);
+    }
+
+    @GetMapping("/names/{name}")
+    public ResponseEntity<List<ProductFieldDto>> getAllProductFieldsByName(@PathVariable String name) {
+        List<ProductFieldDto> productProcessDtoList = productFieldService.searchByName(name);
+        return ResponseEntity.ok(productProcessDtoList);
     }
 
     @GetMapping("/{id}/product-field-value")

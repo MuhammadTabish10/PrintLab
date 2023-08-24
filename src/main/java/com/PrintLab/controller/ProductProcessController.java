@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.modal.ProductProcess;
 import com.PrintLab.service.ProductProcessService;
@@ -38,6 +39,12 @@ public class ProductProcessController
     public ResponseEntity<ProductProcessDto> getProductProcessByName(@PathVariable String name) {
         ProductProcessDto productProcessDto = productProcessService.findByName(name);
         return ResponseEntity.ok(productProcessDto);
+    }
+
+    @GetMapping("/names/{name}")
+    public ResponseEntity<List<ProductProcessDto>> getProductProcessesByName(@PathVariable String name) {
+        List<ProductProcessDto> productProcessDtoList = productProcessService.searchByName(name);
+        return ResponseEntity.ok(productProcessDtoList);
     }
 
     @DeleteMapping("/{id}")

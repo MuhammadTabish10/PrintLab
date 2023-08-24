@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
+import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.modal.PaperMarketRates;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,12 @@ public class PaperMarketRatesController
     public ResponseEntity<PaperMarketRatesDto> getPaperMarketRatesByPaperStock(@PathVariable String stock) {
         PaperMarketRatesDto paperMarketRatesDto = marketRatesService.findByPaperStock(stock);
         return ResponseEntity.ok(paperMarketRatesDto);
+    }
+
+    @GetMapping("/paper-stocks/{stock}")
+    public ResponseEntity<List<PaperMarketRatesDto>> getAllPaperMarketRateByPaperStock(@PathVariable String stock) {
+        List<PaperMarketRatesDto> paperMarketRatesDtoList = marketRatesService.searchByPaperStock(stock);
+        return ResponseEntity.ok(paperMarketRatesDtoList);
     }
 
     @DeleteMapping("/{id}")

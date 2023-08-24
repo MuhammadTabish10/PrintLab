@@ -2,8 +2,10 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.OrderDto;
 
+import com.PrintLab.dto.SettingDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.Order;
+import com.PrintLab.modal.Setting;
 import com.PrintLab.repository.CustomerRepository;
 import com.PrintLab.repository.OrderRepository;
 import com.PrintLab.service.OrderService;
@@ -34,6 +36,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDto> getAll() {
         List<Order> orderList = orderRepository.findAll();
+        List<OrderDto> orderDtoList = new ArrayList<>();
+
+        for (Order order : orderList) {
+            OrderDto orderDto = toDto(order);
+            orderDtoList.add(orderDto);
+        }
+        return orderDtoList;
+    }
+
+    @Override
+    public List<OrderDto> searchByProduct(String product) {
+        List<Order> orderList = orderRepository.findOrderByProduct(product);
         List<OrderDto> orderDtoList = new ArrayList<>();
 
         for (Order order : orderList) {

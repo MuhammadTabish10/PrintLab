@@ -1,9 +1,11 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
+import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.PaperMarketRates;
 
+import com.PrintLab.modal.PaperSize;
 import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,18 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         else {
             throw new RecordNotFoundException(String.format("Paper Market Rate not found at => %s", paperStock));
         }
+    }
+
+    @Override
+    public List<PaperMarketRatesDto> searchByPaperStock(String paperStock) {
+        List<PaperMarketRates> paperMarketRateList = paperMarketRatesRepository.findPaperMarketRatesByPaperStock(paperStock);
+        List<PaperMarketRatesDto> paperMarketRatesDtoList = new ArrayList<>();
+
+        for (PaperMarketRates paperMarketRates : paperMarketRateList) {
+            PaperMarketRatesDto paperMarketRatesDto = toDto(paperMarketRates);
+            paperMarketRatesDtoList.add(paperMarketRatesDto);
+        }
+        return paperMarketRatesDtoList;
     }
 
 

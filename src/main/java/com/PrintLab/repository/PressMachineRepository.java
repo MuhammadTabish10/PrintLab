@@ -17,9 +17,11 @@ public interface PressMachineRepository extends JpaRepository<PressMachine,Long>
     PressMachine findByName(String name);
     @Query("SELECT pm FROM PressMachine pm where pm.is_selected = true")
     PressMachine findSelectedPressMachine();
-
     @Modifying
     @Transactional
     @Query("UPDATE PressMachine pm SET pm.is_selected = false")
     void unselectAllPressMachines();
+
+    @Query("SELECT pm FROM PressMachine pm WHERE pm.name LIKE %:searchName%")
+    List<PressMachine> findPressMachinesByName(@Param("searchName") String searchName);
 }

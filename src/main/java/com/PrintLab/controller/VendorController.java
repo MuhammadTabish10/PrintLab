@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.VendorDto;
 import com.PrintLab.service.VendorService;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,12 @@ public class VendorController
     public ResponseEntity<VendorDto> getVendorByName(@PathVariable String name) {
         VendorDto vendorDto = vendorService.findByName(name);
         return ResponseEntity.ok(vendorDto);
+    }
+
+    @GetMapping("/names/{name}")
+    public ResponseEntity<List<VendorDto>> getVendorsByName(@PathVariable String name) {
+        List<VendorDto> vendorDtoList = vendorService.searchByName(name);
+        return ResponseEntity.ok(vendorDtoList);
     }
 
     @GetMapping("/{id}/product-process")

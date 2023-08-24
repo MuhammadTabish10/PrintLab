@@ -1,5 +1,6 @@
 package com.PrintLab.repository;
 
+import com.PrintLab.modal.PressMachine;
 import com.PrintLab.modal.ProductDefinition;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,4 +20,6 @@ public interface ProductDefinitionRepository extends JpaRepository<ProductDefini
     @Modifying
     @Query("UPDATE ProductDefinition pd SET pd.status = false WHERE pd.id = :id")
     void setStatusInactive(@Param("id") Long id);
+    @Query("SELECT pd FROM ProductDefinition pd WHERE pd.title LIKE %:searchName%")
+    List<ProductDefinition> findProductDefinitionsByName(@Param("searchName") String searchName);
 }

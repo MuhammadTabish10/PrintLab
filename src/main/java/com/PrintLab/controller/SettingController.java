@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.dto.SettingDto;
 import com.PrintLab.service.SettingService;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,12 @@ public class SettingController {
     public ResponseEntity<SettingDto> getSettingByKey(@PathVariable String key) {
         SettingDto settingDto = settingService.findByKey(key);
         return ResponseEntity.ok(settingDto);
+    }
+
+    @GetMapping("/keys/{key}")
+    public ResponseEntity<List<SettingDto>> getAllSettingByKey(@PathVariable String key) {
+        List<SettingDto> settingDtoList = settingService.searchByKey(key);
+        return ResponseEntity.ok(settingDtoList);
     }
 
     @DeleteMapping("/{id}")

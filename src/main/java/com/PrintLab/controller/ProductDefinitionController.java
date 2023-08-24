@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.ProductDefinitionDto;
+import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.service.ProductDefinitionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,12 @@ public class ProductDefinitionController {
     public ResponseEntity<ProductDefinitionDto> getProductDefinitionByTitle(@PathVariable String title) {
         ProductDefinitionDto productDefinitionDto = productDefinitionService.findByTitle(title);
         return ResponseEntity.ok(productDefinitionDto);
+    }
+
+    @GetMapping("/titles/{title}")
+    public ResponseEntity<List<ProductDefinitionDto>> getAllProductDefinitionsByTitle(@PathVariable String title) {
+        List<ProductDefinitionDto> productProcessDtoList = productDefinitionService.searchByTitle(title);
+        return ResponseEntity.ok(productProcessDtoList);
     }
 
     @GetMapping("/{id}/product-field")
@@ -80,6 +87,12 @@ public class ProductDefinitionController {
     @DeleteMapping("/{id}/{pdfId}/product-definition-field/{svId}/selected-value")
     public ResponseEntity<String> deleteSelectedValue(@PathVariable Long id, @PathVariable Long pdfId, @PathVariable Long svId) {
         productDefinitionService.deleteSelectedValueById(id,pdfId,svId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/{pdfId}/product-definition-field/selected-value")
+    public ResponseEntity<String> deleteAllSelectedValue(@PathVariable Long id, @PathVariable Long pdfId) {
+        productDefinitionService.deleteAllSelectedValues(id,pdfId);
         return ResponseEntity.ok().build();
     }
 

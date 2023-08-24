@@ -1,7 +1,9 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.exception.RecordNotFoundException;
+import com.PrintLab.modal.PressMachine;
 import com.PrintLab.modal.ProductProcess;
 import com.PrintLab.repository.ProductProcessRepository;
 import com.PrintLab.service.ProductProcessService;
@@ -62,6 +64,18 @@ public class ProductProcessServiceImpl implements ProductProcessService
         else {
             throw new RecordNotFoundException(String.format("ProductProcess not found at => %s", name));
         }
+    }
+
+    @Override
+    public List<ProductProcessDto> searchByName(String name) {
+        List<ProductProcess> productProcessList = productProcessRepository.findProductProcessByName(name);
+        List<ProductProcessDto> productProcessDtoList = new ArrayList<>();
+
+        for (ProductProcess productProcess : productProcessList) {
+            ProductProcessDto productProcessDto = toDto(productProcess);
+            productProcessDtoList.add(productProcessDto);
+        }
+        return productProcessDtoList;
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface PressMachineService
     List<PressMachineDto> getAll();
     PressMachineDto findById(Long id);
     PressMachineDto findByName(String name);
-
+    List<PressMachineDto> searchByName(String name);
     List<PressMachineDto> getPressMachineByPaperSizeId(Long paperSizeId);
     String deleteById(Long id);
     PressMachineDto updatePressMachine(Long id, PressMachineDto pressMachineDto);

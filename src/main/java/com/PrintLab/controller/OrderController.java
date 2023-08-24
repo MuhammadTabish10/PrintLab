@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.OrderDto;
+import com.PrintLab.dto.SettingDto;
 import com.PrintLab.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +35,17 @@ public class OrderController
         return ResponseEntity.ok(orderDto);
     }
 
+    @GetMapping("/products/{product}")
+    public ResponseEntity<List<OrderDto>> getAllOrdersByProduct(@PathVariable String product) {
+        List<OrderDto> orderDtoList = orderService.searchByProduct(product);
+        return ResponseEntity.ok(orderDtoList);
+    }
+
     @DeleteMapping("/order/{id}")
     public ResponseEntity<String> deleteOrder(@PathVariable Long id) {
         orderService.deleteById(id);
-        return ResponseEntity.ok().build();    }
+        return ResponseEntity.ok().build();
+    }
 
     @PutMapping("/order/{id}")
     public ResponseEntity<OrderDto> updateOrder(@PathVariable Long id, @RequestBody OrderDto orderDto) {

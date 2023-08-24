@@ -12,6 +12,8 @@ public interface ProductDefinitionService {
     List<ProductDefinitionDto> getAll();
     ProductDefinitionDto findById(Long id);
     ProductDefinitionDto findByTitle(String title);
+    List<ProductDefinitionDto> searchByTitle(String title);
+
     List<ProductDefinitionDto> getProductDefinitionByProductFieldId(Long productFieldId);
     List<ProductDefinitionDto> getProductDefinitionByProductProcessId(Long productProcessId);
     List<ProductDefinitionDto> getProductDefinitionByVendorId(Long vendorId);
@@ -19,6 +21,7 @@ public interface ProductDefinitionService {
     void deleteProductDefinition(Long id);
     void deleteProductDefinitionFieldById(Long id, Long productDefinitionFieldId);
     void deleteSelectedValueById(Long id, Long productDefinitionFieldId, Long selectedValueId);
+    void deleteAllSelectedValues(Long id, Long productDefinitionFieldId);
     void deleteProductDefinitionProcessById(Long id, Long productDefinitionProcessId);
 
 }

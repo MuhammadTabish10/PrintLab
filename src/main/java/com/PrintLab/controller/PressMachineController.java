@@ -44,6 +44,12 @@ public class PressMachineController
         return ResponseEntity.ok(pressMachineDtoList);
     }
 
+    @GetMapping("/names/{name}")
+    public ResponseEntity<List<PressMachineDto>> getPressMachinesByName(@PathVariable String name) {
+        List<PressMachineDto> pressMachineDtoList = pressMachineService.searchByName(name);
+        return ResponseEntity.ok(pressMachineDtoList);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePressMachine(@PathVariable Long id) {
         pressMachineService.deleteById(id);

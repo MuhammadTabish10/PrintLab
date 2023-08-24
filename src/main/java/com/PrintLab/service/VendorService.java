@@ -1,5 +1,6 @@
 package com.PrintLab.service;
 
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.dto.VendorDto;
 import com.PrintLab.modal.Vendor;
@@ -13,6 +14,7 @@ public interface VendorService
     List<VendorDto> getVendorByProcessId(Long productProcessId);
     VendorDto findById(Long id);
     VendorDto findByName(String name);
+    List<VendorDto> searchByName(String name);
     String deleteById(Long id);
     VendorDto updateVendor(Long id, VendorDto vendorDto);
     void deleteVendorProcessById(Long id, Long vendorProcessId);

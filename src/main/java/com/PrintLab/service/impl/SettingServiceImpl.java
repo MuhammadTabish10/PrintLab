@@ -1,7 +1,9 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.SettingDto;
 import com.PrintLab.exception.RecordNotFoundException;
+import com.PrintLab.modal.ProductField;
 import com.PrintLab.modal.Setting;
 import com.PrintLab.repository.SettingRepository;
 import com.PrintLab.service.SettingService;
@@ -61,6 +63,18 @@ public class SettingServiceImpl implements SettingService
         else {
             throw new RecordNotFoundException(String.format("Setting not found at => %s", key));
         }
+    }
+
+    @Override
+    public List<SettingDto> searchByKey(String key) {
+        List<Setting> settingList = settingRepository.findSettingsByKey(key);
+        List<SettingDto> settingDtoList = new ArrayList<>();
+
+        for (Setting setting : settingList) {
+            SettingDto settingDto = toDto(setting);
+            settingDtoList.add(settingDto);
+        }
+        return settingDtoList;
     }
 
     @Override

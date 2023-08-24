@@ -1,5 +1,6 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.dto.UpingPaperSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
@@ -86,6 +87,18 @@ public class UpingServiceImpl implements UpingService {
         else {
             throw new RecordNotFoundException(String.format("Uping not found at => %s", productSize));
         }
+    }
+
+    @Override
+    public List<UpingDto> searchByProductSize(String productSize) {
+        List<Uping> upingList = upingRepository.findUpingByProductSize(productSize);
+        List<UpingDto> upingDtoList = new ArrayList<>();
+
+        for (Uping uping : upingList) {
+            UpingDto upingDto = toDto(uping);
+            upingDtoList.add(upingDto);
+        }
+        return upingDtoList;
     }
 
     @Override

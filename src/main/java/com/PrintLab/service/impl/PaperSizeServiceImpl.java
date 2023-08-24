@@ -1,6 +1,7 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PaperSizeDto;
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.*;
 import com.PrintLab.repository.PaperSizeRepository;
@@ -27,6 +28,18 @@ public class PaperSizeServiceImpl implements PaperSizeService {
     @Override
     public List<PaperSizeDto> getAll() {
         List<PaperSize> paperSizeList = paperSizeRepository.findByStatus("Active");
+        List<PaperSizeDto> paperSizeDtoList = new ArrayList<>();
+
+        for (PaperSize paperSize : paperSizeList) {
+            PaperSizeDto paperSizeDto = toDto(paperSize);
+            paperSizeDtoList.add(paperSizeDto);
+        }
+        return paperSizeDtoList;
+    }
+
+    @Override
+    public List<PaperSizeDto> searchByLabel(String label) {
+        List<PaperSize> paperSizeList = paperSizeRepository.findPaperSizesByLabel(label);
         List<PaperSizeDto> paperSizeDtoList = new ArrayList<>();
 
         for (PaperSize paperSize : paperSizeList) {

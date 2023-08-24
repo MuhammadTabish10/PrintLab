@@ -55,7 +55,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             productDefinitionField.setProductField(productField);
 
             for (ProductDefinitionSelectedValues selectedValue : productDefinitionField.getSelectedValues()) {
-                if(selectedValue.getProductFieldValue() != null){
+                if (selectedValue.getProductFieldValue() != null) {
                     ProductFieldValues productFieldValue = productFieldValuesRepository.findById(selectedValue.getProductFieldValue().getId())
                             .orElseThrow(() -> new RecordNotFoundException(String.format("Product Field Value is not found for id => %d", selectedValue.getProductFieldValue().getId())));
 
@@ -66,8 +66,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                     } else {
                         throw new RecordNotFoundException("Selected ProductFieldValue not found in ProductField");
                     }
-                }
-                else{
+                } else {
                     selectedValue.setProductDefinitionField(productDefinitionField);
                     productDefinitionSelectedValuesRepository.save(selectedValue);
                 }
@@ -124,6 +123,18 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         } else {
             throw new RecordNotFoundException(String.format("ProductDefinition not found at => %s", title));
         }
+    }
+
+    @Override
+    public List<ProductDefinitionDto> searchByTitle(String title) {
+        List<ProductDefinition> productDefinitionList = productDefinitionRepository.findProductDefinitionsByName(title);
+        List<ProductDefinitionDto> productDefinitionDtoList = new ArrayList<>();
+
+        for (ProductDefinition productDefinition : productDefinitionList) {
+            ProductDefinitionDto productDefinitionDto = toDto(productDefinition);
+            productDefinitionDtoList.add(productDefinitionDto);
+        }
+        return productDefinitionDtoList;
     }
 
     @Override
@@ -210,11 +221,11 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
 
                         for (ProductDefinitionSelectedValues selectedValue : selectedValuesList) {
                             Optional<ProductDefinitionSelectedValues> existingProductDefinitionSelectedValuesOptional = Optional.empty();
-                            if(!(selectedValue.getId() == null)){
+                            if (!(selectedValue.getId() == null)) {
                                 existingProductDefinitionSelectedValuesOptional = productDefinitionSelectedValuesRepository.findById(selectedValue.getId());
                             }
 
-                            if(existingProductDefinitionSelectedValuesOptional.isPresent()){
+                            if (existingProductDefinitionSelectedValuesOptional.isPresent()) {
                                 ProductDefinitionSelectedValues existingProductDefinitionSelectedValues = existingProductDefinitionSelectedValuesOptional.get();
                                 existingProductDefinitionSelectedValues.setValue(selectedValue.getValue());
                                 existingProductDefinitionSelectedValues.setProductFieldValue(selectedValue.getProductFieldValue());
@@ -331,7 +342,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                         .filter(sv -> sv.getId().equals(selectedValueId))
                         .findFirst();
 
-                if(optionalProductDefinitionSelectedValues.isPresent()){
+                if (optionalProductDefinitionSelectedValues.isPresent()) {
                     ProductDefinitionSelectedValues productDefinitionSelectedValuesToDelete = optionalProductDefinitionSelectedValues.get();
                     productDefinitionField.getSelectedValues().remove(productDefinitionSelectedValuesToDelete);
                     productDefinitionSelectedValuesRepository.delete(productDefinitionSelectedValuesToDelete);
@@ -347,6 +358,42 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             throw new RecordNotFoundException(String.format("Product Definition not found for id => %d", id));
         }
     }
+
+    @Override
+    public void deleteAllSelectedValues(Long id, Long productDefinitionFieldId) {
+        Optional<ProductDefinition> optionalProductDefinition = productDefinitionRepository.findById(id);
+        if (optionalProductDefinition.isPresent()) {
+            ProductDefinition productDefinition = optionalProductDefinition.get();
+
+            Optional<ProductDefinitionField> optionalProductDefinitionField = productDefinition.getProductDefinitionFieldList()
+                    .stream()
+                    .filter(pdf -> pdf.getId().equals(productDefinitionFieldId))
+                    .findFirst();
+
+            if (optionalProductDefinitionField.isPresent()) {
+                ProductDefinitionField productDefinitionField = optionalProductDefinitionField.get();
+
+                List<ProductDefinitionSelectedValues> selectedValuesList = productDefinitionField.getSelectedValues();
+                if (selectedValuesList != null && !selectedValuesList.isEmpty()) {
+                    // Remove and delete each selected value
+                    for (ProductDefinitionSelectedValues selectedValues : selectedValuesList) {
+                        productDefinitionSelectedValuesRepository.delete(selectedValues);
+                    }
+                    // Clear the selected values list
+                    selectedValuesList.clear();
+                    // Save the updated product definition field
+                    productDefinitionFieldRepository.save(productDefinitionField);
+                } else {
+                    throw new RecordNotFoundException("No selected values found");
+                }
+            } else {
+                throw new RecordNotFoundException("Product Definition Field not found");
+            }
+        } else {
+            throw new RecordNotFoundException(String.format("Product Definition not found for id => %d", id));
+        }
+    }
+
 
     @Override
     public void deleteProductDefinitionProcessById(Long id, Long productDefinitionProcessId) {

@@ -94,6 +94,18 @@ public class PressMachineServiceImpl implements PressMachineService {
     }
 
     @Override
+    public List<PressMachineDto> searchByName(String name) {
+        List<PressMachine> pressMachineList = pressMachineRepository.findPressMachinesByName(name);
+        List<PressMachineDto> pressMachineDtoList = new ArrayList<>();
+
+        for (PressMachine pressMachine : pressMachineList) {
+            PressMachineDto pressMachineDto = toDto(pressMachine);
+            pressMachineDtoList.add(pressMachineDto);
+        }
+        return pressMachineDtoList;
+    }
+
+    @Override
     public List<PressMachineDto> getPressMachineByPaperSizeId(Long paperSizeId) {
         Optional<List<PressMachine>> optionalPressMachineList = Optional.ofNullable(pressMachineRepository.findByPressMachineSize_PaperSize_Id(paperSizeId));
         if(optionalPressMachineList.isPresent()){

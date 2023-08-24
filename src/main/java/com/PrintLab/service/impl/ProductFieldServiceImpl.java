@@ -1,5 +1,6 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.ProductDefinitionDto;
 import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.ProductFieldValuesDto;
 import com.PrintLab.dto.projectEnums.Type;
@@ -86,6 +87,18 @@ public class ProductFieldServiceImpl implements ProductFieldService {
         else {
             throw new RecordNotFoundException(String.format("ProductField not found at => %s", name));
         }
+    }
+
+    @Override
+    public List<ProductFieldDto> searchByName(String name) {
+        List<ProductField> productFieldList = productFieldRepository.findProductFieldsByName(name);
+        List<ProductFieldDto> productFieldDtoList = new ArrayList<>();
+
+        for (ProductField productField : productFieldList) {
+            ProductFieldDto productFieldDto = toDto(productField);
+            productFieldDtoList.add(productFieldDto);
+        }
+        return productFieldDtoList;
     }
 
     @Override

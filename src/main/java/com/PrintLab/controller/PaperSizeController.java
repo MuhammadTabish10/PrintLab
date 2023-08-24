@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.PaperSizeDto;
+import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.service.impl.PaperSizeServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,12 @@ public class PaperSizeController
     @GetMapping("/label/{label}")
     public ResponseEntity<PaperSizeDto> getPaperSizeByLabel(@PathVariable String label) {
         PaperSizeDto paperSizeDtoList = paperSizeService.findByLabel(label);
+        return ResponseEntity.ok(paperSizeDtoList);
+    }
+
+    @GetMapping("/labels/{label}")
+    public ResponseEntity<List<PaperSizeDto>> getPaperSizesByLabel(@PathVariable String label) {
+        List<PaperSizeDto> paperSizeDtoList = paperSizeService.searchByLabel(label);
         return ResponseEntity.ok(paperSizeDtoList);
     }
 
