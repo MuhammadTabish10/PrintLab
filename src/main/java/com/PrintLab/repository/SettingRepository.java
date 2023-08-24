@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface SettingRepository extends JpaRepository<Setting,Long> {
     Setting findByKey(String key);
-    @Query("SELECT s FROM Setting k WHERE k.key LIKE %:searchKey%")
+    @Query("SELECT s FROM Setting s WHERE s.key LIKE %:searchKey%")
     List<Setting> findSettingsByKey(@Param("searchKey") String searchKey);
 }
