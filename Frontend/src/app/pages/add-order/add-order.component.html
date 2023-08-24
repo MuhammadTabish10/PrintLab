@@ -1,0 +1,134 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
+    <div style="background-color: #f8f9fa;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <div class="main-container">
+                        <div>
+                            <h4>Add Order</h4>
+                        </div>
+                        <div class="order-body py-2 px-3">
+                            <div class="my-3">
+                                <label class="add-order-label m-0">Product</label>
+                                <p-dropdown styleClass="w-100" [options]="productArray" optionLabel="title"
+                                    [(ngModel)]="productToUpdate" (onChange)="toggleFields($event.value)"
+                                    placeholder="Select Product"></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="main-container">
+                        <div class="order-body py-2 px-3">
+                            <div *ngFor="let product of selectedProduct;let i = index" class="my-3">
+                                <label class="add-order-label m-0">{{product?.productField.name}}</label>
+                                <p-dropdown styleClass="w-100" [options]="product?.selectedValues"
+                                    (onChange)="selectProductDef(product,$event.value)" [(ngModel)]="valuesToUpdate[i]"
+                                    optionLabel="productFieldValue.name" placeholder="Select Product"></p-dropdown>
+                            </div>
+                            <button type="submit" class="btn order-table-btn btn-search-panel w-100"
+                                (click)="calculate()">Calculate</button>
+                        </div>
+                    </div>
+
+
+                    <div class="main-container">
+                        <div class="order-body py-2 px-3">
+                            <div class="my-3">
+                                <label class="add-order-label m-0">Customer Name</label>
+                                <p-dropdown styleClass="w-100" [options]="customersArray" optionLabel="name"
+                                    [(ngModel)]="selectedCustomer" placeholder="Select Customer Name"></p-dropdown>
+                            </div>
+                            <div class="my-3" *ngIf="selectedCustomer?.businessName">
+                                <label class="add-order-label m-0">Business Name</label>
+                                <span class="order-search form-control m-0 w-100"
+                                    style="border: 1px solid #ced4da;">{{selectedCustomer?.businessName}}</span>
+                            </div>
+                            <button type="submit" class="btn order-table-btn btn-search-panel w-100"
+                                routerLink='/addCustomer'>Add New Customer
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="main-container">
+                        <div class="order-body upload-section" [ngClass]="{'upload-img': !imgUrl}">
+                            <div class="text-center" *ngIf="!imgUrl">
+                                <!-- <button type="submit" class="btn order-table-btn btn-search-panel m-0"
+                                    (click)="openFileSelector()">Upload Files Here
+                                    &nbsp;&nbsp;<i class="fa-solid fa-upload"></i>
+                                </button> -->
+                                <input type="file" (change)="uploadFile($event)" class="">
+                            </div>
+                            <img src="{{imgUrl}}" alt="" class="w-100" *ngIf="imgUrl">
+                        </div>
+                        <div class="mt-3">
+                            <input type="radio" name="selectDesign" (click)="designToggle(customerDesign)"
+                                [checked]="designValue"> &nbsp;&nbsp;
+                            Will provide Design
+                            Later
+                            <br>
+                            <input type="radio" name="selectDesign" (click)="designToggle(printLabDesign)"
+                                [checked]="!designValue"> &nbsp;&nbsp;
+                            Design by PrintLab
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-6 mt-5 p-3 h-100 invoice">
+                    <h4 class="text-center">Order Summary</h4>
+
+
+                    <div class="my-3">
+                        <h5 class="text-decoration-underline">Order Summary:</h5>
+                        <div>
+                            <span>Product Name: </span>
+                            <span>{{productName}}</span>
+                        </div>
+                        <div *ngFor="let product of selectedProdDefArray;let i=index">
+                            <span>{{product?.name}}: </span>
+                            <span>{{product?.selected?.productFieldValue?.name}}</span>
+                        </div>
+                        <div class="mt-4">
+                            <span>Total: </span>
+                            <h6 class="d-inline-block">Rs, {{totalAmount}}</h6>
+                        </div>
+                    </div>
+
+
+
+                    <div class="my-3">
+                        <h5 class="text-decoration-underline">Design Information:</h5>
+                        <span>{{design}}</span>
+                    </div>
+
+                    <div class="my-3">
+                        <h5 class="text-decoration-underline">Customer Information:</h5>
+                        <div>
+                            <div>
+                                <span>Client's Name: </span>
+                                <span>{{selectedCustomer?.name}}</span>
+                            </div>
+                            <div>
+                                <span>Business Name: </span>
+                                <span>{{selectedCustomer?.businessName}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class=" my-3">
+                        <h5 class="text-decoration-underline">Estimated Delivery Date:</h5>
+                        <span class="text-danger">Monday, July 17, 2023</span>
+                    </div>
+                    <button type="submit" class="btn order-table-btn btn-search-panel w-100"
+                        [disabled]="totalAmount==null" (click)="addOrder()">{{buttonName}}
+                        Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

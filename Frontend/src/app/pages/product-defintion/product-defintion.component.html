@@ -1,0 +1,56 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
+    <div class="main-container">
+        <div>
+            <h4>Product Field</h4>
+        </div>
+        <div class="order-body">
+            <div class="order-search-panel">
+                <input type="text" placeholder="Search product ID" class="order-search form-control" (keyup)="searchProdutField($event.target)" [(ngModel)]="search">
+                <div>
+                    <button type="button" class="btn order-table-btn btn-search-panel"
+                        routerLink="/addProductField">
+                        <i class="fa-solid fa-plus"></i>&nbsp;Add</button>
+                </div>
+            </div>
+            <div class="order-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-lg-center">Name</th>
+                            <th scope="col" class="text-lg-center">Created at</th>
+                            <th scope="col" class="text-lg-center">Sequence</th>
+                            <th scope="col" class="text-lg-center">Type</th>
+                            <th scope="col" class="text-lg-center">Status</th>
+                            <th scope="col" class="text-lg-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="order-table-404" colspan="6" *ngIf="tableData">
+                                No record found</td>
+
+                        </tr>
+                        <tr *ngFor="let field of fieldList">
+                            <td class="text-lg-center"> {{field.name}} </td>
+                            <td class="text-lg-center"> {{field.created_at}} </td>
+                            <td class="text-lg-center"> {{field.sequence}} </td>
+                            <td class="text-lg-center"> {{field.type}} </td>
+                            <td class="text-lg-center"> {{field.status}} </td>
+                            <td class="text-lg-center">
+                                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                    <button type="button" class="btn order-table-btn" (click)="editField(field.id)">
+                                        <i class="fa-solid fa-pen"></i>&nbsp;Edit</button>
+                                    <button type="button" class="btn order-table-btn" (click)="deleteField(field.id)">
+                                        <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
