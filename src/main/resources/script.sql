@@ -151,7 +151,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `product_field` WRITE;
 /*!40000 ALTER TABLE `product_field` DISABLE KEYS */;
-INSERT INTO `product_field` VALUES (1,'2023-08-22','JobColor(Front)',1,'Active','MULTIDROPDOWN'),(2,'2023-08-22','Paper Stock',3,'Active','MULTIDROPDOWN'),(3,'2023-08-22','Product Size',2,'Active','MULTIDROPDOWN'),(4,'2023-08-22','GSM',4,'Active','MULTIDROPDOWN'),(5,'2023-08-22','Sheet Size',5,'Active','MULTIDROPDOWN'),(6,'2023-08-22','Side Option',6,'Active','MULTIDROPDOWN'),(7,'2023-08-22','Imposition',7,'Active','MULTIDROPDOWN'),(8,'2023-08-22','JobColor(Back)',8,'Active','MULTIDROPDOWN');
+INSERT INTO `product_field` VALUES (1,'2023-08-25','Paper Stock',1,'Active','MULTIDROPDOWN'),(2,'2023-08-25','Size',2,'Active','MULTIDROPDOWN'),(3,'2023-08-25','GSM',3,'Active','MULTIDROPDOWN'),(4,'2023-08-25','Quantity',4,'Active','MULTIDROPDOWN'),(5,'2023-08-25','Print Side',5,'Active','MULTIDROPDOWN'),(6,'2023-08-25','JobColor(Front)',6,'Active','MULTIDROPDOWN'),(7,'2023-08-25','JobColor(Back)',7,'Active','MULTIDROPDOWN'),(8,'2023-08-25','Imposition',8,'Active','TOGGLE');
 /*!40000 ALTER TABLE `product_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -249,7 +249,6 @@ UNLOCK TABLES;
 LOCK TABLES `vendor_process` WRITE;
 /*!40000 ALTER TABLE `vendor_process` DISABLE KEYS */;
 INSERT INTO `vendor_process` VALUES (1,'MATTE','These are new notesss',2.2,1,1),(2,'GLOSSY','These are new notesss',1.8,1,1),(3,'GLOSSY','These are new notesss',1.5,2,1),(4,'MATTE','These are new notesss',1.8,2,1);
-
 /*!40000 ALTER TABLE `vendor_process` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

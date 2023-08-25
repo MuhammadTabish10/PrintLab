@@ -10,6 +10,7 @@ import java.util.List;
 
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/product-definition")
 public class ProductDefinitionController {
 
