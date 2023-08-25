@@ -187,7 +187,7 @@ export class AddProductComponent implements OnInit {
           this.productDefinition.push({
             isPublic: this.publicArray[publicIndex],
             productField: field,
-            selectedValues: object
+            selectedValues: values
           })
         } else {
           let valueSelected = []
