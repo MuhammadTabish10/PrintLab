@@ -123,6 +123,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `product_definition_field` WRITE;
 /*!40000 ALTER TABLE `product_definition_field` DISABLE KEYS */;
+INSERT INTO `product_field` VALUES (1,'2023-08-25','Paper Stock',1,'Active','MULTIDROPDOWN'),(2,'2023-08-25','Size',2,'Active','MULTIDROPDOWN'),(3,'2023-08-25','GSM',3,'Active','MULTIDROPDOWN'),(4,'2023-08-25','Quantity',4,'Active','MULTIDROPDOWN'),(5,'2023-08-25','Print Side',5,'Active','MULTIDROPDOWN'),(6,'2023-08-25','JobColor(Front)',6,'Active','MULTIDROPDOWN'),(7,'2023-08-25','JobColor(Back)',7,'Active','MULTIDROPDOWN'),(8,'2023-08-25','Imposition',8,'Active','TOGGLE');
 /*!40000 ALTER TABLE `product_definition_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -160,7 +161,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `product_field_values` WRITE;
 /*!40000 ALTER TABLE `product_field_values` DISABLE KEYS */;
-INSERT INTO `product_field_values` VALUES (1,'1','Active',1),(2,'2','Active',1),(3,'3','Active',1),(4,'4','Active',1),(5,'5','Active',1),(6,'6','Active',1),(7,'Offset','Active',2),(8,'DL','Active',3),(9,'113','Active',4),(10,'18\" x 23\"','Active',5),(11,'Single Sided','Active',6),(12,'Double Sided','Active',6),(13,'Applied','Active',7),(14,'Not Applied','Active',7),(15,'Not Applicable','Active',7),(16,'1','Active',8),(17,'2','Active',8),(18,'3','Active',8),(19,'4','Active',8),(20,'5','Active',8),(21,'6','Active',8);
+INSERT INTO `product_field_values` VALUES (1,'Art card','Active',1),(2,'Bleach card','Active',1),(3,'Carbonless','Active',1),(4,'Glossy/Art Paper','Active',1),(5,'Matte Paper','Active',1),(6,'Uncoated/Offset','Active',1),(7,'DL','Active',2),(8,'A5','Active',2),(9,'A4','Active',2),(10,'LETTER','Active',2),(11,'A3','Active',2),(12,'A2','Active',2),(13,'A1','Active',2),(14,'48','Active',3),(15,'128','Active',3),(16,'113','Active',3),(17,'250','Active',3),(18,'300','Active',3),(19,'350','Active',3),(20,'90','Active',3),(21,'70','Active',3),(22,'80','Active',3),(23,'100','Active',3),(24,'1000','Active',4),(25,'2000','Active',4),(26,'3000','Active',4),(27,'4000','Active',4),(28,'5000','Active',4),(29,'SingleSided','Active',5),(30,'DoubleSided','Active',5),(31,'1','Active',6),(32,'2','Active',6),(33,'3','Active',6),(34,'4','Active',6),(35,'5','Active',6),(36,'6','Active',6),(37,'1','Active',7),(38,'2','Active',7),(39,'3','Active',7),(40,'4','Active',7),(41,'5','Active',7),(42,'6','Active',7);
 /*!40000 ALTER TABLE `product_field_values` ENABLE KEYS */;
 UNLOCK TABLES;
 
