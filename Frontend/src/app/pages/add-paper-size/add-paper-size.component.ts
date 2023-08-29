@@ -9,6 +9,8 @@ import { PaperSizeService } from 'src/app/services/paper-size.service';
 })
 export class AddPaperSizeComponent implements OnInit {
 
+  visible!: boolean
+  error: string = ''
   buttonName: String = 'Add'
   labelValue: String = ''
   statusValue: String = 'Active'
@@ -25,13 +27,15 @@ export class AddPaperSizeComponent implements OnInit {
         this.buttonName = 'Add'
       } else {
         this.paperSizeService.getPaperSizeById(this.idFromQueryParam).subscribe(res => {
-          debugger
+
           this.buttonName = 'Update'
-          // console.log(res);
           this.sizeToUpdate = res
           this.labelValue = this.sizeToUpdate.label
           this.statusValue = this.sizeToUpdate.status
           this.statusValue == "Active" ? this.statusFlag = true : this.statusFlag = false
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
@@ -40,12 +44,10 @@ export class AddPaperSizeComponent implements OnInit {
   getstatusValue() {
     this.statusFlag = !this.statusFlag
     this.statusFlag == true ? this.statusValue = "Active" : this.statusValue = "Inactive"
-    console.log(this.statusValue);
-
   }
 
   addPaperSize() {
-    debugger
+
     let obj = {
       label: this.labelValue,
       status: this.statusValue
@@ -53,10 +55,16 @@ export class AddPaperSizeComponent implements OnInit {
     if (Number.isNaN(this.idFromQueryParam)) {
       this.paperSizeService.postPaperSize(obj).subscribe(() => {
         this.router.navigateByUrl('/paperSize')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       this.paperSizeService.updatePaperSize(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/paperSize')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }

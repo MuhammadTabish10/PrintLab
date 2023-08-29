@@ -11,7 +11,7 @@ export class CustomerService {
   constructor(private http: HttpClient) { }
 
   postCustomer(obj: any) {
-    debugger
+
     let url = `${this._url}/customer`
     return this.http.post(url, obj)
   }

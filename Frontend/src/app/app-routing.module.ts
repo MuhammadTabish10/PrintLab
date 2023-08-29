@@ -5,7 +5,6 @@ import { AuthguardService } from './services/authguard.service';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { AddOrderComponent } from './pages/add-order/add-order.component';
-import { EditOrderComponent } from './pages/edit-order/edit-order.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { AddProductComponent } from './pages/add-product/add-product.component';
 import { ViewProductComponent } from './pages/view-product/view-product.component';
@@ -27,6 +26,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { AddSettingsComponent } from './pages/add-settings/add-settings.component';
 import { CustomerComponent } from './pages/customer/customer.component';
 import { AddCustomerComponent } from './pages/add-customer/add-customer.component';
+import { ViewOrderComponent } from './pages/view-order/view-order.component';
 
 const routes: Routes = [
   {
@@ -49,10 +49,6 @@ const routes: Routes = [
   {
     path: 'addOrder',
     component: AddOrderComponent
-  },
-  {
-    path: 'editOrder/:id',
-    component: EditOrderComponent
   },
   {
     path: 'products',
@@ -137,6 +133,10 @@ const routes: Routes = [
   {
     path: 'addSettings',
     component: AddSettingsComponent
+  },
+  {
+    path: 'viewOrder',
+    component: ViewOrderComponent
   }
 ];
 

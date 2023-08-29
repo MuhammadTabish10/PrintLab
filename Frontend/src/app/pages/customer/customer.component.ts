@@ -9,6 +9,8 @@ import { CustomerService } from 'src/app/services/customer.service';
 })
 export class CustomerComponent implements OnInit {
 
+  visible!: boolean
+  error: string = ''
   tableData: boolean = true
   customersArray: any = []
   search: string = ''
@@ -22,8 +24,10 @@ export class CustomerComponent implements OnInit {
   getcustomers() {
     this.customerService.getCustomer().subscribe(res => {
       this.customersArray = res
-      console.log(this.customersArray);
       this.customersArray.length == 0 ? this.tableData = true : this.tableData = false
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
 

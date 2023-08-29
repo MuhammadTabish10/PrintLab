@@ -16,6 +16,8 @@ export class AddCustomerComponent implements OnInit {
   status: string = 'Active'
   idFromQueryParam!: number
   customerToUpdate: any = []
+  error:string=''
+  visible!:boolean
 
   constructor(private customerService: CustomerService, private route: ActivatedRoute, private router: Router) { }
 
@@ -32,6 +34,9 @@ export class AddCustomerComponent implements OnInit {
           this.businessValue = this.customerToUpdate[0].businessName
           this.status = this.customerToUpdate[0].status
           this.status == 'Active' ? this.statusFlag = true : this.statusFlag = false
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
@@ -46,10 +51,16 @@ export class AddCustomerComponent implements OnInit {
     if (Number.isNaN(this.idFromQueryParam)) {
       this.customerService.postCustomer(obj).subscribe(() => {
         this.router.navigateByUrl('/customers')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       this.customerService.updateCustomer(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/customers')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }

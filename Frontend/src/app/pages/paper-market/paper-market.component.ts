@@ -11,27 +11,26 @@ export class PaperMarketComponent implements OnInit {
 
   paperMarketArray: any = []
   tableData: Boolean = false
-  search:string=''
+  search: string = ''
 
   constructor(private paperMarketService: PaperMarketService, private router: Router) { }
 
   ngOnInit(): void {
-    // debugger
+    //
     this.getPaperMartetRates()
   }
 
   getPaperMartetRates() {
     this.paperMarketService.getPaperMarket().subscribe(res => {
       this.paperMarketArray = res
-      console.log(this.paperMarketArray);
       this.paperMarketArray.length == 0 ? this.tableData = true : this.tableData = false;
     })
   }
 
   deletePaperMarketRate(id: any) {
-    debugger
+
     this.paperMarketService.deletePaperMarket(id).subscribe(res => {
-      debugger
+
       this.getPaperMartetRates()
     })
   }
