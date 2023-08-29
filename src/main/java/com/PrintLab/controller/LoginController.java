@@ -3,6 +3,7 @@ package com.PrintLab.controller;
 import com.PrintLab.config.security.JwtUtil;
 import com.PrintLab.dto.AuthenticationResponse;
 import com.PrintLab.dto.LoginCredentials;
+import com.PrintLab.modal.User;
 import com.PrintLab.service.UserService;
 import com.PrintLab.service.impl.MyUserDetailServiceImplementation;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +44,11 @@ public class LoginController {
         String jwtToken = jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody User user) {
+        userService.registerUser(user);
+        return ResponseEntity.ok("User registered successfully.");
     }
 }

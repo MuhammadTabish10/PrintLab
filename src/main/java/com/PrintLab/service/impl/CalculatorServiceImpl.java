@@ -1,5 +1,6 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.Calculator;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.*;
 import com.PrintLab.repository.*;
@@ -45,6 +46,10 @@ public class CalculatorServiceImpl implements CalculatorService {
     @Override
     public Double CalculateMoq(Calculator calculator)
     {
+        if(calculator.getSideOptionValue() == null){
+            calculator.setSideOptionValue(SINGLE_SIDED);
+        }
+
         // CALCULATION OF ProductQty
         //Checking provided Uping/ProductSize in database
         Uping uping = upingRepository.findByProductSize(calculator.getSizeValue());
@@ -79,10 +84,11 @@ public class CalculatorServiceImpl implements CalculatorService {
 
 
         // Now checking if the provided PressMachine is present in database
-        PressMachine pressMachine = pressMachineRepository.findSelectedPressMachine();
-        if(pressMachine == null){
+        Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(calculator.getPressMachine().getId());
+        if(!optionalPressMachine.isPresent()){
             throw new RecordNotFoundException("PressMachine not found. Please Select a Press Machine.");
         }
+        PressMachine pressMachine = optionalPressMachine.get();
         logger.info("PressMachine found for name: " + pressMachine.getName());
 
         // Check if the provided PaperSize is available in the PressMachine
@@ -177,38 +183,50 @@ public class CalculatorServiceImpl implements CalculatorService {
         Double press = 1.0;
 
         // Checking provided jobColor(Front) in database.
-        Optional<ProductField> optionalJobColorFront = Optional.ofNullable(productFieldRepository.findByName(JOB_COLOR_FRONT));
-        if(!optionalJobColorFront.isPresent()){
-            throw new RecordNotFoundException("JobColor(Front) not found");
-        }
-        logger.info("JobColorFront Found");
-        ProductField jobColorFrontProductField = optionalJobColorFront.get();
+        Long jobColorFront;
+        if(calculator.getJobColorsFront() != null){
+            Optional<ProductField> optionalJobColorFront = Optional.ofNullable(productFieldRepository.findByName(JOB_COLOR_FRONT));
+            if(!optionalJobColorFront.isPresent()){
+                throw new RecordNotFoundException("JobColor(Front) not found");
+            }
+            logger.info("JobColorFront Found");
+            ProductField jobColorFrontProductField = optionalJobColorFront.get();
 
-        Optional<ProductFieldValues> optionalJobColorFrontValue = Optional.ofNullable(productFieldValuesRepository.findByProductFieldAndName(jobColorFrontProductField, String.valueOf(calculator.getJobColorsFront())));
-        if(!optionalJobColorFrontValue.isPresent()){
-            throw new RecordNotFoundException("JobColor(Front) value not found");
+            Optional<ProductFieldValues> optionalJobColorFrontValue = Optional.ofNullable(productFieldValuesRepository.findByProductFieldAndName(jobColorFrontProductField, String.valueOf(calculator.getJobColorsFront())));
+            if(!optionalJobColorFrontValue.isPresent()){
+                throw new RecordNotFoundException("JobColor(Front) value not found");
+            }
+            jobColorFront = Long.valueOf(optionalJobColorFrontValue.get().getName());
+            logger.info("JobColorFront Value Found: " + jobColorFront);
         }
-        Double jobColorFront = Double.valueOf(optionalJobColorFrontValue.get().getName());
-        logger.info("JobColorFront Vaklue Found: " + jobColorFront);
+        else {
+            jobColorFront = 1L;
+        }
+
 
         if(calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equals(false))
         {
             logger.info("Side Option is Double Sided and Imposition is Not Applied");
             // Checking provided jobColor(Back) in database.
-            Optional<ProductField> optionalJobColorBack = Optional.ofNullable(productFieldRepository.findByName(JOB_COLOR_BACK));
-            if(!optionalJobColorBack.isPresent()){
-                throw new RecordNotFoundException("JobColor(Back) not found");
-            }
-            logger.info("JobColorBack Found");
-            ProductField jobColorBackProductField = optionalJobColorBack.get();
+            Long jobColorBack;
+            if(calculator.getJobColorsBack() != null){
+                Optional<ProductField> optionalJobColorBack = Optional.ofNullable(productFieldRepository.findByName(JOB_COLOR_BACK));
+                if(!optionalJobColorBack.isPresent()){
+                    throw new RecordNotFoundException("JobColor(Back) not found");
+                }
+                logger.info("JobColorBack Found");
+                ProductField jobColorBackProductField = optionalJobColorBack.get();
 
-            Optional<ProductFieldValues> optionalJobColorBackValue = Optional.ofNullable(productFieldValuesRepository.findByProductFieldAndName(jobColorBackProductField, String.valueOf(calculator.getJobColorsBack())));
-            if(!optionalJobColorBackValue.isPresent()){
-                throw new RecordNotFoundException("JobColor(Back) Value not found");
+                Optional<ProductFieldValues> optionalJobColorBackValue = Optional.ofNullable(productFieldValuesRepository.findByProductFieldAndName(jobColorBackProductField, String.valueOf(calculator.getJobColorsBack())));
+                if(!optionalJobColorBackValue.isPresent()){
+                    throw new RecordNotFoundException("JobColor(Back) Value not found");
+                }
+                jobColorBack = Long.valueOf(optionalJobColorBackValue.get().getName());
+                logger.info("JobColorBack Value Found: " + jobColorBack);
             }
-            Double jobColorBack = Double.valueOf(optionalJobColorBackValue.get().getName());
-            logger.info("JobColorBack Value Found: " + jobColorBack);
-
+            else{
+                jobColorBack = 1L;
+            }
 
             // Get CTP by Adding Front and Back Job color and Multiplying them with selected pressMachine ctp rate.
             ctp = (jobColorFront + jobColorBack) * pressMachine.getCtp_rate();

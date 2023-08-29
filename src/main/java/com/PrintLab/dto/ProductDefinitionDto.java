@@ -1,5 +1,6 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.modal.PressMachine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class ProductDefinitionDto {
     private Long id;
     private String title;
     private Boolean status;
+    private PressMachine pressMachine;
     private List<ProductDefinitionFieldDto> productDefinitionFieldList;
     private List<ProductDefinitionProcessDto> productDefinitionProcessList;
 }

@@ -1,6 +1,6 @@
 package com.PrintLab.service;
 
-import com.PrintLab.modal.Calculator;
+import com.PrintLab.dto.Calculator;
 public interface CalculatorService
 {
     public Double CalculateMoq(Calculator calculator);

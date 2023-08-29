@@ -88,10 +88,16 @@ public class OrderServiceImpl implements OrderService {
         if (optionalOrder.isPresent()) {
             Order existingOrder = optionalOrder.get();
             existingOrder.setProduct(orderDto.getProduct());
+            existingOrder.setPaper(orderDto.getPaper());
             existingOrder.setSize(orderDto.getSize());
+            existingOrder.setSheetSizeValue(orderDto.getSheetSizeValue());
             existingOrder.setGsm(orderDto.getGsm());
             existingOrder.setQuantity(orderDto.getQuantity());
             existingOrder.setPrice(orderDto.getPrice());
+            existingOrder.setJobColorsFront(orderDto.getJobColorsFront());
+            existingOrder.setSideOptionValue(orderDto.getSideOptionValue());
+            existingOrder.setImpositionValue(orderDto.getImpositionValue());
+            existingOrder.setJobColorsBack(orderDto.getJobColorsBack());
             existingOrder.setProvidedDesign(orderDto.getProvidedDesign());
             existingOrder.setUrl(orderDto.getUrl());
             existingOrder.setCustomer(customerRepository.findById(orderDto.getCustomer().getId())
@@ -108,13 +114,20 @@ public class OrderServiceImpl implements OrderService {
         return OrderDto.builder()
                 .id(order.getId())
                 .product(order.getProduct())
+                .paper(order.getPaper())
                 .size(order.getSize())
+                .sheetSizeValue(order.getSheetSizeValue())
                 .gsm(order.getGsm())
                 .quantity(order.getQuantity())
                 .price(order.getPrice())
+                .jobColorsFront(order.getJobColorsFront())
+                .sideOptionValue(order.getSideOptionValue())
+                .impositionValue(order.getImpositionValue())
+                .jobColorsBack(order.getJobColorsBack())
                 .providedDesign(order.getProvidedDesign())
                 .url(order.getUrl())
-                .customer(order.getCustomer())
+                .customer(customerRepository.findById(order.getCustomer().getId())
+                        .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
                 .build();
     }
 
@@ -122,13 +135,20 @@ public class OrderServiceImpl implements OrderService {
         return Order.builder()
                 .id(orderDto.getId())
                 .product(orderDto.getProduct())
+                .paper(orderDto.getPaper())
                 .size(orderDto.getSize())
+                .sheetSizeValue(orderDto.getSheetSizeValue())
                 .gsm(orderDto.getGsm())
                 .quantity(orderDto.getQuantity())
                 .price(orderDto.getPrice())
+                .jobColorsFront(orderDto.getJobColorsFront())
+                .sideOptionValue(orderDto.getSideOptionValue())
+                .impositionValue(orderDto.getImpositionValue())
+                .jobColorsBack(orderDto.getJobColorsBack())
                 .providedDesign(orderDto.getProvidedDesign())
                 .url(orderDto.getUrl())
-                .customer(orderDto.getCustomer())
+                .customer(customerRepository.findById(orderDto.getCustomer().getId())
+                        .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.PrintLab.modal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +19,12 @@ public class PressMachineSize
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "press_machine_id")
     private PressMachine pressMachine;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "paper_size_id")
     private PaperSize paperSize;
