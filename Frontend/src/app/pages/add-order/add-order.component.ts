@@ -1,5 +1,4 @@
-import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/Environments/environment';
 import { CustomerService } from 'src/app/services/customer.service';
@@ -42,6 +41,7 @@ export class AddOrderComponent implements OnInit {
   jobBack: any = {}
   visible: boolean = false
   error: string = ''
+  machineId!: number
 
   constructor(private orderService: OrdersService, private router: Router, private productService: ProductService, private route: ActivatedRoute, private customerService: CustomerService) { }
 
@@ -77,7 +77,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   calculate() {
-
+    debugger
     this.selectedProdDefArray.forEach((el: any) => {
       el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperValue = el.selected.productFieldValue.name : null
       el.name.toLowerCase().replace(/\s/g, '') == 'size' ? this.sizeValue = el.selected.productFieldValue.name : null
@@ -88,11 +88,14 @@ export class AddOrderComponent implements OnInit {
       el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)' ? this.jobBackValue = el.selected.productFieldValue.name : null
       el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.sheetValue = el.selected.productFieldValue.name : null
     })
-    if (this.sideOptionValue.toLowerCase().replace(/\s/g, '') == "singlesided") {
-      this.jobBackValue = null
-      this.impositionValue = false
+    if (this.sideOptionValue != undefined) {
+      if (this.sideOptionValue.toLowerCase().replace(/\s/g, '') == "singlesided") {
+        this.jobBackValue = null
+        this.impositionValue = false
+      }
     }
     let obj = {
+      pressMachineId: this.machineId,
       productValue: this.productName,
       paper: this.paperValue,
       sizeValue: this.sizeValue,
@@ -104,10 +107,11 @@ export class AddOrderComponent implements OnInit {
       jobColorsBack: this.jobBackValue
     }
     this.orderService.calculations(obj).subscribe(res => {
-
       this.totalAmount = res
     }, error => {
       this.error = error.error.error
+      alert(this.error);
+
       this.visible = true;
     })
   }
@@ -168,9 +172,10 @@ export class AddOrderComponent implements OnInit {
   }
 
   toggleFields(title: any) {
-
+    debugger
     this.selectedProduct = []
     this.productName = title.title
+    this.machineId = title.pressMachine.id
     title.productDefinitionFieldList.forEach((el: any) => {
       el.isPublic ? this.selectedProduct.push(el) : null
       el.productField.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selectedValues[0].value : null
@@ -179,7 +184,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   selectProductDef(product: any, productDef: any) {
-
     if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name.toLowerCase().replace(/\s/g, '') == 'singlesided') {
       this.selectedProduct.forEach((el: any) => {
         if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {

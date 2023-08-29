@@ -43,7 +43,6 @@ export class AddPaperMarketComponent implements OnInit {
         this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
 
           this.buttonName = 'Update'
-          console.log(res);
           this.rateToUpdate = res
           this.dateValue = this.rateToUpdate.date
           this.paperStockValue = this.rateToUpdate.paperStock
@@ -64,8 +63,6 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   addPapermarketRate() {
-
-    console.log(this.verifiedValue);
     let obj = {
       date: this.dateValue,
       paperStock: this.paperStockValue.name,
