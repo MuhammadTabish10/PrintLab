@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Calculator
 {
-    private PressMachineDto pressMachine;
+    private Long pressMachineId;
     private String productValue;
     private Long jobColorsFront;
     private String sizeValue;

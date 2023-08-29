@@ -84,7 +84,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 
 
         // Now checking if the provided PressMachine is present in database
-        Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(calculator.getPressMachine().getId());
+        Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(calculator.getPressMachineId());
         if(!optionalPressMachine.isPresent()){
             throw new RecordNotFoundException("PressMachine not found. Please Select a Press Machine.");
         }
