@@ -9,6 +9,8 @@ import { SettingsService } from 'src/app/services/settings.service';
 })
 export class AddSettingsComponent implements OnInit {
 
+  visible!: boolean
+  error: string = ''
   buttonName: string = 'Add'
   keyData: string = ''
   valueData: string = ''
@@ -28,6 +30,9 @@ export class AddSettingsComponent implements OnInit {
           this.settingToUpdate = res
           this.keyData = this.settingToUpdate.key
           this.valueData = this.settingToUpdate.value
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
@@ -41,10 +46,16 @@ export class AddSettingsComponent implements OnInit {
     if (Number.isNaN(this.idFromQueryParam)) {
       this.settingService.postSettings(obj).subscribe(res => {
         this.router.navigateByUrl('/settings')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       this.settingService.updateSettings(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/settings')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }

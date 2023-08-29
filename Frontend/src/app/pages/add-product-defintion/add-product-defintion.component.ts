@@ -20,76 +20,65 @@ export class AddProductDefintionComponent implements OnInit {
   idFromQueryParam!: number
   fieldToUpdate: any = []
   buttonName: String = 'Add'
+  visible!: boolean
+  error: string = ''
 
   constructor(private productFieldService: ProductDefinitionService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
-      Number.isNaN(this.idFromQueryParam) ? this.buttonName = 'Add' : this.buttonName = 'Update';
-      this.productFieldService.getProductDefintionById(this.idFromQueryParam).subscribe(res => {
-        // debugger
-        this.fieldToUpdate = res
-        console.log(this.fieldToUpdate);
-        if (this.fieldToUpdate.type == "MULTIDROPDOWN" || this.fieldToUpdate.type == "DROPDOWN") {
-          this.pfvalueFlag = true
-        }
-        this.pfvaluesArray = this.fieldToUpdate.productFieldValuesList
-        this.nameValue = this.fieldToUpdate.name
-        this.sequenceValue = this.fieldToUpdate.sequence
-        this.statusValue = this.fieldToUpdate.status
-        this.typeValue = this.fieldToUpdate.type
-        console.log(this.pfvaluesArray);
-      })
+      if (Number.isNaN(this.idFromQueryParam)) {
+        this.buttonName = 'Add'
+      } else {
+        this.buttonName = 'Update';
+        this.productFieldService.getProductDefintionById(this.idFromQueryParam).subscribe(res => {
+          //
+          this.fieldToUpdate = res
+          if (this.fieldToUpdate.type == "MULTIDROPDOWN" || this.fieldToUpdate.type == "DROPDOWN") {
+            this.pfvalueFlag = true
+          }
+          this.pfvaluesArray = this.fieldToUpdate.productFieldValuesList
+          this.nameValue = this.fieldToUpdate.name
+          this.sequenceValue = this.fieldToUpdate.sequence
+          this.statusValue = this.fieldToUpdate.status
+          this.typeValue = this.fieldToUpdate.type
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
+        })
+      }
     })
   }
 
 
   type() {
-    debugger
+
     if (this.typeValue == "DROPDOWN" || this.typeValue == "MULTIDROPDOWN") {
       if (Number.isNaN(this.idFromQueryParam)) {
         this.pfvaluesArray.length == 0 ? this.pfvaluesArray.push({ name: null, status: null }) : null;
       }
       this.pfvalueFlag = true
-    } else {
-      if (!Number.isNaN(this.idFromQueryParam)) {
-        if (this.typeValue == "TEXTFIELD" || this.typeValue == "TOGGLE") {
-
-        }
-      }
-      this.pfvaluesArray = []
-      this.pfvalueFlag = false
     }
   }
 
   addpfvalues() {
     this.pfvaluesArray.push({ name: null, status: null });
-    console.log(this.pfvaluesArray);
   }
 
   removeElement(i: number) {
-    debugger
+
     if (!Number.isNaN(this.idFromQueryParam)) {
-      this.productFieldService.deleteProductFieldValue(this.idFromQueryParam, this.pfvaluesArray[i].id).subscribe(res => {
-        debugger
+      this.productFieldService.deleteProductFieldValue(this.idFromQueryParam, this.pfvaluesArray[i].id).subscribe(() => { }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
     this.pfvaluesArray.splice(i, 1)
-    // if (Number.isNaN(this.idFromQueryParam)) {
-    //   this.pfvaluesArray.splice(index, 1);
-    // } else {
-    //   let pfId = this.fieldToUpdate.productFieldValuesList[index].id
-    //   this.productFieldService.deleteProductFieldValue(id, pfId).subscribe(res => {
-    //     debugger
-    //     console.log(res);
-    //   })
-    //   this.pfvaluesArray.splice(index, 1)
-    // }
   }
 
   addProduct() {
-    debugger
+
     this.typeValue == "TEXTFIELD" || this.typeValue == "TOGGLE" ? this.pfvaluesArray = [] : null;
     let obj = {
       name: this.nameValue,
@@ -100,14 +89,19 @@ export class AddProductDefintionComponent implements OnInit {
     }
     if (Number.isNaN(this.idFromQueryParam)) {
       this.productFieldService.postProductField(obj).subscribe(res => {
-        // debugger
-        console.log(res);
+        //
         this.router.navigateByUrl('/productField')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       this.productFieldService.updateField(this.idFromQueryParam, obj).subscribe(res => {
-        debugger
+
         this.router.navigateByUrl('/productField')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }

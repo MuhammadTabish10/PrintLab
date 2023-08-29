@@ -10,6 +10,8 @@ import { VendorService } from 'src/app/services/vendor.service';
 })
 export class AddVendorComponent implements OnInit {
 
+  visible!: boolean
+  error: string = ''
   buttonName: string = 'Add'
   nameValue: string = ''
   dateValue: string = ''
@@ -55,7 +57,7 @@ export class AddVendorComponent implements OnInit {
             this.notesProcess.push(el.notes)
             this.vendorProcess.push({})
             this.placeHolder.push(el.productProcess.name)
-            debugger
+
             this.productProcessArray.forEach((item: any) => {
               if (item.id == el.productProcess.id) {
                 let index = this.productProcessArray.indexOf(item)
@@ -63,14 +65,16 @@ export class AddVendorComponent implements OnInit {
               }
             })
           })
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
   }
 
   addSize(obj: any, i: any) {
-    debugger
-    console.log(this.selectedVendorProcess[i])
+
     if (this.selectedVendorProcess[i]) {
       this.productProcessArray.push(this.selectedVendorProcess[i])
       this.selectedVendorProcess[i] = obj
@@ -81,8 +85,6 @@ export class AddVendorComponent implements OnInit {
     if (foundIndex !== -1) {
       this.productProcessArray.splice(foundIndex, 1);
     }
-    console.log(this.selectedVendorProcess);
-    console.log(this.productProcessArray);
   }
 
   generateElement() {
@@ -91,9 +93,12 @@ export class AddVendorComponent implements OnInit {
   }
 
   removeElement(i: any) {
-    debugger
+
     if (!Number.isNaN(this.idFromQueryParam)) {
-      this.vendorService.deleteVendorProcess(this.idFromQueryParam, this.vendorProcessId[i]).subscribe()
+      this.vendorService.deleteVendorProcess(this.idFromQueryParam, this.vendorProcessId[i]).subscribe(() => { }, error => {
+        this.error = error.error.error
+        this.visible = true;
+      })
       this.vendorProcessId.splice(i, 1)
     }
     this.vendorProcess.splice(i, 1)
@@ -106,7 +111,7 @@ export class AddVendorComponent implements OnInit {
   }
 
   addVendor() {
-    debugger
+
     if (Number.isNaN(this.idFromQueryParam)) {
       for (let i = 0; i < this.selectedVendorProcess.length; i++) {
         this.selectedVendorProcess[i] = {
@@ -116,7 +121,6 @@ export class AddVendorComponent implements OnInit {
           notes: this.notesProcess[i]
         }
       }
-      console.log(this.selectedVendorProcess);
       let obj = {
         name: this.nameValue,
         date: this.dateValue,
@@ -128,9 +132,11 @@ export class AddVendorComponent implements OnInit {
       }
       this.vendorService.postVendor(obj).subscribe(res => {
         this.router.navigateByUrl('/vendor')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
-      console.log(this.vendorProcessId);
       for (let i = 0; i < this.selectedVendorProcess.length; i++) {
         this.selectedVendorProcess[i] = {
           id: this.vendorProcessId[i],
@@ -140,7 +146,6 @@ export class AddVendorComponent implements OnInit {
           notes: this.notesProcess[i],
         }
       }
-      console.log(this.selectedVendorProcess);
       let obj = {
         name: this.nameValue,
         date: this.dateValue,
@@ -152,6 +157,9 @@ export class AddVendorComponent implements OnInit {
       }
       this.vendorService.updateVendor(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/vendor')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }
@@ -160,6 +168,9 @@ export class AddVendorComponent implements OnInit {
     this.productProcessService.getProductProcess().subscribe(res => {
       this.productProcessArray = res
       this.maxLength = this.productProcessArray.length
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
 }

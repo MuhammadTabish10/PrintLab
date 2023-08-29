@@ -12,7 +12,7 @@ export class VendorComponent implements OnInit {
   tableData: boolean = true
   vendorArray: any = []
   search: string = ''
-  
+
   constructor(private vendorService: VendorService, private router: Router) { }
 
   ngOnInit(): void {
@@ -22,7 +22,6 @@ export class VendorComponent implements OnInit {
   getVendors() {
     this.vendorService.getVendor().subscribe(res => {
       this.vendorArray = res
-      console.log(this.vendorArray);
       this.vendorArray.length == 0 ? this.tableData = true : this.tableData = false
     })
   }

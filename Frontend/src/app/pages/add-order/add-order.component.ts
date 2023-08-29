@@ -32,7 +32,7 @@ export class AddOrderComponent implements OnInit {
   sheetValue: any
   qtyValue: any
   design: any
-  designValue!: boolean
+  designValue = true
   imgUrl: string = ''
   idFromQueryParam!: number
   buttonName: string = 'Add'
@@ -40,6 +40,8 @@ export class AddOrderComponent implements OnInit {
   productToUpdate: any
   valuesToUpdate: any = []
   jobBack: any = {}
+  visible: boolean = false
+  error: string = ''
 
   constructor(private orderService: OrdersService, private router: Router, private productService: ProductService, private route: ActivatedRoute, private customerService: CustomerService) { }
 
@@ -54,9 +56,6 @@ export class AddOrderComponent implements OnInit {
         this.buttonName = 'Update'
         this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
           this.orderToUpdate = res
-          console.log(this.orderToUpdate);
-          debugger
-          console.log(this.productToUpdate);
           this.selectedCustomer = this.orderToUpdate.customer
           this.totalAmount = this.orderToUpdate.price
           this.imgUrl = this.orderToUpdate.url
@@ -67,29 +66,29 @@ export class AddOrderComponent implements OnInit {
           })
           this.toggleFields(this.productToUpdate)
           this.selectedProduct.forEach((el: any) => {
-            el.productField.namestr1.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmValue = this.orderToUpdate.gsm : null
+            el.productField.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmValue = this.orderToUpdate.gsm : null
           })
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
   }
 
   calculate() {
-    debugger
+
     this.selectedProdDefArray.forEach((el: any) => {
-      el.name == 'Paper Stock' ? this.paperValue = el.selected.productFieldValue.name : null
-      if (el.name == 'Size') {
-        this.sizeValue = el.selected.productFieldValue.name
-      }
-      // el.name == 'Size' ? this.sizeValue = el.selected.productFieldValue.name : null
-      el.name == 'GSM' ? this.gsmValue = el.selected.productFieldValue.name : null
-      el.name == 'JobColor(Front)' ? this.jobFrontValue = el.selected.productFieldValue.name : null
-      el.name == 'Print Side' ? this.sideOptionValue = el.selected.productFieldValue.name : null
-      el.name == 'Imposition' ? this.impositionValue = el.selected.productFieldValue.name : null
-      el.name == 'JobColor(Back)' ? this.jobBackValue = el.selected.productFieldValue.name : null
-      el.name == 'Paper Stock' ? this.sheetValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'size' ? this.sizeValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(front)' ? this.jobFrontValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'printside' ? this.sideOptionValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)' ? this.jobBackValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.sheetValue = el.selected.productFieldValue.name : null
     })
-    if (this.sideOptionValue == "Single Side") {
+    if (this.sideOptionValue.toLowerCase().replace(/\s/g, '') == "singlesided") {
       this.jobBackValue = null
       this.impositionValue = false
     }
@@ -105,83 +104,99 @@ export class AddOrderComponent implements OnInit {
       jobColorsBack: this.jobBackValue
     }
     this.orderService.calculations(obj).subscribe(res => {
-      debugger
+
       this.totalAmount = res
     }, error => {
-      alert(error.error.error)
+      this.error = error.error.error
+      this.visible = true;
     })
-    console.log(obj);
   }
 
   addOrder() {
-    debugger
     this.selectedProdDefArray.forEach((el: any) => {
-      el.name == 'Quantity' ? this.qtyValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'quantity' ? this.qtyValue = el.selected.productFieldValue.name : null
     })
     if (Number.isNaN(this.idFromQueryParam)) {
-
       let obj = {
         product: this.productName,
+        paper: this.paperValue,
         size: this.sizeValue,
+        sheetSizeValue: "18\"x23\"",
         gsm: this.gsmValue,
         quantity: this.qtyValue,
-        price: this.totalAmount,
+        price: Math.round(this.totalAmount * 100) / 100,
         providedDesign: this.designValue,
         url: this.imgUrl,
+        sideOptionValue: this.sideOptionValue,
+        impositionValue: this.impositionValue,
+        jobColorsFront: this.jobFrontValue,
+        jobColorsBack: this.jobBackValue,
         customer: this.selectedCustomer
       }
       this.orderService.addOrder(obj).subscribe(res => {
-        debugger
+
         this.router.navigateByUrl('/orders')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       let obj = {
         id: this.idFromQueryParam,
         product: this.productName,
+        paper: this.paperValue,
         size: this.sizeValue,
+        sheetSizeValue: "18\"x23\"",
         gsm: this.gsmValue,
         quantity: this.qtyValue,
-        price: this.totalAmount,
+        price: Math.round(this.totalAmount * 100) / 100,
         providedDesign: this.designValue,
         url: this.imgUrl,
+        sideOptionValue: this.sideOptionValue,
+        impositionValue: this.impositionValue,
+        jobColorsFront: this.jobFrontValue,
+        jobColorsBack: this.jobBackValue,
         customer: this.selectedCustomer
       }
       this.orderService.updateOrder(this.idFromQueryParam, obj).subscribe(res => {
         this.router.navigateByUrl('/orders')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }
 
   toggleFields(title: any) {
-    debugger
+
+    this.selectedProduct = []
     this.productName = title.title
     title.productDefinitionFieldList.forEach((el: any) => {
       el.isPublic ? this.selectedProduct.push(el) : null
-      el.productField.name == 'Imposition' ? this.impositionValue = el.selectedValues[0].value : null
+      el.productField.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selectedValues[0].value : null
     })
     this.selectedProdDefArray = []
-    console.log(this.selectedProduct)
   }
 
   selectProductDef(product: any, productDef: any) {
-    debugger
-    if (product.productField.name == 'Print Side' && productDef.productFieldValue.name == 'SingleSided') {
+
+    if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name.toLowerCase().replace(/\s/g, '') == 'singlesided') {
       this.selectedProduct.forEach((el: any) => {
-        if (el.productField.name == 'JobColor(Back)') {
+        if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
           let i = this.selectedProduct.indexOf(el)
           this.jobBack = this.selectedProduct[i]
           this.selectedProduct.splice(i, 1)
         }
       })
-    } else if (product.productField.name == 'Print Side' && productDef.productFieldValue.name == 'DoubleSided' && this.impositionValue == "true") {
+    } else if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name.toLowerCase().replace(/\s/g, '') == 'doublesided' && this.impositionValue == "true") {
       this.selectedProduct.forEach((el: any) => {
-        if (el.productField.name == 'JobColor(Back)') {
+        if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
           let i = this.selectedProduct.indexOf(el)
           this.jobBack = this.selectedProduct[i]
           this.selectedProduct.splice(i, 1)
         }
       })
-    } else if (product.productField.name == 'Print Side' && productDef.productFieldValue.name == 'DoubleSided' && this.impositionValue == "false") {
+    } else if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name.toLowerCase().replace(/\s/g, '') == 'doublesided' && this.impositionValue == "false") {
       this.jobBack ? this.selectedProduct.push(this.jobBack) : null
     }
     let obj = {
@@ -205,7 +220,6 @@ export class AddOrderComponent implements OnInit {
       }
       flag ? this.selectedProdDefArray.push(obj) : null
     }
-    console.log(this.selectedProdDefArray);
   }
 
   designToggle(design: any) {
@@ -216,26 +230,31 @@ export class AddOrderComponent implements OnInit {
   getProducts() {
     this.productService.getProducts().subscribe(res => {
       this.productArray = res
-      console.log(this.productArray);
       // this.titleArray = this.productArray.map((product: any) => product.title)
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
 
   getCustomers() {
     this.customerService.getCustomer().subscribe(res => {
       this.customersArray = res
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
 
   uploadFile(event: any) {
-    debugger
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append('file', file);
     this.orderService.postImage(formData).subscribe(response => {
       this.imgUrl = environment.baseUrl + response
-      // console.log(this.imgUrl);
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     });
-
   }
 }

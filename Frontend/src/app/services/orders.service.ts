@@ -13,19 +13,19 @@ export class OrdersService {
   constructor(private http: HttpClient) { }
 
   calculations(obj: any) {
-    debugger
+
     let url = `${this._url}/printlab-calculator`
     return this.http.post(url, obj)
   }
 
   addOrder(order: any) {
-    debugger
+
     let url = `${this._url}/order`
     return this.http.post(url, order)
   }
 
   getOrders() {
-    debugger
+
     let url = `${this._url}/order`;
     return this.http.get(url);
   }
@@ -35,7 +35,7 @@ export class OrdersService {
     return this.http.get(url)
   }
 
-  deleteOrder(id:any){
+  deleteOrder(id: any) {
     let url = `${this._url}/order/${id}`
     return this.http.delete(url)
   }
@@ -62,7 +62,7 @@ export class OrdersService {
   }
 
   postImage(formData: any) {
-    debugger
+
     let url = `${this._url}/image`
     return this.http.post(url, formData, { responseType: 'text' })
   }

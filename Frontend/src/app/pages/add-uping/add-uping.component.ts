@@ -11,6 +11,8 @@ import { UpingService } from 'src/app/services/uping.service';
 })
 export class AddUpingComponent implements OnInit {
 
+  visible!: boolean
+  error: string = ''
   buttonName: string = 'Add'
   productSizeValue: string = ''
   idFromQueryParam!: number
@@ -56,13 +58,16 @@ export class AddUpingComponent implements OnInit {
           //     element.id == this.paperSizesArray[i].id ? this.paperSizesArray.splice(i, 1) : null;
           //   }
           // });
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
   }
 
   addUping() {
-    debugger
+
     if (Number.isNaN(this.idFromQueryParam)) {
       for (let i = 0; i < this.selectedSizes.length; i++) {
         this.selectedSizes[i] = {
@@ -76,6 +81,9 @@ export class AddUpingComponent implements OnInit {
       }
       this.upingService.postUping(obj).subscribe(() => {
         this.router.navigateByUrl('/uping')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       for (let i = 0; i < this.selectedSizes.length; i++) {
@@ -91,6 +99,9 @@ export class AddUpingComponent implements OnInit {
       }
       this.upingService.updateUping(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/uping')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }
@@ -102,7 +113,10 @@ export class AddUpingComponent implements OnInit {
 
   removeElement(index: number) {
     if (!Number.isNaN(this.idFromQueryParam)) {
-      this.upingService.deleteUpingSize(this.idFromQueryParam, this.upingSizeId[index]).subscribe()
+      this.upingService.deleteUpingSize(this.idFromQueryParam, this.upingSizeId[index]).subscribe(() => { }, error => {
+        this.error = error.error.error
+        this.visible = true;
+      })
       this.upingSizeId.splice(index, 1)
     }
     this.selectedSizes[index] ? this.paperSizesArray.push(this.selectedSizes[index]) : null
@@ -126,6 +140,9 @@ export class AddUpingComponent implements OnInit {
     this.paperSizeService.getPaperSize().subscribe(res => {
       this.paperSizesArray = res
       this.maxLength = this.paperSizesArray.length
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
 }
