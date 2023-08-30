@@ -1,6 +1,7 @@
 package com.PrintLab.config.security;
 
 import com.PrintLab.service.impl.MyUserDetailServiceImplementation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +18,10 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
     private MyUserDetailServiceImplementation myUserDetailServiceImplementation;
 
     @Override
