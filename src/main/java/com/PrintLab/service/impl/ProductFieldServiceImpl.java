@@ -117,14 +117,14 @@ public class ProductFieldServiceImpl implements ProductFieldService {
             throw new RecordNotFoundException(String.format("ProductField not found on Product Field Value id => %d", productFieldValueId));
         }
     }
-
+    @Transactional
     @Override
     public String deleteById(Long id) {
         Optional<ProductField> optionalProductField = productFieldRepository.findById(id);
 
         if(optionalProductField.isPresent()) {
             ProductField productField = optionalProductField.get();
-            productFieldRepository.deleteById(id);
+            productFieldRepository.setStatusInactive(id);;
         }
         else {
             throw new RecordNotFoundException(String.format("Product Field not found for id => %d", id));

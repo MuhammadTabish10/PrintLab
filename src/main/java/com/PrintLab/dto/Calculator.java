@@ -22,4 +22,8 @@ public class Calculator
     private String sideOptionValue;
     private Boolean impositionValue;
     private Long jobColorsBack;
+    private Double margin;
+    private Double setupFee;
+    private Double cutting;
+    private Double cuttingImpression;
 }

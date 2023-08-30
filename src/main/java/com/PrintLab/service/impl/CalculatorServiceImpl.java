@@ -145,45 +145,54 @@ public class CalculatorServiceImpl implements CalculatorService {
         PaperMarketRates paperMarketRates = optionalPaperMarketRates.get();
         logger.info("date and name and gsm and sheetsize: " + paperMarketRates.getDate() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM() + " " + paperMarketRates.getDimension());
 
-
         // Dividing paper rate with qty and multiplying with sheets
         Double paperMart = paperMarketRates.getRatePkr()/paperMarketRates.getQty();
         paperMart = paperMart * sheets;
         logger.info("PaperMart value: " + paperMart);
 
+        // Definitions and initializations of variables
+        Double cuttingRates = null;
+        Double cuttingImpressionValue = null;
+
         // CALCULATIONS OF SLICING
         // Getting predefined current rates from settings
-        Optional<Setting> settingOptionalDefinedRates = Optional.ofNullable(settingRepository.findByKey(PREDEFINED_CUTTING_RATES_IN_SETTINGS));
-
-        if(!settingOptionalDefinedRates.isPresent()){
-            throw new RecordNotFoundException("Predefined cutting rates not found in setting");
+        if (calculator.getCutting() == null) {
+            Optional<Setting> settingOptionalDefinedRates = Optional.ofNullable(settingRepository.findByKey(PREDEFINED_CUTTING_RATES_IN_SETTINGS));
+            if (!settingOptionalDefinedRates.isPresent()) {
+                throw new RecordNotFoundException("Predefined cutting rates not found in setting");
+            }
+            Setting definedCuttingRates = settingOptionalDefinedRates.get();
+            cuttingRates = Double.parseDouble(definedCuttingRates.getValue());
+            logger.info("PreDefined Cutting Rates found");
+        } else {
+            cuttingRates = calculator.getCutting();
         }
-        Setting definedCuttingRates = settingOptionalDefinedRates.get();
-        logger.info("PreDefined Cutting Rates found");
 
-        // Getting current impression from settings
-        Optional<Setting> settingOptionalCuttingImpression = Optional.ofNullable(settingRepository.findByKey(PREDEFINED_CUTTING_IMPRESSION_IN_SETTINGS));
+        if (calculator.getCuttingImpression() == null) {
+            // Getting current impression from settings
+            Optional<Setting> settingOptionalCuttingImpression = Optional.ofNullable(settingRepository.findByKey(PREDEFINED_CUTTING_IMPRESSION_IN_SETTINGS));
 
-        if(!settingOptionalCuttingImpression.isPresent()){
-            throw new RecordNotFoundException("Cutting Impression not found in setting");
+            if (!settingOptionalCuttingImpression.isPresent()) {
+                throw new RecordNotFoundException("Cutting Impression not found in setting");
+            }
+            Setting cuttingImpressionSetting = settingOptionalCuttingImpression.get();
+            cuttingImpressionValue = Double.parseDouble(cuttingImpressionSetting.getValue());
+            logger.info("Cutting Impression found");
+        } else {
+            cuttingImpressionValue = calculator.getCuttingImpression();
         }
-        Setting cuttingImpression = settingOptionalCuttingImpression.get();
-        logger.info("Cutting Impression found");
 
-        //Ceiling sheets value with currentImpression and multiplying it with cuttingRates
-        Double cuttingImpressionValue = Double.parseDouble(cuttingImpression.getValue());
-        Double cuttingRates = Double.parseDouble(definedCuttingRates.getValue());
-        Double sheetCeil = Math.ceil(sheets/cuttingImpressionValue);
+        // Rest of your calculations using cuttingImpressionValue and cuttingRates
+        Double sheetCeil = Math.ceil(sheets / cuttingImpressionValue);
         Double slicing = sheetCeil * cuttingRates;
         logger.info("Slicing value: " + slicing);
-
 
         // CALCULATION OF CTP AND PRESS
         Double ctp = 1.0;
         Double press = 1.0;
 
         // Checking provided jobColor(Front) in database.
-        Long jobColorFront;
+        Long jobColorFront = null;
         if(calculator.getJobColorsFront() != null){
             Optional<ProductField> optionalJobColorFront = Optional.ofNullable(productFieldRepository.findByName(JOB_COLOR_FRONT));
             if(!optionalJobColorFront.isPresent()){
@@ -208,7 +217,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         {
             logger.info("Side Option is Double Sided and Imposition is Not Applied");
             // Checking provided jobColor(Back) in database.
-            Long jobColorBack;
+            Long jobColorBack = null;
             if(calculator.getJobColorsBack() != null){
                 Optional<ProductField> optionalJobColorBack = Optional.ofNullable(productFieldRepository.findByName(JOB_COLOR_BACK));
                 if(!optionalJobColorBack.isPresent()){
@@ -252,22 +261,38 @@ public class CalculatorServiceImpl implements CalculatorService {
 
         // CALCULATION OF PRICE PER QTY
         // Getting predefined margin rates from settings
-        Optional<Setting> settingOptionalDefinedMargin = Optional.ofNullable(settingRepository.findByKey(PREDEFINED_MARGIN_IN_SETTINGS));
 
-        if(!settingOptionalDefinedMargin.isPresent()){
-            throw new RecordNotFoundException("Margin not found in setting");
+        Double definedMargin = null;
+        Double definedSetupFee = null;
+
+        if(calculator.getMargin() == null){
+            Optional<Setting> settingOptionalDefinedMargin = Optional.ofNullable(settingRepository.findByKey(PREDEFINED_MARGIN_IN_SETTINGS));
+
+            if(!settingOptionalDefinedMargin.isPresent()){
+                throw new RecordNotFoundException("Margin not found in setting");
+            }
+            definedMargin = Double.valueOf(settingOptionalDefinedMargin.get().getValue());
+            logger.info("Margin found: " + definedMargin);
+
         }
-        Double definedMargin = Double.valueOf(settingOptionalDefinedMargin.get().getValue());
-        logger.info("Margin found: " + definedMargin);
-
-        // Getting predefined setup fee from settings
-        Optional<Setting> settingOptionalDefinedSetupFee = Optional.ofNullable(settingRepository.findByKey(PREDEFINED_SETUP_FEE_IN_SETTINGS));
-
-        if(!settingOptionalDefinedSetupFee.isPresent()){
-            throw new RecordNotFoundException("Setup Fee not found in setting");
+        else{
+            definedMargin = calculator.getMargin();
         }
-        Double definedSetupFee = Double.valueOf(settingOptionalDefinedSetupFee.get().getValue());
-        logger.info("SetupFee found: " + definedSetupFee);
+
+        if(calculator.getSetupFee() == null){
+            // Getting predefined setup fee from settings
+            Optional<Setting> settingOptionalDefinedSetupFee = Optional.ofNullable(settingRepository.findByKey(PREDEFINED_SETUP_FEE_IN_SETTINGS));
+
+            if(!settingOptionalDefinedSetupFee.isPresent()){
+                throw new RecordNotFoundException("Setup Fee not found in setting");
+            }
+            definedSetupFee = Double.valueOf(settingOptionalDefinedSetupFee.get().getValue());
+            logger.info("SetupFee found: " + definedSetupFee);
+
+        }
+        else{
+            definedSetupFee = calculator.getSetupFee();
+        }
 
         Double pricePerQty = (fixedCost * definedMargin/100) + (fixedCost + definedSetupFee);
         logger.info("SetupFee: " + definedSetupFee);

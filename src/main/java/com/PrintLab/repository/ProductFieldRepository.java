@@ -4,6 +4,7 @@ import com.PrintLab.modal.Customer;
 import com.PrintLab.modal.PressMachine;
 import com.PrintLab.modal.ProductField;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,7 @@ public interface ProductFieldRepository extends JpaRepository<ProductField, Long
     ProductField findByName(String name);
     @Query("SELECT pf FROM ProductField pf WHERE pf.name LIKE %:searchName%")
     List<ProductField> findProductFieldsByName(@Param("searchName") String searchName);
+    @Modifying
+    @Query("UPDATE ProductField pf SET pf.status = 'inActive' WHERE pf.id = :id")
+    void setStatusInactive(@Param("id") Long id);
 }
