@@ -5,6 +5,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,11 +19,13 @@ public class ImageController
     }
 
     @PostMapping("/image")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         String imageUrl = imageService.uploadImage(file);
         return ResponseEntity.ok(imageUrl);
     }
     @GetMapping("/image/{fileName}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Resource> getImageUrl(@PathVariable String fileName) {
         Resource imageResource = imageService.getImage(fileName);
 

@@ -7,6 +7,7 @@ import com.PrintLab.modal.User;
 import com.PrintLab.service.UserService;
 import com.PrintLab.service.impl.MyUserDetailServiceImplementation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,8 +37,8 @@ public class LoginController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginCredentials.getName(), loginCredentials.getPassword())
             );
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect Username or Password ! ", e);
+        } catch (Exception e) {
+            throw new BadCredentialsException("Incorrect Username or Password! ", e);
         }
 
         UserDetails userDetails = myUserDetailService.loadUserByUsername(loginCredentials.getName());
@@ -47,6 +48,7 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> signup(@RequestBody User user) {
         userService.registerUser(user);
         return ResponseEntity.ok("User registered successfully.");

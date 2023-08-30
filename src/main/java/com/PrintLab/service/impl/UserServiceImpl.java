@@ -1,6 +1,6 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.LoginCredentials;
+import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.Role;
 import com.PrintLab.modal.User;
 import com.PrintLab.repository.RoleRepository;
@@ -9,8 +9,7 @@ import com.PrintLab.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,21 +24,16 @@ public class UserServiceImpl implements UserService {
         this.roleRepository = roleRepository;
     }
 
-
     @Override
     public User registerUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-
-        // Fetch role entities from the database by their IDs
-        Role adminRole = roleRepository.findById(1L).orElse(null);
-        Role userRole = roleRepository.findById(2L).orElse(null);
-
-        if (adminRole != null && userRole != null) {
-            user.getRoles().add(adminRole);
-            user.getRoles().add(userRole);
+        Set<Role> roleList = new HashSet<>();
+        for(Role role: user.getRoles()){
+            roleRepository.findById(role.getId())
+                    .orElseThrow(()-> new RecordNotFoundException("Role not found"));
+            roleList.add(role);
         }
-
-
+        user.setRoles(roleList);
         userRepository.save(user);
         return user;
     }
