@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api")
@@ -19,8 +21,8 @@ public class CalculatorController {
 
     @PostMapping("/printlab-calculator")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Double> calculateMoq(@RequestBody Calculator calculator) {
-        Double result = calculatorService.CalculateMoq(calculator);
+    public ResponseEntity<Map<String, Double>> calculateMoq(@RequestBody Calculator calculator) {
+        Map<String,Double> result = calculatorService.CalculateMoq(calculator);
         return ResponseEntity.ok(result);
     }
 }
