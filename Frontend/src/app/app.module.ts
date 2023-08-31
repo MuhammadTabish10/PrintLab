@@ -37,6 +37,7 @@ import { CustomerComponent } from './pages/customer/customer.component';
 import { AddCustomerComponent } from './pages/add-customer/add-customer.component';
 import { ViewOrderComponent } from './pages/view-order/view-order.component';
 import { DialogModule } from 'primeng/dialog';
+import { AuthInterceptorProvider, InterceptorService } from './services/interceptor.service';
 
 
 @NgModule({
@@ -70,8 +71,7 @@ import { DialogModule } from 'primeng/dialog';
     CustomerComponent,
     AddCustomerComponent,
     ViewOrderComponent
-
-  ],
+   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -83,7 +83,7 @@ import { DialogModule } from 'primeng/dialog';
     DropdownModule,
     DialogModule
   ],
-  providers: [],
+  providers: [AuthInterceptorProvider,InterceptorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

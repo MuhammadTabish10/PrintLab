@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs';
+import { AuthguardService } from 'src/app/services/authguard.service';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -13,7 +15,8 @@ export class LoginFormComponent implements OnInit {
   passwordValue: string = ''
   token: any
 
-  constructor(private router: Router, private loginService: LoginService) { }
+  constructor(private router: Router, private loginService: LoginService, private authService: AuthguardService) {
+  }
 
   ngOnInit(): void {
   }
@@ -24,9 +27,12 @@ export class LoginFormComponent implements OnInit {
       password: this.passwordValue
     }
     this.loginService.post(obj).subscribe(res => {
+      debugger
       this.token = res
-      localStorage.setItem("token", JSON.stringify(this.token))
+      localStorage.setItem("token", this.token.jwt)
       this.router.navigateByUrl('/dashboard')
+    }, error => {
+      alert(error.error.error)
     })
   }
 }

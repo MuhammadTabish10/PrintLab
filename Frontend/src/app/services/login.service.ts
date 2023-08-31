@@ -10,6 +10,7 @@ export class LoginService {
 
 
   constructor(private http: HttpClient) { }
+
   post(obj: any) {
     let url = `${this._url}/login`
     return this.http.post(url, obj)

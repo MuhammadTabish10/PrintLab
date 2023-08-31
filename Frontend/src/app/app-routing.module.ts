@@ -31,7 +31,7 @@ import { ViewOrderComponent } from './pages/view-order/view-order.component';
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent
+    component: LoginFormComponent
   },
   {
     path: 'dashboard',
@@ -52,7 +52,8 @@ const routes: Routes = [
   },
   {
     path: 'products',
-    component: ProductsComponent
+    component: ProductsComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addProduct',

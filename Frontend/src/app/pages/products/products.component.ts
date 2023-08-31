@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthguardService } from 'src/app/services/authguard.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class ProductsComponent implements OnInit {
   tableData: Boolean = true
   search: string = ''
 
-  constructor(private router: Router, private productService: ProductService) { }
+  constructor(private router: Router, private productService: ProductService, private authService: AuthguardService) { }
 
   ngOnInit(): void {
     this.getProducts()

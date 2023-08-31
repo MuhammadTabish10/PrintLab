@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { InterceptorService } from './interceptor.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class ProductService {
 
   _url = environment.baseUrl
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private interceptor: InterceptorService) { }
 
   deleteSelectedField(id: any, pfId: any, selectedId: any) {
 
@@ -30,7 +31,6 @@ export class ProductService {
   }
 
   getVendorByProcessId(id: any) {
-    //
     let url = `${this._url}/vendor/${id}/product-process`
     return this.http.get(url)
   }
