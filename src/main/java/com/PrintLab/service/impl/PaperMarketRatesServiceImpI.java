@@ -1,11 +1,9 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
-import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.PaperMarketRates;
 
-import com.PrintLab.modal.PaperSize;
 import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.stereotype.Service;
@@ -39,6 +37,17 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             paperMarketRatesDtoList.add(paperMarketRatesDto);
         }
         return paperMarketRatesDtoList;
+    }
+
+    @Override
+    public List<Integer> getDistinctGSMForPaperStock(String paperStock) {
+        Optional<List<Integer>> optionalGsmList = Optional.ofNullable(paperMarketRatesRepository.findDistinctGSMByPaperStock(paperStock));
+        if(optionalGsmList.isPresent()){
+            return optionalGsmList.get();
+        }
+        else{
+            throw new RecordNotFoundException("PaperStock not found at: " + paperStock);
+        }
     }
 
     @Override
