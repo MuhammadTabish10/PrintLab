@@ -77,6 +77,7 @@ export class AddOrderComponent implements OnInit {
       el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperValue = el.selected.productFieldValue.name : null
       el.name.toLowerCase().replace(/\s/g, '') == 'size' ? this.sizeValue = el.selected.productFieldValue.name : null
       el.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'quantity' ? this.qtyValue = el.selected.productFieldValue.name : null
       el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(front)' ? this.jobFrontValue = el.selected.productFieldValue.name : null
       el.name.toLowerCase().replace(/\s/g, '') == 'printside' ? this.sideOptionValue = el.selected.productFieldValue.name : null
       el.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selected.productFieldValue.name : null
@@ -95,6 +96,7 @@ export class AddOrderComponent implements OnInit {
       paper: this.paperValue,
       sizeValue: this.sizeValue,
       gsm: this.gsmValue,
+      quantity: this.qtyValue,
       jobColorsFront: this.jobFrontValue,
       sheetSizeValue: "18\"x23\"",
       sideOptionValue: this.sideOptionValue,
@@ -104,7 +106,7 @@ export class AddOrderComponent implements OnInit {
     this.orderService.calculations(obj).subscribe(res => {
       let obj: any
       obj = res
-      this.totalAmount = obj.TotalProfit
+      this.totalAmount = Math.round(obj.TotalProfit * 100) / 100
     }, error => {
       this.error = error.error.error
       alert(this.error);
@@ -113,9 +115,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   addOrder() {
-    this.selectedProdDefArray.forEach((el: any) => {
-      el.name.toLowerCase().replace(/\s/g, '') == 'quantity' ? this.qtyValue = el.selected.productFieldValue.name : null
-    })
     if (Number.isNaN(this.idFromQueryParam)) {
       let obj = {
         product: this.productName,
@@ -124,7 +123,7 @@ export class AddOrderComponent implements OnInit {
         sheetSizeValue: "18\"x23\"",
         gsm: this.gsmValue,
         quantity: this.qtyValue,
-        price: Math.round(this.totalAmount * 100) / 100,
+        price: this.totalAmount,
         providedDesign: this.designValue,
         url: this.imgUrl,
         sideOptionValue: this.sideOptionValue,
@@ -149,7 +148,7 @@ export class AddOrderComponent implements OnInit {
         sheetSizeValue: "18\"x23\"",
         gsm: this.gsmValue,
         quantity: this.qtyValue,
-        price: Math.round(this.totalAmount * 100) / 100,
+        price: this.totalAmount,
         providedDesign: this.designValue,
         url: this.imgUrl,
         sideOptionValue: this.sideOptionValue,
