@@ -10,6 +10,7 @@ public interface PaperMarketRatesService
 {
     PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto);
     List<PaperMarketRatesDto> getAll();
+    List<Integer> getDistinctGSMForPaperStock(String paperStock);
     PaperMarketRatesDto findByPaperStock(String paperStock);
     List<PaperMarketRatesDto> searchByPaperStock(String paperStock);
     PaperMarketRatesDto findById(Long id);

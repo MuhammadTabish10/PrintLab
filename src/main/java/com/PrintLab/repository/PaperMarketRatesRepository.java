@@ -1,7 +1,6 @@
 package com.PrintLab.repository;
 
 import com.PrintLab.modal.PaperMarketRates;
-import com.PrintLab.modal.PressMachine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +14,6 @@ public interface PaperMarketRatesRepository extends JpaRepository<PaperMarketRat
     @Query("SELECT pmr FROM PaperMarketRates pmr WHERE pmr.paperStock LIKE %:searchName%")
     List<PaperMarketRates> findPaperMarketRatesByPaperStock(@Param("searchName") String searchName);
     List<PaperMarketRates> findByPaperStockAndGSMAndDimensionOrderByDateDesc(String paperStock, Integer gsm, String dimension);
+    @Query("SELECT DISTINCT pmr.GSM FROM PaperMarketRates pmr WHERE pmr.paperStock = :paperStock")
+    List<Integer> findDistinctGSMByPaperStock(@Param("paperStock") String paperStock);
 }
