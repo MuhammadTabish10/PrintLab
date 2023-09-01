@@ -11,7 +11,7 @@ export class PressMachineService {
   constructor(private http: HttpClient) { }
 
   postPressMachine(obj: any) {
-    debugger
+
     let url = `${this._url}/press-machine`
     return this.http.post(url, obj)
   }
@@ -22,7 +22,7 @@ export class PressMachineService {
   }
 
   getPressMachineById(id: any) {
-    debugger
+
     let url = `${this._url}/press-machine/${id}`
     return this.http.get(url)
   }
@@ -33,7 +33,7 @@ export class PressMachineService {
   }
 
   deletePressMachineSize(id: any, sizeId: any) {
-    debugger
+
     let url = `${this._url}/press-machine/${id}/${sizeId}`
     return this.http.delete(url)
   }

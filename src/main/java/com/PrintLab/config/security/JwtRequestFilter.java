@@ -1,6 +1,7 @@
 package com.PrintLab.config.security;
 
 import com.PrintLab.service.impl.MyUserDetailServiceImplementation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,14 +18,22 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
     private MyUserDetailServiceImplementation myUserDetailServiceImplementation;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         try {
+
+//            if(request.getMethod().equalsIgnoreCase("OPTIONS")){
+//                response.setStatus(200);
+//                response.setHeader("Access-Control-Allow-Origin", "*");
+//                return;
+//            }
             final String authorizationHeader = request.getHeader("Authorization");
             String username = null;
             String jwt = null;

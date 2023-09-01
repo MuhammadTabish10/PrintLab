@@ -25,8 +25,9 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
     private final ProductFieldServiceImpl productFieldService;
     private final ProductProcessServiceImpl productProcessService;
     private final VendorServiceImpl vendorService;
+    private final PressMachineRepository pressMachineRepository;
 
-    public ProductDefinitionServiceImpl(ProductDefinitionRepository productDefinitionRepository, ProductDefinitionFieldRepository productDefinitionFieldRepository, ProductDefinitionProcessRepository productDefinitionProcessRepository, ProductProcessRepository productProcessRepository, ProductFieldRepository productFieldRepository, ProductDefinitionSelectedValuesRepository productDefinitionSelectedValuesRepository, ProductFieldValuesRepository productFieldValuesRepository, VendorRepository vendorRepository, ProductFieldServiceImpl productFieldService, ProductProcessServiceImpl productProcessService, VendorServiceImpl vendorService) {
+    public ProductDefinitionServiceImpl(ProductDefinitionRepository productDefinitionRepository, ProductDefinitionFieldRepository productDefinitionFieldRepository, ProductDefinitionProcessRepository productDefinitionProcessRepository, ProductProcessRepository productProcessRepository, ProductFieldRepository productFieldRepository, ProductDefinitionSelectedValuesRepository productDefinitionSelectedValuesRepository, ProductFieldValuesRepository productFieldValuesRepository, VendorRepository vendorRepository, ProductFieldServiceImpl productFieldService, ProductProcessServiceImpl productProcessService, VendorServiceImpl vendorService, PressMachineRepository pressMachineRepository) {
         this.productDefinitionRepository = productDefinitionRepository;
         this.productDefinitionFieldRepository = productDefinitionFieldRepository;
         this.productDefinitionProcessRepository = productDefinitionProcessRepository;
@@ -38,7 +39,9 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
         this.productFieldService = productFieldService;
         this.productProcessService = productProcessService;
         this.vendorService = vendorService;
+        this.pressMachineRepository = pressMachineRepository;
     }
+
 
     @Transactional
     @Override
@@ -199,6 +202,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
             ProductDefinition existingProductDefinition = optionalProductDefinition.get();
             existingProductDefinition.setTitle(productDefinition.getTitle());
             existingProductDefinition.setStatus(productDefinition.getStatus());
+            existingProductDefinition.setPressMachine(productDefinition.getPressMachine());
 
             List<ProductDefinitionField> existingPdfValues = existingProductDefinition.getProductDefinitionFieldList();
             List<ProductDefinitionField> newPdfValues = productDefinition.getProductDefinitionFieldList();
@@ -469,6 +473,7 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
                 .id(productDefinition.getId())
                 .title(productDefinition.getTitle())
                 .status(productDefinition.getStatus())
+                .pressMachine(productDefinition.getPressMachine())
                 .productDefinitionFieldList(productDefinitionFieldDto)
                 .productDefinitionProcessList(productDefinitionProcessDto)
                 .build();
@@ -476,10 +481,14 @@ public class ProductDefinitionServiceImpl implements ProductDefinitionService {
 
 
     public ProductDefinition toEntity(ProductDefinitionDto productDefinitionDto) {
+        PressMachine pressMachine = pressMachineRepository.findById(productDefinitionDto.getPressMachine().getId())
+                .orElseThrow(()->new RecordNotFoundException("PressMachine not found"));
+
         ProductDefinition productDefinition = ProductDefinition.builder()
                 .id(productDefinitionDto.getId())
                 .title(productDefinitionDto.getTitle())
                 .status(productDefinitionDto.getStatus())
+                .pressMachine(pressMachine)
                 .build();
 
         List<ProductDefinitionField> productDefinitionFieldList = new ArrayList<>();

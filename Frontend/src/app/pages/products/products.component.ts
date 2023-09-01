@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthguardService } from 'src/app/services/authguard.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -11,9 +12,9 @@ export class ProductsComponent implements OnInit {
 
   productDefinitionArray: any = []
   tableData: Boolean = true
-  search:string=''
+  search: string = ''
 
-  constructor(private router: Router, private productService: ProductService) { }
+  constructor(private router: Router, private productService: ProductService, private authService: AuthguardService) { }
 
   ngOnInit(): void {
     this.getProducts()
@@ -26,33 +27,31 @@ export class ProductsComponent implements OnInit {
   getProducts() {
     this.productService.getProducts().subscribe(res => {
       this.productDefinitionArray = res
-      console.log(this.productDefinitionArray);
       this.productDefinitionArray.length == 0 ? this.tableData = true : this.tableData = false
     })
   }
 
   deleteProduct(id: any) {
     this.productService.deleteProduct(id).subscribe(res => {
-      debugger
+
       this.getProducts()
     })
   }
 
   searchProduct(title: any) {
-    if(this.search==''){
+    if (this.search == '') {
       this.getProducts()
-    }else{
-    this.productService.searchProduct(title.value).subscribe(res => {
-      debugger
-      this.productDefinitionArray = res
-      console.log(this.productDefinitionArray);
-      if (this.productDefinitionArray.length == 0) {
-        this.tableData = true
-      } else {
-        this.tableData = false
-      }
-    })
-  }
+    } else {
+      this.productService.searchProduct(title.value).subscribe(res => {
+
+        this.productDefinitionArray = res
+        if (this.productDefinitionArray.length == 0) {
+          this.tableData = true
+        } else {
+          this.tableData = false
+        }
+      })
+    }
   }
 
   editProduct(id: any): void {

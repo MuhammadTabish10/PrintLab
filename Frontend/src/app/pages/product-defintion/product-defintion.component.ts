@@ -29,7 +29,7 @@ export class ProductDefintionComponent implements OnInit {
   }
 
   deleteField(id: any) {
-    debugger
+
     this.productFieldService.deleteField(id).subscribe(() => {
       this.getFields()
     })
@@ -44,10 +44,9 @@ export class ProductDefintionComponent implements OnInit {
       this.getFields()
     } else {
       this.productFieldService.searchProductField(field.value).subscribe(res => {
-        debugger
+
         this.fieldList = res
         this.fieldList.length == 0 ? this.tableData = true : this.tableData = false
-        console.log(this.fieldList);
       })
     }
   }

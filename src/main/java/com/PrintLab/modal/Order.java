@@ -20,10 +20,16 @@ public class Order
     private Long id;
 
     private String product;
+    private String paper;
     private String size;
+    private String sheetSizeValue;
     private Double gsm;
     private Double quantity;
     private Double price;
+    private Long jobColorsFront;
+    private String sideOptionValue;
+    private Boolean impositionValue;
+    private Long jobColorsBack;
     private Boolean providedDesign;
     private String url;
 

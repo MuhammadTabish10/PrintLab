@@ -31,15 +31,18 @@ export class OrdersComponent implements OnInit {
 
   getOrders() {
     this.orderService.getOrders().subscribe(res => {
-      debugger
+
       this.ordersArray = res;
-      console.log(this.ordersArray);
       this.ordersArray.length == 0 ? this.tableData = true : this.tableData == false
     })
   }
 
   editOrder(id: any) {
     this.router.navigate(['/addOrder'], { queryParams: { id: id } });
+  }
+
+  viewOrder(id: any) {
+    this.router.navigate(['/viewOrder'], { queryParams: { id: id } });
   }
 
   deleteOrder(id: any) {

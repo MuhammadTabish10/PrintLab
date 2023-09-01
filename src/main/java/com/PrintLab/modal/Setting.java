@@ -21,5 +21,6 @@ public class Setting {
     @Column(name = "setting_key")
     private String key;
 
+    @Column(name = "value", length = 1000)
     private String value;
 }

@@ -21,7 +21,6 @@ export class PaperSizeComponent implements OnInit {
   getPaperSizes() {
     this.paperSizeService.getPaperSize().subscribe(res => {
       this.paperSizesArray = res
-      console.log(this.paperSizesArray);
       this.paperSizesArray.length == 0 ? this.tableData = true : this.tableData = false
     })
   }

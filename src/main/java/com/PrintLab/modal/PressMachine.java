@@ -1,5 +1,6 @@
 package com.PrintLab.modal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +27,6 @@ public class PressMachine {
     private Double impression_1000_rate;
     private Boolean is_selected;
 
-
-    @OneToMany(mappedBy = "pressMachine", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pressMachine", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PressMachineSize> pressMachineSize;
 }

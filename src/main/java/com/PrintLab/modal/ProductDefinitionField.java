@@ -30,6 +30,11 @@ public class ProductDefinitionField {
     @JoinColumn(name = "product_field_id")
     private ProductField productField;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "press_machine_id")
+    private PressMachine pressMachine;
+
     @OneToMany(mappedBy = "productDefinitionField")
     private List<ProductDefinitionSelectedValues> selectedValues;
 }

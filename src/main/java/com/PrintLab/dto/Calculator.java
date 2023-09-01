@@ -1,5 +1,6 @@
-package com.PrintLab.modal;
+package com.PrintLab.dto;
 
+import com.PrintLab.modal.PressMachine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,13 +12,19 @@ import lombok.NoArgsConstructor;
 @Data
 public class Calculator
 {
-    private String selectedProductValue;
+    private Long pressMachineId;
+    private String productValue;
     private Long jobColorsFront;
     private String sizeValue;
     private String paper;
     private Integer gsm;
+    private Long quantity;
     private String sheetSizeValue;
     private String sideOptionValue;
     private Boolean impositionValue;
     private Long jobColorsBack;
+    private Double margin;
+    private Double setupFee;
+    private Double cutting;
+    private Double cuttingImpression;
 }

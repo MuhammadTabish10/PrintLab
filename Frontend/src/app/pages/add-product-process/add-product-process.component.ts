@@ -9,6 +9,8 @@ import { ProductProcessService } from 'src/app/services/product-process.service'
 })
 export class AddProductProcessComponent implements OnInit {
 
+  visible!:boolean
+  error:string=''
   buttonName: string = 'Add'
   nameValue: string = ''
   statusValue: string = 'Active'
@@ -30,6 +32,9 @@ export class AddProductProcessComponent implements OnInit {
           this.nameValue = this.productProcessToUpdate.name
           this.statusValue = this.productProcessToUpdate.status
           this.statusValue == 'Active' ? this.statusFlag = true : this.statusFlag = false
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
@@ -43,10 +48,16 @@ export class AddProductProcessComponent implements OnInit {
     if (Number.isNaN(this.idFromQueryParam)) {
       this.productProcessService.postProductProcess(obj).subscribe(() => {
         this.router.navigateByUrl('/productProcess')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       this.productProcessService.updateProductProcess(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/productProcess')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }

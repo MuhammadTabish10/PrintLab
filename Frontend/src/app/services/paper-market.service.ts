@@ -12,7 +12,7 @@ export class PaperMarketService {
   constructor(private http: HttpClient) { }
 
   postPaperMarket(obj: any) {
-    debugger
+
     let url = `${this._url}/paper-market-rates`
     return this.http.post(url, obj)
   }
@@ -23,7 +23,7 @@ export class PaperMarketService {
   }
 
   deletePaperMarket(id: any) {
-    debugger
+
     let url = `${this._url}/paper-market-rates/${id}`
     return this.http.delete(url)
   }
@@ -34,7 +34,7 @@ export class PaperMarketService {
   }
 
   updatePaperMarket(id: any, obj: any) {
-    debugger
+
     let url = `${this._url}/paper-market-rates/${id}`
     return this.http.put(url, obj)
   }

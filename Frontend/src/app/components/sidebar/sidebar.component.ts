@@ -29,35 +29,15 @@ export class SidebarComponent {
       name: "Orders"
     },
     {
-      link: "123",
-      icon: "fa fa-shop fa-2x",
-      name: "Sellers"
-    },
-    {
       link: "addProduct",
       icon: "fa fa-add fa-2x",
       name: "Add Product"
     },
     {
-      link: "123",
-      icon: "fa fa-book fa-2x",
-      name: "Transactions"
-    },
-    {
-      link: "123",
-      icon: "fa fa-user fa-2x",
-      name: "Accounts"
-    },
-    {
-      link: "123",
-      icon: "fa fa-star fa-2x",
-      name: "Brands"
-    },
-    {
-      link: "calculator",
-      icon: "fa fa-calculator",
-      name: "Calculator"
-    }
+          link: "calculator",
+          icon: "fa fa-calculator",
+          name: "Calculator"
+        }
   ]
   configurationOptions: any = [
     {

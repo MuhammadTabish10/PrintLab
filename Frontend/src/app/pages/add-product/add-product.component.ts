@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PressMachineService } from 'src/app/services/press-machine.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { ProductProcessService } from 'src/app/services/product-process.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -11,6 +12,8 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class AddProductComponent implements OnInit {
 
+  visible!: boolean
+  error: string = ''
   fieldList: any = []
   productDefinition: any = [];
   valuesArr: any = []
@@ -28,12 +31,15 @@ export class AddProductComponent implements OnInit {
   impostionObj: any = {}
   publicArray: any = []
   status: boolean = true
+  pressMachineArray: any = []
+  selectedMachine: any = {}
 
-  constructor(private service: ProductService, private route: ActivatedRoute, private router: Router, private productProcessService: ProductProcessService, private productFieldService: ProductDefinitionService) { }
+  constructor(private service: ProductService, private route: ActivatedRoute, private router: Router, private productProcessService: ProductProcessService, private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService) { }
 
   ngOnInit(): void {
     this.getFields()
     this.getProductProcessList()
+    this.getPressMachines()
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
@@ -45,13 +51,17 @@ export class AddProductComponent implements OnInit {
           this.titleInput = this.productToUpdate.title
           this.status = this.productToUpdate.status
           this.productDefinition = this.productToUpdate.productDefinitionFieldList
+          this.selectedMachine = this.productToUpdate.pressMachine
           this.process = this.productToUpdate.productDefinitionProcessList
           this.process.forEach((el: any) => {
             this.service.getVendorByProcessId(el.productProcess.id).subscribe(res => {
               this.vendorList.push(res)
+            }, error => {
+              this.error = error.error.error
+              this.visible = true;
             })
           })
-          debugger
+
           for (let i = 0; i < this.fieldList.length; i++) {
             if (this.fieldList[i].id == this.productDefinition[i].productField.id) {
               this.publicArray[i] = this.productDefinition[i].isPublic
@@ -60,7 +70,6 @@ export class AddProductComponent implements OnInit {
                 this.valuesSelected[i].push(el.productFieldValue)
               })
             }
-            console.log(this.productToUpdate.productDefinitionFieldList);
             if (this.fieldList[i].type == 'TOGGLE') {
               this.toggleFlag = []
               this.productToUpdate.productDefinitionFieldList.forEach((el: any) => {
@@ -73,11 +82,11 @@ export class AddProductComponent implements OnInit {
                 }
               })
             }
-            console.log(this.toggleFlag);
           }
 
-          // console.log(this.valuesSelected);
-          console.log(this.productDefinition);
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
@@ -85,11 +94,10 @@ export class AddProductComponent implements OnInit {
 
   getStatusValue() {
     this.status = !this.status
-    console.log(this.status);
   }
 
   showPublic(i: any, id: any) {
-    debugger
+
     let flag = false
     for (const el of this.productDefinition) {
       if (el.productField.id == id) {
@@ -101,15 +109,13 @@ export class AddProductComponent implements OnInit {
       }
     }
     flag ? this.publicArray[i] = !this.publicArray[i] : null
-    console.log(this.productDefinition);
   }
 
   productDefinitionComposing(field: any, obj: any, publicIndex: any) {
-    debugger
+
     let object: any
     obj.hasOwnProperty('itemValue') ? object = obj.itemValue : object = obj.value
     if (this.productDefinition.length == 0) {
-      console.log(object);
       if (Array.isArray(object)) {
         let values: any = []
         for (let i = 0; i < object.length; i++) {
@@ -157,10 +163,10 @@ export class AddProductComponent implements OnInit {
               if (index == -1) {
                 element.selectedValues.push({ productFieldValue: object });
               } else {
-                debugger
+
                 if (!Number.isNaN(this.idFromQueryParam)) {
                   this.service.deleteSelectedField(this.idFromQueryParam, element.id, object.id).subscribe(res => {
-                    debugger
+
                     element.selectedValues.splice(index, 1);
                   })
                 }
@@ -200,15 +206,11 @@ export class AddProductComponent implements OnInit {
         }
       }
     }
-    // this.productDefinition = this.productDefinition.filter((obj: any) =>{
-    //   obj.hasOwnProperty('selectedValues') ? obj.selectedValues.length > 0 : null});
-    // this.productDefinition.sort((a: any, b: any) => a.id - b.id);
     this.valuesAddFlag = false
-    console.log(this.productDefinition);
   }
 
   postProduct() {
-    debugger
+
     if (Number.isNaN(this.idFromQueryParam)) {
       for (let i = 0; i < this.fieldList.length; i++) {
         if (this.fieldList[i].type == 'TOGGLE') {
@@ -222,13 +224,16 @@ export class AddProductComponent implements OnInit {
         title: this.titleInput,
         status: this.status,
         productDefinitionFieldList: this.productDefinition,
+        pressMachine: this.selectedMachine,
         productDefinitionProcessList: this.process,
       };
-      console.log(obj);
-      debugger
+
       this.service.addProduct(obj).subscribe(res => {
-        debugger
+
         this.router.navigateByUrl('/products')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       for (let i = 0; i < this.productDefinition.length; i++) {
@@ -241,33 +246,34 @@ export class AddProductComponent implements OnInit {
         title: this.titleInput,
         status: this.status,
         productDefinitionFieldList: this.productDefinition,
+        pressMachine: this.selectedMachine,
         productDefinitionProcessList: this.process,
       };
       this.service.updateProduct(this.idFromQueryParam, obj).subscribe()
       this.service.getProducts().subscribe(res => {
-        debugger
+
         this.router.navigateByUrl('/products')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }
 
   selectProcess(obj: any, i: any) {
     this.service.getVendorByProcessId(obj.id).subscribe(res => {
-      debugger
+
       if (this.process[i].productProcess.id == obj.id) {
         this.vendorList[i] = res
       } else {
         this.vendorList.push(res)
       }
-      console.log(this.vendorList);
       // this.vendorList = res
-      // console.log(this.vendorList);
     })
   }
   getFields() {
     this.productFieldService.getProductDefintion().subscribe(res => {
       this.fieldList = res
-      console.log(this.fieldList);
       this.fieldList.forEach((field: any) => {
         field.type != 'TEXTFIELD' && field.type != 'TOGGLE' ? this.publicArray.push(false) : this.publicArray.push(null)
         if (field.type == 'TOGGLE') {
@@ -277,33 +283,46 @@ export class AddProductComponent implements OnInit {
         }
         field.type == 'TEXTFIELD' ? this.titleObj = field : null
       })
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
   getProductProcessList() {
     this.productProcessService.getProductProcess().subscribe(res => {
       this.productProcessList = res
-      // console.log(this.productProcessList);
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
   getToggleValue(i: any) {
-    debugger
+
     this.toggleFlag[i] = !this.toggleFlag[i]
-    console.log(this.toggleFlag);
   }
   generateElement() {
     this.process.push({ productProcess: null, vendor: null });
   }
   removeElement(index: number) {
-    debugger
+
     if (!Number.isNaN(this.idFromQueryParam)) {
       this.service.deleteProcess(this.idFromQueryParam, this.process[index].id).subscribe(res => {
         this.process.splice(index, 1);
         this.vendorList.splice(index, 1);
-        debugger
+
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       this.process.splice(index, 1);
       this.vendorList.splice(index, 1);
     }
+  }
+
+  getPressMachines() {
+    this.pressMachineService.getPressMachine().subscribe(res => {
+      this.pressMachineArray = res
+    })
   }
 }

@@ -1,3 +1,4 @@
+import { ProductDefinitionService } from './../../services/product-definition.service';
 import { Component, OnInit } from '@angular/core';
 import { PaperMarketComponent } from '../paper-market/paper-market.component';
 import { PaperMarketService } from 'src/app/services/paper-market.service';
@@ -10,10 +11,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AddPaperMarketComponent implements OnInit {
 
+  quantityArray: any = [500, 1000]
+  visible: boolean = false
+  error: string = ''
   buttonName: String = 'Add'
   dateValue: String = ''
-  paperStockValue: String = ''
-  gsmValue!: number
+  paperStockValue: any = {}
+  gsmValue: any = {}
   lengthValue!: number
   widthValue!: number
   dimensionValue: String = ''
@@ -23,21 +27,22 @@ export class AddPaperMarketComponent implements OnInit {
   noteValue: String = ''
   idFromQueryParam!: number
   rateToUpdate: any = []
+  paperStockArray: any = []
+  gsmArray: any = []
 
-
-  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService) { }
 
   ngOnInit(): void {
+    this.getProductFields()
     this.route.queryParams.subscribe(param => {
-      debugger
+      //
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add'
       } else {
         this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
-          debugger
+
           this.buttonName = 'Update'
-          console.log(res);
           this.rateToUpdate = res
           this.dateValue = this.rateToUpdate.date
           this.paperStockValue = this.rateToUpdate.paperStock
@@ -49,38 +54,60 @@ export class AddPaperMarketComponent implements OnInit {
           this.rateValue = this.rateToUpdate.ratePkr
           this.noteValue = this.rateToUpdate.notes
           this.verifiedValue = this.rateToUpdate.verified
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
   }
 
   addPapermarketRate() {
-    debugger
-    console.log(this.verifiedValue);
     let obj = {
       date: this.dateValue,
-      paperStock: this.paperStockValue,
+      paperStock: this.paperStockValue.name,
       length: this.lengthValue,
       width: this.widthValue,
       dimension: this.dimensionValue,
       qty: this.qtyValue,
       ratePkr: this.rateValue,
       verified: this.verifiedValue,
-      gsm: this.gsmValue,
+      gsm: this.gsmValue.name,
       notes: this.noteValue
     }
     if (Number.isNaN(this.idFromQueryParam)) {
       this.paperMarketService.postPaperMarket(obj).subscribe(res => {
-        debugger
+
         this.router.navigateByUrl('/paperMarket')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       this.paperMarketService.updatePaperMarket(this.idFromQueryParam, obj).subscribe(res => {
-        debugger
+
         this.router.navigateByUrl('/paperMarket')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
 
     }
+  }
+
+  dimension() {
+    this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
+  }
+
+  getProductFields() {
+    this.productFieldService.getProductDefintion().subscribe(res => {
+      let arr: any = []
+      arr = res
+      arr.forEach((element: any) => {
+        element.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperStockArray = element.productFieldValuesList : null
+        element.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmArray = element.productFieldValuesList : null
+      });
+    })
   }
 
   getVerifiedValue() {

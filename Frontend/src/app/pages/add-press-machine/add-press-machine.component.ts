@@ -10,6 +10,8 @@ import { PressMachineService } from 'src/app/services/press-machine.service';
 })
 export class AddPressMachineComponent implements OnInit {
 
+  visible!: boolean
+  error: string = ''
   buttonName: string = 'Add'
   nameValue: string = ''
   ctpRateValue!: number
@@ -41,7 +43,7 @@ export class AddPressMachineComponent implements OnInit {
           this.ctpRateValue = this.pressMachineToUpdate.ctp_rate
           this.impressionRateValue = this.pressMachineToUpdate.impression_1000_rate
           this.select = this.pressMachineToUpdate.is_selected
-          debugger
+
           this.pressMachineToUpdate.pressMachineSize.forEach((item: any) => {
             this.pressMachineSizeId.push(item.id)
             this.value.push(item.value)
@@ -55,7 +57,9 @@ export class AddPressMachineComponent implements OnInit {
               }
             })
           })
-          // console.log(this.paperSizesArray);
+        }, error => {
+          this.error = error.error.error
+          this.visible = true;
         })
       }
     })
@@ -65,6 +69,9 @@ export class AddPressMachineComponent implements OnInit {
     this.paperSizeService.getPaperSize().subscribe(res => {
       this.paperSizesArray = res
       this.maxLength = this.paperSizesArray.length
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
 
@@ -77,7 +84,6 @@ export class AddPressMachineComponent implements OnInit {
         this.paperSizesArray.splice(i, 1);
       }
     }
-    console.log(this.obj);
   }
 
   generateElement() {
@@ -86,9 +92,12 @@ export class AddPressMachineComponent implements OnInit {
   }
 
   removeElement(index: number) {
-    debugger
+
     if (!Number.isNaN(this.idFromQueryParam)) {
-      this.pressMachineService.deletePressMachineSize(this.idFromQueryParam, this.pressMachineSizeId[index]).subscribe()
+      this.pressMachineService.deletePressMachineSize(this.idFromQueryParam, this.pressMachineSizeId[index]).subscribe(() => { }, error => {
+        this.error = error.error.error
+        this.visible = true;
+      })
     }
     this.pressMachineSizeId.splice(index, 1)
     this.obj[index] ? this.paperSizesArray.push(this.obj[index]) : null
@@ -99,7 +108,7 @@ export class AddPressMachineComponent implements OnInit {
   }
 
   addPressMachine() {
-    debugger
+
     if (Number.isNaN(this.idFromQueryParam)) {
       this.obj = this.obj.map((item: any, index: any) => {
         return { paperSize: item, value: this.value[index] };
@@ -113,6 +122,9 @@ export class AddPressMachineComponent implements OnInit {
       }
       this.pressMachineService.postPressMachine(obj).subscribe(() => {
         this.router.navigateByUrl('/pressMachine')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     } else {
       for (let i = 0; i < this.obj.length; i++) {
@@ -131,6 +143,9 @@ export class AddPressMachineComponent implements OnInit {
       }
       this.pressMachineService.updatePressMachine(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/pressMachine')
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }

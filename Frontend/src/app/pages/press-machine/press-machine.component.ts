@@ -21,7 +21,6 @@ export class PressMachineComponent implements OnInit {
   getPressMachine() {
     this.pressMachineService.getPressMachine().subscribe(res => {
       this.pressMachineArray = res
-      // console.log(this.pressMachineArray);
       this.pressMachineArray.length == 0 ? this.tableData = true : this.tableData = false
     })
   }

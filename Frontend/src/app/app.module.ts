@@ -9,7 +9,6 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { AddOrderComponent } from './pages/add-order/add-order.component';
-import { EditOrderComponent } from './pages/edit-order/edit-order.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { AddProductComponent } from './pages/add-product/add-product.component';
 import { ViewProductComponent } from './pages/view-product/view-product.component';
@@ -39,6 +38,9 @@ import { AddCustomerComponent } from './pages/add-customer/add-customer.componen
 import { CalculatorComponent } from './pages/calculator/calculator.component';
 import { CalculatorHeaderComponent } from './pages/calculator-header/calculator-header.component';
 import { ConfigurationTableComponent } from './pages/configuration-table/configuration-table.component';
+import { ViewOrderComponent } from './pages/view-order/view-order.component';
+import { DialogModule } from 'primeng/dialog';
+import { AuthInterceptorProvider, InterceptorService } from './services/interceptor.service';
 
 
 @NgModule({
@@ -50,7 +52,6 @@ import { ConfigurationTableComponent } from './pages/configuration-table/configu
     OrdersComponent,
     LoginFormComponent,
     AddOrderComponent,
-    EditOrderComponent,
     ProductsComponent,
     AddProductComponent,
     ViewProductComponent,
@@ -72,6 +73,9 @@ import { ConfigurationTableComponent } from './pages/configuration-table/configu
     AddSettingsComponent,
     CustomerComponent,
     AddCustomerComponent,
+    ViewOrderComponent
+   ],
+    AddCustomerComponent,
     CalculatorComponent,
     CalculatorHeaderComponent,
     ConfigurationTableComponent
@@ -85,9 +89,10 @@ import { ConfigurationTableComponent } from './pages/configuration-table/configu
     FormsModule,
     MultiSelectModule,
     BrowserAnimationsModule,
-    DropdownModule
+    DropdownModule,
+    DialogModule
   ],
-  providers: [],
+  providers: [AuthInterceptorProvider,InterceptorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

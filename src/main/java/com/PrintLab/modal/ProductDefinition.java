@@ -24,9 +24,14 @@ public class ProductDefinition {
     private String title;
     private Boolean status;
 
+    @ManyToOne
+    @JoinColumn(name = "press_machine_id")
+    private PressMachine pressMachine;
+
     @OneToMany(mappedBy = "productDefinition", cascade = CascadeType.ALL)
     private List<ProductDefinitionField> productDefinitionFieldList = new ArrayList<>();
 
     @OneToMany(mappedBy = "productDefinition", cascade = CascadeType.ALL)
     private List<ProductDefinitionProcess> productDefinitionProcessList = new ArrayList<>();
 }
+
