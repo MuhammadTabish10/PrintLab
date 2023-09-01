@@ -52,6 +52,11 @@ export class SidebarComponent {
       link: "123",
       icon: "fa fa-star fa-2x",
       name: "Brands"
+    },
+    {
+      link: "calculator",
+      icon: "fa fa-calculator",
+      name: "Calculator"
     }
   ]
   configurationOptions: any = [

@@ -36,6 +36,9 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { AddSettingsComponent } from './pages/add-settings/add-settings.component';
 import { CustomerComponent } from './pages/customer/customer.component';
 import { AddCustomerComponent } from './pages/add-customer/add-customer.component';
+import { CalculatorComponent } from './pages/calculator/calculator.component';
+import { CalculatorHeaderComponent } from './pages/calculator-header/calculator-header.component';
+import { ConfigurationTableComponent } from './pages/configuration-table/configuration-table.component';
 
 
 @NgModule({
@@ -68,7 +71,10 @@ import { AddCustomerComponent } from './pages/add-customer/add-customer.componen
     SettingsComponent,
     AddSettingsComponent,
     CustomerComponent,
-    AddCustomerComponent
+    AddCustomerComponent,
+    CalculatorComponent,
+    CalculatorHeaderComponent,
+    ConfigurationTableComponent
 
   ],
   imports: [

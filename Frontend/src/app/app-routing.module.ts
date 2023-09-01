@@ -27,6 +27,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { AddSettingsComponent } from './pages/add-settings/add-settings.component';
 import { CustomerComponent } from './pages/customer/customer.component';
 import { AddCustomerComponent } from './pages/add-customer/add-customer.component';
+import { CalculatorComponent } from './pages/calculator/calculator.component';
 
 const routes: Routes = [
   {
@@ -137,6 +138,10 @@ const routes: Routes = [
   {
     path: 'addSettings',
     component: AddSettingsComponent
+  },
+  {
+    path: 'calculator',
+    component: CalculatorComponent
   }
 ];
 

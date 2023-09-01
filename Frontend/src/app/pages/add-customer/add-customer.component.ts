@@ -34,6 +34,8 @@ export class AddCustomerComponent implements OnInit {
           this.status == 'Active' ? this.statusFlag = true : this.statusFlag = false
         })
       }
+    },err =>{
+      let error = err.er
     })
   }
 
