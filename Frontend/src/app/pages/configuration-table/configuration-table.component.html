@@ -1,0 +1,84 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+<table
+  class="table-bordered border-2 border border-dark table-responsive text-lg-start text-center fw-bold"
+  style="width: 17rem"
+  id="configRate"
+>
+  <thead>
+    <tr>
+      <th colspan="2">Press Specification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="2">
+        <select class="form-select form-select-sm w-100 border-0 fw-bold ps-0" [(ngModel)]="selectedPress">
+          <option *ngFor="let machine of press" [value]="machine.press" >{{machine.press}}</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Impressions: <br/> {{ getSelectedPressImpressions() }}</td>
+      <td>Impressions: <br/> {{ getSelectedPressBaseRate() }}</td>
+    </tr>
+    <tr>
+      <td>Ctp Rate: <br/> {{getSelectedPressCtpRate()}}</td>
+      <td>{{getBataRate()}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<table
+  class="table-bordered border-2 border border-dark table-responsive text-lg-start text-center fw-bold"
+  style="width: 17rem"
+  id="configRate"
+>
+  <thead>
+    <tr>
+      <th>Your Specification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <input class="col-12" type="number" name="margin" placeholder="Margin" id="" [(ngModel)]="margin">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input class="col-12" type="number" name="setupFee" id="" placeholder="setupFee" [(ngModel)]="setupFee">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input class="col-12" type="number" name="cuttingImpression" id="" placeholder="cuttingImpression"  [(ngModel)]="cuttingImpression">
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<table
+  class="table-bordered border-2 border border-dark table-responsive text-lg-start text-center fw-bold"
+  style="width: 17rem"
+  id="configRate"
+>
+  <thead>
+    <tr>
+      <th>Process Specification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <input class="col-12" type="number" name="Cutting" id="" placeholder="Cutting" [(ngModel)]="cutting">
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
