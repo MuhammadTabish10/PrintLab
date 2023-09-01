@@ -73,9 +73,7 @@ import { AuthInterceptorProvider, InterceptorService } from './services/intercep
     AddSettingsComponent,
     CustomerComponent,
     AddCustomerComponent,
-    ViewOrderComponent
-   ],
-    AddCustomerComponent,
+    ViewOrderComponent,
     CalculatorComponent,
     CalculatorHeaderComponent,
     ConfigurationTableComponent
