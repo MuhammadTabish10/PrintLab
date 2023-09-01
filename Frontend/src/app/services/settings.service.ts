@@ -40,4 +40,11 @@ export class SettingsService {
     let url = `${this._url}/setting/keys/${key}`
     return this.http.get(url)
   }
+
+  getGsmByPaperStock(paperStock: any) {
+    debugger
+    console.log(paperStock);
+    let url = `${this._url}/paper-market-rates/paper-stock/gsm?paperStock=${paperStock}`
+    return this.http.get(url)
+  }
 }

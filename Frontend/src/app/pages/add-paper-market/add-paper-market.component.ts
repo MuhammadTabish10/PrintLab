@@ -18,7 +18,7 @@ export class AddPaperMarketComponent implements OnInit {
   buttonName: String = 'Add'
   dateValue: String = ''
   paperStockValue: any = {}
-  gsmValue: any = {}
+  gsmValue: string = ''
   lengthValue!: number
   widthValue!: number
   dimensionValue: String = ''
@@ -30,22 +30,21 @@ export class AddPaperMarketComponent implements OnInit {
   rateToUpdate: any = []
   paperStockArray: any = []
   gsmArray: any = []
+  paperStockIndex: any
 
   constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService, private settingservice: SettingsService) { }
 
   ngOnInit(): void {
-    this.getProductFields()
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
+        this.getProductFields("")
         this.buttonName = 'Add'
       } else {
         this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
           this.rateToUpdate = res
           this.dateValue = this.rateToUpdate.date
-          this.paperStockValue = this.rateToUpdate.paperStock
-          this.gsmValue = this.rateToUpdate.gsm
           this.lengthValue = this.rateToUpdate.length
           this.widthValue = this.rateToUpdate.width
           this.dimensionValue = this.rateToUpdate.dimension
@@ -53,6 +52,10 @@ export class AddPaperMarketComponent implements OnInit {
           this.rateValue = this.rateToUpdate.ratePkr
           this.noteValue = this.rateToUpdate.notes
           this.verifiedValue = this.rateToUpdate.verified
+          debugger
+          console.log(this.rateToUpdate)
+          this.getProductFields(this.rateToUpdate.paperStock)
+          this.getGsm(this.rateToUpdate.paperStock, {})
         }, error => {
           this.error = error.error.error
           this.visible = true;
@@ -71,7 +74,7 @@ export class AddPaperMarketComponent implements OnInit {
       qty: this.qtyValue,
       ratePkr: this.rateValue,
       verified: this.verifiedValue,
-      gsm: this.gsmValue.name,
+      gsm: this.gsmValue,
       notes: this.noteValue
     }
     if (Number.isNaN(this.idFromQueryParam)) {
@@ -91,25 +94,39 @@ export class AddPaperMarketComponent implements OnInit {
     }
   }
 
-  getGsm(paperStock: any) {
+  getGsm(papervalue: string, obj: any) {
     debugger
-    this.settingservice.searchSettings(paperStock).subscribe(res => {
+    Number.isNaN(this.idFromQueryParam) ? this.paperStockIndex = this.paperStockArray.indexOf(obj) : null
+    const words = papervalue.split(' ');
+    const converted = words.map(word => word.toUpperCase()).join('_')
+    this.settingservice.getGsmByPaperStock(converted).subscribe(res => {
       this.gsmArray = res
+      this.gsmValue = this.rateToUpdate.gsm
     })
   }
 
-  dimension() {
-    this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
-  }
-
-  getProductFields() {
+  getProductFields(val: any) {
     this.productFieldService.getProductDefintion().subscribe(res => {
       let arr: any = []
       arr = res
       arr.forEach((element: any) => {
         element.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperStockArray = element.productFieldValuesList : null
       });
+      if (!Number.isNaN(this.idFromQueryParam)) {
+        debugger
+        this.paperStockIndex = this.paperStockArray.findIndex((el: any) => el.name == val)
+        this.paperStockValue = this.rateToUpdate.paperStock
+      }
+      console.log(this.paperStockArray);
     })
+  }
+
+  get id(): boolean {
+    return Number.isNaN(this.idFromQueryParam)
+  }
+
+  dimension() {
+    this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
   }
 
   getVerifiedValue() {
