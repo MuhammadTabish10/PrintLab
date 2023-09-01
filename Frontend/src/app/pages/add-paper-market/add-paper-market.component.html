@@ -18,7 +18,7 @@
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Paper Stock</label><br>
             <p-dropdown [options]="paperStockArray" optionLabel="name" placeholder="Select Paper Stock"
-              styleClass="w-100" [(ngModel)]="paperStockValue"></p-dropdown>
+              (onChange)="getGsm($event.value.name)" styleClass="w-100" [(ngModel)]="paperStockValue"></p-dropdown>
 
           </div>
           <div class="col-6 my-3">
@@ -38,8 +38,8 @@
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Dimensions</label>
-            <!-- <span class="order-search form-control order-form-input m-0 border">{{dimensionValue}}</span> -->
-            <input type="text" class="order-search form-control order-form-input m-0 bg-white" [(ngModel)]="dimensionValue" disabled style="border:1px solid #ced4da;">
+            <input type="text" class="order-search form-control order-form-input m-0 bg-white"
+              [(ngModel)]="dimensionValue" disabled style="border:1px solid #ced4da;">
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">QTY</label><br>

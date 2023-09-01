@@ -14,7 +14,7 @@ export class ProductService {
   constructor(private http: HttpClient, private interceptor: InterceptorService) { }
 
   deleteSelectedField(id: any, pfId: any, selectedId: any) {
-
+    debugger
     let url = `${this._url}/product-definition/${id}/${pfId}/product-definition-field/${selectedId}/selected-value`
     return this.http.delete(url)
   }

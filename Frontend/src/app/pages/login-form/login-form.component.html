@@ -8,13 +8,22 @@
         <h2 class="mb-4 text-center">Login</h2>
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
-          <input type="text" class="form-control form-control-sm" [(ngModel)]="userNamevalue"
+          <input type="text" class="form-control" [(ngModel)]="userNamevalue"
             [ngModelOptions]="{standalone: true}" placeholder="Enter username">
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
-          <input [(ngModel)]="passwordValue" type="password" class="form-control form-control-sm"
-            [ngModelOptions]="{standalone: true}" placeholder="Enter password">
+          <div class="d-flex">
+            <input [(ngModel)]=" passwordValue" type="{{passwordToggle}}" class="form-control"
+              style="border-top-right-radius: 0; border-bottom-right-radius: 0;" [ngModelOptions]="{standalone: true}"
+              placeholder="Enter password">
+            <span class="form-control form-control-color text-center"
+              style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-left: 0;"
+              (click)="togglePasswordVisiblity()">
+              <i class="fa-solid fa-eye" *ngIf="showPassword"></i>
+              <i class="fa-solid fa-eye-slash" *ngIf="!showPassword"></i>
+            </span>
+          </div>
         </div>
         <div class="text-center">
           <button type="submit" (click)="addUser()"

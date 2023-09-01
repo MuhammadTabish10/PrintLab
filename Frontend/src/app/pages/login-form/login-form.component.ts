@@ -14,6 +14,8 @@ export class LoginFormComponent implements OnInit {
   userNamevalue: string = ''
   passwordValue: string = ''
   token: any
+  passwordToggle: string = 'password'
+  showPassword: boolean = false
 
   constructor(private router: Router, private loginService: LoginService, private authService: AuthguardService) {
   }
@@ -34,5 +36,10 @@ export class LoginFormComponent implements OnInit {
     }, error => {
       alert(error.error.error)
     })
+  }
+
+  togglePasswordVisiblity() {
+    this.passwordToggle == 'password' ? this.passwordToggle = 'text' : this.passwordToggle = 'password'
+    this.showPassword = !this.showPassword
   }
 }

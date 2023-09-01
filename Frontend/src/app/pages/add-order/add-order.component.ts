@@ -46,28 +46,24 @@ export class AddOrderComponent implements OnInit {
   constructor(private orderService: OrdersService, private router: Router, private productService: ProductService, private route: ActivatedRoute, private customerService: CustomerService) { }
 
   ngOnInit(): void {
-    this.getProducts()
     this.getCustomers()
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add'
+        this.getProducts()
       } else {
         this.buttonName = 'Update'
         this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
+          debugger
           this.orderToUpdate = res
           this.selectedCustomer = this.orderToUpdate.customer
           this.totalAmount = this.orderToUpdate.price
           this.imgUrl = this.orderToUpdate.url
           this.designValue = this.orderToUpdate.providedDesign
           this.designValue ? this.design = this.customerDesign : this.design = this.printLabDesign
-          this.productArray.forEach((el: any) => {
-            el.title == this.orderToUpdate.product ? this.productToUpdate = el : null
-          })
-          this.toggleFields(this.productToUpdate)
-          this.selectedProduct.forEach((el: any) => {
-            el.productField.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmValue = this.orderToUpdate.gsm : null
-          })
+          // console.log(this.productArray);
+          this.getProducts()
         }, error => {
           this.error = error.error.error
           this.visible = true;
@@ -77,7 +73,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   calculate() {
-    debugger
     this.selectedProdDefArray.forEach((el: any) => {
       el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperValue = el.selected.productFieldValue.name : null
       el.name.toLowerCase().replace(/\s/g, '') == 'size' ? this.sizeValue = el.selected.productFieldValue.name : null
@@ -107,11 +102,12 @@ export class AddOrderComponent implements OnInit {
       jobColorsBack: this.jobBackValue
     }
     this.orderService.calculations(obj).subscribe(res => {
-      this.totalAmount = res
+      let obj: any
+      obj = res
+      this.totalAmount = obj.TotalProfit
     }, error => {
       this.error = error.error.error
       alert(this.error);
-
       this.visible = true;
     })
   }
@@ -184,6 +180,8 @@ export class AddOrderComponent implements OnInit {
   }
 
   selectProductDef(product: any, productDef: any) {
+    debugger
+    this.totalAmount = null
     if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name.toLowerCase().replace(/\s/g, '') == 'singlesided') {
       this.selectedProduct.forEach((el: any) => {
         if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
@@ -224,6 +222,8 @@ export class AddOrderComponent implements OnInit {
       }
       flag ? this.selectedProdDefArray.push(obj) : null
     }
+    console.log(this.selectedProdDefArray);
+
   }
 
   designToggle(design: any) {
@@ -234,7 +234,7 @@ export class AddOrderComponent implements OnInit {
   getProducts() {
     this.productService.getProducts().subscribe(res => {
       this.productArray = res
-      // this.titleArray = this.productArray.map((product: any) => product.title)
+      !Number.isNaN(this.idFromQueryParam) ? this.putValuesOnUpdate() : null
     }, error => {
       this.error = error.error.error
       this.visible = true;
@@ -260,5 +260,113 @@ export class AddOrderComponent implements OnInit {
       this.error = error.error.error
       this.visible = true;
     });
+  }
+
+  putValuesOnUpdate() {
+    this.productArray.forEach((el: any) => {
+      el.title == this.orderToUpdate.product ? this.productToUpdate = el : null
+    })
+    this.toggleFields(this.productToUpdate)
+    this.selectedProduct.forEach((el: any) => {
+      if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'paperstock') {
+        this.paperValue = this.orderToUpdate.paper
+        let item;
+        el.selectedValues.forEach((subEl: any) => {
+          if (subEl.productFieldValue.name == this.paperValue) {
+            this.valuesToUpdate.push(subEl)
+            item = subEl
+          }
+        });
+        this.selectedProdDefArray.push({
+          id: el.id,
+          name: el.productField.name,
+          selected: item
+        })
+      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'gsm') {
+        this.gsmValue = this.orderToUpdate.gsm
+        let item;
+        el.selectedValues.forEach((subEl: any) => {
+          if (subEl.productFieldValue.name == this.gsmValue) {
+            this.valuesToUpdate.push(subEl)
+            item = subEl
+          }
+        });
+        this.selectedProdDefArray.push({
+          id: el.id,
+          name: el.productField.name,
+          selected: item
+        })
+      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'size') {
+        this.sizeValue = this.orderToUpdate.size
+        let item;
+        el.selectedValues.forEach((subEl: any) => {
+          if (subEl.productFieldValue.name == this.sizeValue) {
+            this.valuesToUpdate.push(subEl)
+            item = subEl
+          }
+        });
+        this.selectedProdDefArray.push({
+          id: el.id,
+          name: el.productField.name,
+          selected: item
+        })
+      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'quantity') {
+        this.qtyValue = this.orderToUpdate.quantity
+        let item;
+        el.selectedValues.forEach((subEl: any) => {
+          if (subEl.productFieldValue.name == this.qtyValue) {
+            this.valuesToUpdate.push(subEl)
+            item = subEl
+          }
+        });
+        this.selectedProdDefArray.push({
+          id: el.id,
+          name: el.productField.name,
+          selected: item
+        })
+      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'printside') {
+        this.sideOptionValue = this.orderToUpdate.sideOptionValue
+        let item;
+        el.selectedValues.forEach((subEl: any) => {
+          if (subEl.productFieldValue.name == this.sideOptionValue) {
+            this.valuesToUpdate.push(subEl)
+            item = subEl
+          }
+        });
+        this.selectedProdDefArray.push({
+          id: el.id,
+          name: el.productField.name,
+          selected: item
+        })
+      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(front)') {
+        this.jobFrontValue = this.orderToUpdate.jobColorsFront
+        let item;
+        el.selectedValues.forEach((subEl: any) => {
+          if (subEl.productFieldValue.name == this.jobFrontValue) {
+            this.valuesToUpdate.push(subEl)
+            item = subEl
+          }
+        });
+        this.selectedProdDefArray.push({
+          id: el.id,
+          name: el.productField.name,
+          selected: item
+        })
+      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
+        this.jobBackValue = this.orderToUpdate.jobColorsBack
+        let item;
+        el.selectedValues.forEach((subEl: any) => {
+          if (subEl.productFieldValue.name == this.jobBackValue) {
+            this.valuesToUpdate.push(subEl)
+            item = subEl
+          }
+        });
+        this.selectedProdDefArray.push({
+          id: el.id,
+          name: el.productField.name,
+          selected: item
+        })
+      }
+    })
   }
 }

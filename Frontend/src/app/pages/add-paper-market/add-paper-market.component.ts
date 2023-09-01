@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PaperMarketComponent } from '../paper-market/paper-market.component';
 import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-add-paper-market',
@@ -30,18 +31,16 @@ export class AddPaperMarketComponent implements OnInit {
   paperStockArray: any = []
   gsmArray: any = []
 
-  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService) { }
+  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService, private settingservice: SettingsService) { }
 
   ngOnInit(): void {
     this.getProductFields()
     this.route.queryParams.subscribe(param => {
-      //
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add'
       } else {
         this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
-
           this.buttonName = 'Update'
           this.rateToUpdate = res
           this.dateValue = this.rateToUpdate.date
@@ -77,7 +76,6 @@ export class AddPaperMarketComponent implements OnInit {
     }
     if (Number.isNaN(this.idFromQueryParam)) {
       this.paperMarketService.postPaperMarket(obj).subscribe(res => {
-
         this.router.navigateByUrl('/paperMarket')
       }, error => {
         this.error = error.error.error
@@ -85,14 +83,19 @@ export class AddPaperMarketComponent implements OnInit {
       })
     } else {
       this.paperMarketService.updatePaperMarket(this.idFromQueryParam, obj).subscribe(res => {
-
         this.router.navigateByUrl('/paperMarket')
       }, error => {
         this.error = error.error.error
         this.visible = true;
       })
-
     }
+  }
+
+  getGsm(paperStock: any) {
+    debugger
+    this.settingservice.searchSettings(paperStock).subscribe(res => {
+      this.gsmArray = res
+    })
   }
 
   dimension() {
@@ -105,7 +108,6 @@ export class AddPaperMarketComponent implements OnInit {
       arr = res
       arr.forEach((element: any) => {
         element.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperStockArray = element.productFieldValuesList : null
-        element.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmArray = element.productFieldValuesList : null
       });
     })
   }

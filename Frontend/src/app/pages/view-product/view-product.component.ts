@@ -18,8 +18,8 @@ export class ViewProductComponent implements OnInit {
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       this.service.getById(this.idFromQueryParam).subscribe(res => {
-
         this.productToView = res
+        console.log(this.productToView );
       })
     })
 

@@ -7,7 +7,7 @@ import { OrdersService } from 'src/app/services/orders.service';
   templateUrl: './view-order.component.html',
   styleUrls: ['./view-order.component.css']
 })
-export class ViewOrderComponent implements OnInit{
+export class ViewOrderComponent implements OnInit {
   order: any
   idFromQueryParam!: number
 
