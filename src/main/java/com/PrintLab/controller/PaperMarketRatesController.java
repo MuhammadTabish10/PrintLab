@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/paper-market-rates")
@@ -47,7 +48,8 @@ public class PaperMarketRatesController
 
     @GetMapping("/paper-stock/gsm")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Integer>> getPaperStockAllGsm(@RequestBody String paperStock) {
+    public ResponseEntity<List<Integer>> getPaperStockAllGsm(@RequestBody Map<String, String> requestBody) {
+        String paperStock = requestBody.get("paperStock");
         List<Integer> gsmList = marketRatesService.getDistinctGSMForPaperStock(paperStock);
         return ResponseEntity.ok(gsmList);
     }
