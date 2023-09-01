@@ -18,6 +18,7 @@ public class Calculator
     private String sizeValue;
     private String paper;
     private Integer gsm;
+    private Long quantity;
     private String sheetSizeValue;
     private String sideOptionValue;
     private Boolean impositionValue;

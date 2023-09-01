@@ -142,7 +142,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 
         // Now dividing Extracted Uping value with Extracted PressMachine value then multiplying it with 1000
         Double productQty = upingValue / pressMachineValue;
-        productQty = productQty * 1000;
+        productQty = productQty * calculator.getQuantity();
 
         // If Side Option is double-sided and imposition is applied
         if (calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equals(true)) {
@@ -232,8 +232,8 @@ public class CalculatorServiceImpl implements CalculatorService {
     private List<Double> calculateCtpAndPress(Calculator calculator, PressMachine pressMachine) {
         // Calculation logic for CTP and press
         // CALCULATION OF CTP AND PRESS
-        Double ctp = 1.0;
-        Double press = 1.0;
+        Double ctp = null;
+        Double press = null;
 
         // Checking provided jobColor(Front) in database.
         Long jobColorFront = null;
