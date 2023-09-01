@@ -48,8 +48,7 @@ public class PaperMarketRatesController
 
     @GetMapping("/paper-stock/gsm")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Integer>> getPaperStockAllGsm(@RequestBody PaperMarketRatesDto paperMarketRatesDto) {
-        String paperStock = paperMarketRatesDto.getPaperStock();
+    public ResponseEntity<List<Integer>> getPaperStockAllGsm(@RequestParam(name = "paperStock") String paperStock) {
         List<Integer> gsmList = marketRatesService.getDistinctGSMForPaperStock(paperStock);
         return ResponseEntity.ok(gsmList);
     }
