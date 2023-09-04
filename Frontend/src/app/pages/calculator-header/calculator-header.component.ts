@@ -1,3 +1,4 @@
+import { SettingsService } from 'src/app/services/settings.service';
 import { Component, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { CalculatorService } from 'src/app/services/calculator.service';
 import { OrdersService } from 'src/app/services/orders.service';
@@ -47,7 +48,9 @@ export class CalculatorHeaderComponent implements OnInit {
   configuration: any;
   pressAlert: boolean = false;
   qtyAlert: boolean = false;
-  constructor(private calculatorService: CalculatorService, private orderService: OrdersService, private renderer: Renderer2) { }
+  gsmArray: any = []
+  constructor(private calculatorService: CalculatorService, private orderService: OrdersService, private renderer: Renderer2, private settingService: SettingsService) { }
+
   ngOnInit(): void {
     this.configuration = "Configuration";
     this.fields = this.calculatorService.getFields();
@@ -68,7 +71,7 @@ export class CalculatorHeaderComponent implements OnInit {
     const options = {
       hour12: true
     };
-    this.currentDatetime = new Date().toLocaleString(undefined,options);
+    this.currentDatetime = new Date().toLocaleString(undefined, options);
   }
 
   calculate() {
@@ -149,15 +152,17 @@ export class CalculatorHeaderComponent implements OnInit {
     }
   }
 
-  onPaperSelection(): void {
+  onPaperSelection(obj: any): void {
     const { date, rate, qty } = this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
     this.lastUpdatedPaper = date;
     this.lastUpdatedRate = rate;
     this.lastUpdatedQty = qty;
     this.costPerSheet = this.calculateCostPerSheet(rate, qty);
+    this.getGsm(obj)
   }
 
-  onGSMSelection(): void {
+  onGSMSelection(gsmValue: any): void {
+    this.gsmValue = gsmValue
     const { date, rate, qty } = this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
     this.lastUpdatedPaper = date;
     this.lastUpdatedRate = rate;
@@ -178,12 +183,6 @@ export class CalculatorHeaderComponent implements OnInit {
         new Date(entry.date) > new Date(latest.date) ? entry : latest
       );
 
-      const latestEntryDate = new Date(latestEntry.date);
-      const currentDate = new Date();
-
-      if (currentDate.getTime() - latestEntryDate.getTime() >= 10 * 24 * 60 * 60 * 1000) {
-        alert('Please update paper!');
-      }
 
       return {
         date: latestEntry.date,
@@ -197,6 +196,14 @@ export class CalculatorHeaderComponent implements OnInit {
         qty: 'Not found'
       };
     }
+  }
+
+  getGsm(papervalue: string) {
+    this.settingService.getGsmByPaperStock(papervalue).subscribe(res => {
+      this.gsmArray = res
+      console.log(this.gsmArray);
+
+    })
   }
 
 
@@ -214,7 +221,6 @@ export class CalculatorHeaderComponent implements OnInit {
 
   getUppingValue(selectedSize: string, selectedSheetSize: string): string | null {
     const uppingEntry = this.upping.find(entry => entry.product === selectedSize);
-    debugger
     if (uppingEntry && selectedSheetSize) {
       const key = `s${this.normalizeSizeValue(selectedSheetSize)}`;
       if (uppingEntry[key]) {
@@ -230,7 +236,8 @@ export class CalculatorHeaderComponent implements OnInit {
 
 
   onSizeSelection(): void {
-      this.uppingValue = this.getUppingValue(this.sizeValue, this.sheetValue);
+    this.uppingValue = this.getUppingValue(this.sizeValue, this.sheetValue);
+
   }
 
   onSheetSizeSelection(): void {

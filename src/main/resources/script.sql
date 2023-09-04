@@ -150,8 +150,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `product_field` WRITE;
 /*!40000 ALTER TABLE `product_field` DISABLE KEYS */;
-INSERT INTO `product_field` VALUES (1,'2023-08-22','JobColor(Front)',1,'Active','MULTIDROPDOWN'),(2,'2023-08-22','Paper Stock',3,'Active','MULTIDROPDOWN'),(3,'2023-08-22','Product Size',2,'Active','MULTIDROPDOWN'),(4,'2023-08-22','GSM',4,'Active','MULTIDROPDOWN'),(5,'2023-08-22','Sheet Size',5,'Active','MULTIDROPDOWN'),(6,'2023-08-22','Side Option',6,'Active','MULTIDROPDOWN'),(7,'2023-08-22','Imposition',7,'Active','MULTIDROPDOWN'),(8,'2023-08-22','JobColor(Back)',8,'Active','MULTIDROPDOWN');
-/*!40000 ALTER TABLE `product_field` ENABLE KEYS */;
+INSERT INTO `product_field` VALUES (1,'2023-08-24','Paper Stock',1,'Active','MULTIDROPDOWN'),(2,'2023-08-24','Size',2,'Active','MULTIDROPDOWN'),(3,'2023-08-24','Quantity',3,'Active','MULTIDROPDOWN'),(4,'2023-08-24','GSM',4,'Active','MULTIDROPDOWN'),(5,'2023-08-24','Print Side',5,'Active','MULTIDROPDOWN'),(6,'2023-08-24','JobColor(Front)',6,'Active','MULTIDROPDOWN'),(7,'2023-08-24','JobColor(Back)',7,'Active','MULTIDROPDOWN'),(8,'2023-08-24','Imposition',8,'Active','TOGGLE');
 UNLOCK TABLES;
 
 --
@@ -160,9 +159,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `product_field_values` WRITE;
 /*!40000 ALTER TABLE `product_field_values` DISABLE KEYS */;
-INSERT INTO `product_field_values` VALUES (1,'1','Active',1),(2,'2','Active',1),(3,'3','Active',1),(4,'4','Active',1),(5,'5','Active',1),(6,'6','Active',1),(7,'Offset','Active',2),(8,'DL','Active',3),(9,'113','Active',4),(10,'18\" x 23\"','Active',5),(11,'Single Sided','Active',6),(12,'Double Sided','Active',6),(13,'Applied','Active',7),(14,'Not Applied','Active',7),(15,'Not Applicable','Active',7),(16,'1','Active',8),(17,'2','Active',8),(18,'3','Active',8),(19,'4','Active',8),(20,'5','Active',8),(21,'6','Active',8);
-/*!40000 ALTER TABLE `product_field_values` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `product_field_values` VALUES (1,'UNCOATED/OFFSET','Active',1),(2,'OFFSET','Active',1),(3,'ART_CARD','Active',1),(4,'BLEACH_CARD','Active',1),(5,'DL','Active',2),(6,'A4','Active',2),(7,'LETTER','Active',2),(8,'A5','Active',2),(9,'1000','Active',3),(10,'2000','Active',3),(11,'3000','Active',3),(12,'4000','Active',3),(13,'90','Active',4),(14,'110','Active',4),(15,'200','Active',4),(16,'48','Active',4),(17,'113','Active',4),(18,'SingleSided','Active',5),(19,'DoubleSided','Active',5),(20,'1','Active',6),(21,'2','Active',6),(22,'3','Active',6),(23,'4','Active',6),(24,'5','Active',6),(25,'1','Active',7),(26,'2','Active',7),(27,'3','Active',7),(28,'4','Active',7),(29,'5','Active',7),(30,'ART_PAPER/MATTE','Active',1),(31,'CARBONLESS','Active',1),(32,'GLOSSY/ART_PAPER','Active',1),(33,'MATTE_PAPER','Active',1),(34,'NEWSPAPER','Active',1),(35,'WHITE_LINEN','Active',1),(36,'YELLOW_LAID','Active',1);
 
 --
 -- Dumping data for table `product_process`

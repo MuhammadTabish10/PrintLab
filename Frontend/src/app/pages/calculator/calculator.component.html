@@ -21,7 +21,7 @@
           data-bs-toggle="tooltip"
           data-bs-title="if (sideOption is double sided and imposition is applied ){Extract the selected sheetSize value from uping and also from selected press machine, then divide the extracted uping value / by machine value then multiply by 1000 the / 2} else if (sideOption is double sided and imposition is not applied or if sideOption is single sided){do the same but dont divide by 2 at the end!}"
         >
-          {{ receivedData?.ProductQty ? receivedData?.ProductQty : "Error!" }}
+          {{ receivedData?.ProductQty ? receivedData?.ProductQty.toFixed(2) : "Error!" }}
         </td>
       </tr>
       <tr>
@@ -33,7 +33,7 @@
           data-bs-title="It will take the value of qty in leafs then divide by selected sheetSize value from uping"
           [ngClass]="receivedData?.Sheets  ? 'bg-white' : ''"
         >{{ receivedData?.Sheets
-          ? receivedData?.Sheets
+          ? receivedData?.Sheets.toFixed(2)
           : "Error!" }}</td>
       </tr>
       <tr>
@@ -44,7 +44,7 @@
           data-bs-toggle="tooltip"
           data-bs-title="It will take the last updated Paper Market Rate of selected paper from Paper Stock and check selected GSM for Paper Rate, each paper has different rates depending on GSM! which is in showing above nav, and then divide by qtys then multiply by the value of sheets!, means previous cell's achived calculation"
         >{{ receivedData?.PaperMart
-          ? receivedData?.PaperMart
+          ? receivedData?.PaperMart.toFixed(2)
           : "Error!" }}</td>
       </tr>
       <tr>
@@ -54,7 +54,7 @@
           data-bs-toggle="tooltip"
           data-bs-title="It will take pre define rates of cutting which is 70!,then take the value of sheet's cell and ceil it for slicing imperession which is pre defined 500!, so if you have 250 in sheet,s cell so it will convert it to 500!,then divide by slicing imperession means 500/500, then multiply both values means the value of slicing 70 multiply by 1 cause 500/500 = 1 so finaly you have the cost"
         >{{ receivedData?.Slicing
-          ? receivedData?.Slicing
+          ? receivedData?.Slicing.toFixed(2)
           : "Error!" }}</td>
       </tr>
       <tr>
@@ -64,7 +64,7 @@
           data-bs-toggle="tooltip"
           data-bs-title="It is simple get the selected machine's CTP rate from configuration and multiply by (job colors front + job colors back) but if imposition is applied you cant get the job colors back value so it will only multiply by the front value"
         >{{ receivedData?.Ctp
-        ? receivedData?.Ctp
+        ? receivedData?.Ctp.toFixed(2)
         : "Error!" }}</td>
       </tr>
       <tr>
@@ -74,7 +74,7 @@
           data-bs-toggle="tooltip"
           data-bs-title="It will take the selected machine's impressions value and multiply by (job colors front + job colors back) but if imposition is applied you cant get the job colors back value so it will only multiply by the front value!"
         >{{ receivedData?.Press
-        ? receivedData?.Press
+        ? receivedData?.Press.toFixed(2)
         : "Error!" }}</td>
       </tr>
       <tr>
@@ -85,7 +85,7 @@
           data-bs-toggle="tooltip"
           data-bs-title="It will give the total sum of PaperMart,Slicing,Ctp,Press!"
         >{{ receivedData?.FixedCost
-          ? receivedData?.FixedCost
+          ? receivedData?.FixedCost.toFixed(2)
           : "Error!" }}</td>
       </tr>
       <tr>
@@ -95,7 +95,7 @@
           data-bs-toggle="tooltip"
           data-bs-title="It will take the fixed cost value then multiply by the pre defined margin, and then again take the value of fixed cost then add pre defined setupFee,now then you have two values add then and you have gain the price per qty value!"
         >{{ receivedData?.PricePerQty
-          ? receivedData?.PricePerQty
+          ? receivedData?.PricePerQty.toFixed(2)
           : "Error!" }}</td>
       </tr>
       <tr>
@@ -105,7 +105,7 @@
           data-bs-toggle="tooltip"
           data-bs-title="It will take the pricePerQty value and divide by the qty in leafs value!"
         >{{ receivedData?.PricePerUnit
-          ? receivedData?.PricePerUnit
+          ? receivedData?.PricePerUnit.toFixed(2)
           : "Error!" }}</td>
       </tr>
       <tr>
@@ -116,7 +116,7 @@
           data-bs-toggle="tooltip"
           data-bs-title="It will take the pricePerQty value and then substract by the fixed cost value so you have the profit value!"
         >{{ receivedData?.TotalProfit
-          ? receivedData?.TotalProfit
+          ? receivedData?.TotalProfit.toFixed(2)
           : "Error!" }}</td>
       </tr>
     </tbody>

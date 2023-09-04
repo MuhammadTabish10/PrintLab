@@ -53,7 +53,7 @@ export class AddPaperMarketComponent implements OnInit {
           this.noteValue = this.rateToUpdate.notes
           this.verifiedValue = this.rateToUpdate.verified
           this.getProductFields()
-          this.getGsm(this.rateToUpdate.paperStock, {})
+          this.getGsm(this.rateToUpdate.paperStock)
         }, error => {
           this.error = error.error.error
           this.visible = true;
@@ -92,7 +92,7 @@ export class AddPaperMarketComponent implements OnInit {
     }
   }
 
-  getGsm(papervalue: string, obj: any) {
+  getGsm(papervalue: string) {
     this.settingservice.getGsmByPaperStock(papervalue).subscribe(res => {
       this.gsmArray = res
       this.gsmValue = this.rateToUpdate.gsm
