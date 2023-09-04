@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -179,6 +181,16 @@ public class CalculatorServiceImpl implements CalculatorService {
 
         PaperMarketRates paperMarketRates = optionalPaperMarketRates.get();
         logger.info("date and name and gsm and sheetsize: " + paperMarketRates.getDate() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM() + " " + paperMarketRates.getDimension());
+
+        LocalDate currentDate = LocalDate.now();
+        LocalDate databaseDate = paperMarketRates.getDate();
+
+        // Calculate the difference between the current date and the database date
+        long daysDifference = ChronoUnit.DAYS.between(databaseDate, currentDate);
+
+        if (daysDifference > 10) {
+            throw new RecordNotFoundException("Please update your paper as the database date exceeds 10 days from the current date.");
+        }
 
         // Dividing paper rate with qty and multiplying with sheets
         Double paperMart = paperMarketRates.getRatePkr() / paperMarketRates.getQty();
