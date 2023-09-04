@@ -7,3 +7,6 @@ tr,td,th{
   padding: 0;
   transition: opacity 0.5s ease, width 0.5s ease, padding 0.5s ease;
 }
+.ps-6{
+  padding-left: 4% !important;
+}

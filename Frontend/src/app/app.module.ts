@@ -41,8 +41,6 @@ import { ConfigurationTableComponent } from './pages/configuration-table/configu
 import { ViewOrderComponent } from './pages/view-order/view-order.component';
 import { DialogModule } from 'primeng/dialog';
 import { AuthInterceptorProvider, InterceptorService } from './services/interceptor.service';
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -73,14 +71,12 @@ import { AuthInterceptorProvider, InterceptorService } from './services/intercep
     AddSettingsComponent,
     CustomerComponent,
     AddCustomerComponent,
-    ViewOrderComponent
-   ],
+    ViewOrderComponent,
     AddCustomerComponent,
     CalculatorComponent,
     CalculatorHeaderComponent,
-    ConfigurationTableComponent
-
-  ],
+    ConfigurationTableComponent,
+   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -90,7 +86,7 @@ import { AuthInterceptorProvider, InterceptorService } from './services/intercep
     MultiSelectModule,
     BrowserAnimationsModule,
     DropdownModule,
-    DialogModule
+    DialogModule,
   ],
   providers: [AuthInterceptorProvider,InterceptorService],
   bootstrap: [AppComponent]

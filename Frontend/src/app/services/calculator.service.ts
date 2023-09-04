@@ -22,15 +22,15 @@ export class CalculatorService {
     {
       id: "paperStock",
       values: [
-        "Glossy / Art Paper",
-        "Art Paper / Matte",
-        "Carbonless",
-        "Matte Paper",
-        "Newspaper",
-        "Uncoated / Offset",
-        "White Linen",
-        "Yellow Laid",
-        "Bleach card",
+        "GLOSSY/ART_PAPER",
+        "ART_PAPER_/_MATTE",
+        "CARBONLESS",
+        "MATTE_PAPER",
+        "NEWS_PAPER",
+        "UNCOATED/OFFSET",
+        "WHITE_LINEN",
+        "YELLOW_LAID",
+        "BLEACH_CARD",
       ],
     },
     {
@@ -40,12 +40,12 @@ export class CalculatorService {
     {
       id: "sheetSize",
       values: [
-        { label: "s17x24", value: '17" x 24"' },
-        { label: "s23x36", value: '23" x 36"' },
-        { label: "s25x36", value: '25" x 36"' },
+        { label: "s17x24", value: '17"x24"' },
+        { label: "s23x36", value: '23"x36"' },
+        { label: "s25x36", value: '25"x36"' },
         { label: "s18x23", value: '18"x23"' },
-        { label: "s85x12", value: '8.5" x 12"' },
-        { label: "s20x30", value: '20" x 30"' },
+        { label: "s85x12", value: '8.5"x12"' },
+        { label: "s20x30", value: '20"x30"' },
       ],
     },
     {
@@ -66,21 +66,6 @@ export class CalculatorService {
     }
   ];
   private pressMachines = [
-    {
-      header: [
-        "PRESS",
-        "CTP RATE",
-        "1000 IMPRESSIONS PRESS",
-        '17" x 24"',
-        '23" x 36"',
-        '25" x 36"',
-        '18" x 23"',
-        '8.5" x 12"',
-        '20" x 30"',
-        "DELETE",
-        "EDIT",
-      ],
-    },
     {
       press: "HEIDELBERG GTO-46",
       ctp: "220.00",
@@ -174,7 +159,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Art card",
+      paperStock: "ART_CARD",
       gsm: "250",
       length: "25.00",
       width: "36.00",
@@ -187,7 +172,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Art card",
+      paperStock: "ART_CARD",
       gsm: "300",
       length: "25.00",
       width: "36.00",
@@ -200,7 +185,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Art card",
+      paperStock: "ART_CARD",
       gsm: "350",
       length: "25.00",
       width: "36.00",
@@ -213,7 +198,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Art card",
+      paperStock: "ART_CARD",
       gsm: "250",
       length: "23.00",
       width: "36.00",
@@ -226,7 +211,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Art card",
+      paperStock: "ART_CARD",
       gsm: "300",
       length: "23.00",
       width: "36.00",
@@ -239,7 +224,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Art card",
+      paperStock: "ART_CARD",
       gsm: "350",
       length: "23.00",
       width: "36.00",
@@ -252,7 +237,7 @@ export class CalculatorService {
     },
     {
       date: "08/Sep/22",
-      paperStock: "Art Paper / Matte",
+      paperStock: "ART_PAPER_/_MATTE",
       gsm: "90",
       length: "25.00",
       width: "36.00",
@@ -265,7 +250,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Bleach card",
+      paperStock: "BLEACH_CARD",
       gsm: "250",
       length: "25.00",
       width: "36.00",
@@ -278,7 +263,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Bleach card",
+      paperStock: "BLEACH_CARD",
       gsm: "300",
       length: "25.00",
       width: "36.00",
@@ -291,7 +276,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Bleach card",
+      paperStock: "BLEACH_CARD",
       gsm: "350",
       length: "25.00",
       width: "36.00",
@@ -304,7 +289,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Bleach card",
+      paperStock: "BLEACH_CARD",
       gsm: "250",
       length: "23.00",
       width: "36.00",
@@ -317,7 +302,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Bleach card",
+      paperStock: "BLEACH_CARD",
       gsm: "300",
       length: "23.00",
       width: "36.00",
@@ -330,7 +315,7 @@ export class CalculatorService {
     },
     {
       date: "06/Aug/22",
-      paperStock: "Bleach card",
+      paperStock: "BLEACH_CARD",
       gsm: "350",
       length: "23.00",
       width: "36.00",
@@ -343,7 +328,7 @@ export class CalculatorService {
     },
     {
       date: "27/May/22",
-      paperStock: "Carbonless",
+      paperStock: "CARBONLESS",
       gsm: "48",
       length: "18.00",
       width: "23.00",
@@ -356,7 +341,7 @@ export class CalculatorService {
     },
     {
       date: "27/May/22",
-      paperStock: "Carbonless",
+      paperStock: "CARBONLESS",
       gsm: "48",
       length: "25.00",
       width: "36.00",
@@ -369,7 +354,7 @@ export class CalculatorService {
     },
     {
       date: "26/May/22",
-      paperStock: "Carbonless",
+      paperStock: "CARBONLESS",
       gsm: "48",
       length: "18.00",
       width: "23.00",
@@ -382,7 +367,7 @@ export class CalculatorService {
     },
     {
       date: "14/Jun/22",
-      paperStock: "Glossy / Art Paper",
+      paperStock: "GLOSSY/ART_PAPER",
       gsm: "113",
       length: "25.00",
       width: "36.00",
@@ -395,7 +380,7 @@ export class CalculatorService {
     },
     {
       date: "14/Jun/22",
-      paperStock: "Glossy / Art Paper",
+      paperStock: "GLOSSY/ART_PAPER",
       gsm: "128",
       length: "25.00",
       width: "36.00",
@@ -408,7 +393,7 @@ export class CalculatorService {
     },
     {
       date: "14/Jun/22",
-      paperStock: "Glossy / Art Paper",
+      paperStock: "GLOSSY/ART_PAPER",
       gsm: "150",
       length: "25.00",
       width: "36.00",
@@ -421,7 +406,7 @@ export class CalculatorService {
     },
     {
       date: "24/Aug/22",
-      paperStock: "Matte Paper",
+      paperStock: "MATTE_PAPER",
       gsm: "128",
       length: "23.00",
       width: "36.00",
@@ -434,7 +419,7 @@ export class CalculatorService {
     },
     {
       date: "24/Aug/22",
-      paperStock: "Matte Paper",
+      paperStock: "MATTE_PAPER",
       gsm: "128",
       length: "25.00",
       width: "36.00",
@@ -447,7 +432,7 @@ export class CalculatorService {
     },
     {
       date: "16/Jun/22",
-      paperStock: "Matte Paper",
+      paperStock: "MATTE_PAPER",
       gsm: "113",
       length: "25.00",
       width: "36.00",
@@ -460,7 +445,7 @@ export class CalculatorService {
     },
     {
       date: "16/Jun/22",
-      paperStock: "Matte Paper",
+      paperStock: "MATTE_PAPER",
       gsm: "128",
       length: "25.00",
       width: "36.00",
@@ -473,7 +458,7 @@ export class CalculatorService {
     },
     {
       date: "16/Jun/22",
-      paperStock: "Matte Paper",
+      paperStock: "MATTE_PAPER",
       gsm: "150",
       length: "25.00",
       width: "36.00",
@@ -486,7 +471,7 @@ export class CalculatorService {
     },
     {
       date: "24/Aug/22",
-      paperStock: "News Paper",
+      paperStock: "NEWS_PAPER",
       gsm: "48",
       length: "25.00",
       width: "36.00",
@@ -499,7 +484,7 @@ export class CalculatorService {
     },
     {
       date: "08/Sep/22",
-      paperStock: "Uncoated / Offset",
+      paperStock: "UNCOATED/OFFSET",
       gsm: "120",
       length: "25.00",
       width: "36.00",
@@ -512,7 +497,7 @@ export class CalculatorService {
     },
     {
       date: "25/Jun/22",
-      paperStock: "Uncoated / Offset",
+      paperStock: "UNCOATED/OFFSET",
       gsm: "70",
       length: "25.00",
       width: "36.00",
@@ -525,7 +510,7 @@ export class CalculatorService {
     },
     {
       date: "25/Jun/22",
-      paperStock: "Uncoated / Offset",
+      paperStock: "UNCOATED/OFFSET",
       gsm: "80",
       length: "25.00",
       width: "36.00",
@@ -538,7 +523,7 @@ export class CalculatorService {
     },
     {
       date: "25/Jun/22",
-      paperStock: "Uncoated / Offset",
+      paperStock: "UNCOATED/OFFSET",
       gsm: "100",
       length: "25.00",
       width: "36.00",
@@ -551,7 +536,7 @@ export class CalculatorService {
     },
     {
       date: "25/Jun/22",
-      paperStock: "Uncoated / Offset",
+      paperStock: "UNCOATED/OFFSET",
       gsm: "70",
       length: "23.00",
       width: "36.00",
@@ -564,7 +549,7 @@ export class CalculatorService {
     },
     {
       date: "25/Jun/22",
-      paperStock: "Uncoated / Offset",
+      paperStock: "UNCOATED/OFFSET",
       gsm: "80",
       length: "23.00",
       width: "36.00",
@@ -577,7 +562,7 @@ export class CalculatorService {
     },
     {
       date: "25/Jun/22",
-      paperStock: "Uncoated / Offset",
+      paperStock: "UNCOATED/OFFSET",
       gsm: "100",
       length: "23.00",
       width: "36.00",
@@ -590,7 +575,7 @@ export class CalculatorService {
     },
     {
       date: "27/May/22",
-      paperStock: "Uncoated / Offset",
+      paperStock: "UNCOATED/OFFSET",
       gsm: "70",
       length: "25.00",
       width: "35.50",
@@ -603,7 +588,7 @@ export class CalculatorService {
     },
     {
       date: "08/Sep/22",
-      paperStock: "White Linen",
+      paperStock: "WHITE_LINEN",
       gsm: "100",
       length: "8.50",
       width: "12.00",
@@ -616,7 +601,7 @@ export class CalculatorService {
     },
     {
       date: "08/Sep/22",
-      paperStock: "Yellow Laid",
+      paperStock: "YELLOW_LAID",
       gsm: "100",
       length: "17.00",
       width: "24.00",
@@ -626,7 +611,7 @@ export class CalculatorService {
       verified: "VERIFIED",
       notes: "",
       id: 35,
-    },
+    }
   ];
   private uping = [
     {
@@ -680,7 +665,7 @@ export class CalculatorService {
       id: 5,
     },
     {
-      product: "BUISNESS CARD",
+      product: "BUSINESS CARD",
       s17x24: "-",
       s23x36: "-",
       s25x36: "96",

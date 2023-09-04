@@ -1,6 +1,6 @@
 <app-sidebar></app-sidebar>
 <!-- <div class="container"></div> -->
-<div class="container text-center px-0">
+<div class="container-fluid text-center px-0 ps-5">
   <div class="bg-dark row mx-auto">
     <div class="col-lg-4 col-12 text-warning text-center text-lg-start">
       <button
@@ -10,43 +10,53 @@
         data-bs-target="#collapseExample"
         aria-expanded="false"
         aria-controls="collapseExample"
+        [ngClass]="{'text-danger': pressAlert}"
       >
-        Configurations <i class="fa-solid fa-arrow-down-wide-short"></i>
+        {{configuration}} <i class="fa-solid fa-arrow-down-wide-short"></i>
       </button>
     </div>
-    <div class="col-lg-5 col-12 text-white text-center">
+    <div class="col-lg-4 col-12 text-white text-center">
       {{ currentDatetime }}
     </div>
   </div>
   <div class="collapse container-fluid mt-3 mb-3" id="collapseExample">
     <div class="row mx-auto justify-content-center justify-content-lg-start">
-      <app-configuration-table></app-configuration-table>
+      <app-configuration-table
+        (dataToParent)="receiveDataFromChild($event)"
+        [selectedValue]="selectedOption"
+      ></app-configuration-table>
     </div>
   </div>
 </div>
-<div class="container px-0">
+<div class="container-fluid px-0 ps-5">
   <div class="row mx-auto">
     <div class="col-lg-3 bg-dark text-white text-center">
       Paper Stock : <span id="selectedPaper">{{ paperValue }}</span> | GSM :
       <span id="selectedGsm">{{ gsmValue }}</span>
     </div>
     <div
-      class="col-lg-1 col-6 bg-dark text-white ms-lg-5 px-3"
+      class="col-lg-1 col-6 bg-dark text-white ms-lg-5 ps-4"
       style="font-size: 13px"
     >
       Last Updated
     </div>
-    <small class="col-lg-1 col-6 border" id="lastUpdated" [ngClass]="{'bg-danger text-white': lastUpdatedPaper === 'Not found'}">{{
-      lastUpdatedPaper
-    }}</small>
+    <small
+      class="col-lg-1 col-6 border"
+      id="lastUpdated"
+      [ngClass]="{ 'bg-danger text-white': lastUpdatedPaper === 'Not found' }"
+      >{{ lastUpdatedPaper }}</small
+    >
     <small
       class="col-lg-1 col-6 bg-dark text-white ps-1 px-0"
       style="font-size: 13px"
       >Paper Market Rate</small
     >
-    <small class="col-lg-1 col-6 border" id="updatedRate" [ngClass]="{'bg-danger text-white': lastUpdatedRate === 'Not found'}">{{
-      lastUpdatedRate
-    }}</small>
+    <small
+      class="col-lg-1 col-6 border"
+      id="updatedRate"
+      [ngClass]="{ 'bg-danger text-white': lastUpdatedRate === 'Not found' }"
+      >{{ lastUpdatedRate }}</small
+    >
     <small
       class="col-lg-1 col-6 bg-dark text-white px-0 text-center"
       style="font-size: 13px"
@@ -65,22 +75,23 @@
       >Cost Per Sheet</small
     >
     <small
-      class="col-lg-1 col-6 border"
+      class="col-lg-1 col-6 border border-dark"
       id="costPerSheet"
-      style="font-size: 13px"
-      [ngClass]="['bg-danger', 'text-white']"
-      *ngIf="costPerSheet === 'Can\'t calculate'"
+      [ngClass]="{
+        'bg-danger': costPerSheet === 'Can\'t calculate',
+        'text-white': costPerSheet === 'Can\'t calculate'
+      }"
     >
       {{ costPerSheet }}
     </small>
   </div>
 </div>
-<div class="container table-responsive px-0 d-lg-flex">
+<div class="container-fluid table-responsive px-0 d-lg-flex ps-6">
   <table class="table table-bordered">
     <thead>
       <tr>
         <th scope="col" class="text-nowrap">Select Product</th>
-        <th scope="col" class="bg-light-warning">Job Color (S)</th>
+        <th scope="col" class="bg-light-warning text-nowrap">Job Color (S)</th>
       </tr>
     </thead>
     <tbody>
@@ -113,8 +124,8 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th scope="col" class="bg-light-warning">Size</th>
-        <th scope="col" class="bg-light-warning">Paper Stock</th>
+        <th scope="col" class="bg-light-warning text-nowrap">Size</th>
+        <th scope="col" class="bg-light-warning text-nowrap">Paper Stock</th>
       </tr>
     </thead>
     <tbody>
@@ -149,8 +160,8 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th scope="col" class="bg-light-warning">GSM</th>
-        <th scope="col" class="bg-light-warning">Sheet Size</th>
+        <th scope="col" class="bg-light-warning text-nowrap">GSM</th>
+        <th scope="col" class="bg-light-warning text-nowrap">Sheet Size</th>
       </tr>
     </thead>
     <tbody>
@@ -174,7 +185,7 @@
             [(ngModel)]="sheetValue"
             (ngModelChange)="onSheetSizeSelection()"
           >
-            <option *ngFor="let size of fields[5].values" [value]="size.label">
+            <option *ngFor="let size of fields[5].values" [value]="size.value">
               {{ size.value }}
             </option>
           </select>
@@ -182,11 +193,13 @@
       </tr>
     </tbody>
   </table>
+</div>
+<div class="container-fluid table-responsive px-0 d-lg-flex ps-6">
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th scope="col" class="bg-light-warning"># Of Up' (S)</th>
-        <th scope="col" class="bg-light-warning">Side Option</th>
+        <th scope="col" class="bg-light-warning text-nowrap"># Of Up' (S)</th>
+        <th scope="col" class="bg-light-warning text-nowrap">Side Option</th>
       </tr>
     </thead>
     <tbody>
@@ -204,6 +217,7 @@
             class="form-select form-select-sm"
             id="sideOption"
             [(ngModel)]="sideOptionValue"
+            (ngModelChange)="onImpositionValueChange()"
           >
             <option *ngFor="let product of fields[6].values" [value]="product">
               {{ product }}
@@ -236,7 +250,7 @@
       <tr>
         <td id="tdImposition" class="col-6 col-lg-0">
           <ng-container *ngIf="sideOptionValue === 'SingleSided'">
-            <input class="text-center" type="readOnly" value="Not Applicable" />
+            <input class="text-center col-12" readonly value="Not Applicable" />
           </ng-container>
 
           <ng-container *ngIf="sideOptionValue !== 'SingleSided'">
@@ -271,6 +285,26 @@
               {{ product }}
             </option>
           </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered">
+    <thead>
+      <tr class="">
+        <th scope="col" class="bg-light-warning fs-6 text-nowrap">Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="col">
+        <td 
+        [ngClass]="{'bg-danger': qtyAlert}">
+          <input
+            class="col-12"
+            type="number"
+            name="Quantity"
+            [(ngModel)]="qty"
+          />
         </td>
       </tr>
     </tbody>
