@@ -1,4 +1,7 @@
-<div class="container">
+<div class="container d-flex justify-content-center">
+  <div class="loader" *ngIf="isLoading"></div>
+</div>
+<div class="container"[ngClass]="{ 'hide-content': isLoading }">
   <div class="row">
     <div class="col">
 <table
@@ -15,7 +18,7 @@
     <tr>
       <td colspan="2">
         <select class="form-select form-select-sm w-100 border-0 fw-bold ps-0" [(ngModel)]="selectedPress">
-          <option *ngFor="let machine of press" [value]="machine.press" >{{machine.press}}</option>
+          <option *ngFor="let machine of press" [value]="machine.id" >{{machine.press}}</option>
         </select>
       </td>
     </tr>
@@ -25,7 +28,9 @@
     </tr>
     <tr>
       <td>Ctp Rate: <br/> {{getSelectedPressCtpRate()}}</td>
-      <td>{{getBataRate()}}</td>
+      <td *ngIf="selectedValue && selectedPress">
+        {{ getBataRate(selectedValue, selectedPress) !== '-' ? 'SHEET PIECES: 1/' + getBataRate(selectedValue, selectedPress) : 'Error!' }}
+      </td>
     </tr>
   </tbody>
 </table>
@@ -44,7 +49,8 @@
   <tbody>
     <tr>
       <td>
-        <input class="col-12" type="number" name="margin" placeholder="Margin" id="" [(ngModel)]="margin">
+        <input class="col-12" type="number" name="margin" placeholder="Margin" id="" [(ngModel)]="margin"
+        >
       </td>
     </tr>
     <tr>
@@ -79,6 +85,9 @@
     </tr>
   </tbody>
 </table>
+</div>
+<div class="container">
+  <button class="btn btn-dark" (click)="saveDataAndShowLoader()">Save</button>
 </div>
 </div>
 </div>

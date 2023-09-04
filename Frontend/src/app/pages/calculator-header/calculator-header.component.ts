@@ -1,6 +1,7 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { CalculatorService } from 'src/app/services/calculator.service';
 import { OrdersService } from 'src/app/services/orders.service';
+import { ConfigurationTableComponent } from '../configuration-table/configuration-table.component';
 
 @Component({
   selector: 'app-calculator-header',
@@ -8,6 +9,10 @@ import { OrdersService } from 'src/app/services/orders.service';
   styleUrls: ['./calculator-header.component.css']
 })
 export class CalculatorHeaderComponent implements OnInit {
+  @ViewChild(ConfigurationTableComponent)
+  configTable!: ConfigurationTableComponent;
+  @Output() calculateedObj: EventEmitter<object> = new EventEmitter();
+  @Output() sheetSize: EventEmitter<any> = new EventEmitter();
   currentDatetime: string = '';
   error: any
   visible!: boolean;
@@ -35,35 +40,51 @@ export class CalculatorHeaderComponent implements OnInit {
   costPerSheet: any;
   upping: any[] = [];
   uppingValue: any;
+  receivedData: any;
+  margin: any;
+  qty: any;
+  selectedOption: any;
+  configuration: any;
+  pressAlert: boolean = false;
+  qtyAlert: boolean = false;
   constructor(private calculatorService: CalculatorService, private orderService: OrdersService, private renderer: Renderer2) { }
   ngOnInit(): void {
+    this.configuration = "Configuration";
     this.fields = this.calculatorService.getFields();
-    console.log(this.fields);
     this.updateDatetime();
     setInterval(() => this.updateDatetime(), 1000);
     this.paperMarket = this.calculatorService.getPaperMarket();
     this.upping = this.calculatorService.getUpping();
-    this.uppingValue = '-'
-    console.log(this.fields);
+    this.uppingValue = '-';
+  }
+
+  ngAfterViewInit() {
+    this.configTable.specifications.subscribe((data: string) => {
+      this.receivedData = data;
+    });
   }
 
   private updateDatetime(): void {
-    this.currentDatetime = new Date().toLocaleString();
-  }
-
-  toggleFields(title: any) {
-    debugger
-    this.productName = title.title
-    title.productDefinitionFieldList.forEach((el: any) => {
-      el.isPublic ? this.selectedProduct.push(el) : null
-      el.productField.name == 'Imposition' ? this.impositionValue = el.selectedValues[0].value : null
-    })
-    this.selectedProdDefArray = []
-    console.log(this.selectedProduct)
+    const options = {
+      hour12: true
+    };
+    this.currentDatetime = new Date().toLocaleString(undefined,options);
   }
 
   calculate() {
-    debugger
+    if (!this.receivedData || !this.receivedData.press) {
+      alert('Please select a press machine and save');
+      this.pressAlert = true;
+      return;
+    }
+    this.pressAlert = false;
+
+    if (!this.qty) {
+      alert('Please decide quantity');
+      this.qtyAlert = true;
+      return;
+    }
+    this.qtyAlert = false;
     this.selectedProdDefArray.forEach((el: any) => {
       el.name == 'Paper Stock' ? this.paperValue = el.selected.productFieldValue.name : null
       if (el.name == 'Size') {
@@ -83,6 +104,8 @@ export class CalculatorHeaderComponent implements OnInit {
     }
     this.impositionValue == "Applied" ? this.impositionValue = "true" : this.impositionValue = "false";
     let obj = {
+      pressMachineId: this.receivedData.press,
+      quantity: this.qty,
       productValue: this.productName,
       paper: this.paperValue,
       sizeValue: this.sizeValue,
@@ -91,18 +114,21 @@ export class CalculatorHeaderComponent implements OnInit {
       sheetSizeValue: this.sheetValue,
       sideOptionValue: this.sideOptionValue,
       impositionValue: this.impositionValue,
-      jobColorsBack: this.jobBackValue
+      jobColorsBack: this.jobBackValue,
+      margin: this.receivedData.margin,
+      setupFeee: this.receivedData.setupFee,
+      cutting: this.receivedData.cutting,
+      cuttingImpression: this.receivedData.impression
     }
+
     this.orderService.calculations(obj).subscribe(res => {
-      debugger
-      this.totalAmount = res
+      this.calculateedObj.emit(res);
     }, error => {
       alert(error.error.error)
     })
-    console.log(obj);
   }
   onImpositionValueChange(): void {
-    if (this.impositionValue === 'Applied') {
+    if (this.impositionValue === 'Applied' || this.sideOptionValue === 'SingleSided') {
       setTimeout(() => {
         const tdColorsElement = document.getElementById('tdColors');
         const headerAnimationElement = document.getElementById('headerAnimation');
@@ -113,13 +139,12 @@ export class CalculatorHeaderComponent implements OnInit {
         }
       }, 300);
     } else {
-      // Reset the display property when impositionValue is not 'Applied'
       const tdColorsElement = document.getElementById('tdColors');
       const headerAnimationElement = document.getElementById('headerAnimation');
 
       if (tdColorsElement && headerAnimationElement) {
-        this.renderer.setStyle(tdColorsElement, 'display', 'table-cell'); // Or whatever is the original display style
-        this.renderer.setStyle(headerAnimationElement, 'display', 'table-cell'); // Or whatever is the original display style
+        this.renderer.setStyle(tdColorsElement, 'display', 'table-cell');
+        this.renderer.setStyle(headerAnimationElement, 'display', 'table-cell');
       }
     }
   }
@@ -129,11 +154,7 @@ export class CalculatorHeaderComponent implements OnInit {
     this.lastUpdatedPaper = date;
     this.lastUpdatedRate = rate;
     this.lastUpdatedQty = qty;
-
-    // Calculate the cost per sheet
     this.costPerSheet = this.calculateCostPerSheet(rate, qty);
-
-    // Rest of your logic for updating the UI or performing other actions.
   }
 
   onGSMSelection(): void {
@@ -141,16 +162,13 @@ export class CalculatorHeaderComponent implements OnInit {
     this.lastUpdatedPaper = date;
     this.lastUpdatedRate = rate;
     this.lastUpdatedQty = qty;
-
-    // Calculate the cost per sheet
     this.costPerSheet = this.calculateCostPerSheet(rate, qty);
-
-    // Rest of your logic for updating the UI or performing other actions.
   }
 
 
 
   private getLastUpdatedInfoForPaperAndGSM(paper: string, gsm: string): { date: string, rate: string, qty: string } {
+
     const matchingEntries = this.paperMarket.filter(entry =>
       entry.paperStock === paper && entry.gsm === gsm
     );
@@ -160,13 +178,19 @@ export class CalculatorHeaderComponent implements OnInit {
         new Date(entry.date) > new Date(latest.date) ? entry : latest
       );
 
+      const latestEntryDate = new Date(latestEntry.date);
+      const currentDate = new Date();
+
+      if (currentDate.getTime() - latestEntryDate.getTime() >= 10 * 24 * 60 * 60 * 1000) {
+        alert('Please update paper!');
+      }
+
       return {
         date: latestEntry.date,
         rate: latestEntry.rate,
         qty: latestEntry.qty
       };
     } else {
-      // Return default values or empty strings if no matching entry is found.
       return {
         date: 'Not found',
         rate: 'Not found',
@@ -174,6 +198,7 @@ export class CalculatorHeaderComponent implements OnInit {
       };
     }
   }
+
 
   private calculateCostPerSheet(rate: string, qty: string): number | string {
     const rateValue = parseFloat(rate.replace(/,/g, ''));
@@ -188,48 +213,31 @@ export class CalculatorHeaderComponent implements OnInit {
 
 
   getUppingValue(selectedSize: string, selectedSheetSize: string): string | null {
-    // Find the entry in the 'upping' array that matches the selected 'size'
     const uppingEntry = this.upping.find(entry => entry.product === selectedSize);
-
-    // Check if a matching entry was found
-    if (uppingEntry) {
-      // Check if the upping entry has a property for the selected 'sheetSize'
-      if (uppingEntry[selectedSheetSize]) {
-        // Return the upping value for the selected 'sheetSize'
-        return uppingEntry[selectedSheetSize];
-      } else {
-        // Handle the case where the selected 'sheetSize' is not found in the upping entry
-        return null;
+    debugger
+    if (uppingEntry && selectedSheetSize) {
+      const key = `s${this.normalizeSizeValue(selectedSheetSize)}`;
+      if (uppingEntry[key]) {
+        return uppingEntry[key];
       }
-    } else {
-      // Handle the case where no matching entry is found for the selected 'size'
-      return null;
     }
+    return null;
   }
 
-  onSizeSelection(): void {
-    // Call getUppingValue with the selected 'size' and 'sheetSize'
-    this.uppingValue = this.getUppingValue(this.sizeValue, this.sheetValue);
+  normalizeSizeValue(selectedValue: string): string {
+    return selectedValue.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  }
 
-    if (this.uppingValue !== null) {
-      // Handle the upping value, e.g., assign it to a variable or perform other actions
-      console.log(`Upping Value: ${this.uppingValue}`);
-    } else {
-      // Handle the case where no matching upping value is found
-      console.log('Upping Value not found');
-    }
+
+  onSizeSelection(): void {
+      this.uppingValue = this.getUppingValue(this.sizeValue, this.sheetValue);
   }
 
   onSheetSizeSelection(): void {
-    // Call getUppingValue with the selected 'size' and 'sheetSize'
     this.uppingValue = this.getUppingValue(this.sizeValue, this.sheetValue);
-
-    if (this.uppingValue !== null) {
-      // Handle the upping value, e.g., assign it to a variable or perform other actions
-      console.log(`Upping Value: ${this.uppingValue}`);
-    } else {
-      // Handle the case where no matching upping value is found
-      console.log('Upping Value not found');
-    }
+    this.selectedOption = this.sheetValue;
+  }
+  receiveDataFromChild(obj: any) {
+    this.receivedData = obj;
   }
 }

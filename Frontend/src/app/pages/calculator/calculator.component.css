@@ -5,3 +5,6 @@ th,td{
   border-right:1px solid black;
   border-left:1px solid black;
 }
+.text-dark{
+  color:#000000 !important;
+}
