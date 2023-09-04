@@ -43,6 +43,7 @@ public class PaperMarketRatesController
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaperMarketRatesDto> getPaperMarketRatesByPaperStock(@PathVariable String stock) {
         PaperMarketRatesDto paperMarketRatesDto = marketRatesService.findByPaperStock(stock);
+
         return ResponseEntity.ok(paperMarketRatesDto);
     }
 
