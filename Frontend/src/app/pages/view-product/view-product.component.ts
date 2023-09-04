@@ -19,7 +19,6 @@ export class ViewProductComponent implements OnInit {
       this.idFromQueryParam = +param['id']
       this.service.getById(this.idFromQueryParam).subscribe(res => {
         this.productToView = res
-        console.log(this.productToView );
       })
     })
 

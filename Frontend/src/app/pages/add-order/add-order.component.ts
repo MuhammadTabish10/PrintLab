@@ -55,14 +55,12 @@ export class AddOrderComponent implements OnInit {
       } else {
         this.buttonName = 'Update'
         this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
-          debugger
           this.orderToUpdate = res
           this.selectedCustomer = this.orderToUpdate.customer
           this.totalAmount = this.orderToUpdate.price
           this.imgUrl = this.orderToUpdate.url
           this.designValue = this.orderToUpdate.providedDesign
           this.designValue ? this.design = this.customerDesign : this.design = this.printLabDesign
-          // console.log(this.productArray);
           this.getProducts()
         }, error => {
           this.error = error.error.error
@@ -167,7 +165,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   toggleFields(title: any) {
-    debugger
     this.selectedProduct = []
     this.productName = title.title
     this.machineId = title.pressMachine.id
@@ -179,7 +176,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   selectProductDef(product: any, productDef: any) {
-    debugger
     this.totalAmount = null
     if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name.toLowerCase().replace(/\s/g, '') == 'singlesided') {
       this.selectedProduct.forEach((el: any) => {
@@ -221,8 +217,6 @@ export class AddOrderComponent implements OnInit {
       }
       flag ? this.selectedProdDefArray.push(obj) : null
     }
-    console.log(this.selectedProdDefArray);
-
   }
 
   designToggle(design: any) {

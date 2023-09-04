@@ -29,7 +29,6 @@ export class LoginFormComponent implements OnInit {
       password: this.passwordValue
     }
     this.loginService.post(obj).subscribe(res => {
-      debugger
       this.token = res
       localStorage.setItem("token", this.token.jwt)
       this.router.navigateByUrl('/dashboard')

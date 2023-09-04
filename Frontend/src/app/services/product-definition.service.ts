@@ -35,7 +35,6 @@ export class ProductDefinitionService {
   }
 
   deleteProductFieldValue(id: any, pfId: any) {
-
     let url = `${this._url}/product-field/${id}/${pfId}`
     return this.http.delete(url)
   }

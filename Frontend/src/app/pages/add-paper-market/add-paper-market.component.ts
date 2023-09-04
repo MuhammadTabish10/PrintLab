@@ -38,7 +38,7 @@ export class AddPaperMarketComponent implements OnInit {
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
-        this.getProductFields("")
+        this.getProductFields()
         this.buttonName = 'Add'
       } else {
         this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
@@ -52,9 +52,7 @@ export class AddPaperMarketComponent implements OnInit {
           this.rateValue = this.rateToUpdate.ratePkr
           this.noteValue = this.rateToUpdate.notes
           this.verifiedValue = this.rateToUpdate.verified
-          debugger
-          console.log(this.rateToUpdate)
-          this.getProductFields(this.rateToUpdate.paperStock)
+          this.getProductFields()
           this.getGsm(this.rateToUpdate.paperStock, {})
         }, error => {
           this.error = error.error.error
@@ -95,17 +93,13 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   getGsm(papervalue: string, obj: any) {
-    debugger
-    Number.isNaN(this.idFromQueryParam) ? this.paperStockIndex = this.paperStockArray.indexOf(obj) : null
-    const words = papervalue.split(' ');
-    const converted = words.map(word => word.toUpperCase()).join('_')
-    this.settingservice.getGsmByPaperStock(converted).subscribe(res => {
+    this.settingservice.getGsmByPaperStock(papervalue).subscribe(res => {
       this.gsmArray = res
       this.gsmValue = this.rateToUpdate.gsm
     })
   }
 
-  getProductFields(val: any) {
+  getProductFields() {
     this.productFieldService.getProductDefintion().subscribe(res => {
       let arr: any = []
       arr = res
@@ -113,11 +107,10 @@ export class AddPaperMarketComponent implements OnInit {
         element.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperStockArray = element.productFieldValuesList : null
       });
       if (!Number.isNaN(this.idFromQueryParam)) {
-        debugger
-        this.paperStockIndex = this.paperStockArray.findIndex((el: any) => el.name == val)
-        this.paperStockValue = this.rateToUpdate.paperStock
+        this.paperStockArray.forEach((el: any) => {
+          el.name == this.rateToUpdate.paperStock ? this.paperStockValue = el : null
+        })
       }
-      console.log(this.paperStockArray);
     })
   }
 

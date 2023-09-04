@@ -53,7 +53,6 @@ export class AddProductDefintionComponent implements OnInit {
 
 
   type() {
-
     if (this.typeValue == "DROPDOWN" || this.typeValue == "MULTIDROPDOWN") {
       if (Number.isNaN(this.idFromQueryParam)) {
         this.pfvaluesArray.length == 0 ? this.pfvaluesArray.push({ name: null, status: null }) : null;
@@ -67,9 +66,9 @@ export class AddProductDefintionComponent implements OnInit {
   }
 
   removeElement(i: number) {
-
     if (!Number.isNaN(this.idFromQueryParam)) {
-      this.productFieldService.deleteProductFieldValue(this.idFromQueryParam, this.pfvaluesArray[i].id).subscribe(() => { }, error => {
+      this.productFieldService.deleteProductFieldValue(this.idFromQueryParam, this.pfvaluesArray[i].id).subscribe(() => {
+      }, error => {
         this.error = error.error.error
         this.visible = true;
       })
@@ -78,8 +77,11 @@ export class AddProductDefintionComponent implements OnInit {
   }
 
   addProduct() {
-
     this.typeValue == "TEXTFIELD" || this.typeValue == "TOGGLE" ? this.pfvaluesArray = [] : null;
+    this.pfvaluesArray.forEach((element: any) => {
+      element.name = element.name.split(' ');
+      element.name = element.name.map((word: any) => word.toUpperCase()).join('_')
+    })
     let obj = {
       name: this.nameValue,
       status: this.statusValue,
