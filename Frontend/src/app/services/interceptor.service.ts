@@ -12,10 +12,7 @@ export class InterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.authService.token ? req = req.clone({
       headers: req.headers.set('authorization', `Bearer ${this.authService.token}`)
-
-
     }) : null
-    //  req.headers.set('Access-Control-Allow-Origin', '*')
     return next.handle(req)
   }
 }

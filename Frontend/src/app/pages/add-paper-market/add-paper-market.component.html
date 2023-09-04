@@ -18,12 +18,13 @@
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Paper Stock</label><br>
             <p-dropdown [options]="paperStockArray" optionLabel="name" placeholder="Select Paper Stock"
-              (onChange)="getGsm($event.value.name)" styleClass="w-100" [(ngModel)]="paperStockValue"></p-dropdown>
+              (onChange)="getGsm($event.value.name, $event.value)" styleClass="w-100"
+              [(ngModel)]="id ? null : paperStockArray[paperStockIndex]"></p-dropdown>
 
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">GSM (Grams)</label>
-            <p-dropdown [options]="gsmArray" optionLabel="name" placeholder="Select Paper Stock" styleClass="w-100"
+            <p-dropdown [options]="gsmArray" placeholder="Select Paper Stock" styleClass="w-100"
               [(ngModel)]="gsmValue"></p-dropdown>
           </div>
           <div class="col-6 my-3">

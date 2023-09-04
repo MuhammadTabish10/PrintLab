@@ -100,7 +100,6 @@ export class AddProductComponent implements OnInit {
   }
 
   showPublic(i: any, id: any) {
-
     let flag = false
     for (const el of this.productDefinition) {
       if (el.productField.id == id) {
