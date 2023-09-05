@@ -9,6 +9,8 @@ import { PaperMarketService } from 'src/app/services/paper-market.service';
 })
 export class PaperMarketComponent implements OnInit {
 
+  error:string=''
+  visible!:boolean
   paperMarketArray: any = []
   tableData: Boolean = false
   search: string = ''
@@ -24,14 +26,19 @@ export class PaperMarketComponent implements OnInit {
     this.paperMarketService.getPaperMarket().subscribe(res => {
       this.paperMarketArray = res
       this.paperMarketArray.length == 0 ? this.tableData = true : this.tableData = false;
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
   deletePaperMarketRate(id: any) {
 
-    this.paperMarketService.deletePaperMarket(id).subscribe(res => {
-
+    this.paperMarketService.deletePaperMarket(id).subscribe(() => {
       this.getPaperMartetRates()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -46,6 +53,9 @@ export class PaperMarketComponent implements OnInit {
       this.paperMarketService.searchPaperMarket(paperStockName.value).subscribe(res => {
         this.paperMarketArray = res
         this.paperMarketArray.length == 0 ? this.tableData = true : this.tableData = false;
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
       })
     }
   }

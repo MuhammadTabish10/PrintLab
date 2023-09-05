@@ -11,13 +11,15 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class LoginFormComponent implements OnInit {
 
+  visible!: boolean
+  error: string = ''
   userNamevalue: string = ''
   passwordValue: string = ''
   token: any
   passwordToggle: string = 'password'
   showPassword: boolean = false
 
-  constructor(private router: Router, private loginService: LoginService, private authService: AuthguardService) {
+  constructor(private router: Router, private loginService: LoginService) {
   }
 
   ngOnInit(): void {
@@ -33,7 +35,8 @@ export class LoginFormComponent implements OnInit {
       localStorage.setItem("token", this.token.jwt)
       this.router.navigateByUrl('/dashboard')
     }, error => {
-      alert(error.error.error)
+      this.error = error.error.error
+      this.visible = true
     })
   }
 

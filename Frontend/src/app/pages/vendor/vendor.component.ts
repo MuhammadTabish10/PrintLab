@@ -12,6 +12,8 @@ export class VendorComponent implements OnInit {
   tableData: boolean = true
   vendorArray: any = []
   search: string = ''
+  visible!: boolean
+  error: string = ''
 
   constructor(private vendorService: VendorService, private router: Router) { }
 
@@ -23,12 +25,18 @@ export class VendorComponent implements OnInit {
     this.vendorService.getVendor().subscribe(res => {
       this.vendorArray = res
       this.vendorArray.length == 0 ? this.tableData = true : this.tableData = false
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
     })
   }
 
   deleteVendor(id: any) {
-    this.vendorService.deleteVendor(id).subscribe(res => {
+    this.vendorService.deleteVendor(id).subscribe(() => {
       this.getVendors()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
   editVendor(id: any) {
@@ -42,6 +50,9 @@ export class VendorComponent implements OnInit {
       this.vendorService.searchVendor(name.value).subscribe(res => {
         this.vendorArray = res
         this.vendorArray.length == 0 ? this.tableData = true : this.tableData = false;
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
       })
     }
   }

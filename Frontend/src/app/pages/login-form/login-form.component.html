@@ -7,12 +7,12 @@
       <form class="p-4 w-100">
         <h2 class="mb-4 text-center">Login</h2>
         <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
+          <label class="form-label">Username</label>
           <input type="text" class="form-control" [(ngModel)]="userNamevalue"
             [ngModelOptions]="{standalone: true}" placeholder="Enter username">
         </div>
         <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
+          <label class="form-label">Password</label>
           <div class="d-flex">
             <input [(ngModel)]=" passwordValue" type="{{passwordToggle}}" class="form-control"
               style="border-top-right-radius: 0; border-bottom-right-radius: 0;" [ngModelOptions]="{standalone: true}"
@@ -33,3 +33,9 @@
     </div>
   </div>
 </div>
+
+
+<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
+    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <h5 class="error-modal-head">{{error}}</h5>
+</p-dialog>

@@ -130,7 +130,7 @@ export class AddVendorComponent implements OnInit {
         notes: this.notesValue,
         vendorProcessList: this.selectedVendorProcess
       }
-      this.vendorService.postVendor(obj).subscribe(res => {
+      this.vendorService.postVendor(obj).subscribe(() => {
         this.router.navigateByUrl('/vendor')
       }, error => {
         this.error = error.error.error

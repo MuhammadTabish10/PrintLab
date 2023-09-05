@@ -33,7 +33,6 @@ export class AddProductDefintionComponent implements OnInit {
       } else {
         this.buttonName = 'Update';
         this.productFieldService.getProductDefintionById(this.idFromQueryParam).subscribe(res => {
-          //
           this.fieldToUpdate = res
           if (this.fieldToUpdate.type == "MULTIDROPDOWN" || this.fieldToUpdate.type == "DROPDOWN") {
             this.pfvalueFlag = true
@@ -90,16 +89,14 @@ export class AddProductDefintionComponent implements OnInit {
       productFieldValuesList: this.pfvaluesArray
     }
     if (Number.isNaN(this.idFromQueryParam)) {
-      this.productFieldService.postProductField(obj).subscribe(res => {
-        //
+      this.productFieldService.postProductField(obj).subscribe(() => {
         this.router.navigateByUrl('/productField')
       }, error => {
         this.error = error.error.error
         this.visible = true;
       })
     } else {
-      this.productFieldService.updateField(this.idFromQueryParam, obj).subscribe(res => {
-
+      this.productFieldService.updateField(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/productField')
       }, error => {
         this.error = error.error.error

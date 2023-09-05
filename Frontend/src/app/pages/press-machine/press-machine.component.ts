@@ -8,10 +8,11 @@ import { PressMachineService } from 'src/app/services/press-machine.service';
   styleUrls: ['./press-machine.component.css']
 })
 export class PressMachineComponent implements OnInit {
-
+  visible!: boolean
+  error: string = ''
   tableData: boolean = true
   pressMachineArray: any = []
-  search:string=''
+  search: string = ''
 
   constructor(private pressMachineService: PressMachineService, private router: Router) { }
   ngOnInit(): void {
@@ -22,12 +23,18 @@ export class PressMachineComponent implements OnInit {
     this.pressMachineService.getPressMachine().subscribe(res => {
       this.pressMachineArray = res
       this.pressMachineArray.length == 0 ? this.tableData = true : this.tableData = false
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
   deletePressMachine(id: any) {
     this.pressMachineService.deletePressMachine(id).subscribe(res => {
       this.getPressMachine()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -42,6 +49,9 @@ export class PressMachineComponent implements OnInit {
       this.pressMachineService.searchPressMachine(name.value).subscribe(res => {
         this.pressMachineArray = res
         this.pressMachineArray.length == 0 ? this.tableData = true : this.tableData = false;
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
       })
     }
   }

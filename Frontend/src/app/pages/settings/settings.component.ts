@@ -12,6 +12,8 @@ export class SettingsComponent {
   tableData: boolean = true
   settingsArray: any = []
   search:string=''
+  visible!: boolean
+  error: string = ''
 
   constructor(private settingsService: SettingsService, private router: Router) { }
 
@@ -23,6 +25,9 @@ export class SettingsComponent {
     this.settingsService.getSettings().subscribe(res => {
       this.settingsArray = res
       this.settingsArray.length == 0 ? this.tableData = true : this.tableData = false
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -31,8 +36,11 @@ export class SettingsComponent {
   }
 
   deleteSettings(id: any) {
-    this.settingsService.deleteSettings(id).subscribe(res => {
+    this.settingsService.deleteSettings(id).subscribe(() => {
       this.getSettings()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -43,6 +51,9 @@ export class SettingsComponent {
     this.settingsService.searchSettings(key.value).subscribe(res => {
       this.settingsArray = res
       this.settingsArray.length == 0 ? this.tableData = true : this.tableData = false;
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
   }

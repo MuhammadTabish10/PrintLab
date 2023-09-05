@@ -10,6 +10,8 @@ import { OrdersService } from 'src/app/services/orders.service';
 export class ViewOrderComponent implements OnInit {
   order: any
   idFromQueryParam!: number
+  visible!: boolean
+  error: string = ''
 
   constructor(private route: ActivatedRoute, private orderService: OrdersService) { }
 
@@ -23,8 +25,9 @@ export class ViewOrderComponent implements OnInit {
   getOrderById() {
     this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
       this.order = res
-      console.log(this.order);
-
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 }

@@ -12,7 +12,9 @@ export class UpingComponent implements OnInit {
   tableData: boolean = true
   upingArray: any = []
   search: string = ''
-  
+  visible!: boolean
+  error: string = ''
+
   constructor(private upingService: UpingService, private router: Router) { }
 
   ngOnInit(): void {
@@ -23,6 +25,9 @@ export class UpingComponent implements OnInit {
     this.upingService.getUping().subscribe(res => {
       this.upingArray = res
       this.upingArray.length == 0 ? this.tableData = true : this.tableData = false
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -31,8 +36,11 @@ export class UpingComponent implements OnInit {
   }
 
   deleteuping(id: any) {
-    this.upingService.deleteUping(id).subscribe(res => {
+    this.upingService.deleteUping(id).subscribe(() => {
       this.getUping()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -43,6 +51,9 @@ export class UpingComponent implements OnInit {
       this.upingService.searchUping(size.value).subscribe(res => {
         this.upingArray = res
         this.upingArray.length == 0 ? this.tableData = true : this.tableData = false;
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
       })
     }
   }

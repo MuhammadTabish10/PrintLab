@@ -51,13 +51,6 @@ export class AddUpingComponent implements OnInit {
               }
             })
           })
-          // this.selectedSizes.forEach((item: any) => { this.placeHolder.push(item.label) })
-          // this.selectedSizes.forEach((element: any) => {
-          //   this.paperSize.push({})
-          //   for (let i = 0; i < this.paperSizesArray.length; i++) {
-          //     element.id == this.paperSizesArray[i].id ? this.paperSizesArray.splice(i, 1) : null;
-          //   }
-          // });
         }, error => {
           this.error = error.error.error
           this.visible = true;

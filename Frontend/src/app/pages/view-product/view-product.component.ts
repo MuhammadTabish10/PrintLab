@@ -11,6 +11,8 @@ export class ViewProductComponent implements OnInit {
 
   idFromQueryParam: any
   productToView: any
+  visible!: boolean
+  error: string = ''
 
   constructor(private route: ActivatedRoute, private service: ProductService) { }
 
@@ -19,6 +21,9 @@ export class ViewProductComponent implements OnInit {
       this.idFromQueryParam = +param['id']
       this.service.getById(this.idFromQueryParam).subscribe(res => {
         this.productToView = res
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
       })
     })
 

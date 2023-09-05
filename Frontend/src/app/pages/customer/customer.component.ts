@@ -32,8 +32,11 @@ export class CustomerComponent implements OnInit {
   }
 
   deleteCustomer(id: any) {
-    this.customerService.deleteCustomer(id).subscribe(res => {
+    this.customerService.deleteCustomer(id).subscribe(() => {
       this.getcustomers()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
 
@@ -48,6 +51,9 @@ export class CustomerComponent implements OnInit {
       this.customerService.searchCustomer(name.value).subscribe(res => {
         this.customersArray = res
         this.customersArray.length == 0 ? this.tableData = true : this.tableData = false;
+      }, error => {
+        this.error = error.error.error
+        this.visible = true;
       })
     }
   }

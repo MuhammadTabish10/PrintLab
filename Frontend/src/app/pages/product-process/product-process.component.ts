@@ -12,6 +12,9 @@ export class ProductProcessComponent {
   tableData: boolean = true
   productProcessArray: any = []
   searh: string = ''
+  visible!: boolean
+  error: string = ''
+
   constructor(private productProcessService: ProductProcessService, private router: Router) { }
 
   ngOnInit(): void {
@@ -22,6 +25,9 @@ export class ProductProcessComponent {
     this.productProcessService.getProductProcess().subscribe(res => {
       this.productProcessArray = res
       this.productProcessArray.length == 0 ? this.tableData = true : this.tableData = false
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -32,6 +38,9 @@ export class ProductProcessComponent {
   deleteProductProcess(id: any) {
     this.productProcessService.deleteProductProcess(id).subscribe(res => {
       this.getProductProcess()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -42,6 +51,9 @@ export class ProductProcessComponent {
       this.productProcessService.searchProductProcess(name.value).subscribe(res => {
         this.productProcessArray = res
         this.productProcessArray.length == 0 ? this.tableData = true : this.tableData = false;
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
       })
     }
   }

@@ -16,8 +16,8 @@ export class AddCustomerComponent implements OnInit {
   status: string = 'Active'
   idFromQueryParam!: number
   customerToUpdate: any = []
-  error:string=''
-  visible!:boolean
+  error: string = ''
+  visible!: boolean
 
   constructor(private customerService: CustomerService, private route: ActivatedRoute, private router: Router) { }
 

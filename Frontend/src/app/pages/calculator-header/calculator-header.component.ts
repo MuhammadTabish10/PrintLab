@@ -64,6 +64,9 @@ export class CalculatorHeaderComponent implements OnInit {
   ngAfterViewInit() {
     this.configTable.specifications.subscribe((data: string) => {
       this.receivedData = data;
+    }, () => {
+      this.error = ''
+      this.visible = true;
     });
   }
 
@@ -126,8 +129,9 @@ export class CalculatorHeaderComponent implements OnInit {
 
     this.orderService.calculations(obj).subscribe(res => {
       this.calculateedObj.emit(res);
-    }, error => {
-      alert(error.error.error)
+    }, () => {
+      this.error = ''
+      this.visible = true;
     })
   }
   onImpositionValueChange(): void {
@@ -201,8 +205,10 @@ export class CalculatorHeaderComponent implements OnInit {
   getGsm(papervalue: string) {
     this.settingService.getGsmByPaperStock(papervalue).subscribe(res => {
       this.gsmArray = res
-      console.log(this.gsmArray);
-
+      // console.log(this.gsmArray);
+    }, () => {
+      this.error = ''
+      this.visible = true;
     })
   }
 

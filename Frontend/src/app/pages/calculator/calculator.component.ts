@@ -7,6 +7,9 @@ import { CalculatorHeaderComponent } from '../calculator-header/calculator-heade
   styleUrls: ['./calculator.component.css']
 })
 export class CalculatorComponent implements OnInit {
+  visible!: boolean
+  error: string = ''
+
   @ViewChild(CalculatorHeaderComponent)
   calculation!: CalculatorHeaderComponent;
   receivedData: any;
@@ -16,8 +19,11 @@ export class CalculatorComponent implements OnInit {
   constructor() { }
   ngAfterViewInit() {
     this.calculation.calculateedObj.subscribe((data: any) => {
-      debugger
+      // debugger
       this.receivedData = data;
+    }, () => {
+      this.error = ''
+      this.visible = true;
     });
   }
 }

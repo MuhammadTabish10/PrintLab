@@ -96,6 +96,9 @@ export class AddPaperMarketComponent implements OnInit {
     this.settingservice.getGsmByPaperStock(papervalue).subscribe(res => {
       this.gsmArray = res
       this.gsmValue = this.rateToUpdate.gsm
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
 
@@ -111,6 +114,9 @@ export class AddPaperMarketComponent implements OnInit {
           el.name == this.rateToUpdate.paperStock ? this.paperStockValue = el : null
         })
       }
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
     })
   }
 
