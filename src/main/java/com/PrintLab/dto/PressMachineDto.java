@@ -19,5 +19,6 @@ public class PressMachineDto
     private Double ctp_rate;
     private Double impression_1000_rate;
     private Boolean is_selected;
+    private String status;
     private List<PressMachineSizeDto> pressMachineSize;
 }

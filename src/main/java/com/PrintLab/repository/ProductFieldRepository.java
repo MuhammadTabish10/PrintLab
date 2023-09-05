@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -19,6 +20,7 @@ public interface ProductFieldRepository extends JpaRepository<ProductField, Long
     @Query("SELECT pf FROM ProductField pf WHERE pf.name LIKE %:searchName%")
     List<ProductField> findProductFieldsByName(@Param("searchName") String searchName);
     @Modifying
+    @Transactional
     @Query("UPDATE ProductField pf SET pf.status = 'inActive' WHERE pf.id = :id")
     void setStatusInactive(@Param("id") Long id);
 }

@@ -26,6 +26,7 @@ public class PressMachine {
     private Double ctp_rate;
     private Double impression_1000_rate;
     private Boolean is_selected;
+    private String status;
 
     @OneToMany(mappedBy = "pressMachine", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PressMachineSize> pressMachineSize;

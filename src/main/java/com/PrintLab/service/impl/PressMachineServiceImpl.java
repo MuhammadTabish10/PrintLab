@@ -34,6 +34,7 @@ public class PressMachineServiceImpl implements PressMachineService {
     @Transactional
     @Override
     public PressMachineDto save(PressMachineDto pressMachineDto) {
+        pressMachineDto.setStatus("Active");
         PressMachine pressMachine = toEntity(pressMachineDto);
         if (pressMachine.getIs_selected()) {
             // If the new press machine is selected, unselect all other machines
@@ -58,7 +59,7 @@ public class PressMachineServiceImpl implements PressMachineService {
 
     @Override
     public List<PressMachineDto> getAll() {
-        List<PressMachine> pressMachineList = pressMachineRepository.findAll();
+        List<PressMachine> pressMachineList = pressMachineRepository.findByStatus("Active");
         List<PressMachineDto> pressMachineDtoList = new ArrayList<>();
 
         for (PressMachine pressMachine : pressMachineList) {
@@ -128,7 +129,7 @@ public class PressMachineServiceImpl implements PressMachineService {
 
         if (optionalPressMachine.isPresent()) {
             PressMachine pressMachine = optionalPressMachine.get();
-            pressMachineRepository.deleteById(id);
+            pressMachineRepository.setStatusInactive(id);
         } else {
             throw new RecordNotFoundException(String.format("Press Machine not found for id => %d", id));
         }
@@ -138,6 +139,7 @@ public class PressMachineServiceImpl implements PressMachineService {
     @Transactional
     @Override
     public PressMachineDto updatePressMachine(Long id, PressMachineDto pressMachineDto) {
+        pressMachineDto.setStatus("Active");
         PressMachine pressMachine = toEntity(pressMachineDto);
         Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(id);
         int count = 0;
@@ -146,6 +148,7 @@ public class PressMachineServiceImpl implements PressMachineService {
             PressMachine existingPressMachine = optionalPressMachine.get();
             existingPressMachine.setName(pressMachine.getName());
             existingPressMachine.setCtp_rate(pressMachine.getCtp_rate());
+            existingPressMachine.setStatus(pressMachine.getStatus());
             existingPressMachine.setImpression_1000_rate(pressMachine.getImpression_1000_rate());
 
             if (pressMachine.getIs_selected()) {
@@ -231,6 +234,7 @@ public class PressMachineServiceImpl implements PressMachineService {
                 .ctp_rate(pressMachine.getCtp_rate())
                 .impression_1000_rate(pressMachine.getImpression_1000_rate())
                 .is_selected(pressMachine.getIs_selected())
+                .status(pressMachine.getStatus())
                 .pressMachineSize(pressMachineSizeDtos)
                 .build();
     }
@@ -258,6 +262,7 @@ public class PressMachineServiceImpl implements PressMachineService {
                 .ctp_rate(pressMachineDto.getCtp_rate())
                 .impression_1000_rate(pressMachineDto.getImpression_1000_rate())
                 .is_selected(pressMachineDto.getIs_selected())
+                .status(pressMachineDto.getStatus())
                 .pressMachineSize(pressMachineSizes)
                 .build();
     }

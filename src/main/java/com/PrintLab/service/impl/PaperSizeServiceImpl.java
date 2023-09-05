@@ -1,7 +1,6 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PaperSizeDto;
-import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.modal.*;
 import com.PrintLab.repository.PaperSizeRepository;
@@ -80,7 +79,7 @@ public class PaperSizeServiceImpl implements PaperSizeService {
 
         if (optionalPaperSize.isPresent()) {
             PaperSize paperSize = optionalPaperSize.get();
-            paperSizeRepository.deleteById(id);
+            paperSizeRepository.setStatusInactive(id);
         } else {
             throw new RecordNotFoundException(String.format("Paper Size not found for id => %d", id));
         }
