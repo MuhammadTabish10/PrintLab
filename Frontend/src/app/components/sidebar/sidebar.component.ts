@@ -79,5 +79,4 @@ export class SidebarComponent {
     this.settingFlag = !this.settingFlag
   }
 
-
 }

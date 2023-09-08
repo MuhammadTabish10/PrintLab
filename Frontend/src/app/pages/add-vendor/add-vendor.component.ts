@@ -30,7 +30,7 @@ export class AddVendorComponent implements OnInit {
   notesProcess: any = []
   selectedVendorProcess: any = []
   vendorProcessId: any = []
-
+  elementGenerated: boolean = false;
   constructor(private vendorService: VendorService, private productProcessService: ProductProcessService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -88,6 +88,7 @@ export class AddVendorComponent implements OnInit {
   }
 
   generateElement() {
+    this.elementGenerated = true;
     this.placeHolder.push('Select Label')
     this.vendorProcess.length != this.maxLength ? this.vendorProcess.push({}) : alert('Reached Process limit');
   }

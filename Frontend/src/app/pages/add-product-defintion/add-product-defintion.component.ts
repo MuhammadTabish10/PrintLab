@@ -77,6 +77,7 @@ export class AddProductDefintionComponent implements OnInit {
   }
 
   addProduct() {
+    debugger
     this.typeValue == "TEXTFIELD" || this.typeValue == "TOGGLE" ? this.pfvaluesArray = [] : null;
     this.pfvaluesArray.forEach((element: any) => {
       element.name = element.name.split(' ');
@@ -106,5 +107,8 @@ export class AddProductDefintionComponent implements OnInit {
         this.visible = true;
       })
     }
+  }
+  isTypeValueEmpty(): boolean {
+    return !this.typeValue; // Returns true if typeValue is empty, otherwise false
   }
 }

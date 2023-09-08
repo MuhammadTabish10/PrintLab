@@ -29,7 +29,7 @@ import { AddCustomerComponent } from './pages/add-customer/add-customer.componen
 import { ViewOrderComponent } from './pages/view-order/view-order.component';
 import { CalculatorComponent } from './pages/calculator/calculator.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: LoginFormComponent

@@ -3,47 +3,81 @@
 <div class="container-fluid text-center px-0 ps-5">
   <div class="bg-dark row mx-auto">
     <div class="col-lg-4 col-12 text-warning text-center text-lg-start">
-      <button class="border-0 bg-dark text-warning" type="button" data-bs-toggle="collapse"
-        data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-        [ngClass]="{'text-danger': pressAlert}">
-        {{configuration}} <i class="fa-solid fa-arrow-down-wide-short"></i>
+      <button
+        class="border-0 bg-dark text-warning"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+        [ngClass]="{ 'text-danger': pressAlert}"
+      >
+        {{ configuration }} <i class="fa-solid fa-arrow-down-wide-short"></i>
       </button>
     </div>
     <div class="col-lg-4 col-12 text-white text-center">
       {{ currentDatetime }}
     </div>
   </div>
-  <div class="collapse container-fluid mt-3 mb-3" id="collapseExample">
-    <div class="row mx-auto justify-content-center justify-content-lg-start">
-      <app-configuration-table (dataToParent)="receiveDataFromChild($event)"
-        [selectedValue]="selectedOption"></app-configuration-table>
-    </div>
-  </div>
+  <app-configuration-table
+    (dataToParent)="receiveDataFromChild($event)"
+    [selectedValue]="selectedOption"
+  ></app-configuration-table>
 </div>
-<div class="container-fluid px-0 ps-5">
+<div class="container-fluid px-0 ps-5 text-center">
   <div class="row mx-auto">
     <div class="col-lg-3 bg-dark text-white text-center">
       Paper Stock : <span id="selectedPaper">{{ paperValue }}</span> | GSM :
       <span id="selectedGsm">{{ gsmValue }}</span>
     </div>
-    <div class="col-lg-1 col-6 bg-dark text-white ms-lg-5 ps-4" style="font-size: 13px">
+    <div
+      class="col-lg-1 col-6 bg-dark text-white ms-lg-5 ps-4"
+      style="font-size: 13px"
+    >
       Last Updated
     </div>
-    <small class="col-lg-1 col-6 border" id="lastUpdated"
-      [ngClass]="{ 'bg-danger text-white': lastUpdatedPaper === 'Not found' }">{{ lastUpdatedPaper }}</small>
-    <small class="col-lg-1 col-6 bg-dark text-white ps-1 px-0" style="font-size: 13px">Paper Market Rate</small>
-    <small class="col-lg-1 col-6 border" id="updatedRate"
-      [ngClass]="{ 'bg-danger text-white': lastUpdatedRate === 'Not found' }">{{ lastUpdatedRate }}</small>
-    <small class="col-lg-1 col-6 bg-dark text-white px-0 text-center" style="font-size: 13px">Paper Market Qty</small>
-    <small class="col-lg-1 col-6 border" id="selectedPaperQty"
-      [ngClass]="{ 'bg-danger text-white': lastUpdatedQty === 'Not found' }">
+    <small
+      class="col-lg-1 col-6 border"
+      id="lastUpdated"
+      [ngClass]="{ 'bg-danger text-white': lastUpdatedPaper === 'Not found' }"
+      >{{ lastUpdatedPaper }}</small
+    >
+    <small
+      class="col-lg-1 col-6 bg-dark text-white ps-1 px-0"
+      style="font-size: 13px"
+      >Paper Market Rate</small
+    >
+    <small
+      class="col-lg-1 col-6 border"
+      id="updatedRate"
+      [ngClass]="{ 'bg-danger text-white': lastUpdatedRate === 'Not found' }"
+      >{{ lastUpdatedRate }}</small
+    >
+    <small
+      class="col-lg-1 col-6 bg-dark text-white px-0 text-center"
+      style="font-size: 13px"
+      >Paper Market Qty</small
+    >
+    <small
+      class="col-lg-1 col-6 border"
+      id="selectedPaperQty"
+      [ngClass]="{ 'bg-danger text-white': lastUpdatedQty === 'Not found' }"
+    >
       {{ lastUpdatedQty }}
     </small>
-    <small class="col-lg-1 col-6 bg-dark text-white px-2" style="font-size: 13px">Cost Per Sheet</small>
-    <small class="col-lg-1 col-6 border border-dark" id="costPerSheet" [ngClass]="{
+    <small
+      class="col-lg-1 col-6 bg-dark text-white px-2"
+      style="font-size: 13px"
+      >Cost Per Sheet</small
+    >
+    <small
+      class="col-lg-1 col-6 border border-dark"
+      id="costPerSheet"
+      [ngClass]="{
         'bg-danger': costPerSheet === 'Can\'t calculate',
         'text-white': costPerSheet === 'Can\'t calculate'
-      }">
+      }"
+    >
       {{ costPerSheet }}
     </small>
   </div>
@@ -59,14 +93,22 @@
     <tbody>
       <tr>
         <td class="col-6 col-lg-0">
-          <select class="form-select form-select-sm" id="selectProduct" [(ngModel)]="productName">
+          <select
+            class="form-select form-select-sm"
+            id="selectProduct"
+            [(ngModel)]="productName"
+          >
             <option *ngFor="let product of fields[0].values" [value]="product">
               {{ product }}
             </option>
           </select>
         </td>
         <td>
-          <select class="form-select form-select-sm" id="colors" [(ngModel)]="jobFrontValue">
+          <select
+            class="form-select form-select-sm"
+            id="colors"
+            [(ngModel)]="jobFrontValue"
+          >
             <option *ngFor="let product of fields[1].values" [value]="product">
               {{ product }}
             </option>
@@ -85,20 +127,29 @@
     <tbody>
       <tr>
         <td class="col-6 col-lg-0">
-          <select class="form-select form-select-sm" id="size" [(ngModel)]="sizeValue"
-            (ngModelChange)="onSizeSelection()">
+          <select
+            class="form-select form-select-sm"
+            id="size"
+            [(ngModel)]="sizeValue"
+            (ngModelChange)="onSizeSelection()"
+          >
             <option *ngFor="let product of fields[2].values" [value]="product">
               {{ product }}
             </option>
           </select>
         </td>
         <td>
-          <select class="form-select form-select-sm" id="paperStock" [(ngModel)]="paperValue"
-            (ngModelChange)="onPaperSelection($event)">
-            <option *ngFor="let product of fields[3].values" [value]="product">
-              {{ product }}
-            </option>
-          </select>
+          <select
+          class="form-select form-select-sm"
+          id="paperStock"
+          [(ngModel)]="paperValue"
+          (ngModelChange)="onPaperSelection()"
+        >
+          <option *ngFor="let paperOption of paperStock" [value]="paperOption.name">
+            {{ paperOption.name }}
+          </option>
+        </select>
+        
         </td>
       </tr>
     </tbody>
@@ -113,18 +164,26 @@
     <tbody>
       <tr>
         <td class="col-6 col-lg-0">
-          <select class="form-select form-select-sm" id="grams" [(ngModel)]="gsmValue"
-            (ngModelChange)="onGSMSelection($event)">
+          <select
+            class="form-select form-select-sm"
+            id="grams"
+            [(ngModel)]="gsmValue"
+            (ngModelChange)="onGSMSelection($event)"
+          >
             <option *ngFor="let product of gsmArray" [value]="product">
-              {{ product}}
+              {{ product }}
             </option>
           </select>
         </td>
         <td>
-          <select class="form-select form-select-sm" id="sheetSize" [(ngModel)]="sheetValue"
-            (ngModelChange)="onSheetSizeSelection()">
-            <option *ngFor="let size of fields[5].values" [value]="size.value">
-              {{ size.value }}
+          <select
+            class="form-select form-select-sm"
+            id="sheetSize"
+            [(ngModel)]="sheetValue"
+            (ngModelChange)="onSheetSizeSelection()"
+          >
+            <option *ngFor="let size of paperSizesArray" [value]="size.label">
+              {{ size.label }}
             </option>
           </select>
         </td>
@@ -143,11 +202,20 @@
     <tbody>
       <tr>
         <td class="col-6 col-lg-0">
-          <input class="text-center col-12" readonly id="ofUp" [value]="uppingValue" />
+          <input
+            class="text-center col-12"
+            readonly
+            id="ofUp"
+            [value]="uppingValue"
+          />
         </td>
         <td>
-          <select class="form-select form-select-sm" id="sideOption" [(ngModel)]="sideOptionValue"
-            (ngModelChange)="onImpositionValueChange()">
+          <select
+            class="form-select form-select-sm"
+            id="sideOption"
+            [(ngModel)]="sideOptionValue"
+            (ngModelChange)="onImpositionValueChange()"
+          >
             <option *ngFor="let product of fields[6].values" [value]="product">
               {{ product }}
             </option>
@@ -159,13 +227,18 @@
   <table class="table table-bordered">
     <thead>
       <tr class="col-3">
-        <th scope="col" class="bg-light-warning fs-6 text-nowrap">
+        <th scope="col" class="bg-light-warning fs-6 text-lg-nowrap">
           Imposition [Possible]
         </th>
-        <th scope="col" class="bg-light-warning fs-6 text-nowrap" id="headerAnimation" [ngClass]="{
+        <th
+          scope="col"
+          class="bg-light-warning fs-6 text-nowrap"
+          id="headerAnimation"
+          [ngClass]="{
             'fade-out':
               impositionValue === 'Applied' || sideOptionValue === 'SingleSided'
-          }">
+          }"
+        >
           Job Colors [Black]
         </th>
       </tr>
@@ -178,19 +251,33 @@
           </ng-container>
 
           <ng-container *ngIf="sideOptionValue !== 'SingleSided'">
-            <select class="form-select form-select-sm" id="imposition" [(ngModel)]="impositionValue"
-              (ngModelChange)="onImpositionValueChange()">
-              <option *ngFor="let product of fields[7].values" [value]="product">
+            <select
+              class="form-select form-select-sm"
+              id="imposition"
+              [(ngModel)]="impositionValue"
+              (ngModelChange)="onImpositionValueChange()"
+            >
+              <option
+                *ngFor="let product of fields[7].values"
+                [value]="product"
+              >
                 {{ product }}
               </option>
             </select>
           </ng-container>
         </td>
-        <td id="tdColors" [ngClass]="{
+        <td
+          id="tdColors"
+          [ngClass]="{
             'fade-out':
               impositionValue === 'Applied' || sideOptionValue === 'SingleSided'
-          }">
-          <select class="form-select form-select-sm" id="jobColors" [(ngModel)]="jobBackValue">
+          }"
+        >
+          <select
+            class="form-select form-select-sm"
+            id="jobColors"
+            [(ngModel)]="jobBackValue"
+          >
             <option *ngFor="let product of fields[8].values" [value]="product">
               {{ product }}
             </option>
@@ -203,17 +290,34 @@
     <thead>
       <tr class="">
         <th scope="col" class="bg-light-warning fs-6 text-nowrap">Quantity</th>
+        <!-- <th scope="col" class="bg-light-warning fs-6 text-nowrap">
+          Available in press
+        </th> -->
       </tr>
     </thead>
     <tbody>
       <tr class="col">
-        <td [ngClass]="{'bg-danger': qtyAlert}">
-          <input class="col-12" type="number" name="Quantity" [(ngModel)]="qty" />
+        <td [ngClass]="{ 'bg-danger': qtyAlert }">
+          <input
+            class="col-12"
+            type="number"
+            name="Quantity"
+            [(ngModel)]="qty"
+          />
         </td>
+        <!-- <td>
+          <input
+            readonly
+            class="col-12 text-center"
+            name="boolean"
+            [(ngModel)]="boolean"
+            [value]="boolean"
+          />
+        </td> -->
       </tr>
     </tbody>
   </table>
 </div>
-<div class="container text-center">
+<div class="container text-center ps-6">
   <button class="btn btn-warning" (click)="calculate()">Calculate</button>
 </div>

@@ -1,12 +1,14 @@
+<div class="collapse container-fluid mt-3 mb-3" id="collapseExample">
+  <div class="row mx-auto justify-content-center justify-content-lg-start" >
 <div class="container d-flex justify-content-center">
   <div class="loader" *ngIf="isLoading"></div>
 </div>
-<div class="container"[ngClass]="{ 'hide-content': isLoading }">
+<div class="container-fluid ps-1"[ngClass]="{ 'hide-content': isLoading }">
   <div class="row">
-    <div class="col">
+    <div class="col d-flex justify-content-center">
 <table
   class="table-bordered border-2 border border-dark table-responsive text-lg-start text-center fw-bold"
-  style="width: 17rem"
+  style="width: 16rem"
   id="configRate"
 >
   <thead>
@@ -35,10 +37,10 @@
   </tbody>
 </table>
 </div>
-<div class="col">
+<div class="col mt-3">
 <table
-  class="table-bordered border-2 border border-dark table-responsive text-lg-start text-center fw-bold"
-  style="width: 17rem"
+  class="table-bordered border-2 border border-dark table-responsive text-lg-start text-center fw-bold "
+  style="width: 16rem"
   id="configRate"
 >
   <thead>
@@ -58,36 +60,13 @@
         <input class="col-12" type="number" name="setupFee" id="" placeholder="setupFee" [(ngModel)]="setupFee">
       </td>
     </tr>
-    <tr>
-      <td>
-        <input class="col-12" type="number" name="cuttingImpression" id="" placeholder="cuttingImpression"  [(ngModel)]="cuttingImpression">
-      </td>
-    </tr>
   </tbody>
 </table>
 </div>
-<div class="col">
-<table
-  class="table-bordered border-2 border border-dark table-responsive text-lg-start text-center fw-bold"
-  style="width: 17rem"
-  id="configRate"
->
-  <thead>
-    <tr>
-      <th>Process Specification</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <input class="col-12" type="number" name="Cutting" id="" placeholder="Cutting" [(ngModel)]="cutting">
-      </td>
-    </tr>
-  </tbody>
-</table>
-</div>
-<div class="container">
+<div class="container-fluid text-center">
   <button class="btn btn-dark" (click)="saveDataAndShowLoader()">Save</button>
 </div>
 </div>
+</div>
+  </div>
 </div>

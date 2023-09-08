@@ -6,14 +6,14 @@
     <div>
       <h4>{{buttonName}} Paper Market</h4>
     </div>
-
+    <form class="was-validated" #myForm="ngForm"(ngSubmit)="addPapermarketRate()" novalidate>
     <div class="order-body py-2">
       <div class="container">
         <div class="row">
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Date</label>
             <input type="date" class="order-search form-control order-form-input m-0" [(ngModel)]="dateValue"
-              style="border:1px solid #ced4da;" placeholder="Enter Date">
+              style="border:1px solid #ced4da;" placeholder="Enter Date" name="date" required>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Paper Stock</label><br>
@@ -29,17 +29,17 @@
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Length</label>
             <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="lengthValue"
-              (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Length">
+              (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Length" name="Length" required>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Width</label>
             <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="widthValue"
-              (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Width">
+              (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Width" name="width" required>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Dimensions</label>
             <input type="text" class="order-search form-control order-form-input m-0 bg-white"
-              [(ngModel)]="dimensionValue" disabled style="border:1px solid #ced4da;">
+              [(ngModel)]="dimensionValue" disabled style="border:1px solid #ced4da;" name="dimension" required>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">QTY</label><br>
@@ -49,12 +49,12 @@
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Rate (PKR)</label>
             <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="rateValue"
-              style="border:1px solid #ced4da;" placeholder="Enter Rate">
+              style="border:1px solid #ced4da;" placeholder="Enter Rate" name="rate" required>
           </div>
           <div class="col-12 my-3">
             <label class="add-order-label m-0">Notes</label>
             <textarea class="order-search form-control order-form-input m-0" [(ngModel)]="noteValue"
-              style="border:1px solid #ced4da;" placeholder="Enter Notes" rows="7"></textarea>
+              style="border:1px solid #ced4da;" placeholder="Enter Notes" rows="7" name="Notes" required></textarea>
           </div>
           <div class="col-2 my-3">
             <label class="add-order-label m-0">Verified</label><br>
@@ -66,12 +66,13 @@
           </div>
           <div class="col-10 my-3 d-flex justify-content-center mx-0">
             <button type="submit" class="btn order-table-btn btn-search-panel w-25"
-              (click)="addPapermarketRate()">{{buttonName}}
+            [disabled]="!myForm.valid">{{buttonName}}
             </button>
           </div>
         </div>
       </div>
     </div>
+  </form>
   </div>
 </div>
 

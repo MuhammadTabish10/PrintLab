@@ -26,6 +26,7 @@ export class AddPressMachineComponent implements OnInit {
   placeHolder: any = []
   pressMachineSizeId: any = []
   select: boolean = false
+  elementsGenerated: boolean = false;
 
   constructor(private paperSizeService: PaperSizeService, private pressMachineService: PressMachineService, private route: ActivatedRoute, private router: Router) { }
 
@@ -87,6 +88,7 @@ export class AddPressMachineComponent implements OnInit {
   }
 
   generateElement() {
+    this.elementsGenerated = true;
     this.placeHolder.push('Select Label')
     this.paperSize.length != this.maxLength ? this.paperSize.push({}) : alert('Reached machine sizes limit');
   }

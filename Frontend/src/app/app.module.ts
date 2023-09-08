@@ -1,3 +1,4 @@
+import { LoaderService } from './services/loader.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,7 +17,7 @@ import { ProductDefintionComponent } from './pages/product-defintion/product-def
 import { PaperMarketComponent } from './pages/paper-market/paper-market.component';
 import { AddPaperMarketComponent } from './pages/add-paper-market/add-paper-market.component';
 import { AddProductDefintionComponent } from './pages/add-product-defintion/add-product-defintion.component'
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -40,7 +41,12 @@ import { CalculatorHeaderComponent } from './pages/calculator-header/calculator-
 import { ConfigurationTableComponent } from './pages/configuration-table/configuration-table.component';
 import { ViewOrderComponent } from './pages/view-order/view-order.component';
 import { DialogModule } from 'primeng/dialog';
+import { LoaderComponent } from './components/loader/loader.component';
 import { AuthInterceptorProvider, InterceptorService } from './services/interceptor.service';
+import { provideRouter, withHashLocation, Routes } from '@angular/router';
+import { routes } from './app-routing.module';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -75,6 +81,7 @@ import { AuthInterceptorProvider, InterceptorService } from './services/intercep
     CalculatorComponent,
     CalculatorHeaderComponent,
     ConfigurationTableComponent,
+    LoaderComponent
    ],
   imports: [
     BrowserModule,
@@ -87,7 +94,8 @@ import { AuthInterceptorProvider, InterceptorService } from './services/intercep
     DropdownModule,
     DialogModule
   ],
-  providers: [AuthInterceptorProvider,InterceptorService],
+  providers: [AuthInterceptorProvider,InterceptorService,
+    provideRouter(routes, withHashLocation())],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

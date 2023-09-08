@@ -1,66 +1,99 @@
 <app-sidebar></app-sidebar>
-<div class="body-position">
-    <app-dashboard-head></app-dashboard-head>
-    <div class="main-container">
-        <div>
-            <h4>Orders</h4>
-        </div>
-        <div class="order-body">
-            <div class="order-search-panel">
-                <input type="text" placeholder="Search Order ID" class="order-search form-control" [(ngModel)]="search"
-                    (keyup)="searchOrder($event.target)">
-                <div>
-                    <div class="dropdown" style="float: right;">
-                        <button class="dropbtn">Status</button>
-                        <div class="dropdown-content">
-                            <span (click)="getOrders()">All</span>
-                            <span (click)="statusSorting(pending)">{{pending}}</span>
-                            <span (click)="statusSorting(recieved)">{{recieved}}</span>
-                            <span (click)="statusSorting(canceled)">{{canceled}}</span>
-                        </div>
-                    </div>
-                    <button type="button" class="btn order-table-btn btn-search-panel" routerLink="/addOrder">
-                        <i class="fa-solid fa-plus"></i>&nbsp;Add
-                    </button>
-                </div>
-            </div>
-            <div class="order-table">
-                <table class="table table-hover">
-                    <thead class="position-sticky top-0 z-1">
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Customer Name</th>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="order-table-404" colspan="5" *ngIf="tableData">No record
-                                found</td>
-                        </tr>
-                        <tr *ngFor="let order of ordersArray" class="order-table-row-hover">
-                            <th scope="row" class="tracking-id">{{order?.id}}</th>
-                            <td>{{order?.customer?.name}}</td>
-                            <td>{{order?.product}}</td>
-                            <td>${{order?.price}}</td>
-                            <td class="order-table-btns-container">
-                                <div class="btn-group mr-2" role="group" aria-label="Second group">
-                                    <button type="button" class="btn order-table-btn" (click)="viewOrder(order.id)"><i
-                                            class="fa-solid fa-hand-pointer"></i>&nbsp;View</button>
-                                    <button type="button" class="btn order-table-btn" (click)="editOrder(order.id)"><i
-                                            class="fa-solid fa-pen"></i>&nbsp;Edit
-                                    </button>
-                                    <button type="button" class="btn order-table-btn" (click)="deleteOrder(order.id)">
-                                        <i class="fa-solid fa-trash"></i>&nbsp;Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<div class="container-fluid ps-6">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="container-fluid mt-3">
+    <div class="row">
+      <h4>Orders</h4>
     </div>
+  </div>
+  <div class="container-fluid d-flex px-0 mt-3">
+      <form class="input-group">
+        <input
+          class="form-control"
+          type="search"
+          placeholder="Search Order"
+          aria-label="Search"
+          [(ngModel)]="search"
+          (keyup)="searchOrder($event.target)"
+        />
+
+        <button
+          type="button"
+          class="btn btn-sm btn-dark"
+          routerLink="/addOrder"
+        >
+          + Add
+        </button>
+      </form>
+      <div class="dropdown ms-1 justify-content-end">
+        <button
+          class="btn btn-dark dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <span class="d-none d-lg-inline-block">Status</span>
+        </button>
+        <div class="dropdown-content">
+          <span (click)="getOrders()">All</span>
+          <span (click)="statusSorting(pending)">{{ pending }}</span>
+          <span (click)="statusSorting(recieved)">{{ recieved }}</span>
+          <span (click)="statusSorting(canceled)">{{ canceled }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div class="container-fluid mt-5 ps-6">
+  <table class="table table-fixed table-responsive text-center">
+    <thead>
+      <tr>
+        <th scope="col" class="col-1">ID</th>
+        <th scope="col" class="col-3">Customer Name</th>
+        <th scope="col" class="col-3">Product Name</th>
+        <th scope="col" class="col-2">Price</th>
+        <th scope="col" class="col-3">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="order-table-404" colspan="5" *ngIf="tableData">
+          No record found
+        </td>
+      </tr>
+      <tr *ngFor="let order of ordersArray" class="order-table-row-hover">
+        <th scope="row" class="tracking-id">{{ order?.id }}</th>
+        <td>{{ order?.customer?.name }}</td>
+        <td>{{ order?.product }}</td>
+        <td>${{ order?.price }}</td>
+        <td class="order-table-btns-container">
+          <div class="btn-group mr-2" role="group" aria-label="Second group">
+            <button
+              type="button"
+              class="btn btn-sm order-table-btn"
+              (click)="viewOrder(order.id)"
+            >
+              <i class="fa-solid fa-hand-pointer"></i><small>View</small>
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm order-table-btn"
+              (click)="editOrder(order.id)"
+            >
+              <i class="fa-solid fa-pen"></i><small>Edit</small>
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-danger"
+              (click)="deleteOrder(order.id)"
+            >
+              <i class="fa-solid fa-trash"></i><small>Del</small>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

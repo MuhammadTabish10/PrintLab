@@ -10,13 +10,11 @@ export class CalculatorComponent implements OnInit {
   @ViewChild(CalculatorHeaderComponent)
   calculation!: CalculatorHeaderComponent;
   receivedData: any;
-
   ngOnInit(): void {
   }
   constructor() { }
   ngAfterViewInit() {
     this.calculation.calculateedObj.subscribe((data: any) => {
-      debugger
       this.receivedData = data;
     });
   }
