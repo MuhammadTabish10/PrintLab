@@ -8,6 +8,7 @@ import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Service
 public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 {
+
     private final PaperMarketRatesRepository paperMarketRatesRepository;
 
     public PaperMarketRatesServiceImpI(PaperMarketRatesRepository paperMarketRatesRepository) {
@@ -23,6 +25,9 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 
     @Override
     public PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto) {
+        if(paperMarketRatesDto.getTimeStamp() == null) {
+            paperMarketRatesDto.setTimeStamp(LocalDate.now());
+        }
         PaperMarketRates paperMarketRates = paperMarketRatesRepository.save(toEntity(paperMarketRatesDto));
         return toDto(paperMarketRates);
     }
@@ -107,16 +112,22 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);
         if(optionalPaperMarketRates.isPresent()){
             PaperMarketRates existingPmr = optionalPaperMarketRates.get();
-            existingPmr.setDate(paperMarketRates.getDate());
+            existingPmr.setTimeStamp(paperMarketRates.getTimeStamp());
             existingPmr.setPaperStock(paperMarketRates.getPaperStock());
+            existingPmr.setBrand(paperMarketRates.getBrand());
+            existingPmr.setMadeIn(paperMarketRates.getMadeIn());
             existingPmr.setGSM(paperMarketRates.getGSM());
             existingPmr.setLength(paperMarketRates.getLength());
             existingPmr.setWidth(paperMarketRates.getWidth());
             existingPmr.setDimension(paperMarketRates.getDimension());
             existingPmr.setQty(paperMarketRates.getQty());
+            existingPmr.setKg(paperMarketRates.getKg());
+            existingPmr.setVendor(paperMarketRates.getVendor());
+            existingPmr.setRecordType(paperMarketRates.getRecordType());
             existingPmr.setRatePkr(paperMarketRates.getRatePkr());
             existingPmr.setVerified(paperMarketRates.getVerified());
             existingPmr.setNotes(paperMarketRates.getNotes());
+            existingPmr.setStatus(paperMarketRates.getStatus());
 
             PaperMarketRates updatedPmr = paperMarketRatesRepository.save(existingPmr);
             return toDto(updatedPmr);
@@ -129,32 +140,44 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     public PaperMarketRatesDto toDto(PaperMarketRates paperMarketRates) {
         return PaperMarketRatesDto.builder()
                 .id(paperMarketRates.getId())
-                .date(paperMarketRates.getDate())
+                .timeStamp(paperMarketRates.getTimeStamp())
                 .paperStock(paperMarketRates.getPaperStock())
+                .brand(paperMarketRates.getBrand())
+                .madeIn(paperMarketRates.getMadeIn())
                 .GSM(paperMarketRates.getGSM())
                 .length(paperMarketRates.getLength())
                 .width(paperMarketRates.getWidth())
                 .dimension(paperMarketRates.getDimension())
                 .qty(paperMarketRates.getQty())
+                .kg(paperMarketRates.getKg())
+                .vendor(paperMarketRates.getVendor())
+                .recordType(paperMarketRates.getRecordType())
                 .ratePkr(paperMarketRates.getRatePkr())
                 .verified(paperMarketRates.getVerified())
                 .notes(paperMarketRates.getNotes())
+                .status(paperMarketRates.getStatus())
                 .build();
     }
 
     public PaperMarketRates toEntity(PaperMarketRatesDto paperMarketRatesDto) {
         return PaperMarketRates.builder()
                 .id(paperMarketRatesDto.getId())
-                .date(paperMarketRatesDto.getDate())
+                .timeStamp(paperMarketRatesDto.getTimeStamp())
                 .paperStock(paperMarketRatesDto.getPaperStock())
+                .brand(paperMarketRatesDto.getBrand())
+                .madeIn(paperMarketRatesDto.getMadeIn())
                 .GSM(paperMarketRatesDto.getGSM())
                 .length(paperMarketRatesDto.getLength())
                 .width(paperMarketRatesDto.getWidth())
                 .dimension(paperMarketRatesDto.getDimension())
                 .qty(paperMarketRatesDto.getQty())
+                .kg(paperMarketRatesDto.getKg())
+                .vendor(paperMarketRatesDto.getVendor())
+                .recordType(paperMarketRatesDto.getRecordType())
                 .ratePkr(paperMarketRatesDto.getRatePkr())
                 .verified(paperMarketRatesDto.getVerified())
                 .notes(paperMarketRatesDto.getNotes())
+                .status(paperMarketRatesDto.getStatus())
                 .build();
     }
 

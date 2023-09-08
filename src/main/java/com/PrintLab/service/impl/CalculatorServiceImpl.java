@@ -176,7 +176,7 @@ public class CalculatorServiceImpl implements CalculatorService {
     private Double calculatePaperMart(Calculator calculator, Double sheets) {
         // Calculation logic for paper mart
         // Searching Paper Market Rates by PaperStock, GSM and Dimension and getting the latest Paper Market Rates
-        Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMAndDimensionOrderByDateDesc(calculator.getPaper(), calculator.getGsm(), calculator.getSheetSizeValue())
+        Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMAndDimensionOrderByTimeStampDesc(calculator.getPaper(), calculator.getGsm(), calculator.getSheetSizeValue())
                 .stream().findFirst();
         if (!optionalPaperMarketRates.isPresent()) {
             throw new RecordNotFoundException("Paper Market Rates not found for paper, gsm, sheetsize: " + calculator.getPaper() + ", " + calculator.getGsm() + ", " + calculator.getSheetSizeValue());
@@ -184,10 +184,10 @@ public class CalculatorServiceImpl implements CalculatorService {
         logger.info("Paper Market Rates found");
 
         PaperMarketRates paperMarketRates = optionalPaperMarketRates.get();
-        logger.info("date and name and gsm and sheetsize: " + paperMarketRates.getDate() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM() + " " + paperMarketRates.getDimension());
+        logger.info("date and name and gsm and sheetsize: " + paperMarketRates.getTimeStamp() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM() + " " + paperMarketRates.getDimension());
 
         LocalDate currentDate = LocalDate.now();
-        LocalDate databaseDate = paperMarketRates.getDate();
+        LocalDate databaseDate = paperMarketRates.getTimeStamp();
 
         // Calculate the difference between the current date and the database date
         long daysDifference = ChronoUnit.DAYS.between(databaseDate, currentDate);
