@@ -23,7 +23,7 @@ public class Ctp {
     private Integer l1;
     private Integer l2;
     private String plateDimension;
-    private Integer rate;
+    private Double rate;
 
     @ManyToOne()
     @JoinColumn(name = "vendor_id")
