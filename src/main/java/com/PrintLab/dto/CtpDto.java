@@ -18,6 +18,6 @@ public class CtpDto {
     private Integer l1;
     private Integer l2;
     private String plateDimension;
-    private Integer rate;
+    private Double rate;
     private Vendor vendor;
 }
