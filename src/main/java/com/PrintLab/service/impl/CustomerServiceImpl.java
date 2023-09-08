@@ -79,7 +79,6 @@ public class CustomerServiceImpl implements CustomerService {
         if(updateCustomer.isPresent()){
             Customer existedCustomer = updateCustomer.get();
             existedCustomer.setName(customer.getName());
-            existedCustomer.setCreatedAt(customer.getCreatedAt());
             existedCustomer.setBusinessName(customer.getBusinessName());
             existedCustomer.setStatus(customer.getStatus());
             Customer updatedCustomer = customerRepository.save(existedCustomer);

@@ -35,7 +35,11 @@ public class CalculatorServiceImpl implements CalculatorService {
 
     private static final Logger logger = LoggerFactory.getLogger(CalculatorServiceImpl.class);
 
-    public CalculatorServiceImpl(PressMachineRepository pressMachineRepository, UpingRepository upingRepository, PaperSizeRepository paperSizeRepository, PaperMarketRatesRepository paperMarketRatesRepository, SettingRepository settingRepository, ProductFieldRepository productFieldRepository, ProductFieldValuesRepository productFieldValuesRepository) {
+    public CalculatorServiceImpl(PressMachineRepository pressMachineRepository, UpingRepository upingRepository,
+                                 PaperSizeRepository paperSizeRepository, PaperMarketRatesRepository paperMarketRatesRepository,
+                                 SettingRepository settingRepository, ProductFieldRepository productFieldRepository,
+                                 ProductFieldValuesRepository productFieldValuesRepository) {
+
         this.pressMachineRepository = pressMachineRepository;
         this.upingRepository = upingRepository;
         this.paperSizeRepository = paperSizeRepository;
@@ -89,7 +93,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         // Now checking if the provided PressMachine is present in database
         Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(calculator.getPressMachineId());
         if (!optionalPressMachine.isPresent()) {
-            throw new RecordNotFoundException("PressMachine not found. Please Select a Press Machine.");
+            throw new RecordNotFoundException("PressMachine not found.");
         }
         PressMachine pressMachine = optionalPressMachine.get();
         logger.info("PressMachine found for name: " + pressMachine.getName());
