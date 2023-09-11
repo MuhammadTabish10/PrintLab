@@ -14081,13 +14081,14 @@ input[type="checkbox"]:checked+.dropdown-label+.dropdown-menu {
 
 .main-menu:hover,
 nav.main-menu.expanded {
-    width: 250px;
-    background: black;
-    color: white;
+  width: 250px;
+  background: black;
+  color: white;
 }
+
 .main-menu:hover img,
 nav.main-menu img.img {
-    background: none;
+    display: block !important;
 }
 
 
@@ -14128,7 +14129,7 @@ nav.main-menu img.img {
     z-index: 1000;
 }
 .main-menu img{
-  background:black;
+  display:none !important;
 }
 
 .main-menu>ul {
