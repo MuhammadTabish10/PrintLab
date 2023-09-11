@@ -33,7 +33,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
         if(productFieldDto.getCreated_at() == null) {
             productFieldDto.setCreated_at(LocalDate.now());
         }
-        if (Type.TOGGLE.equals(productFieldDto.getType()) || Type.TEXTFIELD.equals(productFieldDto.getType())) {
+        if (productFieldDto.getType().equalsIgnoreCase("TOGGLE") || productFieldDto.getType().equalsIgnoreCase("TEXTFIELD")) {
             productFieldDto.getProductFieldValuesList().clear();
         }
         ProductField productField = toEntity(productFieldDto);
@@ -144,7 +144,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
             existingPf.setType(productField.getType());
             existingPf.setSequence(productField.getSequence());
 
-            if (Type.TOGGLE.equals(productField.getType()) || Type.TEXTFIELD.equals(productField.getType())) {
+            if (productField.getType().equalsIgnoreCase("TOGGLE") || productField.getType().equalsIgnoreCase("TEXTFIELD")) {
                 for(ProductFieldValues productFieldValues : existingPf.getProductFieldValuesList()){
                     productFieldValuesRepository.deleteById(productFieldValues.getId());
                 }

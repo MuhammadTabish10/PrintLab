@@ -94,7 +94,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `press_machine` WRITE;
 /*!40000 ALTER TABLE `press_machine` DISABLE KEYS */;
-INSERT INTO `press_machine` VALUES (1,220,400,_binary '\0','HEIDELBERG GTO-46'),(2,220,400,_binary '\0','HEIDELBERG GTO-52'),(3,400,400,_binary '\0','SOLNA'),(4,400,0,_binary '\0','SORK'),(5,520,750,_binary '\0','SORM'),(6,220,250,_binary '\0','ROTA(SPOT COLOR)');
+INSERT INTO `press_machine` VALUES (1,220,400,_binary '\0','HEIDELBERG GTO-46','Active'),(2,220,400,_binary '\0','HEIDELBERG GTO-52','Active'),(3,400,400,_binary '\0','SOLNA','Active'),(4,400,0,_binary '\0','SORK','Active'),(5,520,750,_binary '\0','SORM','Active'),(6,220,250,_binary '\0','ROTA(SPOT COLOR)','Active');
 /*!40000 ALTER TABLE `press_machine` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,8 +104,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `press_machine_size` WRITE;
 /*!40000 ALTER TABLE `press_machine_size` DISABLE KEYS */;
-INSERT INTO `press_machine_size` VALUES (1,2,1,1),(3,4,3,1),(4,4,4,1),(5,1,5,1),(6,1,6,1),(7,2,1,2),(9,4,3,2),(10,4,4,2),(11,1,5,2),(13,1,1,3),(15,2,3,3),(16,2,4,3),(17,1,5,3),(20,1,1,4),(21,0,4,4),(22,0,3,4),(23,1,5,4),(26,0,3,5),(27,0,4,5),(28,1,1,5),(29,1,5,5),(32,4,3,6),(33,4,4,6),(34,2,1,6),(35,1,5,6);
-/*!40000 ALTER TABLE `press_machine_size` ENABLE KEYS */;
+ /*!40000 ALTER TABLE `press_machine_size` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -177,7 +176,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'ROLE_ADMIN'),(2,'ROLE_USER');
+INSERT INTO `roles` VALUES (1,'ROLE_ADMIN');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,7 +216,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user_roles` WRITE;
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
-INSERT INTO `user_roles` VALUES (4,1),(7,1),(4,2),(6,2);
+INSERT INTO `user_roles` VALUES (4,1);
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -227,7 +226,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'tabish','$2a$12$oEtHIgHVahTMpkZ8HsFKre91q4POosrLSHAvMub2rnX9doo/xKoTm'),(3,'Tabish','$2a$10$xo00iTfXs2pOSKxGRFP5oOLpUsQUnCHiAg8NMKnfnKdYOF3RNpLV.'),(4,'Admin','$2a$10$b0tU8EK9iKMczYB1A62HtuDOo92TkuTYAEyvUCoyqZqMU5nvMziWy'),(5,'user','$2a$10$JSHfWWlTYBgNncjA1zGqw.0yhd8ZGBJuvyQg7GcftHVg9oTWyGx5i'),(6,'basim','$2a$10$Nmg5tfN9/s.zDYBXNDHDzOSY7CP/jZb9E7/UdKPd0kw6RwEsB3dim'),(7,'zaeem','$2a$10$RP.nGHwC6KXIHniD47a94urrazllAPyGFzm2D.Q2Q4yUI6VWF4IUq');
+INSERT INTO `users` VALUES (4,'Admin','$2a$10$b0tU8EK9iKMczYB1A62HtuDOo92TkuTYAEyvUCoyqZqMU5nvMziWy');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

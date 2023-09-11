@@ -28,8 +28,8 @@ public class ProductField {
     private LocalDate created_at;
     private Integer sequence;
 
-    @Enumerated(EnumType.STRING)
-    private Type type;
+//    @Enumerated(EnumType.STRING)
+    private String type;
 
     @OneToMany(mappedBy = "productField", cascade = CascadeType.ALL)
     private List<ProductFieldValues> productFieldValuesList;
