@@ -187,7 +187,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         logger.info("date and name and gsm and sheetsize: " + paperMarketRates.getTimeStamp() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM() + " " + paperMarketRates.getDimension());
 
         LocalDate currentDate = LocalDate.now();
-        LocalDate databaseDate = paperMarketRates.getTimeStamp();
+        LocalDate databaseDate = LocalDate.from(paperMarketRates.getTimeStamp());
 
         // Calculate the difference between the current date and the database date
         long daysDifference = ChronoUnit.DAYS.between(databaseDate, currentDate);

@@ -168,7 +168,6 @@ public class InventoryServiceImpl implements InventoryService {
                         double width = Double.parseDouble(parts[1].replaceAll("[^\\d.]", ""));
 
                         PaperMarketRates paperMarketRates = new PaperMarketRates();
-                        paperMarketRates.setTimeStamp(LocalDate.now());
                         paperMarketRates.setPaperStock(inventory.getPaperStock());
                         paperMarketRates.setBrand(inventory.getBrandName());
                         paperMarketRates.setMadeIn(inventory.getMadeIn());

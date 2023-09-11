@@ -16,7 +16,6 @@ import java.util.Optional;
 @Service
 public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 {
-
     private final PaperMarketRatesRepository paperMarketRatesRepository;
 
     public PaperMarketRatesServiceImpI(PaperMarketRatesRepository paperMarketRatesRepository) {
@@ -25,9 +24,6 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 
     @Override
     public PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto) {
-        if(paperMarketRatesDto.getTimeStamp() == null) {
-            paperMarketRatesDto.setTimeStamp(LocalDate.now());
-        }
         paperMarketRatesDto.setRecordType("Manual");
         PaperMarketRates paperMarketRates = paperMarketRatesRepository.save(toEntity(paperMarketRatesDto));
         return toDto(paperMarketRates);
@@ -113,7 +109,6 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);
         if(optionalPaperMarketRates.isPresent()){
             PaperMarketRates existingPmr = optionalPaperMarketRates.get();
-            existingPmr.setTimeStamp(paperMarketRates.getTimeStamp());
             existingPmr.setPaperStock(paperMarketRates.getPaperStock());
             existingPmr.setBrand(paperMarketRates.getBrand());
             existingPmr.setMadeIn(paperMarketRates.getMadeIn());
