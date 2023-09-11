@@ -13,7 +13,6 @@ export class CalculatorComponent implements OnInit {
   @ViewChild(CalculatorHeaderComponent)
   calculation!: CalculatorHeaderComponent;
   receivedData: any;
-
   ngOnInit(): void {
   }
   constructor() { }

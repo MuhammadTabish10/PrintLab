@@ -1,106 +1,200 @@
 <app-sidebar></app-sidebar>
 <div class="body-position">
-    <app-dashboard-head></app-dashboard-head>
+  <app-dashboard-head></app-dashboard-head>
 
-    <div class="main-container">
-        <div>
-            <h4>{{buttonName}} Vendor</h4>
-        </div>
-
-        <div class="order-body py-2">
-            <div class="container">
-                <div class="row">
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Name</label>
-                        <input type="text" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="nameValue" style="border:1px solid #ced4da;" placeholder="Enter Name">
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Date</label>
-                        <input type="date" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="dateValue" style="border:1px solid #ced4da;" placeholder="Enter Date">
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Contact Name</label>
-                        <input type="text" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="contactNameValue" style="border:1px solid #ced4da;"
-                            placeholder="Enter Contact Name">
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Contact Number</label>
-                        <input type="number" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="contactNumberValue" style="border:1px solid #ced4da;"
-                            placeholder="Enter Contact Number">
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Address</label>
-                        <input type="text" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="addressValue" style="border:1px solid #ced4da;" placeholder="Enter Address">
-                    </div>
-                    <div class="col-12 my-3">
-                        <label class="add-order-label m-0">Notes</label>
-                        <textarea class="order-search form-control order-form-input m-0" [(ngModel)]="notesValue"
-                            style="border:1px solid #ced4da;" placeholder="Enter Notes" rows="7"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="main-container">
+    <div>
+      <h4>{{ buttonName }} Vendor</h4>
     </div>
+    
+      <div class="order-body py-2">
+        <div class="container">
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Name</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="nameValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Name"
+                name="name"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Date</label>
+              <input
+                type="date"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="dateValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Date"
+                name="date"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Contact Name</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="contactNameValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Contact Name"
+                name="contactNameValue"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Contact Number</label>
+              <input
+                type="number"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="contactNumberValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Contact Number"
+                name="number"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Address</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="addressValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Address"
+                name="addressValue"
+                required
+              />
+            </div>
+            <div class="col-12 my-3">
+              <label class="add-order-label m-0">Notes</label>
+              <textarea
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="notesValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Notes"
+                rows="7"
+                name="notes"
+                required
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
 
     <div class="main-container">
-        <div class="d-flex justify-content-between">
-            <h4>Vendor Process</h4>
-            <button type="submit" class="btn order-table-btn btn-search-panel py-2 px-3" (click)="generateElement()"><i
-                    class="fa-solid fa-plus"></i>
-            </button>
-        </div>
+      <div class="d-flex justify-content-between">
+        <h4>Vendor Process</h4>
+        <button
+          type="submit"
+          class="btn order-table-btn btn-search-panel py-2 px-3"
+          (click)="generateElement()"
+        >
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
 
-        <div class="order-body py-2 my-2" *ngFor=" let element of vendorProcess; let i=index">
-            <div class="container">
-                <div class="row">
-                    <div class="col-4 my-2">
-                        <label class="add-order-label d-inline-block m-0">Label</label><br>
-                        <p-dropdown styleClass="w-100" optionLabel="name" [options]="productProcessArray"
-                            (onChange)="addSize($event.value,i)"
-                            [placeholder]="buttonName=='Add' ? 'Select Label' :placeHolder[i]">
-                        </p-dropdown>
-                    </div>
-                    <div class="col-4 my-2">
-                        <label class="add-order-label d-inline-block m-0">Material Type</label><br>
-                        <input type="text" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="materialProcess[i]" style="border:1px solid #ced4da;"
-                            placeholder="Enter Value">
-                    </div>
-                    <div class="col-4 my-2">
-                        <label class="add-order-label d-inline-block m-0">Rate (sq.ft)</label><br>
-                        <input type="number" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="rateProcess[i]" style="border:1px solid #ced4da;" placeholder="Enter Value">
-                    </div>
-                    <div class="col-11 my-2">
-                        <label class="add-order-label d-inline-block m-0">Notes</label><br>
-                        <textarea class="order-search form-control order-form-input m-0"
-                            style="border:1px solid #ced4da;" [(ngModel)]="notesProcess[i]" placeholder="Enter Notes"
-                            rows="4"></textarea>
-                    </div>
-                    <div class="col-1 align-self-lg-end">
-                        <button type="submit" class="btn order-table-btn btn-search-panel" (click)="removeElement(i)"><i
-                                class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
+      <div
+        class="order-body py-2 my-2"
+        *ngFor="let element of vendorProcess; let i = index"
+      >
+        <div class="container">
+          <div class="row">
+            <div class="col-4 my-2">
+              <label class="add-order-label d-inline-block m-0">Label</label
+              ><br />
+              <p-dropdown
+                styleClass="w-100"
+                optionLabel="name"
+                [options]="productProcessArray"
+                (onChange)="addSize($event.value, i)"
+                [placeholder]="
+                  buttonName == 'Add' ? 'Select Label' : placeHolder[i]
+                "
+                name="material"
+              >
+              </p-dropdown>
             </div>
+            <div class="col-4 my-2">
+              <label class="add-order-label d-inline-block m-0"
+                >Material Type</label
+              ><br />
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="materialProcess[i]"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Value"
+                name="process"
+                required
+              />
+            </div>
+            <div class="col-4 my-2">
+              <label class="add-order-label d-inline-block m-0"
+                >Rate (sq.ft)</label
+              ><br />
+              <input
+                type="number"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="rateProcess[i]"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Value"
+                name="rate"
+                required
+              />
+            </div>
+            <div class="col-11 my-2">
+              <label class="add-order-label d-inline-block m-0">Notes</label
+              ><br />
+              <textarea
+                class="order-search form-control order-form-input m-0"
+                style="border: 1px solid #ced4da"
+                [(ngModel)]="notesProcess[i]"
+                placeholder="Enter Notes"
+                rows="4"
+                name="notesProcess"
+                required
+              ></textarea>
+            </div>
+            <div class="col-1 align-self-lg-end">
+              <button
+                type="submit"
+                class="btn order-table-btn btn-search-panel"
+                (click)="removeElement(i)"
+              >
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="order-body mt-5 py-3">
-            <div class="text-end">
-                <button type="submit" class="btn order-table-btn btn-search-panel" (click)="addVendor()">{{buttonName}}
-                </button>
-            </div>
+      <div class="order-body mt-5 py-3">
+        <div class="text-end">
+          <button
+            type="submit"
+            class="btn order-table-btn btn-search-panel"
+            (click)="addVendor()"
+          >
+            {{ buttonName }}
+          </button>
         </div>
+      </div>
     </div>
 </div>
 
-<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
-    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
-    <h5 class="error-modal-head">{{error}}</h5>
+<p-dialog
+  header="Error"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <h5 class="error-modal-head">{{ error }}</h5>
 </p-dialog>

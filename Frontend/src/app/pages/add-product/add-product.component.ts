@@ -35,6 +35,7 @@ export class AddProductComponent implements OnInit {
   selectedMachine: any = {}
   machineIndex!: number
   arr = [{ id: 1, name: "a" }, { id: 2, name: "b" }, { id: 3, name: "c" }, { id: 4, name: "d" }, { id: 5, name: "e" }]
+  elementGenerated:boolean = false;
 
   constructor(private service: ProductService, private route: ActivatedRoute, private router: Router, private productProcessService: ProductProcessService, private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService) { }
 
@@ -299,6 +300,7 @@ export class AddProductComponent implements OnInit {
     this.toggleFlag[i] = !this.toggleFlag[i]
   }
   generateElement() {
+    this.elementGenerated = true;
     this.process.push({ productProcess: null, vendor: null });
   }
   removeElement(index: number) {

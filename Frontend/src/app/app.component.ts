@@ -1,3 +1,4 @@
+import { LoaderService } from './services/loader.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,4 +8,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'print-lab';
+
+  constructor(public loaderService: LoaderService) {}
 }

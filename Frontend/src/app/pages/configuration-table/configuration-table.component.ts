@@ -15,11 +15,9 @@ export class ConfigurationTableComponent implements OnInit {
   setupFee: any;
   cutting: any;
   cuttingImpression: any;
-  isCollapsed = true;
   bataDefault: any;
   filteredItems: any[] = [];
   isLoading: boolean = false;
-  showModal: boolean = false;
 
 
   @Output() specifications = new EventEmitter<object>();
@@ -47,6 +45,7 @@ export class ConfigurationTableComponent implements OnInit {
 
 
   getBataRate(selectedValue: string, selectedMachineId: any): any {
+    debugger
     const selectedPressId = parseInt(selectedMachineId, 10);
     const selectedMachine = this.press.find(machine => machine.id === selectedPressId);
 
@@ -73,25 +72,20 @@ export class ConfigurationTableComponent implements OnInit {
       this.isLoading = false;
     }, 700);
   }
+
   saveData() {
     const missingFields = [];
-  
+
     if (this.margin === undefined) {
       missingFields.push("margin");
     }
     if (this.setupFee === undefined) {
       missingFields.push("setup fee");
     }
-    if (this.cutting === undefined) {
-      missingFields.push("cutting rate");
-    }
-    if (this.cuttingImpression === undefined) {
-      missingFields.push("cutting impression");
-    }
     if (this.selectedPress === undefined) {
       missingFields.push("machine");
     }
-  
+
     if (missingFields.length > 0) {
       const missingFieldsText = missingFields.join(", ");
       alert(`Please decide ${missingFieldsText}`);
@@ -99,11 +93,9 @@ export class ConfigurationTableComponent implements OnInit {
       this.specifications.emit({
         margin: this.margin,
         setupFee: this.setupFee,
-        cutting: this.cutting,
-        impression: this.cuttingImpression,
-        press: this.selectedPress
+        press: this.selectedPress,
       });
       this.isLoading = true;
     }
-  }  
+  }
 }

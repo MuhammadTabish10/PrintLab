@@ -31,7 +31,6 @@ export class AddPaperMarketComponent implements OnInit {
   paperStockArray: any = []
   gsmArray: any = []
   paperStockIndex: any
-
   constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService, private settingservice: SettingsService) { }
 
   ngOnInit(): void {
@@ -93,6 +92,7 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   getGsm(papervalue: string) {
+    debugger
     this.settingservice.getGsmByPaperStock(papervalue).subscribe(res => {
       this.gsmArray = res
       this.gsmValue = this.rateToUpdate.gsm
