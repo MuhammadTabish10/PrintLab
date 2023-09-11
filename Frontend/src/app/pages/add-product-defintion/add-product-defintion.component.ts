@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-add-product-defintion',
   templateUrl: './add-product-defintion.component.html',
@@ -9,6 +9,7 @@ import { ProductDefinitionService } from 'src/app/services/product-definition.se
 })
 export class AddProductDefintionComponent implements OnInit {
 
+  productForm: FormGroup = new FormGroup({}); // Initialize with an empty FormGroup
   typesDropDown: any = ["TOGGLE", "TEXTFIELD", "DROPDOWN", "MULTIDROPDOWN"]
   statusDropDown: any = ["Active", "Inactive"]
   typeValue: String = ''
@@ -23,9 +24,20 @@ export class AddProductDefintionComponent implements OnInit {
   visible!: boolean
   error: string = ''
 
-  constructor(private productFieldService: ProductDefinitionService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private productFieldService: ProductDefinitionService, private route: ActivatedRoute, private router: Router,private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.productForm = this.fb.group({
+      nameValue: [null, [Validators.required]],
+      sequenceValue: [null, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      typeValue: [null, [Validators.required]],
+      statusValue: [null, [Validators.required]],
+      elementName:[null, [Validators.required]],
+      elementStatus:[null, [Validators.required]]
+    });
+    this.productForm.get('typeValue')?.markAsTouched();
+    this.productForm.get('statusValue')?.markAsTouched();
+    this.productForm.get('elementStatus')?.markAsTouched();
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {

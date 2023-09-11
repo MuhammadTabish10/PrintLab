@@ -5,21 +5,24 @@
     <div>
       <h4>Product Field</h4>
     </div>
-    <nav class="navbar navbar-light">
-      <div class="container-fluid px-0">
-        <form class="input-group">
-          <input
-            class="form-control"
-            type="search"
-            placeholder="Search product"
-            aria-label="Search"
-            name="searchProductField"
-            [(ngModel)]="search"
-          />
-          <button type="button" class="btn btn-md btn-dark">+ Add</button>
-        </form>
+    <div class="order-search-panel">
+      <input
+        type="text"
+        placeholder="Search by Product Size"
+        [(ngModel)]="search"
+        class="order-search form-control"
+        (keyup)="searchProdutField($event.target)"
+      />
+      <div>
+        <button
+          type="button"
+          class="btn order-table-btn btn-search-panel"
+          routerLink="/addProductField"
+        >
+          <i class="fa-solid fa-plus"></i>&nbsp;Add
+        </button>
       </div>
-    </nav>
+    </div>
   </div>
 </div>
 
@@ -51,17 +54,17 @@
           <div class="btn-group mr-2" role="group" aria-label="Second group">
             <button
               type="button"
-              class="btn btn-sm order-table-btn"
+              class="btn order-table-btn"
               (click)="editField(field.id)"
             >
-              <i class="fa-solid fa-pen"></i><small>Edit</small>
+              <i class="fa-solid fa-pen pe-1"></i><small>Edit</small>
             </button>
             <button
               type="button"
-              class="btn btn-sm btn-danger"
+              class="btn order-table-btn"
               (click)="deleteField(field.id)"
             >
-              <i class="fa-solid fa-trash"></i><small>Del</small>
+              <i class="fa-solid fa-trash pe-1"></i><small>Del</small>
             </button>
           </div>
         </td>
@@ -70,8 +73,13 @@
   </table>
 </div>
 
-
-<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
-    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
-    <h5 class="error-modal-head">{{error}}</h5>
+<p-dialog
+  header="Error"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <h5 class="error-modal-head">{{ error }}</h5>
 </p-dialog>

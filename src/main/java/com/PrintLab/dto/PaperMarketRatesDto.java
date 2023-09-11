@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 public class PaperMarketRatesDto
 {
     private Long id;
-    private LocalDate timeStamp;
+    private LocalDateTime timeStamp;
     private String paperStock;
     private String brand;
     private String madeIn;

@@ -1,8 +1,6 @@
-import { LoaderService } from './services/loader.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { DashboardHeadComponent } from './components/dashboard-head/dashboard-head.component';
@@ -17,7 +15,7 @@ import { ProductDefintionComponent } from './pages/product-defintion/product-def
 import { PaperMarketComponent } from './pages/paper-market/paper-market.component';
 import { AddPaperMarketComponent } from './pages/add-paper-market/add-paper-market.component';
 import { AddProductDefintionComponent } from './pages/add-product-defintion/add-product-defintion.component'
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -49,7 +47,7 @@ import { InventoryComponent } from './pages/inventory/inventory.component';
 import { AddInventoryComponent } from './pages/add-inventory/add-inventory.component';
 import { DatePipe } from '@angular/common';
 
-import { provideRouter, withHashLocation, Routes } from '@angular/router';
+import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app-routing.module';
 
 
@@ -108,4 +106,4 @@ import { routes } from './app-routing.module';
     provideRouter(routes, withHashLocation()), DatePipe],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {  }

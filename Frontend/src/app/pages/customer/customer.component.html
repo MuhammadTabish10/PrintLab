@@ -1,34 +1,25 @@
 <app-sidebar></app-sidebar>
 <div class="container-fluid ps-6">
   <app-dashboard-head></app-dashboard-head>
-  <div class="container-fluid px-0 mt-5">
+  <div class="container-fluid px-0">
     <div>
       <h4>Customer</h4>
     </div>
 
-    <div class="container-fluid px-0">
-      <form class="input-group">
-        <input
-          class="form-control"
-          type="search"
-          placeholder="Search by Name"
-          aria-label="Search"
-          [(ngModel)]="search"
-          name="searchCustomer"
-          (keyup)="searchCustomer($event.target)"
-        />
-        <button
-          type="button"
-          class="btn btn-md btn-dark"
-          routerLink="/addCustomer"
-        >
-          + Add
-        </button>
-      </form>
+    <div class="container-fluid px-0 mt-5">
+      <div class="order-search-panel">
+        <input type="text" placeholder="Search by Product Size" [(ngModel)]="search"
+            class="order-search form-control" (keyup)="searchCustomer($event.target)">
+        <div>
+            <button type="button" class="btn order-table-btn btn-search-panel" routerLink="/addCustomer">
+                <i class="fa-solid fa-plus"></i>&nbsp;Add
+            </button>
+        </div>
+    </div>
     </div>
   </div>
 </div>
-<div class="container-fluid ps-6 overflow-auto mt-1">
+<div class="container-fluid ps-6 overflow-auto mt-0">
   <table class="table table-responsive text-center">
     <thead class="position-sticky top-0 z-1">
       <tr>
@@ -50,14 +41,14 @@
           <div class="btn-group" role="group" aria-label="Second group">
             <button
               type="button"
-              class="btn btn-sm order-table-btn"
+              class="btn order-table-btn"
               (click)="editCustomer(customer.id)"
             >
               <i class="fa-solid fa-pen pe-1"></i><small>Edit</small>
             </button>
             <button
               type="button"
-              class="btn btn-sm btn-danger"
+              class="btn order-table-btn"
               (click)="deleteCustomer(customer.id)"
             >
               <i class="fa-solid fa-trash pe-1"></i><small>Del</small>
