@@ -2,9 +2,7 @@ package com.PrintLab.controller;
 
 import com.PrintLab.dto.InventoryDto;
 import com.PrintLab.dto.PaperMarketRatesDto;
-import com.PrintLab.modal.PaperMarketRates;
 import com.PrintLab.service.InventoryService;
-import javafx.print.Paper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

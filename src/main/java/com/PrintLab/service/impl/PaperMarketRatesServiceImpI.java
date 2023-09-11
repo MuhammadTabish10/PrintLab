@@ -28,6 +28,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         if(paperMarketRatesDto.getTimeStamp() == null) {
             paperMarketRatesDto.setTimeStamp(LocalDate.now());
         }
+        paperMarketRatesDto.setRecordType("Manual");
         PaperMarketRates paperMarketRates = paperMarketRatesRepository.save(toEntity(paperMarketRatesDto));
         return toDto(paperMarketRates);
     }

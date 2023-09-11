@@ -1,8 +1,10 @@
-import { SettingsService } from 'src/app/services/settings.service';
+import { PaperSizeService } from './../../services/paper-size.service';
 import { Component, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { CalculatorService } from 'src/app/services/calculator.service';
 import { OrdersService } from 'src/app/services/orders.service';
 import { ConfigurationTableComponent } from '../configuration-table/configuration-table.component';
+import { SettingsService } from 'src/app/services/settings.service';
+import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 
 @Component({
   selector: 'app-calculator-header',
@@ -48,9 +50,19 @@ export class CalculatorHeaderComponent implements OnInit {
   configuration: any;
   pressAlert: boolean = false;
   qtyAlert: boolean = false;
-  gsmArray: any = []
-  constructor(private calculatorService: CalculatorService, private orderService: OrdersService, private renderer: Renderer2, private settingService: SettingsService) { }
-
+  boolean: any;
+  loading: boolean = false;
+  gsmArray: any = [];
+  fieldList: any = [];
+  paperStock: any = [];
+  dimension: any =[];
+  paperSizesArray: any = [];
+  constructor(private calculatorService: CalculatorService,
+    private orderService: OrdersService,
+    private renderer: Renderer2,
+    private settingService: SettingsService,
+    private productFieldService: ProductDefinitionService,
+    private paperSizeService:PaperSizeService) { }
   ngOnInit(): void {
     this.configuration = "Configuration";
     this.fields = this.calculatorService.getFields();
@@ -59,14 +71,13 @@ export class CalculatorHeaderComponent implements OnInit {
     this.paperMarket = this.calculatorService.getPaperMarket();
     this.upping = this.calculatorService.getUpping();
     this.uppingValue = '-';
+    this.getFields();
+    this.getPaperSizes();
   }
 
   ngAfterViewInit() {
     this.configTable.specifications.subscribe((data: string) => {
       this.receivedData = data;
-    }, () => {
-      this.error = ''
-      this.visible = true;
     });
   }
 
@@ -78,6 +89,7 @@ export class CalculatorHeaderComponent implements OnInit {
   }
 
   calculate() {
+    this.loading = true;
     if (!this.receivedData || !this.receivedData.press) {
       alert('Please select a press machine and save');
       this.pressAlert = true;
@@ -153,17 +165,20 @@ export class CalculatorHeaderComponent implements OnInit {
     }
   }
 
-  onPaperSelection(obj: any): void {
-    const { date, rate, qty } = this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
-    this.lastUpdatedPaper = date;
-    this.lastUpdatedRate = rate;
-    this.lastUpdatedQty = qty;
-    this.costPerSheet = this.calculateCostPerSheet(rate, qty);
-    this.getGsm(obj)
+  onPaperSelection(): void {
+    if (this.gsmValue && this.paperValue) {
+      const { date, rate, qty } = this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
+      this.lastUpdatedPaper = date;
+      this.lastUpdatedRate = rate;
+      this.lastUpdatedQty = qty;
+      this.costPerSheet = this.calculateCostPerSheet(rate, qty);
+    }
+    this.onSheetSizeSelection();
+    this.getGsm(this.paperValue);
   }
 
   onGSMSelection(gsmValue: any): void {
-    this.gsmValue = gsmValue
+    this.gsmValue = gsmValue;
     const { date, rate, qty } = this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
     this.lastUpdatedPaper = date;
     this.lastUpdatedRate = rate;
@@ -176,7 +191,7 @@ export class CalculatorHeaderComponent implements OnInit {
   private getLastUpdatedInfoForPaperAndGSM(paper: string, gsm: string): { date: string, rate: string, qty: string } {
 
     const matchingEntries = this.paperMarket.filter(entry =>
-      entry.paperStock === paper && entry.gsm === gsm
+      entry.paperStock === paper && entry.gsm === gsm.toString()
     );
 
     if (matchingEntries.length > 0) {
@@ -184,6 +199,12 @@ export class CalculatorHeaderComponent implements OnInit {
         new Date(entry.date) > new Date(latest.date) ? entry : latest
       );
 
+      const latestEntryDate = new Date(latestEntry.date);
+      const currentDate = new Date();
+
+      if (currentDate.getTime() - latestEntryDate.getTime() >= 10 * 24 * 60 * 60 * 1000) {
+        alert('Please update paper!');
+      }
 
       return {
         date: latestEntry.date,
@@ -200,12 +221,30 @@ export class CalculatorHeaderComponent implements OnInit {
   }
 
   getGsm(papervalue: string) {
-    this.settingService.getGsmByPaperStock(papervalue).subscribe(res => {
-      this.gsmArray = res
-    }, () => {
-      this.error = ''
-      this.visible = true;
-    })
+    this.settingService.getGsmByPaperStock(papervalue).subscribe(
+      (res: any) => {
+        this.gsmArray = res;
+
+        // Check if there's only one GSM option available
+        if (this.gsmArray.length === 1) {
+          // Automatically select the only available GSM
+          this.gsmValue = this.gsmArray[0];
+          this.onGSMSelection(this.gsmValue);
+        } else {
+          // Check if the current gsmValue exists in the fetched gsmArray
+          if (this.gsmValue && !this.gsmArray.includes(this.gsmValue)) {
+            // If the current value is not in the fetched array, set it to the first value
+            this.gsmValue = this.gsmArray.length > 0 ? this.gsmArray[0] : '';
+          }
+        }
+
+      },
+      (error) => {
+      this.error = error.error.error
+            this.visible = true;
+        // Handle the error as needed (e.g., show a user-friendly message)
+      }
+    );
   }
 
 
@@ -239,7 +278,6 @@ export class CalculatorHeaderComponent implements OnInit {
 
   onSizeSelection(): void {
     this.uppingValue = this.getUppingValue(this.sizeValue, this.sheetValue);
-
   }
 
   onSheetSizeSelection(): void {
@@ -248,5 +286,31 @@ export class CalculatorHeaderComponent implements OnInit {
   }
   receiveDataFromChild(obj: any) {
     this.receivedData = obj;
+  }
+  getFields() {
+    this.productFieldService.getProductDefintion().subscribe((res: { [key: string]: any }) => {
+      debugger;
+      let paperStockField = null;
+      for (const key in res) {
+        if (res.hasOwnProperty(key)) {
+          const field = res[key];
+          if (field.name === 'Paper Stock') {
+            paperStockField = field;
+            break;
+          }
+        }
+      }
+
+      if (paperStockField) {
+        for (const value of paperStockField.productFieldValuesList) {
+          this.paperStock.push(value);
+        }
+      }
+    });
+  }
+  getPaperSizes() {
+    this.paperSizeService.getPaperSize().subscribe(res => {
+      this.paperSizesArray = res
+    })
   }
 }

@@ -24,7 +24,7 @@ export class AddUpingComponent implements OnInit {
   paperSize: any = []
   placeHolder: any = []
   upingSizeId: any = []
-
+  elementsGenerated: boolean = false;
   constructor(private upingService: UpingService, private paperSizeService: PaperSizeService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -100,6 +100,7 @@ export class AddUpingComponent implements OnInit {
   }
 
   generateElement() {
+    this.elementsGenerated = true;
     this.placeHolder.push('Select Label')
     this.paperSize.length != this.maxLength ? this.paperSize.push({}) : alert('Reached machine sizes limit');
   }

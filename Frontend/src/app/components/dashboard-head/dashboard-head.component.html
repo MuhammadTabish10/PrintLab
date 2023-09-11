@@ -1,16 +1,17 @@
-<div class="dash-head">
-  <div style="display: flex;">
-    <input type="text" class="form-control input-dashboard" placeholder="Search">
-    <button type="button" class="order-table-btn btn btn-prop ">
-      <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
+<nav class="navbar navbar-light">
+  <div class="container-fluid ps-0 pe-0">
+    <form class="input-group">
+      <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+      <button type="button" class="btn btn-dark">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <div class="btn bg-black text-white ms-1 px-1" (click)="logout()">
+       <span class="d-none d-lg-inline-block">Log-out</span><i class="fa-solid fa-arrow-right-from-bracket ps-2"></i>
+      </div>
+    </form>
   </div>
+</nav>
 
-  <div class="dash-dd">
-    <div class="btn order-table-btn dash-head-btn" (click)="logout()">
-      Log-out&nbsp;&nbsp;<i class="fa-solid fa-arrow-right-from-bracket"></i>
-    </div>
-  </div>
 
 
   <!-- <div class="dropdown">
@@ -26,4 +27,4 @@
             <a class="dropdown-item" href="#">Something else here</a>
         </div>
     </div> -->
-</div>
+<!-- </div> -->

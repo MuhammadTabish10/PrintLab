@@ -9246,6 +9246,9 @@ fieldset:disabled .btn {
 .ps-5 {
     padding-left: 3rem !important
 }
+.ps-6 {
+    padding-left: 4rem !important
+}
 
 .gap-0 {
     gap: 0 !important
@@ -14079,10 +14082,14 @@ input[type="checkbox"]:checked+.dropdown-label+.dropdown-menu {
 .main-menu:hover,
 nav.main-menu.expanded {
     width: 250px;
-    /* overflow: visible; */
     background: black;
     color: white;
 }
+.main-menu:hover img,
+nav.main-menu img.img {
+    background: none;
+}
+
 
 /* width */
 .main-menu::-webkit-scrollbar {
@@ -14116,9 +14123,12 @@ nav.main-menu.expanded {
     left: 0;
     width: 60px;
     overflow: hidden;
-    transition: width .05s linear;
+    transition: width 0.25s linear;
     -webkit-transform: translateZ(0) scale(1, 1);
     z-index: 1000;
+}
+.main-menu img{
+  background:black;
 }
 
 .main-menu>ul {
