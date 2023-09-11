@@ -30,5 +30,4 @@ public class PaperMarketRatesDto
     private Boolean verified;
     private String notes;
     private String status;
-
 }

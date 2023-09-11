@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface PaperMarketRatesRepository extends JpaRepository<PaperMarketRates,Long> {
     PaperMarketRates findByPaperStock(String paperStock);
+    PaperMarketRates findByPaperStockAndGSMAndDimension(String paperStock, Integer gsm, String dimension);
     @Query("SELECT pmr FROM PaperMarketRates pmr WHERE pmr.paperStock LIKE %:searchName%")
     List<PaperMarketRates> findPaperMarketRatesByPaperStock(@Param("searchName") String searchName);
     List<PaperMarketRates> findByPaperStockAndGSMAndDimensionOrderByTimeStampDesc(String paperStock, Integer gsm, String dimension);

@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getAll() {
-        List<Order> orderList = orderRepository.findAll();
+        List<Order> orderList = orderRepository.findAllInDescendingOrderById();
         List<OrderDto> orderDtoList = new ArrayList<>();
 
         for (Order order : orderList) {
