@@ -45,7 +45,6 @@ import { CtpComponent } from './pages/ctp/ctp.component';
 import { AddCtpComponent } from './pages/add-ctp/add-ctp.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { AddInventoryComponent } from './pages/add-inventory/add-inventory.component';
-import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
 
 @NgModule({
@@ -96,8 +95,7 @@ import { DatePipe } from '@angular/common';
     MultiSelectModule,
     BrowserAnimationsModule,
     DropdownModule,
-    DialogModule,
-    CommonModule
+    DialogModule
   ],
   providers: [AuthInterceptorProvider,InterceptorService,DatePipe],
   bootstrap: [AppComponent]

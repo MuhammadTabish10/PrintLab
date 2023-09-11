@@ -30,11 +30,9 @@ export class InventoryComponent implements OnInit {
     this.inventoryService.getInventory().subscribe(res => {
       this.inventoryArray = res
       this.inventoryArray.forEach((element: any) => {
-        debugger
         this.gsm.push(JSON.parse(element.availableGsm))
         this.sizes.push(JSON.parse(element.availableSizes))
         element.created_at = this.datePipe.transform(element.created_at, 'EEEE, MMMM d, yyyy')
-        console.log(element.created_at);
       });
       this.inventoryArray.length == 0 ? this.tableData = true : this.tableData = false
     })
@@ -52,5 +50,13 @@ export class InventoryComponent implements OnInit {
 
   viewInventory(id: any) {
     this.router.navigate(['/viewInventory'], { queryParams: { id: id } })
+  }
+
+  updatePaperMarket(id: any) {
+    let index = this.inventoryArray.findIndex((el: any) => el.id == id);
+    this.inventoryService.updatePaperMarket(id).subscribe(() => { }, error => {
+      this.error = error.error.error
+      this.visible = true
+    })
   }
 }

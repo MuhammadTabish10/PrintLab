@@ -37,7 +37,6 @@ export class AddCtpComponent implements OnInit {
         this.buttonName = 'Update'
         this.ctpService.getCtpById(this.idFromQueryParam).subscribe(res => {
           this.ctpToUpdate = res
-          console.log(this.ctpToUpdate);
           this.LOneValue = this.ctpToUpdate.l1
           this.LTwoValue = this.ctpToUpdate.l2
           this.dimensionValue = this.ctpToUpdate.plateDimension
@@ -52,7 +51,6 @@ export class AddCtpComponent implements OnInit {
     this.vendorService.getVendor().subscribe(res => {
       this.vendorArray = res
       if (!Number.isNaN(this.idFromQueryParam)) {
-        debugger
         this.vendorIndex = this.vendorArray.findIndex((el: any) => el.id === this.ctpToUpdate.vendor.id)
         this.vendorValue = this.vendorArray[this.vendorIndex]
       }
@@ -63,7 +61,6 @@ export class AddCtpComponent implements OnInit {
   }
 
   addCtp() {
-    debugger
     if (Number.isNaN(this.idFromQueryParam)) {
       let obj = {
         l1: this.LOneValue,

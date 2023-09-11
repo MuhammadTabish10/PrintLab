@@ -39,4 +39,9 @@ export class InventoryService {
     let url = `${this._url}/inventorys/${name}`
     return this.http.get(url)
   }
+
+  updatePaperMarket(id: any) {
+    let url = `${this._url}/inventory/${id}/paper-market-rates`
+    return this.http.put(url, {})
+  }
 }

@@ -56,7 +56,6 @@ export class AddOrderComponent implements OnInit {
         this.buttonName = 'Update'
         this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
           this.orderToUpdate = res
-          debugger
           this.selectedCustomer = this.orderToUpdate.customer
           this.totalAmount = this.orderToUpdate.price
           this.imgUrl = this.orderToUpdate.url
@@ -164,7 +163,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   toggleFields(title: any) {
-    debugger
     this.selectedProduct = []
     this.productName = title.title
     this.machineId = title.pressMachine.id
@@ -172,7 +170,6 @@ export class AddOrderComponent implements OnInit {
       el.isPublic ? this.selectedProduct.push(el) : null
       el.productField.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selectedValues[0].value : null
       if (!Number.isNaN(this.idFromQueryParam) && this.orderToUpdate.jobColorsBack == null && el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
-        debugger
         let index = this.selectedProduct.findIndex((item: any) => item.id == el.id)
         this.selectedProduct.splice(index, 1)
       }
