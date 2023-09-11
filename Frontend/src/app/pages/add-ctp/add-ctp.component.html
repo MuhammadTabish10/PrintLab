@@ -1,0 +1,52 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+  <app-dashboard-head></app-dashboard-head>
+
+  <div class="main-container">
+    <div>
+      <h4>{{buttonName}} CTP</h4>
+    </div>
+
+    <div class="order-body py-2">
+      <div class="container">
+        <div class="row">
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">L1 (mm)</label>
+            <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="LOneValue"
+              (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter L1">
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">L2 (mm)</label><br>
+            <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="LTwoValue"
+              (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter L2">
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Plate Dimension</label>
+            <input type="text" class="order-search form-control order-form-input m-0" [(ngModel)]="dimensionValue"
+              disabled style="border:1px solid #ced4da;" placeholder="Enter Dimension">
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Vendor</label>
+            <p-dropdown styleClass="w-100" [options]="vendorArray" optionLabel="name" placeholder="Select vendor"
+              [(ngModel)]="vendorValue"></p-dropdown>
+            <!-- [(ngModel)]="id?vendorValue:vendorArray[vendorIndex]"  (onChange)="vendor()"-->
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Rate</label>
+            <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="rateValue"
+              style="border:1px solid #ced4da;" placeholder="Enter Rate">
+          </div>
+          <div class="col-10 my-3 d-flex justify-content-center mx-0">
+            <button type="submit" class="btn order-table-btn btn-search-panel w-25" (click)="addCtp()">{{buttonName}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+  [draggable]="false" [resizable]="false">
+  <h5 class="error-modal-head">{{error}}</h5>
+</p-dialog>

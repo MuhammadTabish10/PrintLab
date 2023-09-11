@@ -28,6 +28,10 @@ import { CustomerComponent } from './pages/customer/customer.component';
 import { AddCustomerComponent } from './pages/add-customer/add-customer.component';
 import { ViewOrderComponent } from './pages/view-order/view-order.component';
 import { CalculatorComponent } from './pages/calculator/calculator.component';
+import { CtpComponent } from './pages/ctp/ctp.component';
+import { AddCtpComponent } from './pages/add-ctp/add-ctp.component';
+import { InventoryComponent } from './pages/inventory/inventory.component';
+import { AddInventoryComponent } from './pages/add-inventory/add-inventory.component';
 
 const routes: Routes = [
   {
@@ -165,7 +169,28 @@ const routes: Routes = [
   },
   {
     path: 'calculator',
-    component: CalculatorComponent
+    component: CalculatorComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'ctp',
+    component: CtpComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'addCtp',
+    component: AddCtpComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'inventory',
+    component: InventoryComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'addInventory',
+    component: AddInventoryComponent,
+    canActivate: [AuthguardService]
   }
 ];
 

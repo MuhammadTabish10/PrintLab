@@ -12,13 +12,11 @@ export class ProductDefinitionService {
   constructor(private http: HttpClient) { }
 
   postProductField(obj: any) {
-    //
     let url = `${this._url}/product-field`
     return this.http.post(url, obj)
   }
 
   getProductDefintionById(id: any) {
-    //
     let url = `${this._url}/product-field/${id}`
     return this.http.get(url)
   }

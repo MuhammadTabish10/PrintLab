@@ -5,39 +5,38 @@ import { environment } from 'src/Environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class PaperSizeService {
-
+export class InventoryService {
   _url = environment.baseUrl
 
   constructor(private http: HttpClient) { }
 
-  postPaperSize(obj: any) {
-    let url = `${this._url}/paper-size`
+  postInventory(obj: any) {
+    let url = `${this._url}/inventory`
     return this.http.post(url, obj)
   }
 
-  getPaperSize() {
-    let url = `${this._url}/paper-size`
+  getInventory() {
+    let url = `${this._url}/inventory`
     return this.http.get(url)
   }
 
-  deletePaperSize(id: any) {
-    let url = `${this._url}/paper-size/${id}`
+  deleteInventory(id: any) {
+    let url = `${this._url}/inventory/${id}`
     return this.http.delete(url)
   }
 
-  getPaperSizeById(id: any) {
-    let url = `${this._url}/paper-size/${id}`
+  getInventoryById(id: any) {
+    let url = `${this._url}/inventory/${id}`
     return this.http.get(url)
   }
 
-  updatePaperSize(id: any, obj: any) {
-    let url = `${this._url}/paper-size/${id}`
+  updateInventory(id: any, obj: any) {
+    let url = `${this._url}/inventory/${id}`
     return this.http.put(url, obj)
   }
 
-  searchPaperSize(label: any) {
-    let url = `${this._url}/paper-size/labels/${label}`
+  searchInventory(name: any) {
+    let url = `${this._url}/inventorys/${name}`
     return this.http.get(url)
   }
 }

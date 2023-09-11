@@ -18,7 +18,6 @@ export class PaperMarketComponent implements OnInit {
   constructor(private paperMarketService: PaperMarketService, private router: Router) { }
 
   ngOnInit(): void {
-    //
     this.getPaperMartetRates()
   }
 

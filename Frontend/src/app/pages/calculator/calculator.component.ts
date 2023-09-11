@@ -19,7 +19,6 @@ export class CalculatorComponent implements OnInit {
   constructor() { }
   ngAfterViewInit() {
     this.calculation.calculateedObj.subscribe((data: any) => {
-      // debugger
       this.receivedData = data;
     }, () => {
       this.error = ''

@@ -13,7 +13,6 @@ export class OrdersService {
   constructor(private http: HttpClient) { }
 
   calculations(obj: any) {
-    // debugger
     let url = `${this._url}/printlab-calculator`
     return this.http.post(url, obj)
   }

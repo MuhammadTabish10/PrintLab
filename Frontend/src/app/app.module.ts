@@ -41,6 +41,13 @@ import { ConfigurationTableComponent } from './pages/configuration-table/configu
 import { ViewOrderComponent } from './pages/view-order/view-order.component';
 import { DialogModule } from 'primeng/dialog';
 import { AuthInterceptorProvider, InterceptorService } from './services/interceptor.service';
+import { CtpComponent } from './pages/ctp/ctp.component';
+import { AddCtpComponent } from './pages/add-ctp/add-ctp.component';
+import { InventoryComponent } from './pages/inventory/inventory.component';
+import { AddInventoryComponent } from './pages/add-inventory/add-inventory.component';
+import { CommonModule } from '@angular/common';
+import { DatePipe } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -75,6 +82,10 @@ import { AuthInterceptorProvider, InterceptorService } from './services/intercep
     CalculatorComponent,
     CalculatorHeaderComponent,
     ConfigurationTableComponent,
+    CtpComponent,
+    AddCtpComponent,
+    InventoryComponent,
+    AddInventoryComponent,
    ],
   imports: [
     BrowserModule,
@@ -85,9 +96,10 @@ import { AuthInterceptorProvider, InterceptorService } from './services/intercep
     MultiSelectModule,
     BrowserAnimationsModule,
     DropdownModule,
-    DialogModule
+    DialogModule,
+    CommonModule
   ],
-  providers: [AuthInterceptorProvider,InterceptorService],
+  providers: [AuthInterceptorProvider,InterceptorService,DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

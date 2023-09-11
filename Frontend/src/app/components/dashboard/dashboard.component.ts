@@ -13,7 +13,6 @@ export class DashboardComponent implements OnInit {
   constructor(private service: DashboardServiceService) { }
 
   ngOnInit(): void {
-    // this.getcards();
   }
 
   getcards() {

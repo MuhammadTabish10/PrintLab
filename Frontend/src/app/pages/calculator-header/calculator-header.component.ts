@@ -93,10 +93,7 @@ export class CalculatorHeaderComponent implements OnInit {
     this.qtyAlert = false;
     this.selectedProdDefArray.forEach((el: any) => {
       el.name == 'Paper Stock' ? this.paperValue = el.selected.productFieldValue.name : null
-      if (el.name == 'Size') {
-        this.sizeValue = el.selected.productFieldValue.name
-      }
-      // el.name == 'Size' ? this.sizeValue = el.selected.productFieldValue.name : null
+      el.name == 'Size' ? this.sizeValue = el.selected.productFieldValue.name : null
       el.name == 'GSM' ? this.gsmValue = el.selected.productFieldValue.name : null
       el.name == 'JobColor(Front)' ? this.jobFrontValue = el.selected.productFieldValue.name : null
       el.name == 'Print Side' ? this.sideOptionValue = el.selected.productFieldValue.name : null
@@ -205,7 +202,6 @@ export class CalculatorHeaderComponent implements OnInit {
   getGsm(papervalue: string) {
     this.settingService.getGsmByPaperStock(papervalue).subscribe(res => {
       this.gsmArray = res
-      // console.log(this.gsmArray);
     }, () => {
       this.error = ''
       this.visible = true;

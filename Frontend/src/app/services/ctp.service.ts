@@ -5,39 +5,39 @@ import { environment } from 'src/Environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class PaperSizeService {
-
+export class CtpService {
   _url = environment.baseUrl
 
   constructor(private http: HttpClient) { }
 
-  postPaperSize(obj: any) {
-    let url = `${this._url}/paper-size`
+  postCtp(obj: any) {
+
+    let url = `${this._url}/ctp`
     return this.http.post(url, obj)
   }
 
-  getPaperSize() {
-    let url = `${this._url}/paper-size`
+  getCtp() {
+    let url = `${this._url}/ctp`
     return this.http.get(url)
   }
 
-  deletePaperSize(id: any) {
-    let url = `${this._url}/paper-size/${id}`
+  deleteCtp(id: any) {
+    let url = `${this._url}/ctp/${id}`
     return this.http.delete(url)
   }
 
-  getPaperSizeById(id: any) {
-    let url = `${this._url}/paper-size/${id}`
+  getCtpById(id: any) {
+    let url = `${this._url}/ctp/${id}`
     return this.http.get(url)
   }
 
-  updatePaperSize(id: any, obj: any) {
-    let url = `${this._url}/paper-size/${id}`
+  updateCtp(id: any, obj: any) {
+    let url = `${this._url}/ctp/${id}`
     return this.http.put(url, obj)
   }
 
-  searchPaperSize(label: any) {
-    let url = `${this._url}/paper-size/labels/${label}`
+  searchCtp(name: any) {
+    let url = `${this._url}/ctps/${name}`
     return this.http.get(url)
   }
 }

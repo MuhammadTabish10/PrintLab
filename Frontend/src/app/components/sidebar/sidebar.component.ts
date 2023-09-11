@@ -34,10 +34,10 @@ export class SidebarComponent {
       name: "Add Product"
     },
     {
-          link: "calculator",
-          icon: "fa fa-calculator",
-          name: "Calculator"
-        }
+      link: "calculator",
+      icon: "fa fa-calculator",
+      name: "Calculator"
+    }
   ]
   configurationOptions: any = [
     {
@@ -72,6 +72,14 @@ export class SidebarComponent {
       link: "settings",
       name: "Settings"
     },
+    {
+      link: "ctp",
+      name: "CTP"
+    },
+    {
+      link: "inventory",
+      name: "Inventory"
+    }
   ]
   settingFlag: boolean = false
 

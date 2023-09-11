@@ -114,7 +114,6 @@ export class AddProductComponent implements OnInit {
   }
 
   productDefinitionComposing(field: any, obj: any, publicIndex: any) {
-
     let object: any
     obj.hasOwnProperty('itemValue') ? object = obj.itemValue : object = obj.value
     if (this.productDefinition.length == 0) {
@@ -250,7 +249,6 @@ export class AddProductComponent implements OnInit {
         productDefinitionProcessList: this.process,
       };
       this.service.updateProduct(this.idFromQueryParam, obj).subscribe(() => {
-        // this.service.getProducts().subscribe(res => {
         this.router.navigateByUrl('/products')
       }, error => {
         this.error = error.error.error
