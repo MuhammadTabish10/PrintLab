@@ -88,12 +88,12 @@ import { routes } from './app-routing.module';
     CalculatorComponent,
     CalculatorHeaderComponent,
     ConfigurationTableComponent,
-    LoaderComponent
+    LoaderComponent,
     CtpComponent,
     AddCtpComponent,
     InventoryComponent,
     AddInventoryComponent,
-   ],
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -105,9 +105,8 @@ import { routes } from './app-routing.module';
     DropdownModule,
     DialogModule
   ],
-  providers: [AuthInterceptorProvider,InterceptorService,
-    provideRouter(routes, withHashLocation())],
-  providers: [AuthInterceptorProvider,InterceptorService,DatePipe],
+  providers: [AuthInterceptorProvider, InterceptorService,
+    provideRouter(routes, withHashLocation()), DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
