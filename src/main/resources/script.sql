@@ -46,7 +46,7 @@ INSERT INTO `paper_market_rates` VALUES
 (4,250,'2022-08-06','23\"x36\"',23,'Junaid went there to get the rates.','ART_CARD',100,5900,_binary '',36),
 (5,300,'2022-08-06','23\"x36\"',23,'Junaid went there to get the rates.','ART_CARD',100,7100,_binary '',36),
 (6,350,'2022-08-06','23\"x36\"',23,'Junaid went there to get the rates.','ART_CARD',500,8250,_binary '',36),
-(7,90,'2022-09-08','25\"x36\"',25,'Junaid on WhatsApp','ART_PAPER_/_MATTE',500,10000,_binary '',36),
+(7,90,'2022-09-08','25\"x36\"',25,'Junaid on WhatsApp','ART_PAPER/MATTE',500,10000,_binary '',36),
 (8,250,'2022-08-06','25\"x36\"',25,'Junaid went there to get the rates.','BLEACH_CARD',100,5700,_binary '',36),
 (9,300,'2022-08-06','25\"x36\"',25,'Junaid went there to get the rates.','BLEACH_CARD',100,6800,_binary '',36),
 (10,350,'2022-08-06','25\"x36\"',25,'Junaid went there to get the rates.','BLEACH_CARD',100,7949,_binary '',36),

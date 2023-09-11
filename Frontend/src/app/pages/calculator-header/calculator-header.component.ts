@@ -289,7 +289,6 @@ export class CalculatorHeaderComponent implements OnInit {
   }
   getFields() {
     this.productFieldService.getProductDefintion().subscribe((res: { [key: string]: any }) => {
-      debugger;
       let paperStockField = null;
       for (const key in res) {
         if (res.hasOwnProperty(key)) {

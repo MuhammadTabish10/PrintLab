@@ -45,7 +45,6 @@ export class ConfigurationTableComponent implements OnInit {
 
 
   getBataRate(selectedValue: string, selectedMachineId: any): any {
-    debugger
     const selectedPressId = parseInt(selectedMachineId, 10);
     const selectedMachine = this.press.find(machine => machine.id === selectedPressId);
 

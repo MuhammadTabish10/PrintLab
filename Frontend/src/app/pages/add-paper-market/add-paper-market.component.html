@@ -6,73 +6,93 @@
     <div>
       <h4>{{buttonName}} Paper Market</h4>
     </div>
-    <form class="was-validated" #myForm="ngForm"(ngSubmit)="addPapermarketRate()" novalidate>
-    <div class="order-body py-2">
-      <div class="container">
-        <div class="row">
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Date</label>
-            <input type="date" class="order-search form-control order-form-input m-0" [(ngModel)]="dateValue"
-              style="border:1px solid #ced4da;" placeholder="Enter Date" name="date" required>
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Paper Stock</label><br>
-            <p-dropdown [options]="paperStockArray" optionLabel="name" placeholder="Select Paper Stock"
-              (onChange)="getGsm($event.value.name)" styleClass="w-100"
-              [(ngModel)]="paperStockValue" name="paperStock"></p-dropdown>
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">GSM (Grams)</label>
-            <p-dropdown [options]="gsmArray" placeholder="Select Paper Stock" styleClass="w-100"
-              [(ngModel)]="gsmValue" name="gsmValue"></p-dropdown>
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Length</label>
-            <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="lengthValue"
-              (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Length" name="Length" required>
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Width</label>
-            <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="widthValue"
-              (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Width" name="width" required>
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Dimensions</label>
-            <input type="text" class="order-search form-control order-form-input m-0 bg-white"
-              [(ngModel)]="dimensionValue" disabled style="border:1px solid #ced4da;" name="dimension" required>
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">QTY</label><br>
-            <p-dropdown [options]="quantityArray" placeholder="Select Quantity" styleClass="w-100"
-              [(ngModel)]="qtyValue"></p-dropdown>
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Rate (PKR)</label>
-            <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="rateValue"
-              style="border:1px solid #ced4da;" placeholder="Enter Rate" name="rate" required>
-          </div>
-          <div class="col-12 my-3">
-            <label class="add-order-label m-0">Notes</label>
-            <textarea class="order-search form-control order-form-input m-0" [(ngModel)]="noteValue"
-              style="border:1px solid #ced4da;" placeholder="Enter Notes" rows="7" name="Notes" required></textarea>
-          </div>
-          <div class="col-2 my-3">
-            <label class="add-order-label m-0">Verified</label><br>
-            <label class="switch mt-2">
-              <input type="checkbox" [checked]="verifiedValue" (click)="getVerifiedValue()">
-              <!--  -->
-              <span class="slider round"></span>
-            </label>
-          </div>
-          <div class="col-10 my-3 d-flex justify-content-center mx-0">
-            <button type="submit" class="btn order-table-btn btn-search-panel w-25"
-            [disabled]="!myForm.valid">{{buttonName}}
-            </button>
+    <form class="was-validated" #myForm="ngForm" (ngSubmit)="addPapermarketRate()" novalidate>
+      <div class="order-body py-2">
+        <div class="container">
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Time Stamp</label>
+              <input type="date" class="order-search form-control order-form-input m-0" [(ngModel)]="timeStampValue"
+                style="border:1px solid #ced4da;" placeholder="Enter Date" name="date" required>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Paper Stock</label><br>
+              <p-dropdown [options]="paperStockArray" optionLabel="name" placeholder="Select Paper Stock"
+                (onChange)="getGsm($event.value.name)" styleClass="w-100" [(ngModel)]="paperStockValue"
+                name="paperStock"></p-dropdown>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Brand</label>
+              <input type="text" class="order-search form-control order-form-input m-0" [(ngModel)]="brandValue"
+                style="border:1px solid #ced4da;" placeholder="Enter Brand" name="Brand" required>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Made In</label>
+              <input type="text" class="order-search form-control order-form-input m-0" [(ngModel)]="madeInValue"
+                style="border:1px solid #ced4da;" placeholder="Enter Made In" name="Made In" required>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">GSM (Grams)</label>
+              <p-dropdown [options]="gsmArray" placeholder="Select Paper Stock" styleClass="w-100"
+                [(ngModel)]="gsmValue" name="gsmValue"></p-dropdown>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Length</label>
+              <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="lengthValue"
+                (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Made In" name="Made In"
+                required>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Width</label>
+              <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="widthValue"
+                (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Made In" name="Made In"
+                required>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Dimensions</label>
+              <input type="text" class="order-search form-control order-form-input m-0 bg-white"
+                placeholder="Enter Dimensions" disabled [(ngModel)]="dimensionValue" style="border:1px solid #ced4da;"
+                name="dimension" required>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">QTY</label><br>
+              <p-dropdown [options]="quantityArray" placeholder="Select Quantity" styleClass="w-100" name="qty"
+                [(ngModel)]="qtyValue"></p-dropdown>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">KG</label>
+              <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="kgValue"
+                style="border:1px solid #ced4da;" placeholder="Enter KG" name="kg" required>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Vendor</label>
+              <p-dropdown [options]="vendorArray" placeholder="Select vendor" styleClass="w-100" name="vendor" optionLabel="name"
+                [(ngModel)]="vendorValue"></p-dropdown>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Rate (PKR)</label>
+              <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="rateValue"
+                style="border:1px solid #ced4da;" placeholder="Enter Rate" name="rate" required>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Status</label>
+              <p-dropdown [options]="statusArray" placeholder="Select Status" styleClass="w-100" labelName="name"
+                [(ngModel)]="statusValue"></p-dropdown>
+            </div>
+            <div class="col-12 my-3">
+              <label class="add-order-label m-0">Notes</label>
+              <textarea class="order-search form-control order-form-input m-0" [(ngModel)]="noteValue"
+                style="border:1px solid #ced4da;" placeholder="Enter Notes" rows="7" name="Notes" required></textarea>
+            </div>
+            <div class="col-10 my-3 d-flex justify-content-center mx-0">
+              <button type="submit" class="btn order-table-btn btn-search-panel w-25"
+                [disabled]="!myForm.valid">{{buttonName}}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </form>
+    </form>
   </div>
 </div>
 

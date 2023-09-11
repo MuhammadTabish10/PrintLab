@@ -4,6 +4,7 @@ import { PaperMarketComponent } from '../paper-market/paper-market.component';
 import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SettingsService } from 'src/app/services/settings.service';
+import { VendorService } from 'src/app/services/vendor.service';
 
 @Component({
   selector: 'app-add-paper-market',
@@ -12,15 +13,20 @@ import { SettingsService } from 'src/app/services/settings.service';
 })
 export class AddPaperMarketComponent implements OnInit {
 
-  quantityArray: any = [500, 1000]
+  quantityArray: any = [500, 100]
+  statusArray: any = ['Hoarding', 'In stock', 'Out of stock']
   visible: boolean = false
   error: string = ''
   buttonName: String = 'Add'
-  dateValue: String = ''
+  timeStampValue: String = ''
+  statusValue: string = ''
   paperStockValue: any = {}
   gsmValue: string = ''
   lengthValue!: number
   widthValue!: number
+  brandValue: string = ''
+  madeInValue: string = ''
+  kgValue: string = ''
   dimensionValue: String = ''
   qtyValue!: number
   rateValue!: number
@@ -31,7 +37,10 @@ export class AddPaperMarketComponent implements OnInit {
   paperStockArray: any = []
   gsmArray: any = []
   paperStockIndex: any
-  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService, private settingservice: SettingsService) { }
+  vendorArray: any = []
+  vendorValue: any = {}
+
+  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService, private settingservice: SettingsService, private vendorService: VendorService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -43,7 +52,7 @@ export class AddPaperMarketComponent implements OnInit {
         this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
           this.rateToUpdate = res
-          this.dateValue = this.rateToUpdate.date
+          this.timeStampValue = this.rateToUpdate.date
           this.lengthValue = this.rateToUpdate.length
           this.widthValue = this.rateToUpdate.width
           this.dimensionValue = this.rateToUpdate.dimension
@@ -59,21 +68,27 @@ export class AddPaperMarketComponent implements OnInit {
         })
       }
     })
+    this.getVendors()
   }
 
   addPapermarketRate() {
     let obj = {
-      date: this.dateValue,
+      timeStamp: this.timeStampValue,
       paperStock: this.paperStockValue.name,
+      brand: this.brandValue,
+      madeIn: this.madeInValue,
+      gsm: this.gsmValue,
       length: this.lengthValue,
-      width: this.widthValue,
+      width: this.lengthValue,
       dimension: this.dimensionValue,
       qty: this.qtyValue,
+      kg: this.kgValue,
+      vendor: this.vendorValue.name,
       ratePkr: this.rateValue,
-      verified: this.verifiedValue,
-      gsm: this.gsmValue,
-      notes: this.noteValue
+      notes: this.noteValue,
+      status: this.statusValue
     }
+    debugger
     if (Number.isNaN(this.idFromQueryParam)) {
       this.paperMarketService.postPaperMarket(obj).subscribe(res => {
         this.router.navigateByUrl('/paperMarket')
@@ -92,7 +107,6 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   getGsm(papervalue: string) {
-    debugger
     this.settingservice.getGsmByPaperStock(papervalue).subscribe(res => {
       this.gsmArray = res
       this.gsmValue = this.rateToUpdate.gsm
@@ -125,10 +139,14 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   dimension() {
+    debugger
     this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
   }
 
-  getVerifiedValue() {
-    this.verifiedValue = !this.verifiedValue
+  getVendors() {
+    this.vendorService.getVendor().subscribe(res => {
+      debugger
+      this.vendorArray = res
+    })
   }
 }

@@ -76,7 +76,6 @@ export class AddProductDefintionComponent implements OnInit {
   }
 
   addProduct() {
-    debugger
     this.typeValue == "TEXTFIELD" || this.typeValue == "TOGGLE" ? this.pfvaluesArray = [] : null;
     this.pfvaluesArray.forEach((element: any) => {
       element.name = element.name.split(' ');

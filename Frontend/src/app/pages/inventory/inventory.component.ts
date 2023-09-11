@@ -53,7 +53,6 @@ export class InventoryComponent implements OnInit {
   }
 
   updatePaperMarket(id: any) {
-    let index = this.inventoryArray.findIndex((el: any) => el.id == id);
     this.inventoryService.updatePaperMarket(id).subscribe(() => { }, error => {
       this.error = error.error.error
       this.visible = true
