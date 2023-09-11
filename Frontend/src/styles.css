@@ -14082,10 +14082,14 @@ input[type="checkbox"]:checked+.dropdown-label+.dropdown-menu {
 .main-menu:hover,
 nav.main-menu.expanded {
     width: 250px;
-    /* overflow: visible; */
     background: black;
     color: white;
 }
+.main-menu:hover img,
+nav.main-menu img.img {
+    background: none;
+}
+
 
 /* width */
 .main-menu::-webkit-scrollbar {
@@ -14122,6 +14126,9 @@ nav.main-menu.expanded {
     transition: width 0.25s linear;
     -webkit-transform: translateZ(0) scale(1, 1);
     z-index: 1000;
+}
+.main-menu img{
+  background:black;
 }
 
 .main-menu>ul {

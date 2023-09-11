@@ -92,6 +92,7 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   getGsm(papervalue: string) {
+    debugger
     this.settingservice.getGsmByPaperStock(papervalue).subscribe(res => {
       this.gsmArray = res
       this.gsmValue = this.rateToUpdate.gsm

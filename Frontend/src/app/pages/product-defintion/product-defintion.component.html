@@ -1,7 +1,7 @@
 <app-sidebar></app-sidebar>
 <div class="container-fluid ps-6 pe-1">
   <app-dashboard-head></app-dashboard-head>
-  <div class="">
+  <div class="container-fluid px-0 mt-5">
     <div>
       <h4>Product Field</h4>
     </div>
@@ -13,6 +13,7 @@
             type="search"
             placeholder="Search product"
             aria-label="Search"
+            name="searchProductField"
             [(ngModel)]="search"
           />
           <button type="button" class="btn btn-md btn-dark">+ Add</button>
@@ -22,16 +23,16 @@
   </div>
 </div>
 
-<div class="container-fluid ps-6">
-  <table class="table table-responsive text-center table-fixed">
+<div class="container-fluid ps-6 overflow-auto">
+  <table class="table table-responsive text-center">
     <thead>
       <tr>
-        <th scope="col" class="text-lg-center">Name</th>
-        <th scope="col" class="text-lg-center">Created at</th>
-        <th scope="col" class="text-lg-center">Sequence</th>
-        <th scope="col" class="text-lg-center">Type</th>
-        <th scope="col" class="text-lg-center">Status</th>
-        <th scope="col" class="text-lg-center">Action</th>
+        <th scope="col" class="col-2 text-lg-center">Name</th>
+        <th scope="col" class="col-2 text-lg-center">Created at</th>
+        <th scope="col" class="col-1 text-lg-center">Sequence</th>
+        <th scope="col" class="col-3 text-lg-center">Type</th>
+        <th scope="col" class="col-1 text-lg-center">Status</th>
+        <th scope="col" class="col-3 text-lg-center">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -50,17 +51,17 @@
           <div class="btn-group mr-2" role="group" aria-label="Second group">
             <button
               type="button"
-              class="btn order-table-btn"
+              class="btn btn-sm order-table-btn"
               (click)="editField(field.id)"
             >
-              <i class="fa-solid fa-pen"></i>&nbsp;Edit
+              <i class="fa-solid fa-pen"></i><small>Edit</small>
             </button>
             <button
               type="button"
-              class="btn order-table-btn"
+              class="btn btn-sm btn-danger"
               (click)="deleteField(field.id)"
             >
-              <i class="fa-solid fa-trash"></i>&nbsp;Delete
+              <i class="fa-solid fa-trash"></i><small>Del</small>
             </button>
           </div>
         </td>

@@ -244,7 +244,6 @@ export class CalculatorHeaderComponent implements OnInit {
           }
         }
 
-        console.log(this.gsmArray);
       },
       (error) => {
         console.error('Error fetching GSM data:', error);
@@ -324,7 +323,6 @@ export class CalculatorHeaderComponent implements OnInit {
       if (paperStockField) {
         for (const value of paperStockField.productFieldValuesList) {
           this.paperStock.push(value);
-          console.log(value);
         }
       }
     });
@@ -332,8 +330,6 @@ export class CalculatorHeaderComponent implements OnInit {
   getPaperSizes() {
     this.paperSizeService.getPaperSize().subscribe(res => {
       this.paperSizesArray = res
-      console.log(this.paperSizesArray);
-      
     })
   }
 }

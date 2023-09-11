@@ -16,6 +16,7 @@
               placeholder="Search"
               aria-label="Search"
               [(ngModel)]="search"
+              name="searchProduct"
               (keyup)="searchProduct($event.target)"
             />
             <button type="button" class="btn btn-md btn-dark" (click)="goToAddProduct()">
@@ -24,7 +25,7 @@
           </form>
         </div>
       </nav>
-      <div class="order-table">
+      <div class="order-table overflow-auto">
         <table class="table table-responsive text-center">
           <thead>
             <tr>
