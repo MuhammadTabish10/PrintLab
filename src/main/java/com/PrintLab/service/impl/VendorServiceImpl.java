@@ -148,7 +148,7 @@ public class VendorServiceImpl implements VendorService {
             existingVendor.setName(vendor.getName());
             existingVendor.setContactName(vendor.getContactName());
             existingVendor.setContactNumber(vendor.getContactNumber());
-            existingVendor.setDate(vendor.getDate());
+            existingVendor.setEmail(vendor.getEmail());
             existingVendor.setAddress(vendor.getAddress());
             existingVendor.setNotes(vendor.getNotes());
 
@@ -226,6 +226,7 @@ public class VendorServiceImpl implements VendorService {
         return VendorDto.builder()
                 .id(vendor.getId())
                 .name(vendor.getName())
+                .email(vendor.getEmail())
                 .date(vendor.getDate())
                 .contactName(vendor.getContactName())
                 .contactNumber(vendor.getContactNumber())
@@ -240,6 +241,7 @@ public class VendorServiceImpl implements VendorService {
         Vendor vendor = Vendor.builder()
                 .id(vendorDto.getId())
                 .name(vendorDto.getName())
+                .email(vendorDto.getEmail())
                 .date(vendorDto.getDate())
                 .contactName(vendorDto.getContactName())
                 .contactNumber(vendorDto.getContactNumber())
