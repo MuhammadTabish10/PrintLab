@@ -21,6 +21,7 @@ public class VendorDto
     private LocalDate date;
     private String contactName;
     private String contactNumber;
+    private String email;
     private String address;
     private String notes;
 
