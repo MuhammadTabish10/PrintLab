@@ -24,7 +24,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 
     @Override
     public PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto) {
-        paperMarketRatesDto.setRecordType("Manual");
+        paperMarketRatesDto.setRecordType("manual");
         PaperMarketRates paperMarketRates = paperMarketRatesRepository.save(toEntity(paperMarketRatesDto));
         return toDto(paperMarketRates);
     }
