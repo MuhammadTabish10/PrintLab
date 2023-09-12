@@ -31,3 +31,6 @@ INSERT INTO `users` VALUES (4,'Admin','$2a$10$b0tU8EK9iKMczYB1A62HtuDOo92TkuTYAE
 INSERT INTO `vendor` VALUES (1,'Gulistan','Contact1','03334215643','2023-02-12','MUTAHIR TRADERS','These are notes',NULL);
 
 INSERT INTO `vendor_process` VALUES (1,'MATTE','These are new notesss',2.2,1,1),(2,'GLOSSY','These are new notesss',1.8,1,1),(3,'GLOSSY','These are new notesss',1.5,2,1),(4,'MATTE','These are new notesss',1.8,2,1);
+
+
+--script updated
