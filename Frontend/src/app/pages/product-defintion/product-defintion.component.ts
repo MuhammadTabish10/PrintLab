@@ -26,7 +26,6 @@ export class ProductDefintionComponent implements OnInit {
   getFields() {
     this.productFieldService.getProductField().subscribe(res => {
       this.fieldList = res
-      debugger
       this.fieldList.length == 0 ? this.tableData = true : this.tableData = false
     }, error => {
       this.error = error.error.error

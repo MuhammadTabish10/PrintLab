@@ -26,7 +26,6 @@ export class PaperMarketComponent implements OnInit {
     this.paperMarketService.getPaperMarket().subscribe(res => {
       this.paperMarketArray = res
       this.paperMarketArray.forEach((el: any) => {
-        debugger
         el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy')
         el.ratePkr = Math.round(el.ratePkr * 100) / 100
         el.kg = Math.round(el.kg * 100) / 100

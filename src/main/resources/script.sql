@@ -13,8 +13,8 @@ INSERT INTO `uping_paper_size` VALUES (1,4,2,1),(2,8,3,1),(3,8,4,1),(4,4,1,1),(5
 INSERT INTO `roles` VALUES (1,'ROLE_ADMIN');
 INSERT INTO `users` VALUES (4,'Admin','$2a$10$b0tU8EK9iKMczYB1A62HtuDOo92TkuTYAEyvUCoyqZqMU5nvMziWy');
 INSERT INTO `user_roles` VALUES (4,1);
-INSERT INTO `vendor` VALUES (1,'Gulistan','Contact1','03334215643','2023-02-12','mutahir@gmail.com','MUTAHIR TRADERS','These are notes');
-INSERT INTO `vendor_process` VALUES (1,'MATTE','These are new notesss',2.2,1,1),(2,'GLOSSY','These are new notesss',1.8,1,1),(3,'GLOSSY','These are new notesss',1.5,2,1),(4,'MATTE','These are new notesss',1.8,2,1);
+INSERT INTO `vendor` VALUES (1,'Gulistan','Contact1','03334215643','2023-02-12','mutahir@gmail.com','MUTAHIR TRADERS','These are notes'),(2,'Karachi','Shakeel','8998','2023-09-12','shakeel@gmail.com','Shakeel Cutting ','hello');
+INSERT INTO `vendor_process` VALUES (1,'MATTE','These are new notesss',2.2,1,1),(3,'GLOSSY','These are new notesss',1.5,2,1),(5,'Glossy','hello',90,3,2),(6,'Matte','hello',78,1,2);
 INSERT INTO `ctp` VALUES (1,'2023-09-12',450,370,'450\" x 370\"',160,2),(2,'2023-09-12',510,400,'510\" x 400\"',200,2),(3,'2023-09-12',645,510,'645\" x 510\"',360,2),(4,'2023-09-12',650,550,'650\" x 550\"',400,2),(5,'2023-09-12',670,560,'670\" x 560\"',430,2);
 
 --script updated

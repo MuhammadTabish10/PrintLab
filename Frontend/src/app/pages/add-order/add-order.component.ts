@@ -178,7 +178,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   selectProductDef(product: any, productDef: any) {
-    debugger
     this.totalAmount = null
     if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'SINGLE_SIDED') {
       this.selectedProduct.forEach((el: any) => {

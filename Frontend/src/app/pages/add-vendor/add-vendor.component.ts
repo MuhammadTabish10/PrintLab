@@ -14,7 +14,7 @@ export class AddVendorComponent implements OnInit {
   error: string = ''
   buttonName: string = 'Add'
   nameValue: string = ''
-  dateValue: string = ''
+  emailValue: string = ''
   contactNameValue: string = ''
   contactNumberValue: string = ''
   addressValue: string = ''
@@ -44,7 +44,7 @@ export class AddVendorComponent implements OnInit {
           this.buttonName = 'Update'
           this.vendorToUpdate = res
           this.nameValue = this.vendorToUpdate.name
-          this.dateValue = this.vendorToUpdate.date
+          this.emailValue = this.vendorToUpdate.email
           this.contactNameValue = this.vendorToUpdate.contactName
           this.contactNumberValue = this.vendorToUpdate.contactNumber
           this.addressValue = this.vendorToUpdate.address
@@ -124,7 +124,7 @@ export class AddVendorComponent implements OnInit {
       }
       let obj = {
         name: this.nameValue,
-        date: this.dateValue,
+        email: this.emailValue,
         contactName: this.contactNameValue,
         contactNumber: this.contactNumberValue,
         address: this.addressValue,
@@ -149,7 +149,7 @@ export class AddVendorComponent implements OnInit {
       }
       let obj = {
         name: this.nameValue,
-        date: this.dateValue,
+        email: this.emailValue,
         contactName: this.contactNameValue,
         contactNumber: this.contactNumberValue,
         address: this.addressValue,

@@ -88,7 +88,6 @@ export class AddPaperMarketComponent implements OnInit {
       notes: this.noteValue,
       status: this.statusValue
     }
-    debugger
     if (Number.isNaN(this.idFromQueryParam)) {
       this.paperMarketService.postPaperMarket(obj).subscribe(res => {
         this.router.navigateByUrl('/paperMarket')
@@ -139,13 +138,11 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   dimension() {
-    debugger
     this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
   }
 
   getVendors() {
     this.vendorService.getVendor().subscribe(res => {
-      debugger
       this.vendorArray = res
     })
   }

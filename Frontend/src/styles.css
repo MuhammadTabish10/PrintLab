@@ -14348,7 +14348,7 @@ nav.main-menu li.active>a,
     height: fit-content;
     width: 25%;
     padding: 10px 1%;
-    border: 0;
+    /* border: 0; */
     outline: 0;
     position: relative;
     top: 6px;

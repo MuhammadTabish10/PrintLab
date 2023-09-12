@@ -25,9 +25,8 @@ export class VendorComponent implements OnInit {
   getVendors() {
     this.vendorService.getVendor().subscribe(res => {
       this.vendorArray = res
+      let i = 0
       this.vendorArray.forEach((item: any) => {
-        debugger
-        let i = 0
         this.process.push([])
         item.vendorProcessList.forEach((el: any) => {
           this.process[i].push(el.productProcess.name)
