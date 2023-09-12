@@ -41,13 +41,13 @@
           <td class="order-table-btns-container">
             <div class="btn-group mr-2" role="group" aria-label="Second group">
               <button type="button" class="btn order-table-btn" (click)="viewOrder(order.id)">
-                <i class="fa-solid fa-hand-pointer"></i><small>View</small>
+                <i class="fa-solid fa-hand-pointer"></i>&nbsp;<small>View</small>
               </button>
               <button type="button" class="btn order-table-btn" (click)="editOrder(order.id)">
-                <i class="fa-solid fa-pen"></i><small>Edit</small>
+                <i class="fa-solid fa-pen"></i>&nbsp;<small>Edit</small>
               </button>
               <button type="button" class="btn order-table-btn" (click)="deleteOrder(order.id)">
-                <i class="fa-solid fa-trash"></i><small>Del</small>
+                <i class="fa-solid fa-trash"></i>&nbsp;<small>Delete</small>
               </button>
             </div>
           </td>
@@ -61,3 +61,4 @@
     [draggable]="false" [resizable]="false">
     <h5 class="error-modal-head">{{error}}</h5>
   </p-dialog>
+</div>
