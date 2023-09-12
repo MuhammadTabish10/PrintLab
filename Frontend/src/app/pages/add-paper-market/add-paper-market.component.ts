@@ -117,7 +117,7 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   getProductFields() {
-    this.productFieldService.getProductDefintion().subscribe(res => {
+    this.productFieldService.getProductField().subscribe(res => {
       let arr: any = []
       arr = res
       arr.forEach((element: any) => {

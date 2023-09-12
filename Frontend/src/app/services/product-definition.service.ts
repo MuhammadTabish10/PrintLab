@@ -21,7 +21,8 @@ export class ProductDefinitionService {
     return this.http.get(url)
   }
 
-  getProductDefintion() {
+  getProductField() {
+    debugger
     let url = `${this._url}/product-field`
     return this.http.get(url)
   }
