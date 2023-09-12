@@ -35,7 +35,7 @@ export class AddProductComponent implements OnInit {
   selectedMachine: any = {}
   machineIndex!: number
   arr = [{ id: 1, name: "a" }, { id: 2, name: "b" }, { id: 3, name: "c" }, { id: 4, name: "d" }, { id: 5, name: "e" }]
-  elementGenerated:boolean = false;
+  elementGenerated: boolean = false;
 
   constructor(private service: ProductService, private route: ActivatedRoute, private router: Router, private productProcessService: ProductProcessService, private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService) { }
 
@@ -271,7 +271,7 @@ export class AddProductComponent implements OnInit {
     })
   }
   getFields() {
-    this.productFieldService.getProductDefintion().subscribe(res => {
+    this.productFieldService.getProductField().subscribe(res => {
       this.fieldList = res
       this.fieldList.forEach((field: any) => {
         field.type != 'TEXTFIELD' && field.type != 'TOGGLE' ? this.publicArray.push(false) : this.publicArray.push(null)

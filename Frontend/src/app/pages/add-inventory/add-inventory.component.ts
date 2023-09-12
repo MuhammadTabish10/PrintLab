@@ -196,7 +196,7 @@ export class AddInventoryComponent implements OnInit {
   }
 
   getPaperStockAndGsm() {
-    this.productFieldService.getProductDefintion().subscribe(res => {
+    this.productFieldService.getProductField().subscribe(res => {
       let pfArr: any = []
       pfArr = res
       pfArr.forEach((el: any) => {

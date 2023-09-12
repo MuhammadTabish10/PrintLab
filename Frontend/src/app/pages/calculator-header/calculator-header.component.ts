@@ -55,14 +55,14 @@ export class CalculatorHeaderComponent implements OnInit {
   gsmArray: any = [];
   fieldList: any = [];
   paperStock: any = [];
-  dimension: any =[];
+  dimension: any = [];
   paperSizesArray: any = [];
   constructor(private calculatorService: CalculatorService,
     private orderService: OrdersService,
     private renderer: Renderer2,
     private settingService: SettingsService,
     private productFieldService: ProductDefinitionService,
-    private paperSizeService:PaperSizeService) { }
+    private paperSizeService: PaperSizeService) { }
   ngOnInit(): void {
     this.configuration = "Configuration";
     this.fields = this.calculatorService.getFields();
@@ -240,8 +240,8 @@ export class CalculatorHeaderComponent implements OnInit {
 
       },
       (error) => {
-      this.error = error.error.error
-            this.visible = true;
+        this.error = error.error.error
+        this.visible = true;
         // Handle the error as needed (e.g., show a user-friendly message)
       }
     );
@@ -288,7 +288,7 @@ export class CalculatorHeaderComponent implements OnInit {
     this.receivedData = obj;
   }
   getFields() {
-    this.productFieldService.getProductDefintion().subscribe((res: { [key: string]: any }) => {
+    this.productFieldService.getProductField().subscribe((res: { [key: string]: any }) => {
       let paperStockField = null;
       for (const key in res) {
         if (res.hasOwnProperty(key)) {
