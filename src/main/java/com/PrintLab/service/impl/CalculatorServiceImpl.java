@@ -16,8 +16,8 @@ import java.util.*;
 @Service
 public class CalculatorServiceImpl implements CalculatorService {
 
-    private static final String DOUBLE_SIDED = "DoubleSided";
-    private static final String SINGLE_SIDED = "SingleSided";
+    private static final String DOUBLE_SIDED = "DOUBLE_SIDED";
+    private static final String SINGLE_SIDED = "SINGLE_SIDED";
     private static final String PREDEFINED_CUTTING_RATES_IN_SETTINGS = "cutting";
     private static final String PREDEFINED_CUTTING_IMPRESSION_IN_SETTINGS = "cuttingImpression";
     private static final String PREDEFINED_MARGIN_IN_SETTINGS = "margin";
