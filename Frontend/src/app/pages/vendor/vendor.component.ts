@@ -14,6 +14,7 @@ export class VendorComponent implements OnInit {
   search: string = ''
   visible!: boolean
   error: string = ''
+  process: any = []
 
   constructor(private vendorService: VendorService, private router: Router) { }
 
@@ -24,10 +25,19 @@ export class VendorComponent implements OnInit {
   getVendors() {
     this.vendorService.getVendor().subscribe(res => {
       this.vendorArray = res
+      this.vendorArray.forEach((item: any) => {
+        debugger
+        let i = 0
+        this.process.push([])
+        item.vendorProcessList.forEach((el: any) => {
+          this.process[i].push(el.productProcess.name)
+        });
+        i++
+      })
       this.vendorArray.length == 0 ? this.tableData = true : this.tableData = false
-      }, error => {
-        this.error = error.error.error
-        this.visible = true
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 

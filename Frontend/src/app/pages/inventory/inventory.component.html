@@ -19,16 +19,17 @@
         <table class="table">
           <thead class="position-sticky top-0 z-1">
             <tr class="text-nowrap">
+              <th scope="col" class="text-center">Date Added</th>
               <th scope="col" class="text-center">Paper Stock</th>
               <th scope="col" class="text-center">Available GSM</th>
               <th scope="col" class="text-center">Available Sizes</th>
-              <th scope="col" class="text-center">Quantity</th>
+              <th scope="col" class="text-center">Qty</th>
               <th scope="col" class="text-center">Made in</th>
               <th scope="col" class="text-center">Brand name</th>
               <th scope="col" class="text-center">Vendor</th>
+              <th scope="col" class="text-center">Date Updated</th>
               <th scope="col" class="text-center">Rate (KG)</th>
               <th scope="col" class="text-center">Status</th>
-              <th scope="col" class="text-center">Created at</th>
               <th scope="col" class="text-center">Action</th>
             </tr>
           </thead>
@@ -38,6 +39,7 @@
                 found</td>
             </tr>
             <tr *ngFor="let inventory of inventoryArray;let i=index" class="order-table-row-hover text-nowrap">
+              <td class="text-center">{{inventory?.created_at}}</td>
               <td class="text-center">{{inventory?.paperStock}}</td>
               <td class="text-center">{{gsm[i]}}</td>
               <td class="text-center">{{sizes[i]}}</td>
@@ -45,9 +47,9 @@
               <td class="text-center">{{inventory?.madeIn}}</td>
               <td class="text-center">{{inventory?.brandName}}</td>
               <td class="text-center">{{inventory?.vendor}}</td>
+              <td class="text-center">{{inventory?.dateUpdated}}</td>
               <td class="text-center">{{inventory?.rate}}</td>
               <td class="text-center">{{inventory?.status}}</td>
-              <td class="text-center">{{inventory?.created_at}}</td>
               <td class="order-table-btns-container text-center">
                 <div class="btn-group mr-2" role="group" aria-label="Second group">
                   <button type="button" class="btn order-table-btn" (click)="editInventory(inventory.id)"><i

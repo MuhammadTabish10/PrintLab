@@ -22,13 +22,11 @@ export class ProductDefinitionService {
   }
 
   getProductField() {
-    debugger
     let url = `${this._url}/product-field`
     return this.http.get(url)
   }
 
   deleteField(id: any) {
-
     let url = `${this._url}/product-field/${id}`
     return this.http.delete(url)
   }

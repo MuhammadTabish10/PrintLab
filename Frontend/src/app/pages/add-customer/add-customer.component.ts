@@ -30,16 +30,16 @@ export class AddCustomerComponent implements OnInit {
         this.customerService.getCustomerById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
           this.customerToUpdate = res
-          this.nameValue = this.customerToUpdate[0].name
-          this.businessValue = this.customerToUpdate[0].businessName
-          this.status = this.customerToUpdate[0].status
+          this.nameValue = this.customerToUpdate.name
+          this.businessValue = this.customerToUpdate.businessName
+          this.status = this.customerToUpdate.status
           this.status == 'Active' ? this.statusFlag = true : this.statusFlag = false
         }, error => {
           this.error = error.error.error
           this.visible = true;
         })
       }
-    },err =>{
+    }, err => {
       let error = err.er
     })
   }
