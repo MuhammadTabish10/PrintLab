@@ -113,7 +113,7 @@ export class CalculatorHeaderComponent implements OnInit {
       el.name == 'JobColor(Back)' ? this.jobBackValue = el.selected.productFieldValue.name : null
       el.name == 'Paper Stock' ? this.sheetValue = el.selected.productFieldValue.name : null
     })
-    if (this.sideOptionValue == "Single Side") {
+    if (this.sideOptionValue == "SINGLE_SIDED") {
       this.jobBackValue = null
       this.impositionValue = false
     }
@@ -144,11 +144,10 @@ export class CalculatorHeaderComponent implements OnInit {
     })
   }
   onImpositionValueChange(): void {
-    if (this.impositionValue === 'Applied' || this.sideOptionValue === 'SingleSided') {
+    if (this.impositionValue === 'Applied' || this.sideOptionValue === 'SINGLED_SIDED') {
       setTimeout(() => {
         const tdColorsElement = document.getElementById('tdColors');
         const headerAnimationElement = document.getElementById('headerAnimation');
-
         if (tdColorsElement && headerAnimationElement) {
           this.renderer.setStyle(tdColorsElement, 'display', 'none');
           this.renderer.setStyle(headerAnimationElement, 'display', 'none');
@@ -157,7 +156,6 @@ export class CalculatorHeaderComponent implements OnInit {
     } else {
       const tdColorsElement = document.getElementById('tdColors');
       const headerAnimationElement = document.getElementById('headerAnimation');
-
       if (tdColorsElement && headerAnimationElement) {
         this.renderer.setStyle(tdColorsElement, 'display', 'table-cell');
         this.renderer.setStyle(headerAnimationElement, 'display', 'table-cell');
@@ -186,10 +184,7 @@ export class CalculatorHeaderComponent implements OnInit {
     this.costPerSheet = this.calculateCostPerSheet(rate, qty);
   }
 
-
-
   private getLastUpdatedInfoForPaperAndGSM(paper: string, gsm: string): { date: string, rate: string, qty: string } {
-
     const matchingEntries = this.paperMarket.filter(entry =>
       entry.paperStock === paper && entry.gsm === gsm.toString()
     );

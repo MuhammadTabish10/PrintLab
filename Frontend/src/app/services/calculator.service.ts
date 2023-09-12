@@ -50,7 +50,7 @@ export class CalculatorService {
     },
     {
       id: "sideOption",
-      values: ["DoubleSided", "SingleSided"],
+      values: ["DOUBLE_SIDED", "SINGLE_SIDED"],
     },
     {
       id: "imposition",
