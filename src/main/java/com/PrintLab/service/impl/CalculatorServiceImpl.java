@@ -57,18 +57,43 @@ public class CalculatorServiceImpl implements CalculatorService {
             calculator.setSideOptionValue(SINGLE_SIDED);
         }
 
+        PaperMarketRates foundPaperMarketRates = null;
+        if(calculator.getSheetSizeValue() == null){
+            Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMOrderByTimeStampDesc(calculator.getPaper(), calculator.getGsm())
+                    .stream().findFirst();
+            if (!optionalPaperMarketRates.isPresent()) {
+                throw new RecordNotFoundException("Paper Market Rates not found for paper, gsm: " + calculator.getPaper() + ", " + calculator.getGsm());
+            }
+            logger.info("Paper Market Rates found");
+
+            PaperMarketRates paperMarketRates = optionalPaperMarketRates.get();
+            logger.info("date and name and gsm and sheetsize: " + paperMarketRates.getTimeStamp() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM() + " " + paperMarketRates.getDimension());
+
+            LocalDate currentDate = LocalDate.now();
+            LocalDate databaseDate = LocalDate.from(paperMarketRates.getTimeStamp());
+
+            // Calculate the difference between the current date and the database date
+            long daysDifference = ChronoUnit.DAYS.between(databaseDate, currentDate);
+
+            if (daysDifference > 10) {
+                throw new RecordNotFoundException("Please update your paper as the database date exceeds 10 days from the current date.");
+            }
+            calculator.setSheetSizeValue(paperMarketRates.getDimension());
+            foundPaperMarketRates = paperMarketRates;
+        }
+
         // CALCULATION OF ProductQty
         //Checking provided Uping/ProductSize in database
         Uping uping = upingRepository.findByProductSize(calculator.getSizeValue());
         if (uping == null) {
-            throw new RecordNotFoundException("Uping not found for size: " + calculator.getSizeValue());
+            throw new RecordNotFoundException("Uping not found for size: " + calculator.getSheetSizeValue());
         }
         logger.info("Uping found for size: " + uping.getProductSize());
 
         //Checking provided PaperSize/SheetSize in database
         PaperSize paperSize = paperSizeRepository.findByLabel(calculator.getSheetSizeValue());
         if (paperSize == null) {
-            throw new RecordNotFoundException("PaperSize not found for size: " + calculator.getSheetSizeValue());
+            throw new RecordNotFoundException("PaperSize not found for size: " +  calculator.getSheetSizeValue());
         }
         logger.info("PaperSize found for size: " + paperSize.getLabel());
 
@@ -118,7 +143,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 
         Double productQty = calculateProductQty(calculator, upingValue, pressMachineValue);
         Double sheets = calculateSheets(productQty, upingValue);
-        Double paperMart = calculatePaperMart(calculator, sheets);
+        Double paperMart = calculatePaperMart(calculator, sheets, foundPaperMarketRates);
         Double slicing = calculateSlicing(calculator, sheets);
         List<Double> ctpAndPress = calculateCtpAndPress(calculator, pressMachine);
         Double ctp = ctpAndPress.get(0);
@@ -173,34 +198,35 @@ public class CalculatorServiceImpl implements CalculatorService {
         return sheets;
     }
 
-    private Double calculatePaperMart(Calculator calculator, Double sheets) {
+    private Double calculatePaperMart(Calculator calculator, Double sheets, PaperMarketRates paperMarketRates) {
         // Calculation logic for paper mart
-        // Searching Paper Market Rates by PaperStock, GSM and Dimension and getting the latest Paper Market Rates
-        Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMAndDimensionOrderByTimeStampDesc(calculator.getPaper(), calculator.getGsm(), calculator.getSheetSizeValue())
-                .stream().findFirst();
-        if (!optionalPaperMarketRates.isPresent()) {
-            throw new RecordNotFoundException("Paper Market Rates not found for paper, gsm, sheetsize: " + calculator.getPaper() + ", " + calculator.getGsm() + ", " + calculator.getSheetSizeValue());
-        }
-        logger.info("Paper Market Rates found");
-
-        PaperMarketRates paperMarketRates = optionalPaperMarketRates.get();
-        logger.info("date and name and gsm and sheetsize: " + paperMarketRates.getTimeStamp() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM() + " " + paperMarketRates.getDimension());
-
-        LocalDate currentDate = LocalDate.now();
-        LocalDate databaseDate = LocalDate.from(paperMarketRates.getTimeStamp());
-
-        // Calculate the difference between the current date and the database date
-        long daysDifference = ChronoUnit.DAYS.between(databaseDate, currentDate);
-
-        if (daysDifference > 10) {
-            throw new RecordNotFoundException("Please update your paper as the database date exceeds 10 days from the current date.");
-        }
-
         // Dividing paper rate with qty and multiplying with sheets
+        if(paperMarketRates == null){
+            Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findByPaperStockAndGSMOrderByTimeStampDesc(calculator.getPaper(), calculator.getGsm())
+                    .stream().findFirst();
+            if (!optionalPaperMarketRates.isPresent()) {
+                throw new RecordNotFoundException("Paper Market Rates not found for paper, gsm: " + calculator.getPaper() + ", " + calculator.getGsm());
+            }
+            logger.info("Paper Market Rates found");
+
+            paperMarketRates = optionalPaperMarketRates.get();
+            logger.info("date and name and gsm and sheetsize: " + paperMarketRates.getTimeStamp() + " " + paperMarketRates.getPaperStock() + " " + paperMarketRates.getGSM() + " " + paperMarketRates.getDimension());
+
+            LocalDate currentDate = LocalDate.now();
+            LocalDate databaseDate = LocalDate.from(paperMarketRates.getTimeStamp());
+
+            // Calculate the difference between the current date and the database date
+            long daysDifference = ChronoUnit.DAYS.between(databaseDate, currentDate);
+
+            if (daysDifference > 10) {
+                throw new RecordNotFoundException("Please update your paper as the database date exceeds 10 days from the current date.");
+            }
+        }
+
+
         Double paperMart = paperMarketRates.getRatePkr() / paperMarketRates.getQty();
         paperMart = paperMart * sheets;
         logger.info("PaperMart value: " + paperMart);
-
         return paperMart;
     }
 
