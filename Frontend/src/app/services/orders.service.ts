@@ -44,12 +44,6 @@ export class OrdersService {
     return this.http.put(url, order)
   }
 
-  private update = new BehaviorSubject('')
-  update$ = this.update.asObservable()
-  getNewOrders(order: any) {
-    this.update.next(order)
-  }
-
   statusSorting(find: any) {
     let url = `${this._url}/order?status_like=${find}`
     return this.http.get(url)

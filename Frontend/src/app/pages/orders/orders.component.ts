@@ -26,13 +26,6 @@ export class OrdersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOrders()
-    this.orderService.update$.subscribe(res => {
-      this.ordersArray = res
-      this.getOrders()
-    }, error => {
-      this.error = error.error.error
-      this.visible = true
-    })
   }
 
   getOrders() {
