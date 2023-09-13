@@ -7,6 +7,7 @@ import com.PrintLab.modal.*;
 import com.PrintLab.repository.PaperSizeRepository;
 import com.PrintLab.repository.PressMachineRepository;
 import com.PrintLab.repository.PressMachineSizeRepository;
+import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.PressMachineService;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +23,15 @@ public class PressMachineServiceImpl implements PressMachineService {
     private final PressMachineSizeRepository pressMachineSizeRepository;
     private final PaperSizeRepository paperSizeRepository;
     private final PaperSizeServiceImpl paperSizeService;
+    private final VendorRepository vendorRepository;
 
-    public PressMachineServiceImpl(PressMachineRepository pressMachineRepository, PressMachineSizeRepository pressMachineSizeRepository, PaperSizeRepository paperSizeRepository, PaperSizeServiceImpl paperSizeService) {
+    public PressMachineServiceImpl(PressMachineRepository pressMachineRepository, PressMachineSizeRepository pressMachineSizeRepository, PaperSizeRepository paperSizeRepository, PaperSizeServiceImpl paperSizeService, VendorRepository vendorRepository) {
         this.pressMachineRepository = pressMachineRepository;
         this.pressMachineSizeRepository = pressMachineSizeRepository;
         this.paperSizeRepository = paperSizeRepository;
         this.paperSizeService = paperSizeService;
+        this.vendorRepository = vendorRepository;
     }
-
 
     @Transactional
     @Override
@@ -147,9 +149,17 @@ public class PressMachineServiceImpl implements PressMachineService {
         if (optionalPressMachine.isPresent()) {
             PressMachine existingPressMachine = optionalPressMachine.get();
             existingPressMachine.setName(pressMachine.getName());
+            existingPressMachine.setPlateDimension(pressMachine.getPlateDimension());
+            existingPressMachine.setGripperMargin(pressMachine.getGripperMargin());
+            existingPressMachine.setMaxSheetSize(pressMachine.getMaxSheetSize());
+            existingPressMachine.setMinSheetSize(pressMachine.getMinSheetSize());
+            existingPressMachine.setMaxSPH(pressMachine.getMaxSPH());
             existingPressMachine.setCtp_rate(pressMachine.getCtp_rate());
             existingPressMachine.setStatus(pressMachine.getStatus());
             existingPressMachine.setImpression_1000_rate(pressMachine.getImpression_1000_rate());
+
+            existingPressMachine.setVendor(vendorRepository.findById(pressMachineDto.getVendor().getId())
+                    .orElseThrow(()-> new RecordNotFoundException("Vendor not found at id => " + pressMachineDto.getVendor().getId())));
 
             if (pressMachine.getIs_selected()) {
                 // If the new press machine is selected, unselect all other machines
@@ -231,11 +241,18 @@ public class PressMachineServiceImpl implements PressMachineService {
         return PressMachineDto.builder()
                 .id(pressMachine.getId())
                 .name(pressMachine.getName())
+                .plateDimension(pressMachine.getPlateDimension())
+                .gripperMargin(pressMachine.getGripperMargin())
+                .maxSheetSize(pressMachine.getMaxSheetSize())
+                .minSheetSize(pressMachine.getMinSheetSize())
+                .maxSPH(pressMachine.getMaxSPH())
                 .ctp_rate(pressMachine.getCtp_rate())
                 .impression_1000_rate(pressMachine.getImpression_1000_rate())
                 .is_selected(pressMachine.getIs_selected())
                 .status(pressMachine.getStatus())
                 .pressMachineSize(pressMachineSizeDtos)
+                .vendor(vendorRepository.findById(pressMachine.getVendor().getId())
+                        .orElseThrow(()-> new RecordNotFoundException("Vendor not found")))
                 .build();
     }
 
@@ -259,11 +276,18 @@ public class PressMachineServiceImpl implements PressMachineService {
         return PressMachine.builder()
                 .id(pressMachineDto.getId())
                 .name(pressMachineDto.getName())
+                .plateDimension(pressMachineDto.getPlateDimension())
+                .gripperMargin(pressMachineDto.getGripperMargin())
+                .maxSheetSize(pressMachineDto.getMaxSheetSize())
+                .minSheetSize(pressMachineDto.getMinSheetSize())
+                .maxSPH(pressMachineDto.getMaxSPH())
                 .ctp_rate(pressMachineDto.getCtp_rate())
                 .impression_1000_rate(pressMachineDto.getImpression_1000_rate())
                 .is_selected(pressMachineDto.getIs_selected())
                 .status(pressMachineDto.getStatus())
                 .pressMachineSize(pressMachineSizes)
+                .vendor(vendorRepository.findById(pressMachineDto.getVendor().getId())
+                        .orElseThrow(()-> new RecordNotFoundException("Vendor not found")))
                 .build();
     }
 }
