@@ -29,11 +29,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         try {
 
-//            if(request.getMethod().equalsIgnoreCase("OPTIONS")){
-//                response.setStatus(200);
-//                response.setHeader("Access-Control-Allow-Origin", "*");
-//                return;
-//            }
             final String authorizationHeader = request.getHeader("Authorization");
             String username = null;
             String jwt = null;
