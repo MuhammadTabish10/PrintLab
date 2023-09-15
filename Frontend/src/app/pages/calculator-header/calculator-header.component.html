@@ -10,7 +10,6 @@
         data-bs-target="#collapseExample"
         aria-expanded="false"
         aria-controls="collapseExample"
-        [ngClass]="{ 'text-danger': pressAlert}"
       >
         {{ configuration }} <i class="fa-solid fa-arrow-down-wide-short"></i>
       </button>
@@ -51,7 +50,7 @@
       class="col-lg-1 col-6 border"
       id="updatedRate"
       [ngClass]="{ 'bg-danger text-white': lastUpdatedRate === 'Not found' }"
-      >{{ lastEntry?.ratePkr }}</small
+      >{{ lastEntry?.ratePkr.toFixed(2) }}</small
     >
     <small
       class="col-lg-1 col-6 bg-dark text-white px-0 text-center"
@@ -78,7 +77,7 @@
         'text-white': costPerSheet === 'Can\'t calculate'
       }"
     >
-      {{ costPerSheet }}
+      {{ costPerSheet?.toFixed(2) }}
     </small>
   </div>
 </div>

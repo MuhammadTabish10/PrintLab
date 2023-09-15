@@ -24,17 +24,20 @@ export class PaperMarketComponent implements OnInit {
 
   getPaperMartetRates() {
     this.paperMarketService.getPaperMarket().subscribe(res => {
-      this.paperMarketArray = res
+      this.paperMarketArray = res;
       this.paperMarketArray.forEach((el: any) => {
-        el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy')
-        el.ratePkr = Math.round(el.ratePkr * 100) / 100
-        el.kg = Math.round(el.kg * 100) / 100
+        const dateArray = el.timeStamp;
+        el.timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+
+        el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy');
+        el.ratePkr = Math.round(el.ratePkr * 100) / 100;
+        el.kg = Math.round(el.kg * 100) / 100;
       });
       this.paperMarketArray.length == 0 ? this.tableData = true : this.tableData = false;
     }, error => {
-      this.error = error.error.error
-      this.visible = true
-    })
+      this.error = error.error.error;
+      this.visible = true;
+    });
   }
 
   deletePaperMarketRate(id: any) {

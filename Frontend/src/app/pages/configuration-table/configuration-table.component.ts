@@ -73,28 +73,11 @@ export class ConfigurationTableComponent implements OnInit {
   }
 
   saveData() {
-    const missingFields = [];
-
-    if (this.margin === undefined) {
-      missingFields.push("margin");
-    }
-    if (this.setupFee === undefined) {
-      missingFields.push("setup fee");
-    }
-    if (this.selectedPress === undefined) {
-      missingFields.push("machine");
-    }
-
-    if (missingFields.length > 0) {
-      const missingFieldsText = missingFields.join(", ");
-      alert(`Please decide ${missingFieldsText}`);
-    } else {
       this.specifications.emit({
         margin: this.margin,
         setupFee: this.setupFee,
         press: this.selectedPress,
       });
       this.isLoading = true;
-    }
   }
 }
