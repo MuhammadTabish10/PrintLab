@@ -96,7 +96,6 @@ export class AddOrderComponent implements OnInit {
       gsm: this.gsmValue,
       quantity: this.qtyValue,
       jobColorsFront: this.jobFrontValue,
-      sheetSizeValue: "18\"x23\"",
       sideOptionValue: this.sideOptionValue,
       impositionValue: this.impositionValue,
       jobColorsBack: this.jobBackValue

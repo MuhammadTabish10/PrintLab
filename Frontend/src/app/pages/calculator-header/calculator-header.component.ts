@@ -86,6 +86,7 @@ export class CalculatorHeaderComponent implements OnInit {
     this.getFields();
     this.getPaperSizes();
     this.getProducts();
+
   }
 
   ngAfterViewInit() {
@@ -103,13 +104,7 @@ export class CalculatorHeaderComponent implements OnInit {
 
   calculate() {
     this.loading = true;
-    if (!this.receivedData || !this.receivedData.press) {
-      alert('Please select a press machine and save');
-      this.pressAlert = true;
-      return;
-    }
     this.pressAlert = false;
-
     if (!this.qty) {
       alert('Please decide quantity');
       this.qtyAlert = true;
@@ -117,22 +112,25 @@ export class CalculatorHeaderComponent implements OnInit {
     }
     this.qtyAlert = false;
     this.selectedProdDefArray.forEach((el: any) => {
-      el.name == 'Paper Stock' ? this.paperValue = el.selected.productFieldValue.name : null
-      el.name == 'Size' ? this.sizeValue = el.selected.productFieldValue.name : null
-      el.name == 'GSM' ? this.gsmValue = el.selected.productFieldValue.name : null
-      el.name == 'JobColor(Front)' ? this.jobFrontValue = el.selected.productFieldValue.name : null
-      el.name == 'Print Side' ? this.sideOptionValue = el.selected.productFieldValue.name : null
-      el.name == 'Imposition' ? this.impositionValue = el.selected.productFieldValue.name : null
-      el.name == 'JobColor(Back)' ? this.jobBackValue = el.selected.productFieldValue.name : null
-      el.name == 'Paper Stock' ? this.sheetValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'size' ? this.sizeValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'quantity' ? this.qty = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(front)' ? this.jobFrontValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'printside' ? this.sideOptionValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)' ? this.jobBackValue = el.selected.productFieldValue.name : null
+      el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.sheetValue = el.selected.productFieldValue.name : null
     })
-    if (this.sideOptionValue == "SINGLE_SIDED") {
-      this.jobBackValue = null
-      this.impositionValue = false
+    if (this.sideOptionValue != undefined) {
+      if (this.sideOptionValue == "SINGLE_SIDED") {
+        this.jobBackValue = null
+        this.impositionValue = false
+      }
     }
-    this.impositionValue == "Applied" ? this.impositionValue = "true" : this.impositionValue = "false";
+    debugger
     let obj = {
-      pressMachineId: this.receivedData.press,
+      pressMachineId: this.receivedData?.press,
       quantity: this.qty,
       productValue: this.productName,
       paper: this.paperValue,
@@ -143,16 +141,17 @@ export class CalculatorHeaderComponent implements OnInit {
       sideOptionValue: this.sideOptionValue,
       impositionValue: this.impositionValue,
       jobColorsBack: this.jobBackValue,
-      margin: this.receivedData.margin,
-      setupFeee: this.receivedData.setupFee,
-      cutting: this.receivedData.cutting,
-      cuttingImpression: this.receivedData.impression
+      margin: this.receivedData?.margin,
+      setupFeee: this.receivedData?.setupFee,
+      cutting: this.receivedData?.cutting,
+      cuttingImpression: this.receivedData?.impression
     }
 
     this.orderService.calculations(obj).subscribe(res => {
       this.calculateedObj.emit(res);
-    }, () => {
-      this.error = ''
+    }, (error) => {
+      debugger
+      this.error = error.error.error
       this.visible = true;
     })
   }
@@ -192,14 +191,16 @@ export class CalculatorHeaderComponent implements OnInit {
 
   private getLastUpdatedInfoForPaperAndGSM(paper: string, gsm: any) {
 
-
     this.papers.getPaperMarket().subscribe(res => {
       this.paperMarket = res;
       this.paperMarket.forEach((el: any) => {
+        const dateArray = el.timeStamp;
+        el.timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+
         el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy');
         el.ratePkr = Math.round(el.ratePkr * 100) / 100;
+        el.kg = Math.round(el.kg * 100) / 100;
       });
-
       const matchingEntries = this.paperMarket.filter((entry: { paperStock: string; gsm: any }) =>
         entry.paperStock === paper && entry.gsm === gsm
       );
