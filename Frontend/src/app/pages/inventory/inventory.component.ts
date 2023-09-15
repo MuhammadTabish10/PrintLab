@@ -28,7 +28,9 @@ export class InventoryComponent implements OnInit {
 
   getInventory() {
     this.inventoryService.getInventory().subscribe(res => {
+      debugger
       this.inventoryArray = res
+      console.log(this.inventoryArray[0].oldRate);
       this.inventoryArray.forEach((element: any) => {
         this.gsm.push(JSON.parse(element.availableGsm))
         this.sizes.push(JSON.parse(element.availableSizes))

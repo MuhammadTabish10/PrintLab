@@ -31,16 +31,16 @@
       <span id="selectedGsm">{{ gsmValue }}</span>
     </div>
     <div
-      class="col-lg-1 col-6 bg-dark text-white ms-lg-5 ps-4"
+      class="col-lg-1 col-6 bg-dark text-white ms-lg-4 ps-4"
       style="font-size: 13px"
     >
       Last Updated
     </div>
     <small
-      class="col-lg-1 col-6 border"
+      class="col-lg-15 col-6 border"
       id="lastUpdated"
       [ngClass]="{ 'bg-danger text-white': lastUpdatedPaper === 'Not found' }"
-      >{{ lastUpdatedPaper }}</small
+      >{{ lastEntry?.timeStamp }}</small
     >
     <small
       class="col-lg-1 col-6 bg-dark text-white ps-1 px-0"
@@ -51,7 +51,7 @@
       class="col-lg-1 col-6 border"
       id="updatedRate"
       [ngClass]="{ 'bg-danger text-white': lastUpdatedRate === 'Not found' }"
-      >{{ lastUpdatedRate }}</small
+      >{{ lastEntry?.ratePkr }}</small
     >
     <small
       class="col-lg-1 col-6 bg-dark text-white px-0 text-center"
@@ -61,9 +61,9 @@
     <small
       class="col-lg-1 col-6 border"
       id="selectedPaperQty"
-      [ngClass]="{ 'bg-danger text-white': lastUpdatedQty === 'Not found' }"
+      [ngClass]="{ 'bg-danger text-white': lastEntry?.qty === 'Not found' }"
     >
-      {{ lastUpdatedQty }}
+      {{ lastEntry?.qty }}
     </small>
     <small
       class="col-lg-1 col-6 bg-dark text-white px-2"
@@ -98,8 +98,8 @@
             id="selectProduct"
             [(ngModel)]="productName"
           >
-            <option *ngFor="let product of fields[0].values" [value]="product">
-              {{ product }}
+            <option *ngFor="let product of productDefinitionArray" [value]="product.title">
+              {{ product.title }}
             </option>
           </select>
         </td>
@@ -109,8 +109,8 @@
             id="colors"
             [(ngModel)]="jobFrontValue"
           >
-            <option *ngFor="let product of fields[1].values" [value]="product">
-              {{ product }}
+            <option *ngFor="let color of frontJobColors" [value]="color.name">
+              {{ color.name }}
             </option>
           </select>
         </td>
@@ -133,8 +133,8 @@
             [(ngModel)]="sizeValue"
             (ngModelChange)="onSizeSelection()"
           >
-            <option *ngFor="let product of fields[2].values" [value]="product">
-              {{ product }}
+            <option *ngFor="let size of uppingSizes" [value]="size.name">
+              {{ size.name }}
             </option>
           </select>
         </td>
@@ -145,11 +145,11 @@
           [(ngModel)]="paperValue"
           (ngModelChange)="onPaperSelection()"
         >
-          <option *ngFor="let paperOption of paperStock" [value]="paperOption.name">
-            {{ paperOption.name }}
+          <option *ngFor="let paper of papersStock" [value]="paper.name">
+            {{ paper.name }}
           </option>
         </select>
-        
+
         </td>
       </tr>
     </tbody>
@@ -236,7 +236,7 @@
           id="headerAnimation"
           [ngClass]="{
             'fade-out':
-              impositionValue === 'Applied' || sideOptionValue === 'SingleSided'
+              impositionValue === 'Applied' || sideOptionValue === 'SINGLE_SIDED'
           }"
         >
           Job Colors [Black]
@@ -246,11 +246,11 @@
     <tbody>
       <tr>
         <td id="tdImposition" class="col-6 col-lg-0">
-          <ng-container *ngIf="sideOptionValue === 'SingleSided'">
+          <ng-container *ngIf="sideOptionValue === 'SINGLE_SIDED'">
             <input class="text-center col-12" readonly value="Not Applicable" />
           </ng-container>
 
-          <ng-container *ngIf="sideOptionValue !== 'SingleSided'">
+          <ng-container *ngIf="sideOptionValue !== 'SINGLE_SIDED'">
             <select
               class="form-select form-select-sm"
               id="imposition"
@@ -270,7 +270,7 @@
           id="tdColors"
           [ngClass]="{
             'fade-out':
-              impositionValue === 'Applied' || sideOptionValue === 'SingleSided'
+              impositionValue === 'Applied' || sideOptionValue === 'SINGLE_SIDED'
           }"
         >
           <select
@@ -278,8 +278,8 @@
             id="jobColors"
             [(ngModel)]="jobBackValue"
           >
-            <option *ngFor="let product of fields[8].values" [value]="product">
-              {{ product }}
+            <option *ngFor="let backColor of backJobColors" [value]="backColor.name">
+              {{ backColor.name }}
             </option>
           </select>
         </td>

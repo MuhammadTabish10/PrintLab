@@ -1554,6 +1554,10 @@ progress {
         flex: 0 0 auto;
         width: 8.33333333%
     }
+    .col-lg-15 {
+        flex: 0 0 auto;
+        width: 14.33333333%
+    }
 
     .col-lg-2 {
         flex: 0 0 auto;
@@ -14124,7 +14128,7 @@ nav.main-menu img.img {
     left: 0;
     width: 60px;
     overflow: hidden;
-    transition: width 0.25s linear;
+    transition: 0.25s linear;
     -webkit-transform: translateZ(0) scale(1, 1);
     z-index: 1000;
 }
@@ -14236,7 +14240,7 @@ nav.main-menu li.active>a,
 
 .main-menu:hover .sidebar-list-hover:hover {
     background-color: #fdf100;
-    display: -webkit-inline-box;
+    display: block;
     cursor: pointer;
     color: black;
 }
@@ -14631,7 +14635,7 @@ input:checked+.slider:before {
 
 .sidebar-list-hover-settings:hover {
     background-color: #fcf673;
-    display: -webkit-inline-box;
+    display: block;
     cursor: pointer;
     color: black;
 }

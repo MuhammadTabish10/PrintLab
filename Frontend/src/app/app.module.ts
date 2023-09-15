@@ -46,7 +46,6 @@ import { AddCtpComponent } from './pages/add-ctp/add-ctp.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { AddInventoryComponent } from './pages/add-inventory/add-inventory.component';
 import { DatePipe } from '@angular/common';
-
 import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app-routing.module';
 
@@ -100,7 +99,7 @@ import { routes } from './app-routing.module';
     MultiSelectModule,
     BrowserAnimationsModule,
     DropdownModule,
-    DialogModule
+    DialogModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService,
     provideRouter(routes, withHashLocation()), DatePipe],

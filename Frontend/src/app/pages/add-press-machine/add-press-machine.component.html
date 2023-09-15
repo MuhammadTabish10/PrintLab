@@ -10,33 +10,86 @@
         <div class="container">
           <div class="row">
             <div class="col-6 my-3">
-              <label class="add-order-label m-0">Name</label>
+              <label class="add-order-label m-0">Press</label>
               <input
                 type="text"
                 class="order-search form-control order-form-input m-0"
                 [(ngModel)]="nameValue"
                 style="border: 1px solid #ced4da"
-                placeholder="Enter Name"
+                placeholder="Enter Press Machine Name"
                 name="name"
                 required
               />
             </div>
             <div class="col-6 my-3">
-              <label class="add-order-label m-0">CTP Rate</label><br />
+              <label class="add-order-label m-0">Plate Dimension</label>
               <input
-                type="number"
+                type="text"
                 class="order-search form-control order-form-input m-0"
-                [(ngModel)]="ctpRateValue"
+                [(ngModel)]="plateDimension"
                 style="border: 1px solid #ced4da"
-                placeholder="Enter CTP Rate"
-                name="ctpRateValue"
+                placeholder="Enter Plates"
+                name="name"
                 required
               />
             </div>
             <div class="col-6 my-3">
-              <label class="add-order-label m-0">Impression Rate (1000)</label
-              ><br />
+              <label class="add-order-label m-0">Gripper Margin(mm)</label>
               <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="gripperMargin"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Gripper Margin"
+                name="name"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Max. Sheet Size</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="maxSheetSize"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Max Sheet Size"
+                name="name"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Min. Sheet Size</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="minSheetSize"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Min Sheet Size"
+                name="name"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Max SPH</label>
+              <input
+                type="number"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="maxSph"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Max SPH"
+                name="name"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Vendor</label>
+              <p-dropdown styleClass="w-100" [options]="vendorArray" optionLabel="name" placeholder="Select Vendor"
+              [(ngModel)]="vendorValue"></p-dropdown>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Impression Rate</label
+                ><br />
+                <input
                 type="number"
                 class="order-search form-control order-form-input m-0"
                 [(ngModel)]="impressionRateValue"
@@ -44,9 +97,21 @@
                 placeholder="Enter Impression Rate (1000)"
                 name="imperession"
                 required
-              />
-            </div>
-            <div class="col-6 my-3">
+                />
+              </div>
+              <div class="col-6 my-3">
+                <label class="add-order-label m-0">CTP Rate</label><br />
+                <input
+                  type="number"
+                  class="order-search form-control order-form-input m-0"
+                  [(ngModel)]="ctpRateValue"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter CTP Rate"
+                  name="ctpRateValue"
+                  required
+                />
+              </div>
+            <!-- <div class="col-6 my-3">
               <label class="add-order-label m-0">Select Machine</label><br />
               <label class="switch mt-2">
                 <input
@@ -57,7 +122,7 @@
                 />
                 <span class="slider round"></span>
               </label>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -91,7 +156,7 @@
                 (ngModelChange)="addSize($event, i)"
                 [(ngModel)]="obj[i]"
                 [placeholder]="
-                  buttonName == 'Add' ? 'Select Label' : placeHolder[i]
+                  buttonName == 'Add' ? 'Select Sheet Size' : placeHolder[i]
                 "
                 name="paperSize"
               >

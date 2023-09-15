@@ -5,6 +5,9 @@ import { OrdersService } from 'src/app/services/orders.service';
 import { ConfigurationTableComponent } from '../configuration-table/configuration-table.component';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
+import { PaperMarketService } from 'src/app/services/paper-market.service';
+import { DatePipe } from '@angular/common';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-calculator-header',
@@ -35,7 +38,7 @@ export class CalculatorHeaderComponent implements OnInit {
   jobBackValue: any;
   sheetValue: any;
   totalAmount: any;
-  paperMarket: any[] = [];
+  paperMarket: any = []
   lastUpdatedPaper: string = '';
   lastUpdatedGSM: any;
   lastUpdatedRate: any;
@@ -57,22 +60,32 @@ export class CalculatorHeaderComponent implements OnInit {
   paperStock: any = [];
   dimension: any = [];
   paperSizesArray: any = [];
+  lastEntry: any;
+  productDefinitionArray: any = [];
+  papersStock: any[] = [];
+  frontJobColors: any[] = [];
+  uppingSizes: any[] = [];
+  backJobColors: any[] = [];
   constructor(private calculatorService: CalculatorService,
     private orderService: OrdersService,
     private renderer: Renderer2,
     private settingService: SettingsService,
     private productFieldService: ProductDefinitionService,
-    private paperSizeService: PaperSizeService) { }
+    private paperSizeService: PaperSizeService,
+    private papers: PaperMarketService,
+    private datePipe: DatePipe,
+    private productService: ProductService) { }
   ngOnInit(): void {
     this.configuration = "Configuration";
     this.fields = this.calculatorService.getFields();
     this.updateDatetime();
     setInterval(() => this.updateDatetime(), 1000);
-    this.paperMarket = this.calculatorService.getPaperMarket();
+    this.paperMarket = this.papers.getPaperMarket();
     this.upping = this.calculatorService.getUpping();
     this.uppingValue = '-';
     this.getFields();
     this.getPaperSizes();
+    this.getProducts();
   }
 
   ngAfterViewInit() {
@@ -144,7 +157,7 @@ export class CalculatorHeaderComponent implements OnInit {
     })
   }
   onImpositionValueChange(): void {
-    if (this.impositionValue === 'Applied' || this.sideOptionValue === 'SINGLED_SIDED') {
+    if (this.impositionValue === 'Applied' || this.sideOptionValue === 'SINGLE_SIDED') {
       setTimeout(() => {
         const tdColorsElement = document.getElementById('tdColors');
         const headerAnimationElement = document.getElementById('headerAnimation');
@@ -165,70 +178,65 @@ export class CalculatorHeaderComponent implements OnInit {
 
   onPaperSelection(): void {
     if (this.gsmValue && this.paperValue) {
-      const { date, rate, qty } = this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
-      this.lastUpdatedPaper = date;
-      this.lastUpdatedRate = rate;
-      this.lastUpdatedQty = qty;
-      this.costPerSheet = this.calculateCostPerSheet(rate, qty);
+      this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
     }
     this.onSheetSizeSelection();
     this.getGsm(this.paperValue);
   }
 
   onGSMSelection(gsmValue: any): void {
-    this.gsmValue = gsmValue;
-    const { date, rate, qty } = this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
-    this.lastUpdatedPaper = date;
-    this.lastUpdatedRate = rate;
-    this.lastUpdatedQty = qty;
-    this.costPerSheet = this.calculateCostPerSheet(rate, qty);
+    this.gsmValue = parseFloat(gsmValue);
+    debugger
+    this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
   }
 
-  private getLastUpdatedInfoForPaperAndGSM(paper: string, gsm: string): { date: string, rate: string, qty: string } {
-    const matchingEntries = this.paperMarket.filter(entry =>
-      entry.paperStock === paper && entry.gsm === gsm.toString()
-    );
+  private getLastUpdatedInfoForPaperAndGSM(paper: string, gsm: any) {
 
-    if (matchingEntries.length > 0) {
-      const latestEntry = matchingEntries.reduce((latest, entry) =>
-        new Date(entry.date) > new Date(latest.date) ? entry : latest
+
+    this.papers.getPaperMarket().subscribe(res => {
+      this.paperMarket = res;
+      this.paperMarket.forEach((el: any) => {
+        el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy');
+        el.ratePkr = Math.round(el.ratePkr * 100) / 100;
+      });
+
+      const matchingEntries = this.paperMarket.filter((entry: { paperStock: string; gsm: any }) =>
+        entry.paperStock === paper && entry.gsm === gsm
       );
+      console.log('Filtering by Paper:', paper);
+      console.log('Filtering by GSM:', gsm);
 
-      const latestEntryDate = new Date(latestEntry.date);
-      const currentDate = new Date();
 
-      if (currentDate.getTime() - latestEntryDate.getTime() >= 10 * 24 * 60 * 60 * 1000) {
-        alert('Please update paper!');
+      if (matchingEntries.length > 0) {
+        this.lastEntry = matchingEntries.reduce((latest: { timeStamp: string | number | Date }, entry: { timeStamp: string | number | Date }) =>
+          new Date(entry.timeStamp) > new Date(latest.timeStamp) ? entry : latest
+        );
+
+        // Calculate costPerSheet if both ratePkr and qty are available
+        if (this.lastEntry?.ratePkr !== 'Not found' && this.lastEntry?.qty !== 'Not found') {
+          this.costPerSheet = this.lastEntry?.ratePkr / this.lastEntry?.qty;
+
+        } else {
+          this.costPerSheet = 'Can\'t calculate';
+        }
       }
-
-      return {
-        date: latestEntry.date,
-        rate: latestEntry.rate,
-        qty: latestEntry.qty
-      };
-    } else {
-      return {
-        date: 'Not found',
-        rate: 'Not found',
-        qty: 'Not found'
-      };
-    }
+    }, error => {
+      this.error = error.error.error;
+      this.visible = true;
+    });
   }
+
 
   getGsm(papervalue: string) {
     this.settingService.getGsmByPaperStock(papervalue).subscribe(
       (res: any) => {
         this.gsmArray = res;
-
-        // Check if there's only one GSM option available
-        if (this.gsmArray.length === 1) {
-          // Automatically select the only available GSM
+        debugger
+        if (this.gsmArray.length) {
           this.gsmValue = this.gsmArray[0];
           this.onGSMSelection(this.gsmValue);
         } else {
-          // Check if the current gsmValue exists in the fetched gsmArray
           if (this.gsmValue && !this.gsmArray.includes(this.gsmValue)) {
-            // If the current value is not in the fetched array, set it to the first value
             this.gsmValue = this.gsmArray.length > 0 ? this.gsmArray[0] : '';
           }
         }
@@ -237,7 +245,6 @@ export class CalculatorHeaderComponent implements OnInit {
       (error) => {
         this.error = error.error.error
         this.visible = true;
-        // Handle the error as needed (e.g., show a user-friendly message)
       }
     );
   }
@@ -282,29 +289,46 @@ export class CalculatorHeaderComponent implements OnInit {
   receiveDataFromChild(obj: any) {
     this.receivedData = obj;
   }
-  getFields() {
-    this.productFieldService.getProductField().subscribe((res: { [key: string]: any }) => {
-      let paperStockField = null;
-      for (const key in res) {
-        if (res.hasOwnProperty(key)) {
-          const field = res[key];
-          if (field.name === 'Paper Stock') {
-            paperStockField = field;
-            break;
-          }
-        }
-      }
 
-      if (paperStockField) {
-        for (const value of paperStockField.productFieldValuesList) {
-          this.paperStock.push(value);
-        }
-      }
+  private getFields() {
+    this.productFieldService.getProductField().subscribe((res: { [key: string]: any }) => {
+      debugger;
+
+      const paperStockField = this.getFieldByName(res, 'Paper Stock');
+      const frontJobColorsField = this.getFieldByName(res, 'JobColor(Front)');
+      const sizeField = this.getFieldByName(res, 'Size');
+      const backJobColorsField = this.getFieldByName(res, 'JobColor(Back)');
+
+      this.processFieldValues(paperStockField, this.papersStock);
+      this.processFieldValues(frontJobColorsField, this.frontJobColors);
+      this.processFieldValues(sizeField, this.uppingSizes);
+      this.processFieldValues(backJobColorsField, this.backJobColors);
     });
   }
+
+  private getFieldByName(fields: { [key: string]: any }, name: string): any | null {
+    return Object.values(fields).find((field) => field.name === name) || null;
+  }
+
+  private processFieldValues(field: any, targetArray: any[]) {
+    if (field) {
+      targetArray.push(...field.productFieldValuesList);
+    }
+  }
+
   getPaperSizes() {
     this.paperSizeService.getPaperSize().subscribe(res => {
+      debugger
       this.paperSizesArray = res
+    })
+  }
+  getProducts() {
+    this.productService.getProducts().subscribe(res => {
+      this.productDefinitionArray = res
+      console.log(this.productDefinitionArray);
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 }

@@ -30,6 +30,7 @@
               <th scope="col" class="text-center">Date Updated</th>
               <th scope="col" class="text-center">Rate (KG)</th>
               <th scope="col" class="text-center">Status</th>
+              <th scope="col" class="text-center">Old Rate</th>
               <th scope="col" class="text-center">Action</th>
             </tr>
           </thead>
@@ -50,6 +51,7 @@
               <td class="text-center">{{inventory?.dateUpdated}}</td>
               <td class="text-center">{{inventory?.rate}}</td>
               <td class="text-center">{{inventory?.status}}</td>
+              <td class="text-center">{{inventory?.oldRate}}</td>
               <td class="order-table-btns-container text-center">
                 <div class="btn-group mr-2" role="group" aria-label="Second group">
                   <button type="button" class="btn order-table-btn" (click)="editInventory(inventory.id)"><i
