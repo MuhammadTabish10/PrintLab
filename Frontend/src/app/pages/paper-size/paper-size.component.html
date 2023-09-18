@@ -51,3 +51,9 @@
         </div>
     </div>
 </div>
+
+
+<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
+    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <h5 class="error-modal-head">{{error}}</h5>
+</p-dialog>

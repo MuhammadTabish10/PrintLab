@@ -27,7 +27,7 @@ export class CustomerService {
   }
 
   getCustomerById(id: any) {
-    let url = `${this._url}/customer?id_like=${id}`
+    let url = `${this._url}/customer/${id}`
     return this.http.get(url)
   }
 

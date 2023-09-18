@@ -23,9 +23,19 @@ public class PressMachine {
     private Long id;
 
     private String name;
+    private String plateDimension;
+    private String gripperMargin;
+    private String maxSheetSize;
+    private String minSheetSize;
+    private Integer maxSPH;
     private Double ctp_rate;
     private Double impression_1000_rate;
     private Boolean is_selected;
+    private String status;
+
+    @ManyToOne()
+    @JoinColumn(name = "vendor_id")
+    private Vendor vendor;
 
     @OneToMany(mappedBy = "pressMachine", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PressMachineSize> pressMachineSize;

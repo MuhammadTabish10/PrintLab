@@ -27,7 +27,6 @@ export class PaperSizeService {
   }
 
   getPaperSizeById(id: any) {
-    //
     let url = `${this._url}/paper-size/${id}`
     return this.http.get(url)
   }

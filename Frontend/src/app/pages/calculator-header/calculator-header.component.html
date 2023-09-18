@@ -1,0 +1,328 @@
+<app-sidebar></app-sidebar>
+<!-- <div class="container"></div> -->
+<div class="container-fluid text-center px-0 ps-5">
+  <div class="bg-dark row mx-auto">
+    <div class="col-lg-4 col-12 text-warning text-center text-lg-start">
+      <button
+        class="border-0 bg-dark text-warning"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+      >
+        {{ configuration }} <i class="fa-solid fa-arrow-down-wide-short"></i>
+      </button>
+    </div>
+    <div class="col-lg-4 col-12 text-white text-center">
+      {{ currentDatetime }}
+    </div>
+  </div>
+  <app-configuration-table
+    (dataToParent)="receiveDataFromChild($event)"
+    [selectedValue]="selectedOption"
+  ></app-configuration-table>
+</div>
+<div class="container-fluid px-0 ps-5 text-center">
+  <div class="row mx-auto">
+    <div class="col-lg-3 bg-dark text-white text-center">
+      Paper Stock : <span id="selectedPaper">{{ paperValue }}</span> | GSM :
+      <span id="selectedGsm">{{ gsmValue }}</span>
+    </div>
+    <div
+      class="col-lg-1 col-6 bg-dark text-white ms-lg-4 ps-4"
+      style="font-size: 13px"
+    >
+      Last Updated
+    </div>
+    <small
+      class="col-lg-15 col-6 border"
+      id="lastUpdated"
+      [ngClass]="{ 'bg-danger text-white': lastUpdatedPaper === 'Not found' }"
+      >{{ lastEntry?.timeStamp }}</small
+    >
+    <small
+      class="col-lg-1 col-6 bg-dark text-white ps-1 px-0"
+      style="font-size: 13px"
+      >Paper Market Rate</small
+    >
+    <small
+      class="col-lg-1 col-6 border"
+      id="updatedRate"
+      [ngClass]="{ 'bg-danger text-white': lastUpdatedRate === 'Not found' }"
+      >{{ lastEntry?.ratePkr.toFixed(2) }}</small
+    >
+    <small
+      class="col-lg-1 col-6 bg-dark text-white px-0 text-center"
+      style="font-size: 13px"
+      >Paper Market Qty</small
+    >
+    <small
+      class="col-lg-1 col-6 border"
+      id="selectedPaperQty"
+      [ngClass]="{ 'bg-danger text-white': lastEntry?.qty === 'Not found' }"
+    >
+      {{ lastEntry?.qty }}
+    </small>
+    <small
+      class="col-lg-1 col-6 bg-dark text-white px-2"
+      style="font-size: 13px"
+      >Cost Per Sheet</small
+    >
+    <small
+      class="col-lg-1 col-6 border border-dark"
+      id="costPerSheet"
+      [ngClass]="{
+        'bg-danger': costPerSheet === 'Can\'t calculate',
+        'text-white': costPerSheet === 'Can\'t calculate'
+      }"
+    >
+      {{ costPerSheet?.toFixed(2) }}
+    </small>
+  </div>
+</div>
+<div class="container-fluid table-responsive px-0 d-lg-flex ps-6">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="text-nowrap">Select Product</th>
+        <th scope="col" class="bg-light-warning text-nowrap">Job Color (S)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-6 col-lg-0">
+          <select
+            class="form-select form-select-sm"
+            id="selectProduct"
+            [(ngModel)]="productName"
+          >
+            <option *ngFor="let product of productDefinitionArray" [value]="product.title">
+              {{ product.title }}
+            </option>
+          </select>
+        </td>
+        <td>
+          <select
+            class="form-select form-select-sm"
+            id="colors"
+            [(ngModel)]="jobFrontValue"
+          >
+            <option *ngFor="let color of frontJobColors" [value]="color.name">
+              {{ color.name }}
+            </option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="bg-light-warning text-nowrap">Size</th>
+        <th scope="col" class="bg-light-warning text-nowrap">Paper Stock</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-6 col-lg-0">
+          <select
+            class="form-select form-select-sm"
+            id="size"
+            [(ngModel)]="sizeValue"
+            (ngModelChange)="onSizeSelection()"
+          >
+            <option *ngFor="let size of uppingSizes" [value]="size.name">
+              {{ size.name }}
+            </option>
+          </select>
+        </td>
+        <td>
+          <select
+          class="form-select form-select-sm"
+          id="paperStock"
+          [(ngModel)]="paperValue"
+          (ngModelChange)="onPaperSelection()"
+        >
+          <option *ngFor="let paper of papersStock" [value]="paper.name">
+            {{ paper.name }}
+          </option>
+        </select>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="bg-light-warning text-nowrap">GSM</th>
+        <th scope="col" class="bg-light-warning text-nowrap">Sheet Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-6 col-lg-0">
+          <select
+            class="form-select form-select-sm"
+            id="grams"
+            [(ngModel)]="gsmValue"
+            (ngModelChange)="onGSMSelection($event)"
+          >
+            <option *ngFor="let product of gsmArray" [value]="product">
+              {{ product }}
+            </option>
+          </select>
+        </td>
+        <td>
+          <select
+            class="form-select form-select-sm"
+            id="sheetSize"
+            [(ngModel)]="sheetValue"
+            (ngModelChange)="onSheetSizeSelection()"
+          >
+            <option *ngFor="let size of paperSizesArray" [value]="size.label">
+              {{ size.label }}
+            </option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="container-fluid table-responsive px-0 d-lg-flex ps-6">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="bg-light-warning text-nowrap"># Of Up' (S)</th>
+        <th scope="col" class="bg-light-warning text-nowrap">Side Option</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-6 col-lg-0">
+          <input
+            class="text-center col-12"
+            readonly
+            id="ofUp"
+            [value]="uppingValue"
+          />
+        </td>
+        <td>
+          <select
+            class="form-select form-select-sm"
+            id="sideOption"
+            [(ngModel)]="sideOptionValue"
+            (ngModelChange)="onImpositionValueChange()"
+          >
+            <option *ngFor="let product of fields[6].values" [value]="product">
+              {{ product }}
+            </option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered">
+    <thead>
+      <tr class="col-3">
+        <th scope="col" class="bg-light-warning fs-6 text-lg-nowrap">
+          Imposition [Possible]
+        </th>
+        <th
+          scope="col"
+          class="bg-light-warning fs-6 text-nowrap"
+          id="headerAnimation"
+          [ngClass]="{
+            'fade-out':
+              impositionValue === 'Applied' || sideOptionValue === 'SINGLE_SIDED'
+          }"
+        >
+          Job Colors [Black]
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td id="tdImposition" class="col-6 col-lg-0">
+          <ng-container *ngIf="sideOptionValue === 'SINGLE_SIDED'">
+            <input class="text-center col-12" readonly value="Not Applicable" />
+          </ng-container>
+
+          <ng-container *ngIf="sideOptionValue !== 'SINGLE_SIDED'">
+            <select
+              class="form-select form-select-sm"
+              id="imposition"
+              [(ngModel)]="impositionValue"
+              (ngModelChange)="onImpositionValueChange()"
+            >
+              <option
+                *ngFor="let product of fields[7].values"
+                [value]="product"
+              >
+                {{ product }}
+              </option>
+            </select>
+          </ng-container>
+        </td>
+        <td
+          id="tdColors"
+          [ngClass]="{
+            'fade-out':
+              impositionValue === 'Applied' || sideOptionValue === 'SINGLE_SIDED'
+          }"
+        >
+          <select
+            class="form-select form-select-sm"
+            id="jobColors"
+            [(ngModel)]="jobBackValue"
+          >
+            <option *ngFor="let backColor of backJobColors" [value]="backColor.name">
+              {{ backColor.name }}
+            </option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered">
+    <thead>
+      <tr class="">
+        <th scope="col" class="bg-light-warning fs-6 text-nowrap">Quantity</th>
+        <!-- <th scope="col" class="bg-light-warning fs-6 text-nowrap">
+          Available in press
+        </th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="col">
+        <td [ngClass]="{ 'bg-danger': qtyAlert }">
+          <input
+            class="col-12"
+            type="number"
+            name="Quantity"
+            [(ngModel)]="qty"
+          />
+        </td>
+        <!-- <td>
+          <input
+            readonly
+            class="col-12 text-center"
+            name="boolean"
+            [(ngModel)]="boolean"
+            [value]="boolean"
+          />
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="container text-center ps-6">
+  <button class="btn btn-warning" (click)="calculate()">Calculate</button>
+</div>
+
+
+<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
+    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <h5 class="error-modal-head">{{error}}</h5>
+</p-dialog>

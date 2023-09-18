@@ -1,84 +1,97 @@
 <app-sidebar></app-sidebar>
 <div class="body-position">
-    <app-dashboard-head></app-dashboard-head>
-
+  <app-dashboard-head></app-dashboard-head>
+  <form class="was-validated" #productField="ngForm" novalidate>
     <div class="main-container">
-        <div>
-            <h4>{{buttonName}} Product Field</h4>
-        </div>
-
-        <div class="order-body py-2">
-            <div class="container">
-                <div class="row">
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Name</label>
-                        <input type="text" class="order-search form-control order-form-input m-0"
-                            style="border:1px solid #ced4da;" placeholder="Enter Name" [(ngModel)]="nameValue">
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Sequence</label>
-                        <input type="number" class="order-search form-control order-form-input m-0"
-                            style="border:1px solid #ced4da;" placeholder="Enter Sequence" [(ngModel)]="sequenceValue">
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Select Type</label><br>
-                        <p-dropdown [options]="typesDropDown" styleClass="w-100" placeholder="Select Type"
-                            [(ngModel)]="typeValue" (ngModelChange)="type()"></p-dropdown>
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Select Status</label><br>
-                        <p-dropdown [options]="statusDropDown" styleClass="w-100" placeholder="Select Status"
-                            [(ngModel)]="statusValue"></p-dropdown>
-                    </div>
-                </div>
+      <div>
+        <h4>{{ buttonName }} Product Field</h4>
+      </div>
+      <div class="order-body py-2">
+        <div class="container">
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Name</label>
+              <input type="text" class="order-search form-control order-form-input m-0"
+                style="border: 1px solid #ced4da" placeholder="Enter Name" [(ngModel)]="nameValue" name="nameValue"
+                required />
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
             </div>
+
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Sequence</label>
+              <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="sequenceValue"
+                style="border: 1px solid #ced4da" placeholder="Enter Sequence" name="sequenceValue" required />
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Select Type</label><br />
+              <p-dropdown [options]="typesDropDown" styleClass="w-100" placeholder="Select Type" [(ngModel)]="typeValue"
+                (ngModelChange)="type()" name="typeValue" #typedropdown="ngModel" [required]="true"></p-dropdown>
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Select Status</label><br />
+              <p-dropdown [options]="statusDropDown" styleClass="w-100" placeholder="Select Status"
+                [(ngModel)]="statusValue" name="statusValue" [required]="true"></p-dropdown>
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-container" *ngIf="pfvalueFlag">
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn order-table-btn btn-search-panel py-2 px-3" (click)="addpfvalues()">
+            <i class="fa-solid fa-plus"></i>
+          </button>
         </div>
 
-
-        <div class="main-container" *ngIf="pfvalueFlag">
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn order-table-btn btn-search-panel py-2 px-3" (click)="addpfvalues()"><i
-                        class="fa-solid fa-plus"></i>
-
+        <div class="order-body py-4 my-2" *ngFor="let element of pfvaluesArray; let i = index">
+          <div class="container">
+            <div class="row">
+              <div class="col-5">
+                <label class="add-order-label m-0">Name</label>
+                <input type="text" class="order-search form-control order-form-input m-0" [(ngModel)]="element.name"
+                  style="border: 1px solid #ced4da" [name]="'elementName[' + i + ']'" required />
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+              </div>
+              <div class="col-5">
+                <label class="add-order-label m-0">Select Status</label><br />
+                <p-dropdown [options]="statusDropDown" styleClass="w-100" placeholder="Select Status"
+                  [(ngModel)]="element.status" [name]="'elementStatus[' + i + ']'" [required]="true"></p-dropdown>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+              </div>
+              <div class="col-1 align-self-lg-end">
+                <button type="button" class="btn order-table-btn btn-search-panel" (click)="removeElement(i)">
+                  <i class="fa-solid fa-trash"></i>
                 </button>
+              </div>
             </div>
-
-            <div class="order-body py-4 my-2" *ngFor=" let element of pfvaluesArray; let i=index">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-5">
-                            <label class="add-order-label m-0">Name</label>
-                            <input type="text" class="order-search form-control order-form-input m-0"
-                                [(ngModel)]="element.name" style="border:1px solid #ced4da;">
-                        </div>
-                        <div class="col-5">
-                            <label class="add-order-label m-0">Select Status</label><br>
-                            <p-dropdown [options]="statusDropDown" styleClass="w-100" placeholder="Select Status"
-                                [(ngModel)]="element.status"></p-dropdown>
-                        </div>
-                        <div class="col-1 align-self-lg-end">
-                            <button type="submit" class="btn order-table-btn btn-search-panel"
-                                (click)="removeElement(i)"><i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
 
-
-
-        <div class="order-body mt-5 py-3">
-            <div class="text-end">
-                <button type="submit" class="btn order-table-btn btn-search-panel"
-                    (click)="addProduct()">{{buttonName}}</button>
-            </div>
+      <div class="order-body mt-5 py-3">
+        <div class="text-end">
+          <button type="submit" class="btn order-table-btn btn-search-panel" (click)="addProduct()"
+            [disabled]="!productField.valid">
+            {{ buttonName }}
+          </button>
         </div>
-
+      </div>
     </div>
+  </form>
 </div>
 
-<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
-    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
-    <h5 class="error-modal-head">{{error}}</h5>
+<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+  [draggable]="false" [resizable]="false">
+  <h5 class="error-modal-head">{{ error }}</h5>
 </p-dialog>

@@ -1,51 +1,60 @@
 <app-sidebar></app-sidebar>
 <div class="body-position">
-    <app-dashboard-head></app-dashboard-head>
+  <app-dashboard-head></app-dashboard-head>
 
-    <div class="main-container">
-        <div>
-            <h4>Product Definition fields</h4>
-        </div>
-
-        <div>
-            <div class="order-body p-3 my-3">
-                <h3 class="mb-3">Product Definition</h3>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12 my-2">
-                            <h4>Title</h4>
-                            <div>{{productToView?.title}}</div>
-                        </div>
-                        <div class="col-6 my-2"
-                            *ngFor="let value of productToView?.productDefinitionFieldList; let last = last">
-                            <div *ngIf="value.isPublic!=null">
-                                <h4 class="me-2 d-inline-block">{{value.productField.name}}</h4>
-                                <span class="text-danger" *ngIf="value.isPublic">Public</span><br>
-                                <span *ngFor="let item of value.selectedValues; let last = last">
-                                    {{ item?.productFieldValue?.name }}{{ last ? '' : ', ' }}
-                                </span>
-                            </div>
-                            <div *ngIf="value?.isPublic==null">
-                                <h4 class="me-2">{{value?.productField?.name}}</h4>
-                                <span>{{value?.selectedValues[0]?.value}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class=" order-body p-3 my-3">
-                <h3 class="mb-3">Process</h3>
-                <div class="container">
-                    <div class="row">
-                        <div *ngFor="let value of productToView?.productDefinitionProcessList"
-                            class="col-5 m-2 border border-dark">
-                            <div>Product : {{value?.productProcess?.name}}</div>
-                            <div>Vendor : {{value?.vendor?.name}}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="main-container">
+    <div>
+      <h4>Product Definition fields</h4>
     </div>
+
+    <div>
+      <div class="order-body p-3 my-3">
+        <h3 class="mb-3">Product Definition</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12 my-2">
+              <h4>Title</h4>
+              <div>{{productToView?.title}}</div>
+            </div>
+            <div class="col-6 my-2" *ngFor="let value of productToView?.productDefinitionFieldList; let last = last">
+              <div *ngIf="value.isPublic!=null">
+                <h4 class="me-2 d-inline-block">{{value.productField.name}}</h4>
+                <span class="text-danger" *ngIf="value.isPublic">Public</span><br>
+                <span *ngFor="let item of value.selectedValues; let last = last">
+                  {{ item?.productFieldValue?.name }}{{ last ? '' : ', ' }}
+                </span>
+              </div>
+              <div *ngIf="value?.isPublic==null">
+                <h4 class="me-2">{{value?.productField?.name}}</h4>
+                <span>{{value?.selectedValues[0]?.value}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class=" order-body p-3 my-3">
+        <h3 class="mb-3">Press Machine</h3>
+        <div>{{productToView?.pressMachine.name}}</div>
+      </div>
+
+      <div class=" order-body p-3 my-3">
+        <h3 class="mb-3">Process</h3>
+        <div class="container">
+          <div class="row">
+            <div *ngFor="let value of productToView?.productDefinitionProcessList" class="col-5 m-2 border border-dark">
+              <div>Product : {{value?.productProcess?.name}}</div>
+              <div>Vendor : {{value?.vendor?.name}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
+    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <h5 class="error-modal-head">{{error}}</h5>
+</p-dialog>

@@ -32,6 +32,11 @@ export class SidebarComponent {
       link: "addProduct",
       icon: "fa fa-add fa-2x",
       name: "Add Product"
+    },
+    {
+      link: "calculator",
+      icon: "fa fa-calculator",
+      name: "Calculator"
     }
   ]
   configurationOptions: any = [
@@ -67,12 +72,19 @@ export class SidebarComponent {
       link: "settings",
       name: "Settings"
     },
+    {
+      link: "ctp",
+      name: "CTP"
+    },
+    {
+      link: "inventory",
+      name: "Inventory"
+    }
   ]
   settingFlag: boolean = false
 
   toggleSettings() {
     this.settingFlag = !this.settingFlag
   }
-
 
 }

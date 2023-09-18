@@ -1,18 +1,18 @@
-<nav class="main-menu" style="overflow-y:visible;">
+<nav class="main-menu overflow-y-auto">
     <ul>
-        <!-- <li>
-            <span class="px-4" (click)="dashboard()">
-                <img class="w-75 nav-text" src="../../../assets/images/print-lab-logo.png" alt="">
-            </span>
-        </li> -->
-        <li *ngFor="let option of options">
-            <span class="sidebar-list-hover" routerLink="/{{option.link}}">
-                <i class="{{option.icon}}"></i>
-                <h6 class="nav-text">
-                    {{option.name}}
-                </h6>
+        <li>
+            <span>
+                <img class="w-75 nav-text ms-2 nav-logo" src="../../../assets/images/print-lab-logo.png" alt="">
             </span>
         </li>
+        <li *ngFor="let option of options">
+            <span class="sidebar-list-hover">
+              <a routerLink="/{{option.link}}" class="nav-link">
+                <i class="{{option.icon}}"></i>
+                <h6 class="nav-text">{{option.name}}</h6>
+              </a>
+            </span>
+          </li>
         <li>
             <span class="sidebar-list-hover" (click)="toggleSettings()">
                 <i class="fa fa-bars fa-2x"></i>
@@ -24,12 +24,12 @@
             </span>
         </li>
         <li class="settingOptions" *ngFor="let el of configurationOptions">
-            <span routerLink="/{{el.link}}" *ngIf="settingFlag == true" class="sidebar-list-hover-settings">
-                <i class="fa fa-gear fa-2x"></i>
-                <span class="nav-text">
-                    {{el.name}}
-                </span>
-            </span>
+          <span>
+            <a routerLink="/{{el.link}}" class="sidebar-list-hover-settings" *ngIf="settingFlag == true" class="sidebar-list-hover-settings nav-link">
+              <i class="fa fa-gear fa-2x"></i>
+              <span class="nav-text">{{el.name}}</span>
+            </a>
+          </span>
         </li>
       </ul>
 </nav>

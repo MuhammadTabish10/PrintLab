@@ -24,7 +24,7 @@ export class AddUpingComponent implements OnInit {
   paperSize: any = []
   placeHolder: any = []
   upingSizeId: any = []
-
+  elementsGenerated: boolean = false;
   constructor(private upingService: UpingService, private paperSizeService: PaperSizeService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -51,13 +51,6 @@ export class AddUpingComponent implements OnInit {
               }
             })
           })
-          // this.selectedSizes.forEach((item: any) => { this.placeHolder.push(item.label) })
-          // this.selectedSizes.forEach((element: any) => {
-          //   this.paperSize.push({})
-          //   for (let i = 0; i < this.paperSizesArray.length; i++) {
-          //     element.id == this.paperSizesArray[i].id ? this.paperSizesArray.splice(i, 1) : null;
-          //   }
-          // });
         }, error => {
           this.error = error.error.error
           this.visible = true;
@@ -107,6 +100,7 @@ export class AddUpingComponent implements OnInit {
   }
 
   generateElement() {
+    this.elementsGenerated = true;
     this.placeHolder.push('Select Label')
     this.paperSize.length != this.maxLength ? this.paperSize.push({}) : alert('Reached machine sizes limit');
   }

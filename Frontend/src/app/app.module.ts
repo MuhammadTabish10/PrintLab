@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { DashboardHeadComponent } from './components/dashboard-head/dashboard-head.component';
@@ -35,9 +34,20 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { AddSettingsComponent } from './pages/add-settings/add-settings.component';
 import { CustomerComponent } from './pages/customer/customer.component';
 import { AddCustomerComponent } from './pages/add-customer/add-customer.component';
+import { CalculatorComponent } from './pages/calculator/calculator.component';
+import { CalculatorHeaderComponent } from './pages/calculator-header/calculator-header.component';
+import { ConfigurationTableComponent } from './pages/configuration-table/configuration-table.component';
 import { ViewOrderComponent } from './pages/view-order/view-order.component';
 import { DialogModule } from 'primeng/dialog';
+import { LoaderComponent } from './components/loader/loader.component';
 import { AuthInterceptorProvider, InterceptorService } from './services/interceptor.service';
+import { CtpComponent } from './pages/ctp/ctp.component';
+import { AddCtpComponent } from './pages/add-ctp/add-ctp.component';
+import { InventoryComponent } from './pages/inventory/inventory.component';
+import { AddInventoryComponent } from './pages/add-inventory/add-inventory.component';
+import { DatePipe } from '@angular/common';
+import { provideRouter, withHashLocation } from '@angular/router';
+import { routes } from './app-routing.module';
 
 
 @NgModule({
@@ -70,8 +80,16 @@ import { AuthInterceptorProvider, InterceptorService } from './services/intercep
     AddSettingsComponent,
     CustomerComponent,
     AddCustomerComponent,
-    ViewOrderComponent
-   ],
+    ViewOrderComponent,
+    CalculatorComponent,
+    CalculatorHeaderComponent,
+    ConfigurationTableComponent,
+    LoaderComponent,
+    CtpComponent,
+    AddCtpComponent,
+    InventoryComponent,
+    AddInventoryComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -81,9 +99,10 @@ import { AuthInterceptorProvider, InterceptorService } from './services/intercep
     MultiSelectModule,
     BrowserAnimationsModule,
     DropdownModule,
-    DialogModule
+    DialogModule,
   ],
-  providers: [AuthInterceptorProvider,InterceptorService],
+  providers: [AuthInterceptorProvider, InterceptorService,
+    provideRouter(routes, withHashLocation()), DatePipe],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {  }

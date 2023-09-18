@@ -19,13 +19,11 @@ public class ImageController
     }
 
     @PostMapping("/image")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         String imageUrl = imageService.uploadImage(file);
         return ResponseEntity.ok(imageUrl);
     }
     @GetMapping("/image/{fileName}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Resource> getImageUrl(@PathVariable String fileName) {
         Resource imageResource = imageService.getImage(fileName);
 

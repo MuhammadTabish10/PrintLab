@@ -14,6 +14,8 @@ export class ProductDefintionComponent implements OnInit {
   fieldList: any = []
   tableData: Boolean = true
   search: string = ''
+  visible!: boolean
+  error: string = ''
 
   constructor(private productFieldService: ProductDefinitionService, private productService: ProductService, private router: Router) { }
 
@@ -22,9 +24,12 @@ export class ProductDefintionComponent implements OnInit {
     this.getFields()
   }
   getFields() {
-    this.productFieldService.getProductDefintion().subscribe(res => {
+    this.productFieldService.getProductField().subscribe(res => {
       this.fieldList = res
       this.fieldList.length == 0 ? this.tableData = true : this.tableData = false
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -32,6 +37,9 @@ export class ProductDefintionComponent implements OnInit {
 
     this.productFieldService.deleteField(id).subscribe(() => {
       this.getFields()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -44,9 +52,11 @@ export class ProductDefintionComponent implements OnInit {
       this.getFields()
     } else {
       this.productFieldService.searchProductField(field.value).subscribe(res => {
-
         this.fieldList = res
         this.fieldList.length == 0 ? this.tableData = true : this.tableData = false
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
       })
     }
   }

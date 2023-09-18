@@ -27,8 +27,13 @@ import { AddSettingsComponent } from './pages/add-settings/add-settings.componen
 import { CustomerComponent } from './pages/customer/customer.component';
 import { AddCustomerComponent } from './pages/add-customer/add-customer.component';
 import { ViewOrderComponent } from './pages/view-order/view-order.component';
+import { CalculatorComponent } from './pages/calculator/calculator.component';
+import { CtpComponent } from './pages/ctp/ctp.component';
+import { AddCtpComponent } from './pages/add-ctp/add-ctp.component';
+import { InventoryComponent } from './pages/inventory/inventory.component';
+import { AddInventoryComponent } from './pages/add-inventory/add-inventory.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: LoginFormComponent
@@ -40,7 +45,8 @@ const routes: Routes = [
   },
   {
     path: 'orders',
-    component: OrdersComponent
+    component: OrdersComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'login',
@@ -48,7 +54,8 @@ const routes: Routes = [
   },
   {
     path: 'addOrder',
-    component: AddOrderComponent
+    component: AddOrderComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'products',
@@ -57,87 +64,133 @@ const routes: Routes = [
   },
   {
     path: 'addProduct',
-    component: AddProductComponent
+    component: AddProductComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'viewProduct',
-    component: ViewProductComponent
+    component: ViewProductComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addProductField',
-    component: AddProductDefintionComponent
+    component: AddProductDefintionComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'productField',
-    component: ProductDefintionComponent
+    component: ProductDefintionComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'paperMarket',
-    component: PaperMarketComponent
+    component: PaperMarketComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addPaperMarket',
-    component: AddPaperMarketComponent
+    component: AddPaperMarketComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'paperSize',
-    component: PaperSizeComponent
+    component: PaperSizeComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addPaperSize',
-    component: AddPaperSizeComponent
+    component: AddPaperSizeComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'pressMachine',
-    component: PressMachineComponent
+    component: PressMachineComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addPressMachine',
-    component: AddPressMachineComponent
+    component: AddPressMachineComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'uping',
-    component: UpingComponent
+    component: UpingComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addUping',
-    component: AddUpingComponent
+    component: AddUpingComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'vendor',
-    component: VendorComponent
+    component: VendorComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addVendor',
-    component: AddVendorComponent
+    component: AddVendorComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'productProcess',
-    component: ProductProcessComponent
+    component: ProductProcessComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addProductProcess',
-    component: AddProductProcessComponent
+    component: AddProductProcessComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'customers',
-    component: CustomerComponent
+    component: CustomerComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addCustomer',
-    component: AddCustomerComponent
+    component: AddCustomerComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'settings',
-    component: SettingsComponent
+    component: SettingsComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'addSettings',
-    component: AddSettingsComponent
+    component: AddSettingsComponent,
+    canActivate: [AuthguardService]
   },
   {
     path: 'viewOrder',
-    component: ViewOrderComponent
+    component: ViewOrderComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'calculator',
+    component: CalculatorComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'ctp',
+    component: CtpComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'addCtp',
+    component: AddCtpComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'inventory',
+    component: InventoryComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'addInventory',
+    component: AddInventoryComponent,
+    canActivate: [AuthguardService]
   }
 ];
 
@@ -146,3 +199,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+

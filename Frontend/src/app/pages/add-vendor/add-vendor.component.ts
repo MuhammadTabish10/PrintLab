@@ -14,7 +14,7 @@ export class AddVendorComponent implements OnInit {
   error: string = ''
   buttonName: string = 'Add'
   nameValue: string = ''
-  dateValue: string = ''
+  emailValue: string = ''
   contactNameValue: string = ''
   contactNumberValue: string = ''
   addressValue: string = ''
@@ -30,7 +30,7 @@ export class AddVendorComponent implements OnInit {
   notesProcess: any = []
   selectedVendorProcess: any = []
   vendorProcessId: any = []
-
+  elementGenerated: boolean = false;
   constructor(private vendorService: VendorService, private productProcessService: ProductProcessService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -44,7 +44,7 @@ export class AddVendorComponent implements OnInit {
           this.buttonName = 'Update'
           this.vendorToUpdate = res
           this.nameValue = this.vendorToUpdate.name
-          this.dateValue = this.vendorToUpdate.date
+          this.emailValue = this.vendorToUpdate.email
           this.contactNameValue = this.vendorToUpdate.contactName
           this.contactNumberValue = this.vendorToUpdate.contactNumber
           this.addressValue = this.vendorToUpdate.address
@@ -88,6 +88,7 @@ export class AddVendorComponent implements OnInit {
   }
 
   generateElement() {
+    this.elementGenerated = true;
     this.placeHolder.push('Select Label')
     this.vendorProcess.length != this.maxLength ? this.vendorProcess.push({}) : alert('Reached Process limit');
   }
@@ -123,14 +124,14 @@ export class AddVendorComponent implements OnInit {
       }
       let obj = {
         name: this.nameValue,
-        date: this.dateValue,
+        email: this.emailValue,
         contactName: this.contactNameValue,
         contactNumber: this.contactNumberValue,
         address: this.addressValue,
         notes: this.notesValue,
         vendorProcessList: this.selectedVendorProcess
       }
-      this.vendorService.postVendor(obj).subscribe(res => {
+      this.vendorService.postVendor(obj).subscribe(() => {
         this.router.navigateByUrl('/vendor')
       }, error => {
         this.error = error.error.error
@@ -148,7 +149,7 @@ export class AddVendorComponent implements OnInit {
       }
       let obj = {
         name: this.nameValue,
-        date: this.dateValue,
+        email: this.emailValue,
         contactName: this.contactNameValue,
         contactNumber: this.contactNumberValue,
         address: this.addressValue,

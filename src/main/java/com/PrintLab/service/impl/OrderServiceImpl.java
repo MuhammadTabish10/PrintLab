@@ -29,13 +29,34 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto save(OrderDto orderDto) {
+        if(!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")){
+            if(orderDto.getJobColorsFront() == null){
+                orderDto.setJobColorsFront(1L);
+            }
+            if(orderDto.getJobColorsBack() == null){
+                orderDto.setJobColorsBack(1L);
+            }
+        }
+        else if(orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")){
+            if(orderDto.getJobColorsFront() == null){
+                orderDto.setJobColorsFront(1L);
+            }
+        }
+        else if(orderDto.getSideOptionValue().equals("SINGLE_SIDED")){
+            if(orderDto.getJobColorsFront() == null){
+                orderDto.setJobColorsFront(1L);
+            }
+        }
+        if(orderDto.getQuantity() == null){
+            orderDto.setQuantity(1000.0);
+        }
         Order order = orderRepository.save(toEntity(orderDto));
         return toDto(order);
     }
 
     @Override
     public List<OrderDto> getAll() {
-        List<Order> orderList = orderRepository.findAll();
+        List<Order> orderList = orderRepository.findAllInDescendingOrderById();
         List<OrderDto> orderDtoList = new ArrayList<>();
 
         for (Order order : orderList) {

@@ -12,6 +12,9 @@ export class PaperSizeComponent implements OnInit {
   tableData: boolean = true
   paperSizesArray: any = []
   search: string = ''
+  error:string=''
+  visible!:boolean
+
   constructor(private paperSizeService: PaperSizeService, private router: Router) { }
 
   ngOnInit(): void {
@@ -22,12 +25,18 @@ export class PaperSizeComponent implements OnInit {
     this.paperSizeService.getPaperSize().subscribe(res => {
       this.paperSizesArray = res
       this.paperSizesArray.length == 0 ? this.tableData = true : this.tableData = false
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
   deletePaperSize(id: any) {
     this.paperSizeService.deletePaperSize(id).subscribe(res => {
       this.getPaperSizes()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -42,6 +51,9 @@ export class PaperSizeComponent implements OnInit {
       this.paperSizeService.searchPaperSize(label.value).subscribe(res => {
         this.paperSizesArray = res
         this.paperSizesArray.length == 0 ? this.tableData = true : this.tableData = false;
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
       })
     }
   }

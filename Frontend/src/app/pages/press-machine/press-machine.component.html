@@ -16,15 +16,20 @@
                     </button>
                 </div>
             </div>
-            <div class="order-table">
-                <table class="table">
+            <div class="order-table overflow-auto">
+                <table class="table text-nowrap">
 
                     <thead>
                         <tr>
-                            <th scope="col" class="text-lg-center">Name</th>
+                            <th scope="col" class="text-lg-center">Press</th>
+                            <th scope="col" class="text-lg-center">Plate Dimension</th>
+                            <th scope="col" class="text-lg-center">Gripper Margin (mm)</th>
+                            <th scope="col" class="text-lg-center">Max.Sheet Size</th>
+                            <th scope="col" class="text-lg-center">Min.Sheet Size</th>
+                            <th scope="col" class="text-lg-center">Max SPH</th>
+                            <th scope="col" class="text-lg-center">Vendor</th>
+                            <th scope="col" class="text-lg-center">Impression Rate</th>
                             <th scope="col" class="text-lg-center">CTP Rate</th>
-                            <th scope="col" class="text-lg-center">Impression 1000 Rate</th>
-                            <th scope="col" class="text-lg-center">Selected</th>
                             <th scope="col" class="text-lg-center">Action</th>
                         </tr>
                     </thead>
@@ -34,10 +39,15 @@
                                 found</td>
                         </tr>
                         <tr *ngFor="let pressMachine of pressMachineArray">
-                            <td scope="col" class="text-lg-center">{{pressMachine.name}}</td>
-                            <td scope="col" class="text-lg-center">{{pressMachine.ctp_rate}}</td>
-                            <td scope="col" class="text-lg-center">{{pressMachine.impression_1000_rate}}</td>
-                            <td scope="col" class="text-lg-center">{{pressMachine.is_selected}}</td>
+                            <td scope="col" class="text-lg-center">{{ pressMachine.name }}</td>
+                            <td scope="col" class="text-lg-center">{{ pressMachine.plateDimension }}</td>
+                            <td scope="col" class="text-lg-center">{{ pressMachine.gripperMargin }}</td>
+                            <td scope="col" class="text-lg-center">{{ pressMachine.maxSheetSize }}</td>
+                            <td scope="col" class="text-lg-center">{{ pressMachine.minSheetSize }}</td>
+                            <td scope="col" class="text-lg-center">{{ pressMachine.maxSPH }}</td>
+                            <td scope="col" class="text-lg-center">{{ pressMachine.vendor.name }}</td>
+                            <td scope="col" class="text-lg-center">{{ pressMachine.impression_1000_rate }}</td>
+                            <td scope="col" class="text-lg-center">{{ pressMachine.ctp_rate }}</td>
                             <td scope="col" class="text-lg-center">
                                 <div class="btn-group mr-2" role="group" aria-label="Second group">
                                     <button type="button" class="btn order-table-btn"
@@ -57,3 +67,9 @@
 
     </div>
 </div>
+
+
+<p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
+    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <h5 class="error-modal-head">{{error}}</h5>
+</p-dialog>

@@ -13,6 +13,8 @@ export class ProductsComponent implements OnInit {
   productDefinitionArray: any = []
   tableData: Boolean = true
   search: string = ''
+  visible!: boolean
+  error: string = ''
 
   constructor(private router: Router, private productService: ProductService, private authService: AuthguardService) { }
 
@@ -28,13 +30,18 @@ export class ProductsComponent implements OnInit {
     this.productService.getProducts().subscribe(res => {
       this.productDefinitionArray = res
       this.productDefinitionArray.length == 0 ? this.tableData = true : this.tableData = false
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
   deleteProduct(id: any) {
-    this.productService.deleteProduct(id).subscribe(res => {
-
+    this.productService.deleteProduct(id).subscribe(() => {
       this.getProducts()
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
 
@@ -43,13 +50,11 @@ export class ProductsComponent implements OnInit {
       this.getProducts()
     } else {
       this.productService.searchProduct(title.value).subscribe(res => {
-
         this.productDefinitionArray = res
-        if (this.productDefinitionArray.length == 0) {
-          this.tableData = true
-        } else {
-          this.tableData = false
-        }
+        this.productDefinitionArray.length == 0 ? this.tableData = true : this.tableData = false
+      }, error => {
+        this.error = error.error.error
+        this.visible = true
       })
     }
   }

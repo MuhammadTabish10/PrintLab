@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { PaperMarketComponent } from '../paper-market/paper-market.component';
 import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SettingsService } from 'src/app/services/settings.service';
+import { VendorService } from 'src/app/services/vendor.service';
 
 @Component({
   selector: 'app-add-paper-market',
@@ -11,15 +13,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AddPaperMarketComponent implements OnInit {
 
-  quantityArray: any = [500, 1000]
+  quantityArray: any = [500, 100]
+  statusArray: any = ['Hoarding', 'In stock', 'Out of stock']
   visible: boolean = false
   error: string = ''
   buttonName: String = 'Add'
-  dateValue: String = ''
+  timeStampValue: String = ''
+  statusValue: string = ''
   paperStockValue: any = {}
-  gsmValue: any = {}
+  gsmValue: string = ''
   lengthValue!: number
   widthValue!: number
+  brandValue: string = ''
+  madeInValue: string = ''
+  kgValue: string = ''
   dimensionValue: String = ''
   qtyValue!: number
   rateValue!: number
@@ -29,24 +36,23 @@ export class AddPaperMarketComponent implements OnInit {
   rateToUpdate: any = []
   paperStockArray: any = []
   gsmArray: any = []
+  paperStockIndex: any
+  vendorArray: any = []
+  vendorValue: any = {}
 
-  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService) { }
+  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService, private settingservice: SettingsService, private vendorService: VendorService) { }
 
   ngOnInit(): void {
-    this.getProductFields()
     this.route.queryParams.subscribe(param => {
-      //
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
+        this.getProductFields()
         this.buttonName = 'Add'
       } else {
         this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
-
           this.buttonName = 'Update'
           this.rateToUpdate = res
-          this.dateValue = this.rateToUpdate.date
-          this.paperStockValue = this.rateToUpdate.paperStock
-          this.gsmValue = this.rateToUpdate.gsm
+          this.timeStampValue = this.rateToUpdate.date
           this.lengthValue = this.rateToUpdate.length
           this.widthValue = this.rateToUpdate.width
           this.dimensionValue = this.rateToUpdate.dimension
@@ -54,30 +60,36 @@ export class AddPaperMarketComponent implements OnInit {
           this.rateValue = this.rateToUpdate.ratePkr
           this.noteValue = this.rateToUpdate.notes
           this.verifiedValue = this.rateToUpdate.verified
+          this.getProductFields()
+          this.getGsm(this.rateToUpdate.paperStock)
         }, error => {
           this.error = error.error.error
           this.visible = true;
         })
       }
     })
+    this.getVendors()
   }
 
   addPapermarketRate() {
     let obj = {
-      date: this.dateValue,
+      timeStamp: this.timeStampValue,
       paperStock: this.paperStockValue.name,
+      brand: this.brandValue,
+      madeIn: this.madeInValue,
+      gsm: this.gsmValue,
       length: this.lengthValue,
-      width: this.widthValue,
+      width: this.lengthValue,
       dimension: this.dimensionValue,
       qty: this.qtyValue,
+      kg: this.kgValue,
+      vendor: this.vendorValue.name,
       ratePkr: this.rateValue,
-      verified: this.verifiedValue,
-      gsm: this.gsmValue.name,
-      notes: this.noteValue
+      notes: this.noteValue,
+      status: this.statusValue
     }
     if (Number.isNaN(this.idFromQueryParam)) {
       this.paperMarketService.postPaperMarket(obj).subscribe(res => {
-
         this.router.navigateByUrl('/paperMarket')
       }, error => {
         this.error = error.error.error
@@ -85,32 +97,53 @@ export class AddPaperMarketComponent implements OnInit {
       })
     } else {
       this.paperMarketService.updatePaperMarket(this.idFromQueryParam, obj).subscribe(res => {
-
         this.router.navigateByUrl('/paperMarket')
       }, error => {
         this.error = error.error.error
         this.visible = true;
       })
-
     }
+  }
+
+  getGsm(papervalue: string) {
+    this.settingservice.getGsmByPaperStock(papervalue).subscribe(res => {
+      this.gsmArray = res
+      this.gsmValue = this.rateToUpdate.gsm
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
+    })
+  }
+
+  getProductFields() {
+    this.productFieldService.getProductField().subscribe(res => {
+      let arr: any = []
+      arr = res
+      arr.forEach((element: any) => {
+        element.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperStockArray = element.productFieldValuesList : null
+      });
+      if (!Number.isNaN(this.idFromQueryParam)) {
+        this.paperStockArray.forEach((el: any) => {
+          el.name == this.rateToUpdate.paperStock ? this.paperStockValue = el : null
+        })
+      }
+    }, error => {
+      this.error = error.error.error
+      this.visible = true;
+    })
+  }
+
+  get id(): boolean {
+    return Number.isNaN(this.idFromQueryParam)
   }
 
   dimension() {
     this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
   }
 
-  getProductFields() {
-    this.productFieldService.getProductDefintion().subscribe(res => {
-      let arr: any = []
-      arr = res
-      arr.forEach((element: any) => {
-        element.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperStockArray = element.productFieldValuesList : null
-        element.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmArray = element.productFieldValuesList : null
-      });
+  getVendors() {
+    this.vendorService.getVendor().subscribe(res => {
+      this.vendorArray = res
     })
-  }
-
-  getVerifiedValue() {
-    this.verifiedValue = !this.verifiedValue
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaperSizeService } from 'src/app/services/paper-size.service';
 import { PressMachineService } from 'src/app/services/press-machine.service';
+import { VendorService } from 'src/app/services/vendor.service';
 
 @Component({
   selector: 'app-add-press-machine',
@@ -14,6 +15,12 @@ export class AddPressMachineComponent implements OnInit {
   error: string = ''
   buttonName: string = 'Add'
   nameValue: string = ''
+  plateDimension: string = ''
+  gripperMargin: string = ''
+  maxSheetSize: string = ''
+  minSheetSize: string = ''
+  maxSph!: number;
+  vendorValue: string = '';
   ctpRateValue!: number
   impressionRateValue!: number
   paperSize: any = []
@@ -26,8 +33,13 @@ export class AddPressMachineComponent implements OnInit {
   placeHolder: any = []
   pressMachineSizeId: any = []
   select: boolean = false
+  elementsGenerated: boolean = false;
+  vendorArray: any;
+  vendorIndex: any;
+  ctpToUpdate: any;
 
-  constructor(private paperSizeService: PaperSizeService, private pressMachineService: PressMachineService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private paperSizeService: PaperSizeService, private pressMachineService: PressMachineService, private route: ActivatedRoute, private router: Router,
+    private vendorService: VendorService,) { }
 
   ngOnInit(): void {
     this.getPaperSizes()
@@ -35,19 +47,27 @@ export class AddPressMachineComponent implements OnInit {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add'
+        this.getVendors();
       } else {
         this.pressMachineService.getPressMachineById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
           this.pressMachineToUpdate = res
           this.nameValue = this.pressMachineToUpdate.name
-          this.ctpRateValue = this.pressMachineToUpdate.ctp_rate
+          this.plateDimension = this.pressMachineToUpdate.plateDimension
+          this.gripperMargin = this.pressMachineToUpdate.gripperMargin
+          this.maxSheetSize = this.pressMachineToUpdate.maxSheetSize
+          this.minSheetSize = this.pressMachineToUpdate.minSheetSize
+          this.maxSph = this.pressMachineToUpdate.maxSPH
+          this.vendorValue = this.pressMachineToUpdate.vendor.name
           this.impressionRateValue = this.pressMachineToUpdate.impression_1000_rate
+          this.ctpRateValue = this.pressMachineToUpdate.ctp_rate
           this.select = this.pressMachineToUpdate.is_selected
 
           this.pressMachineToUpdate.pressMachineSize.forEach((item: any) => {
             this.pressMachineSizeId.push(item.id)
             this.value.push(item.value)
             this.obj.push(item.paperSize)
+            this.getVendors();
             this.placeHolder.push(item.paperSize.label)
             this.paperSize.push({})
             this.paperSizesArray.forEach((el: any) => {
@@ -87,6 +107,7 @@ export class AddPressMachineComponent implements OnInit {
   }
 
   generateElement() {
+    this.elementsGenerated = true;
     this.placeHolder.push('Select Label')
     this.paperSize.length != this.maxLength ? this.paperSize.push({}) : alert('Reached machine sizes limit');
   }
@@ -115,6 +136,12 @@ export class AddPressMachineComponent implements OnInit {
       })
       let obj = {
         name: this.nameValue,
+        plateDimension: this.plateDimension,
+        gripperMargin: this.gripperMargin,
+        maxSheetSize: this.maxSheetSize,
+        minSheetSize: this.minSheetSize,
+        maxSPH: this.maxSph,
+        vendor:this.vendorValue,
         ctp_rate: this.ctpRateValue,
         impression_1000_rate: this.impressionRateValue,
         is_selected: this.select,
@@ -136,6 +163,12 @@ export class AddPressMachineComponent implements OnInit {
       }
       let obj = {
         name: this.nameValue,
+        plateDimension: this.plateDimension,
+        gripperMargin: this.gripperMargin,
+        maxSheetSize: this.maxSheetSize,
+        minSheetSize: this.minSheetSize,
+        maxSPH: this.maxSph,
+        vendor:this.vendorValue,
         ctp_rate: this.ctpRateValue,
         impression_1000_rate: this.impressionRateValue,
         is_selected: this.select,
@@ -148,6 +181,20 @@ export class AddPressMachineComponent implements OnInit {
         this.visible = true;
       })
     }
+  }
+
+  getVendors() {
+    this.vendorService.getVendor().subscribe(res => {
+      this.vendorArray = res
+      debugger
+      if (!Number.isNaN(this.idFromQueryParam)) {
+        this.vendorIndex = this.vendorArray.findIndex((el: any) => el.id === this.pressMachineToUpdate.vendor.id)
+        this.vendorValue = this.vendorArray[this.vendorIndex]
+      }
+    }, error => {
+      this.visible = true
+      this.error = error.error.error
+    })
   }
 
   getSelectedValue() {

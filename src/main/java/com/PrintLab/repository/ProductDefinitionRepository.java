@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -18,6 +19,7 @@ public interface ProductDefinitionRepository extends JpaRepository<ProductDefini
     ProductDefinition findByTitle(String title);
     List<ProductDefinition> findByStatus(Boolean status);
     @Modifying
+    @Transactional
     @Query("UPDATE ProductDefinition pd SET pd.status = false WHERE pd.id = :id")
     void setStatusInactive(@Param("id") Long id);
     @Query("SELECT pd FROM ProductDefinition pd WHERE pd.title LIKE %:searchName%")

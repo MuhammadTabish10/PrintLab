@@ -13,7 +13,6 @@ export class OrdersService {
   constructor(private http: HttpClient) { }
 
   calculations(obj: any) {
-
     let url = `${this._url}/printlab-calculator`
     return this.http.post(url, obj)
   }
@@ -43,12 +42,6 @@ export class OrdersService {
   updateOrder(id: any, order: any) {
     let url = `${this._url}/order/${id}`
     return this.http.put(url, order)
-  }
-
-  private update = new BehaviorSubject('')
-  update$ = this.update.asObservable()
-  getNewOrders(order: any) {
-    this.update.next(order)
   }
 
   statusSorting(find: any) {

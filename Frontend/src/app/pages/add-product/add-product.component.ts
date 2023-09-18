@@ -33,16 +33,19 @@ export class AddProductComponent implements OnInit {
   status: boolean = true
   pressMachineArray: any = []
   selectedMachine: any = {}
+  machineIndex!: number
+  arr = [{ id: 1, name: "a" }, { id: 2, name: "b" }, { id: 3, name: "c" }, { id: 4, name: "d" }, { id: 5, name: "e" }]
+  elementGenerated: boolean = false;
 
   constructor(private service: ProductService, private route: ActivatedRoute, private router: Router, private productProcessService: ProductProcessService, private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService) { }
 
   ngOnInit(): void {
     this.getFields()
     this.getProductProcessList()
-    this.getPressMachines()
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
+        this.getPressMachines()
         this.buttonName = 'Add'
       } else {
         this.buttonName = 'Update'
@@ -53,6 +56,7 @@ export class AddProductComponent implements OnInit {
           this.productDefinition = this.productToUpdate.productDefinitionFieldList
           this.selectedMachine = this.productToUpdate.pressMachine
           this.process = this.productToUpdate.productDefinitionProcessList
+          this.getPressMachines()
           this.process.forEach((el: any) => {
             this.service.getVendorByProcessId(el.productProcess.id).subscribe(res => {
               this.vendorList.push(res)
@@ -61,14 +65,15 @@ export class AddProductComponent implements OnInit {
               this.visible = true;
             })
           })
-
           for (let i = 0; i < this.fieldList.length; i++) {
-            if (this.fieldList[i].id == this.productDefinition[i].productField.id) {
-              this.publicArray[i] = this.productDefinition[i].isPublic
-              this.valuesSelected[i] = []
-              this.productDefinition[i].selectedValues.forEach((el: any) => {
-                this.valuesSelected[i].push(el.productFieldValue)
-              })
+            if (this.productDefinition[i] != undefined) {
+              if (this.fieldList[i].id == this.productDefinition[i].productField.id) {
+                this.publicArray[i] = this.productDefinition[i].isPublic
+                this.valuesSelected[i] = []
+                this.productDefinition[i].selectedValues.forEach((el: any) => {
+                  this.valuesSelected[i].push(el.productFieldValue)
+                })
+              }
             }
             if (this.fieldList[i].type == 'TOGGLE') {
               this.toggleFlag = []
@@ -83,7 +88,6 @@ export class AddProductComponent implements OnInit {
               })
             }
           }
-
         }, error => {
           this.error = error.error.error
           this.visible = true;
@@ -97,7 +101,6 @@ export class AddProductComponent implements OnInit {
   }
 
   showPublic(i: any, id: any) {
-
     let flag = false
     for (const el of this.productDefinition) {
       if (el.productField.id == id) {
@@ -112,7 +115,6 @@ export class AddProductComponent implements OnInit {
   }
 
   productDefinitionComposing(field: any, obj: any, publicIndex: any) {
-
     let object: any
     obj.hasOwnProperty('itemValue') ? object = obj.itemValue : object = obj.value
     if (this.productDefinition.length == 0) {
@@ -163,11 +165,12 @@ export class AddProductComponent implements OnInit {
               if (index == -1) {
                 element.selectedValues.push({ productFieldValue: object });
               } else {
-
                 if (!Number.isNaN(this.idFromQueryParam)) {
-                  this.service.deleteSelectedField(this.idFromQueryParam, element.id, object.id).subscribe(res => {
-
+                  this.service.deleteSelectedField(this.idFromQueryParam, element.id, element.selectedValues[index].id).subscribe(() => {
                     element.selectedValues.splice(index, 1);
+                  }, error => {
+                    this.error = error.error.error
+                    this.visible = true;
                   })
                 }
                 if (element.selectedValues.length == 0) {
@@ -210,7 +213,6 @@ export class AddProductComponent implements OnInit {
   }
 
   postProduct() {
-
     if (Number.isNaN(this.idFromQueryParam)) {
       for (let i = 0; i < this.fieldList.length; i++) {
         if (this.fieldList[i].type == 'TOGGLE') {
@@ -227,9 +229,7 @@ export class AddProductComponent implements OnInit {
         pressMachine: this.selectedMachine,
         productDefinitionProcessList: this.process,
       };
-
       this.service.addProduct(obj).subscribe(res => {
-
         this.router.navigateByUrl('/products')
       }, error => {
         this.error = error.error.error
@@ -249,9 +249,7 @@ export class AddProductComponent implements OnInit {
         pressMachine: this.selectedMachine,
         productDefinitionProcessList: this.process,
       };
-      this.service.updateProduct(this.idFromQueryParam, obj).subscribe()
-      this.service.getProducts().subscribe(res => {
-
+      this.service.updateProduct(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/products')
       }, error => {
         this.error = error.error.error
@@ -262,17 +260,18 @@ export class AddProductComponent implements OnInit {
 
   selectProcess(obj: any, i: any) {
     this.service.getVendorByProcessId(obj.id).subscribe(res => {
-
       if (this.process[i].productProcess.id == obj.id) {
         this.vendorList[i] = res
       } else {
         this.vendorList.push(res)
       }
-      // this.vendorList = res
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
   }
   getFields() {
-    this.productFieldService.getProductDefintion().subscribe(res => {
+    this.productFieldService.getProductField().subscribe(res => {
       this.fieldList = res
       this.fieldList.forEach((field: any) => {
         field.type != 'TEXTFIELD' && field.type != 'TOGGLE' ? this.publicArray.push(false) : this.publicArray.push(null)
@@ -301,6 +300,7 @@ export class AddProductComponent implements OnInit {
     this.toggleFlag[i] = !this.toggleFlag[i]
   }
   generateElement() {
+    this.elementGenerated = true;
     this.process.push({ productProcess: null, vendor: null });
   }
   removeElement(index: number) {
@@ -323,6 +323,18 @@ export class AddProductComponent implements OnInit {
   getPressMachines() {
     this.pressMachineService.getPressMachine().subscribe(res => {
       this.pressMachineArray = res
+      !Number.isNaN(this.idFromQueryParam) ? this.machineIndex = this.pressMachineArray.findIndex((el: any) => el.id == this.selectedMachine.id) : null
+    }, error => {
+      this.error = error.error.error
+      this.visible = true
     })
+  }
+
+  machine(obj: any) {
+    this.selectedMachine = obj
+  }
+
+  get id(): boolean {
+    return Number.isNaN(this.idFromQueryParam)
   }
 }

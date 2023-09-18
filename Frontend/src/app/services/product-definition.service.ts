@@ -12,30 +12,26 @@ export class ProductDefinitionService {
   constructor(private http: HttpClient) { }
 
   postProductField(obj: any) {
-    //
     let url = `${this._url}/product-field`
     return this.http.post(url, obj)
   }
 
   getProductDefintionById(id: any) {
-    //
     let url = `${this._url}/product-field/${id}`
     return this.http.get(url)
   }
 
-  getProductDefintion() {
+  getProductField() {
     let url = `${this._url}/product-field`
     return this.http.get(url)
   }
 
   deleteField(id: any) {
-
     let url = `${this._url}/product-field/${id}`
     return this.http.delete(url)
   }
 
   deleteProductFieldValue(id: any, pfId: any) {
-
     let url = `${this._url}/product-field/${id}/${pfId}`
     return this.http.delete(url)
   }

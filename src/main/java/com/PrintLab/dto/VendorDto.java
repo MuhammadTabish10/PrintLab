@@ -1,7 +1,5 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.modal.ProductFieldValues;
-import com.PrintLab.modal.VendorProcess;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +19,7 @@ public class VendorDto
     private LocalDate date;
     private String contactName;
     private String contactNumber;
+    private String email;
     private String address;
     private String notes;
 

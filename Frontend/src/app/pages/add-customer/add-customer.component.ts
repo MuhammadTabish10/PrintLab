@@ -16,8 +16,8 @@ export class AddCustomerComponent implements OnInit {
   status: string = 'Active'
   idFromQueryParam!: number
   customerToUpdate: any = []
-  error:string=''
-  visible!:boolean
+  error: string = ''
+  visible!: boolean
 
   constructor(private customerService: CustomerService, private route: ActivatedRoute, private router: Router) { }
 
@@ -30,15 +30,17 @@ export class AddCustomerComponent implements OnInit {
         this.customerService.getCustomerById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
           this.customerToUpdate = res
-          this.nameValue = this.customerToUpdate[0].name
-          this.businessValue = this.customerToUpdate[0].businessName
-          this.status = this.customerToUpdate[0].status
+          this.nameValue = this.customerToUpdate.name
+          this.businessValue = this.customerToUpdate.businessName
+          this.status = this.customerToUpdate.status
           this.status == 'Active' ? this.statusFlag = true : this.statusFlag = false
         }, error => {
           this.error = error.error.error
           this.visible = true;
         })
       }
+    }, err => {
+      let error = err.er
     })
   }
 

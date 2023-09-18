@@ -44,7 +44,7 @@ export class AddSettingsComponent implements OnInit {
       value: this.valueData
     }
     if (Number.isNaN(this.idFromQueryParam)) {
-      this.settingService.postSettings(obj).subscribe(res => {
+      this.settingService.postSettings(obj).subscribe(() => {
         this.router.navigateByUrl('/settings')
       }, error => {
         this.error = error.error.error
