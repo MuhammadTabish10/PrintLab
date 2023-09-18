@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-//   baseUrl:"http://api.printlab.stepwaysoftwares.com/api",
-  baseUrl: "http://localhost:8080/api",
+  baseUrl:"https://api.printlab.stepwaysoftwares.com/api",
+//  baseUrl: "http://localhost:8080/api",
   jsonUrl: "http://localhost:3000"
 
 }
