@@ -14,7 +14,6 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
 

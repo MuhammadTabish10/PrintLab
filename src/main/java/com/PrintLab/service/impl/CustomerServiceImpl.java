@@ -54,9 +54,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto save(CustomerDto customerDto) {
-        if(customerDto.getCreatedAt() == null) {
-            customerDto.setCreatedAt(LocalDate.now());
-        }
         Customer saved = customerRepository.save(toEntity(customerDto));
         return toDto(saved);
     }

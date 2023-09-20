@@ -32,13 +32,14 @@ public class CalculatorServiceImpl implements CalculatorService {
     private final SettingRepository settingRepository;
     private final ProductFieldRepository productFieldRepository;
     private final ProductFieldValuesRepository productFieldValuesRepository;
+    private final ProductDefinitionRepository productDefinitionRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(CalculatorServiceImpl.class);
 
     public CalculatorServiceImpl(PressMachineRepository pressMachineRepository, UpingRepository upingRepository,
                                  PaperSizeRepository paperSizeRepository, PaperMarketRatesRepository paperMarketRatesRepository,
                                  SettingRepository settingRepository, ProductFieldRepository productFieldRepository,
-                                 ProductFieldValuesRepository productFieldValuesRepository) {
+                                 ProductFieldValuesRepository productFieldValuesRepository, ProductDefinitionRepository productDefinitionRepository) {
 
         this.pressMachineRepository = pressMachineRepository;
         this.upingRepository = upingRepository;
@@ -47,6 +48,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         this.settingRepository = settingRepository;
         this.productFieldRepository = productFieldRepository;
         this.productFieldValuesRepository = productFieldValuesRepository;
+        this.productDefinitionRepository = productDefinitionRepository;
     }
 
     @Override
@@ -55,6 +57,17 @@ public class CalculatorServiceImpl implements CalculatorService {
 
         if (calculator.getSideOptionValue() == null) {
             calculator.setSideOptionValue(SINGLE_SIDED);
+        }
+        if(calculator.getQuantity() == null){
+            calculator.setQuantity(1000.0);
+        }
+
+        ProductDefinition productDefinition = null;
+        if(calculator.getProductValue() != null){
+            productDefinition = productDefinitionRepository.findByTitle(calculator.getProductValue());
+            if(productDefinition == null){
+                throw new RecordNotFoundException("Product " + calculator.getProductValue() + " not Found");
+            }
         }
 
         PaperMarketRates foundPaperMarketRates = null;
@@ -98,7 +111,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         logger.info("PaperSize found for size: " + paperSize.getLabel());
 
         // Check if the provided PaperSize is available in the Uping
-        Boolean isPaperSizeAvailableInUping = uping.getUpingPaperSize().stream()
+        boolean isPaperSizeAvailableInUping = uping.getUpingPaperSize().stream()
                 .anyMatch(ps -> ps.getPaperSize().getLabel().equalsIgnoreCase(paperSize.getLabel()));
 
         if (!isPaperSizeAvailableInUping) {
@@ -116,15 +129,22 @@ public class CalculatorServiceImpl implements CalculatorService {
 
 
         // Now checking if the provided PressMachine is present in database
-        Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(calculator.getPressMachineId());
-        if (!optionalPressMachine.isPresent()) {
-            throw new RecordNotFoundException("PressMachine not found.");
+        PressMachine pressMachine = null;
+        if(calculator.getPressMachineId() == null){
+            pressMachine = pressMachineRepository.findById(productDefinition.getPressMachine().getId())
+                    .orElseThrow(() -> new RecordNotFoundException("PressMachine not found in product"));
         }
-        PressMachine pressMachine = optionalPressMachine.get();
+        else{
+            Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(calculator.getPressMachineId());
+            if (!optionalPressMachine.isPresent()) {
+                throw new RecordNotFoundException("PressMachine not found.");
+            }
+            pressMachine = optionalPressMachine.get();
+        }
         logger.info("PressMachine found for name: " + pressMachine.getName());
 
         // Check if the provided PaperSize is available in the PressMachine
-        Boolean isPaperSizeAvailableInPressMachine = pressMachine.getPressMachineSize().stream()
+        boolean isPaperSizeAvailableInPressMachine = pressMachine.getPressMachineSize().stream()
                 .anyMatch(ps -> ps.getPaperSize().getLabel().equalsIgnoreCase(paperSize.getLabel()));
 
         if (!isPaperSizeAvailableInPressMachine) {

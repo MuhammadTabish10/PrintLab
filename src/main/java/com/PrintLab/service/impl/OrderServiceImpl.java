@@ -29,6 +29,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto save(OrderDto orderDto) {
+        if(orderDto.getSideOptionValue() == null){
+            orderDto.setSideOptionValue("SINGLE_SIDED");
+        }
         if(!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")){
             if(orderDto.getJobColorsFront() == null){
                 orderDto.setJobColorsFront(1L);
