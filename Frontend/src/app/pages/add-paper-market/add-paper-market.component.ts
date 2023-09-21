@@ -14,7 +14,7 @@ import { VendorService } from 'src/app/services/vendor.service';
 export class AddPaperMarketComponent implements OnInit {
 
   quantityArray: any = [500, 100]
-  statusArray: any = ['Hoarding', 'In stock', 'Out of stock']
+  statusArray: any = ['Hoarding', 'In Stock', 'Out of stock']
   visible: boolean = false
   error: string = ''
   buttonName: String = 'Add'
@@ -38,11 +38,13 @@ export class AddPaperMarketComponent implements OnInit {
   gsmArray: any = []
   paperStockIndex: any
   vendorArray: any = []
-  vendorValue: any = {}
+  vendorValue: any;
+  disabled:boolean = false;
 
   constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService, private settingservice: SettingsService, private vendorService: VendorService) { }
 
   ngOnInit(): void {
+    this.getVendors()
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
@@ -51,13 +53,21 @@ export class AddPaperMarketComponent implements OnInit {
       } else {
         this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
+          debugger
           this.rateToUpdate = res
-          this.timeStampValue = this.rateToUpdate.date
+          const selectedVendor = this.vendorArray.find((vendor: any) => vendor.name === this.rateToUpdate.vendor);
+          this.timeStampValue = this.formatDate(this.rateToUpdate.timeStamp)
+          this.disabled = true
+          this.brandValue = this.rateToUpdate.brand
+          this.madeInValue = this.rateToUpdate.madeIn
           this.lengthValue = this.rateToUpdate.length
           this.widthValue = this.rateToUpdate.width
           this.dimensionValue = this.rateToUpdate.dimension
           this.qtyValue = this.rateToUpdate.qty
-          this.rateValue = this.rateToUpdate.ratePkr
+          this.kgValue = this.rateToUpdate.kg.toFixed(2)
+          this.vendorValue = selectedVendor
+          this.rateValue = this.rateToUpdate.ratePkr.toFixed(2)
+          this.statusValue = this.rateToUpdate.status
           this.noteValue = this.rateToUpdate.notes
           this.verifiedValue = this.rateToUpdate.verified
           this.getProductFields()
@@ -68,8 +78,16 @@ export class AddPaperMarketComponent implements OnInit {
         })
       }
     })
-    this.getVendors()
   }
+
+  formatDate(timestampArray: number[]): string {
+    const [year, month, day] = timestampArray;
+    const monthString = (month < 10 ? '0' : '') + month;
+    const dayString = (day < 10 ? '0' : '') + day;
+
+    return `${year}-${monthString}-${dayString}`;
+  }
+
 
   addPapermarketRate() {
     let obj = {
@@ -88,6 +106,7 @@ export class AddPaperMarketComponent implements OnInit {
       notes: this.noteValue,
       status: this.statusValue
     }
+
     if (Number.isNaN(this.idFromQueryParam)) {
       this.paperMarketService.postPaperMarket(obj).subscribe(res => {
         this.router.navigateByUrl('/paperMarket')

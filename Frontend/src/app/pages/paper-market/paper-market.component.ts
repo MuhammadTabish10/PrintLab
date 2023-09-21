@@ -19,17 +19,16 @@ export class PaperMarketComponent implements OnInit {
   constructor(private paperMarketService: PaperMarketService, private router: Router, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
-    this.getPaperMartetRates()
+    this.getPaperMarketRates()
   }
 
-  getPaperMartetRates() {
+  getPaperMarketRates() {
     this.paperMarketService.getPaperMarket().subscribe(res => {
       this.paperMarketArray = res;
       this.paperMarketArray.forEach((el: any) => {
         const dateArray = el.timeStamp;
         el.timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
-
-        el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy');
+        el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
         el.ratePkr = Math.round(el.ratePkr * 100) / 100;
         el.kg = Math.round(el.kg * 100) / 100;
       });
@@ -40,10 +39,11 @@ export class PaperMarketComponent implements OnInit {
     });
   }
 
+
   deletePaperMarketRate(id: any) {
 
     this.paperMarketService.deletePaperMarket(id).subscribe(() => {
-      this.getPaperMartetRates()
+      this.getPaperMarketRates()
     }, error => {
       this.error = error.error.error
       this.visible = true
@@ -56,7 +56,7 @@ export class PaperMarketComponent implements OnInit {
 
   searchPaperMarket(paperStockName: any) {
     if (this.search == '') {
-      this.getPaperMartetRates()
+      this.getPaperMarketRates()
     } else {
       this.paperMarketService.searchPaperMarket(paperStockName.value).subscribe(res => {
         this.paperMarketArray = res

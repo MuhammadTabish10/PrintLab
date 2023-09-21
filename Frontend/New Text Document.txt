@@ -1,0 +1,2 @@
+          const selectedPaper = this.paperStockArray.find((paper: any) => paper.name === this.inventoryToUpdate.paperStock);
+          this.paperStockValue = selectedPaper

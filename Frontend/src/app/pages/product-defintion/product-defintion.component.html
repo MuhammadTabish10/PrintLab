@@ -37,7 +37,7 @@
       </tr>
       <tr *ngFor="let field of fieldList">
         <td class="text-lg-center">{{ field.name }}</td>
-        <td class="text-lg-center">{{ field.created_at }}</td>
+        <td class="text-lg-center">{{ field?.created_at }}</td>
         <td class="text-lg-center">{{ field.sequence }}</td>
         <td class="text-lg-center">{{ field.type }}</td>
         <td class="text-lg-center">{{ field.status }}</td>

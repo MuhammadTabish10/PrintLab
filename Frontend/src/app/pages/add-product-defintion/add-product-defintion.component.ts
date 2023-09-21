@@ -60,7 +60,7 @@ export class AddProductDefintionComponent implements OnInit {
   }
 
   addpfvalues() {
-    this.pfvaluesArray.push({ name: null, status: null });
+    this.pfvaluesArray.push({ name: null, status: "Active" });
   }
 
   removeElement(i: number) {

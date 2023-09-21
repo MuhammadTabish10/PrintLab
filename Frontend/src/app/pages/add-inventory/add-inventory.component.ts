@@ -27,7 +27,7 @@ export class AddInventoryComponent implements OnInit {
   paperSizeArray: any = []
   quantityArray: any = [100, 500]
   vendorArray: any = []
-  statusArray: any = ['Hoarding', 'In stock', 'Out of stock']
+  statusArray: any = ['Hoarding', 'In Stock', 'Out of stock']
   inventoryToUpdate: any = {}
 
   paperStockValue: any = {}
@@ -58,13 +58,16 @@ export class AddInventoryComponent implements OnInit {
         this.buttonName = 'Update'
         this.inventoryService.getInventoryById(this.idFromQueryParam).subscribe(res => {
           this.inventoryToUpdate = res
+          debugger
           this.madeInValue = this.inventoryToUpdate.madeIn
           this.brandValue = this.inventoryToUpdate.brandName
           this.rateValue = this.inventoryToUpdate.rate
           this.quantityValue = this.inventoryToUpdate.qty
           this.statusValue = this.inventoryToUpdate.status
           this.gsmSelectedValues = JSON.parse(this.inventoryToUpdate.availableGsm)
+          console.log(this.gsmSelectedValues);
           this.sizeSelectedValues = JSON.parse(this.inventoryToUpdate.availableSizes)
+          console.log(this.sizeSelectedValues);
         })
       }
     })

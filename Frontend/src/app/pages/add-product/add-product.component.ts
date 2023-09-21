@@ -137,6 +137,7 @@ export class AddProductComponent implements OnInit {
         })
       }
     } else {
+      debugger
       for (const element of this.productDefinition) {
         if (element.productField.id == field.id) {
           if (Array.isArray(object)) {
@@ -304,7 +305,7 @@ export class AddProductComponent implements OnInit {
     this.process.push({ productProcess: null, vendor: null });
   }
   removeElement(index: number) {
-
+    debugger
     if (!Number.isNaN(this.idFromQueryParam)) {
       this.service.deleteProcess(this.idFromQueryParam, this.process[index].id).subscribe(res => {
         this.process.splice(index, 1);

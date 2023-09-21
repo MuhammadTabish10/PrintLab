@@ -28,13 +28,13 @@ export class InventoryComponent implements OnInit {
 
   getInventory() {
     this.inventoryService.getInventory().subscribe(res => {
-      debugger
       this.inventoryArray = res
       console.log(this.inventoryArray[0].oldRate);
       this.inventoryArray.forEach((element: any) => {
         this.gsm.push(JSON.parse(element.availableGsm))
         this.sizes.push(JSON.parse(element.availableSizes))
         element.created_at = this.datePipe.transform(element.created_at, 'EEEE, MMMM d, yyyy')
+        element.dateUpdated = this.datePipe.transform(element.created_at, 'EEEE, MMMM d, yyyy')
       });
       this.inventoryArray.length == 0 ? this.tableData = true : this.tableData = false
     })

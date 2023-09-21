@@ -11,11 +11,6 @@
         <div class="container">
           <div class="row">
             <div class="col-6 my-3">
-              <label class="add-order-label m-0">Time Stamp</label>
-              <input type="date" class="order-search form-control order-form-input m-0" [(ngModel)]="timeStampValue"
-                style="border:1px solid #ced4da;" placeholder="Enter Date" name="date" required>
-            </div>
-            <div class="col-6 my-3">
               <label class="add-order-label m-0">Paper Stock</label><br>
               <p-dropdown [options]="paperStockArray" optionLabel="name" placeholder="Select Paper Stock"
                 (onChange)="getGsm($event.value.name)" styleClass="w-100" [(ngModel)]="paperStockValue"
@@ -33,19 +28,19 @@
             </div>
             <div class="col-6 my-3">
               <label class="add-order-label m-0">GSM (Grams)</label>
-              <p-dropdown [options]="gsmArray" placeholder="Select Paper Stock" styleClass="w-100"
+              <p-dropdown [options]="gsmArray" placeholder="Select gsm" styleClass="w-100"
                 [(ngModel)]="gsmValue" name="gsmValue"></p-dropdown>
             </div>
             <div class="col-6 my-3">
               <label class="add-order-label m-0">Length</label>
               <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="lengthValue"
-                (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Made In" name="Made In"
+                (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Made In" name="lengthValue"
                 required>
             </div>
             <div class="col-6 my-3">
               <label class="add-order-label m-0">Width</label>
               <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="widthValue"
-                (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Made In" name="Made In"
+                (keyup)="dimension()" style="border:1px solid #ced4da;" placeholder="Enter Made In" name="widthValue"
                 required>
             </div>
             <div class="col-6 my-3">
@@ -77,6 +72,7 @@
             <div class="col-6 my-3">
               <label class="add-order-label m-0">Status</label>
               <p-dropdown [options]="statusArray" placeholder="Select Status" styleClass="w-100" labelName="name"
+              name="status"
                 [(ngModel)]="statusValue"></p-dropdown>
             </div>
             <div class="col-12 my-3">

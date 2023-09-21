@@ -112,23 +112,20 @@ export class CalculatorHeaderComponent implements OnInit {
     }
     this.qtyAlert = false;
     this.selectedProdDefArray.forEach((el: any) => {
-      el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'size' ? this.sizeValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'quantity' ? this.qty = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(front)' ? this.jobFrontValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'printside' ? this.sideOptionValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)' ? this.jobBackValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.sheetValue = el.selected.productFieldValue.name : null
+      el.name == 'Paper Stock' ? this.paperValue = el.selected.productFieldValue.name : null
+      el.name == 'Size' ? this.sizeValue = el.selected.productFieldValue.name : null
+      el.name == 'GSM' ? this.gsmValue = el.selected.productFieldValue.name : null
+      el.name == 'JobColor(Front)' ? this.jobFrontValue = el.selected.productFieldValue.name : null
+      el.name == 'Print Side' ? this.sideOptionValue = el.selected.productFieldValue.name : null
+      el.name == 'Imposition' ? this.impositionValue = el.selected.productFieldValue.name : null
+      el.name == 'JobColor(Back)' ? this.jobBackValue = el.selected.productFieldValue.name : null
+      el.name == 'Paper Stock' ? this.sheetValue = el.selected.productFieldValue.name : null
     })
-    if (this.sideOptionValue != undefined) {
-      if (this.sideOptionValue == "SINGLE_SIDED") {
-        this.jobBackValue = null
-        this.impositionValue = false
-      }
+    if (this.sideOptionValue == "SINGLE_SIDED") {
+      this.jobBackValue = null
+      this.impositionValue = false
     }
-    debugger
+    this.impositionValue == "Applied" ? this.impositionValue = "true" : this.impositionValue = "false";
     let obj = {
       pressMachineId: this.receivedData?.press,
       quantity: this.qty,
