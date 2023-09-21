@@ -48,6 +48,7 @@ import { AddInventoryComponent } from './pages/add-inventory/add-inventory.compo
 import { DatePipe } from '@angular/common';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app-routing.module';
+import { PermissionComponent } from './pages/permission/permission.component';
 
 
 @NgModule({
@@ -89,6 +90,7 @@ import { routes } from './app-routing.module';
     AddCtpComponent,
     InventoryComponent,
     AddInventoryComponent,
+    PermissionComponent,
   ],
   imports: [
     BrowserModule,

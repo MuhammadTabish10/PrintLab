@@ -32,11 +32,16 @@ export class SidebarComponent {
       link: "addProduct",
       icon: "fa fa-add fa-2x",
       name: "Add Product"
-    },
+    }, 
     {
       link: "calculator",
       icon: "fa fa-calculator",
       name: "Calculator"
+    },
+    {
+      link: "permission",
+      icon: "fa fa-plus",
+      name: "Permissions"
     }
   ]
   configurationOptions: any = [
