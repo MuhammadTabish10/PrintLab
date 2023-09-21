@@ -17,7 +17,7 @@ public class ProductFieldDto {
     private String status;
     private LocalDate created_at;
     private Integer sequence;
-    private String type;
+    private Type type;
 
     private List<ProductFieldValuesDto> productFieldValuesList;
 

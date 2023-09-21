@@ -1,11 +1,11 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.service.ImageService;
+import com.PrintLab.service.impl.ImageServiceImpl;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,8 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api")
 public class ImageController
 {
-    private final ImageService imageService;
-    public ImageController(ImageService imageService) {
+    private final ImageServiceImpl imageService;
+
+    public ImageController(ImageServiceImpl imageService) {
         this.imageService = imageService;
     }
 
@@ -28,20 +29,16 @@ public class ImageController
         Resource imageResource = imageService.getImage(fileName);
 
         if (imageResource != null) {
-            MediaType contentType = MediaType.IMAGE_JPEG;
+            MediaType contentType = imageService.determineMediaType(fileName);
 
-            if (fileName.endsWith(".png")) {
-                contentType = MediaType.IMAGE_PNG;
-            } else if (fileName.endsWith(".gif")) {
-                contentType = MediaType.IMAGE_GIF;
-            } else if (fileName.endsWith(".pdf")){
-                contentType = MediaType.APPLICATION_PDF;
+            if (contentType != null) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(contentType);
+
+                return ResponseEntity.ok().headers(headers).body(imageResource);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
             }
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(contentType);
-
-            return ResponseEntity.ok().headers(headers).body(imageResource);
         } else {
             return ResponseEntity.notFound().build();
         }

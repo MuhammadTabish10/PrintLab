@@ -22,19 +22,14 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
     private final PaperMarketRatesRepository paperMarketRatesRepository;
 
-
     public InventoryServiceImpl(InventoryRepository inventoryRepository, PaperMarketRatesRepository paperMarketRatesRepository) {
         this.inventoryRepository = inventoryRepository;
         this.paperMarketRatesRepository = paperMarketRatesRepository;
     }
 
-
     @Override
     @Transactional
     public InventoryDto save(InventoryDto inventoryDto) {
-        if (inventoryDto.getCreated_at() == null) {
-            inventoryDto.setCreated_at(LocalDate.now());
-        }
         Inventory inventory = inventoryRepository.save(toEntity(inventoryDto));
         return toDto(inventory);
     }

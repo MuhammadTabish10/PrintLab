@@ -1105,5 +1105,53 @@
       "value": "20",
       "id": 2
     }
+  ],
+  "roles":[
+    {
+      "id": 1,
+      "name": "Admin"
+    },
+    {
+      "id": 2,
+      "name": "Customer"
+    }
+  ],
+  "permissions":[
+    {
+      "id": 1,
+      "name": "USER_MANAGEMENT"
+    },
+    {
+      "id": 2,
+      "name": "CUSTOMER_MANAGEMENT"
+    },
+    {
+      "id": 3,
+      "name": "CURRENCY_MANAGEMENT"
+    },
+    {
+      "id": 4,
+      "name": "CUSTOM_PORT_MANAGEMENT"
+    },
+    {
+      "id": 5,
+      "name": "REGIONS_MANAGEMENT"
+    },
+    {
+      "id": 6,
+      "name": "IMPORT_EXCEL_MANAGEMENT"
+    },
+    {
+      "id": 7,
+      "name": "SALES_REPORT_MANAGEMENT"
+    },
+    {
+      "id": 8,
+      "name": "SALES_REPORT_MANAGEMENT"
+    },
+    {
+      "id": 9,
+      "name": "SALES_REPORT_MANAGEMENT"
+    }
   ]
 }

@@ -26,9 +26,6 @@ public class CtpServiceImpl implements CtpService {
 
     @Override
     public CtpDto save(CtpDto ctpDto) {
-        if(ctpDto.getDate() == null) {
-            ctpDto.setDate(LocalDate.now());
-        }
         Ctp ctp = ctpRepository.save(toEntity(ctpDto));
         return toDto(ctp);
     }
