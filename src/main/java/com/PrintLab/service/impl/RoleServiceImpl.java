@@ -52,6 +52,7 @@ public class RoleServiceImpl implements RoleService {
 
         if (optionalRole.isPresent()) {
             Role existingRole = optionalRole.get();
+            existingRole.setName(role.getName());
 
             Set<Permission> existingPerValues = existingRole.getPermissions();
             Set<Permission> newPerValues = roleDto.getPermissions();
