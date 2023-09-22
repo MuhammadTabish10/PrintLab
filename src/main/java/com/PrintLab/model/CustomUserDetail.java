@@ -1,4 +1,4 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,9 +19,20 @@ public class CustomUserDetail implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-        this.user.getRoles().stream().forEach(roles -> authorityList.add(new SimpleGrantedAuthority(roles.getName())));
+
+        // Add roles with the "ROLE_" prefix
+        this.user.getRoles().forEach(role -> {
+            authorityList.add(new SimpleGrantedAuthority(role.getName()));
+
+            // Add permissions without the prefix
+            role.getPermissions().forEach(permission -> {
+                authorityList.add(new SimpleGrantedAuthority(permission.getName()));
+            });
+        });
+
         return authorityList;
     }
+
 
     public Long getUserId(){
         return this.user.getId();

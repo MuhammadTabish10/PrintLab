@@ -1,11 +1,10 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.ProductDefinitionDto;
 import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.ProductFieldValuesDto;
 import com.PrintLab.dto.projectEnums.Type;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.*;
+import com.PrintLab.model.*;
 import com.PrintLab.repository.ProductFieldRepository;
 import com.PrintLab.repository.ProductFieldValuesRepository;
 import com.PrintLab.service.ProductFieldService;

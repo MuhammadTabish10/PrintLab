@@ -1,10 +1,9 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.dto.UpingPaperSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.*;
+import com.PrintLab.model.*;
 import com.PrintLab.repository.PaperSizeRepository;
 import com.PrintLab.repository.UpingPaperSizeRepository;
 import com.PrintLab.repository.UpingRepository;

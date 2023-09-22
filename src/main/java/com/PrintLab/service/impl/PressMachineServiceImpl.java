@@ -3,7 +3,7 @@ package com.PrintLab.service.impl;
 import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.PressMachineSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.*;
+import com.PrintLab.model.*;
 import com.PrintLab.repository.PaperSizeRepository;
 import com.PrintLab.repository.PressMachineRepository;
 import com.PrintLab.repository.PressMachineSizeRepository;

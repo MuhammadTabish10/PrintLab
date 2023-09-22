@@ -1,11 +1,6 @@
 package com.PrintLab.service;
 
-import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.dto.UpingDto;
-import com.PrintLab.dto.VendorDto;
-import com.PrintLab.modal.PressMachineSize;
-import com.PrintLab.modal.Uping;
-import com.PrintLab.modal.UpingPaperSize;
 
 import java.util.List;
 

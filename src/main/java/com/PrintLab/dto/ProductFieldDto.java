@@ -1,7 +1,6 @@
 package com.PrintLab.dto;
 
 import com.PrintLab.dto.projectEnums.Type;
-import com.PrintLab.modal.ProductFieldValues;
 import lombok.*;
 
 import java.time.LocalDate;

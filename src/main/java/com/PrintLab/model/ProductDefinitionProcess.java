@@ -1,35 +1,36 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-@Table(name = "ctp")
-public class Ctp {
+@Entity(name = "product_definition_process")
+public class ProductDefinitionProcess
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreationTimestamp
-    private LocalDate date;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "product_definition_id")
+    private ProductDefinition productDefinition;
 
-    private Integer l1;
-    private Integer l2;
-    private String plateDimension;
-    private Double rate;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "product_process_id")
+    private ProductProcess productProcess;
 
-    @ManyToOne()
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 }

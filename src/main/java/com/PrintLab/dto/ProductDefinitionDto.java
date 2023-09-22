@@ -1,6 +1,6 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.modal.PressMachine;
+import com.PrintLab.model.PressMachine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

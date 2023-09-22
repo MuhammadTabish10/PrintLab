@@ -1,6 +1,5 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.modal.ProductField;
 import lombok.*;
 
 @Builder

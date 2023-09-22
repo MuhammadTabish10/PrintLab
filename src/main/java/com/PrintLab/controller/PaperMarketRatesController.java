@@ -1,14 +1,13 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
-import com.PrintLab.modal.PaperMarketRates;
+import com.PrintLab.model.PaperMarketRates;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/paper-market-rates")

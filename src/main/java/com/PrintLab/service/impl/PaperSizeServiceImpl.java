@@ -2,7 +2,7 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.*;
+import com.PrintLab.model.*;
 import com.PrintLab.repository.PaperSizeRepository;
 import com.PrintLab.service.PaperSizeService;
 import org.springframework.stereotype.Service;
