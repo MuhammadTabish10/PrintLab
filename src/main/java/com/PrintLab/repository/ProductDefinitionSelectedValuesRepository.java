@@ -1,6 +1,6 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.modal.ProductDefinitionSelectedValues;
+import com.PrintLab.model.ProductDefinitionSelectedValues;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

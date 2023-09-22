@@ -1,4 +1,4 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,15 +12,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "setting")
-public class Setting {
+@Table(name = "permissions")
+public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "setting_key")
-    private String key;
-
-    @Column(columnDefinition = "text")
-    private String value;
+    private String name;
 }

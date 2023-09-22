@@ -1,9 +1,7 @@
 package com.PrintLab.service;
 
-import com.PrintLab.dto.PressMachineDto;
-import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.ProductProcessDto;
-import com.PrintLab.modal.ProductProcess;
+import com.PrintLab.model.ProductProcess;
 
 import java.util.List;
 

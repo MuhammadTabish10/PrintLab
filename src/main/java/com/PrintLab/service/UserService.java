@@ -1,6 +1,6 @@
 package com.PrintLab.service;
 
-import com.PrintLab.modal.User;
+import com.PrintLab.model.User;
 import org.springframework.stereotype.Service;
 
 @Service

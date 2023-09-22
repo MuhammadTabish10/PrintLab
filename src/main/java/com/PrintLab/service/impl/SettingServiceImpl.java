@@ -1,10 +1,8 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.SettingDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.ProductField;
-import com.PrintLab.modal.Setting;
+import com.PrintLab.model.Setting;
 import com.PrintLab.repository.SettingRepository;
 import com.PrintLab.service.SettingService;
 import org.springframework.stereotype.Service;

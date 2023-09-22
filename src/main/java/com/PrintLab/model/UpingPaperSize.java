@@ -1,4 +1,4 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -7,22 +7,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "paper_size")
-public class PaperSize {
+@Table(name = "uping_paper_size")
+public class UpingPaperSize
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String label;
-    private String status;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "uping_id")
+    private Uping uping;
 
-    @OneToMany(mappedBy = "paperSize", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PressMachineSize> pressMachineSize;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "paper_size_id")
+    private PaperSize paperSize;
+
+    private Integer value;
 }

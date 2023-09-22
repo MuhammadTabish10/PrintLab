@@ -2,7 +2,7 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.Calculator;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.*;
+import com.PrintLab.model.*;
 import com.PrintLab.repository.*;
 import com.PrintLab.service.CalculatorService;
 import org.slf4j.Logger;

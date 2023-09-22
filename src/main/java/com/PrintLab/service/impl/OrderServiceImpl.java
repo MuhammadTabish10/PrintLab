@@ -2,10 +2,8 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.OrderDto;
 
-import com.PrintLab.dto.SettingDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.Order;
-import com.PrintLab.modal.Setting;
+import com.PrintLab.model.Order;
 import com.PrintLab.repository.CustomerRepository;
 import com.PrintLab.repository.OrderRepository;
 import com.PrintLab.service.OrderService;

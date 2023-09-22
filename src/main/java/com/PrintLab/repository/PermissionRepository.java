@@ -1,6 +1,6 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.modal.Permission;
+import com.PrintLab.model.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

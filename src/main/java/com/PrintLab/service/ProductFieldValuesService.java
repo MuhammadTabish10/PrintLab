@@ -1,9 +1,7 @@
 package com.PrintLab.service;
 
-import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.ProductFieldValuesDto;
-import com.PrintLab.modal.ProductField;
-import com.PrintLab.modal.ProductFieldValues;
+import com.PrintLab.model.ProductFieldValues;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

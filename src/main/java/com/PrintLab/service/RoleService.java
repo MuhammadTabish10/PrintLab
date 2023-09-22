@@ -1,7 +1,14 @@
 package com.PrintLab.service;
 
-import org.springframework.stereotype.Service;
 
-@Service
+import com.PrintLab.dto.RoleDto;
+import com.PrintLab.dto.SettingDto;
+
+import java.util.List;
+
 public interface RoleService {
+    List<RoleDto> getAll();
+    RoleDto findById(Long id);
+    RoleDto updateRole(Long id, RoleDto roleDto);
+
 }

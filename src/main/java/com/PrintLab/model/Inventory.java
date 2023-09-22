@@ -1,4 +1,4 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

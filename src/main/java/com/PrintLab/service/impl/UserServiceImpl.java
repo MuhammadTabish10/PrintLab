@@ -1,8 +1,8 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.Role;
-import com.PrintLab.modal.User;
+import com.PrintLab.model.Role;
+import com.PrintLab.model.User;
 import com.PrintLab.repository.RoleRepository;
 import com.PrintLab.repository.UserRepository;
 import com.PrintLab.service.UserService;
