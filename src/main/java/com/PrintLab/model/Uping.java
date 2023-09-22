@@ -1,4 +1,4 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,21 +6,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "setting")
-public class Setting {
+@Table(name = "uping")
+public class Uping
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String productSize;
 
-    @Column(name = "setting_key")
-    private String key;
-
-    @Column(columnDefinition = "text")
-    private String value;
+    @OneToMany(mappedBy = "uping", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UpingPaperSize> upingPaperSize;
 }

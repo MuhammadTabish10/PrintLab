@@ -13,6 +13,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 import java.util.Collections;
 import java.util.List;
 
+//http://localhost:8080/swagger-ui/index.html#/
+
 @Configuration
 public class SwaggerConfig {
 

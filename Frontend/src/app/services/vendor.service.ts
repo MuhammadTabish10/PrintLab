@@ -20,6 +20,10 @@ export class VendorService {
     let url = `${this._url}/vendor`
     return this.http.get(url)
   }
+  getVendorByProductProcess(processId:any) {
+    let url = `${this._url}/vendor/${processId}/product-process`
+    return this.http.get(url)
+  }
 
   deleteVendor(id: any) {
     let url = `${this._url}/vendor/${id}`

@@ -56,7 +56,7 @@
           <div class="main-container">
             <div class="order-body upload-section" [ngClass]="{'upload-img': !imgUrl}">
               <div class="text-center" *ngIf="!imgUrl">
-                <input type="file" (change)="uploadFile($event)" class="">
+                <input type="file" (change)="uploadFile($event)">
               </div>
               <img src="{{imgUrl}}" alt="" class="w-100" *ngIf="imgUrl">
             </div>

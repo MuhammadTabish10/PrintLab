@@ -19,42 +19,44 @@ export class SidebarComponent {
       name: "Products"
     },
     {
-      link:"customers",
-      icon:"fa fa-user fa-2x",
-      name:"Customers"
+      link: "customers",
+      icon: "fa fa-user fa-2x",
+      name: "Customers"
     },
     {
       link: "orders",
       icon: "fa fa-shopping-cart fa-2x",
       name: "Orders"
     },
-    {
-      link: "addProduct",
-      icon: "fa fa-add fa-2x",
-      name: "Add Product"
-    },
+    // {
+    //   link: "addProduct",
+    //   icon: "fa fa-add fa-2x",
+    //   name: "Add Product"
+    // },
     {
       link: "calculator",
       icon: "fa fa-calculator",
       name: "Calculator"
     }
   ]
-  configurationOptions: any = [
+  process: any = [
     {
-      link: "productField",
-      name: "Product Field"
+      link: "ctp",
+      name: "CTP"
     },
     {
       link: "paperMarket",
       name: "Paper Market Rate"
     },
     {
-      link: "paperSize",
-      name: "Paper Size"
-    },
-    {
       link: "pressMachine",
       name: "Press Machine"
+    }
+  ]
+  configurationOptions: any = [
+    {
+      link: "paperSize",
+      name: "Paper Size"
     },
     {
       link: "uping",
@@ -73,18 +75,21 @@ export class SidebarComponent {
       name: "Settings"
     },
     {
-      link: "ctp",
-      name: "CTP"
-    },
-    {
       link: "inventory",
       name: "Inventory"
     }
   ]
-  settingFlag: boolean = false
+  flags: any = {
+    settingFlag: false,
+    processFlag: false,
+  };
 
-  toggleSettings() {
-    this.settingFlag = !this.settingFlag
+  toggleDropdown(flagName: string) {
+    for (const key in this.flags) {
+      if (key !== flagName) {
+        this.flags[key] = false;
+      }
+    }
+    this.flags[flagName] = !this.flags[flagName];
   }
-
 }

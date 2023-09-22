@@ -2,13 +2,13 @@
   // `ng build` replaces `environment.ts` with `environment.prod.ts`.
   // The list of file replacements can be found in `angular.json`.
 
-  export const environment = {
-    production: false,
-    // baseUrl:"http://api.printlab.stepwaysoftwares.com/api",
-    baseUrl: "http://localhost:8080/api",
-    jsonUrl: "http://localhost:3000"
+export const environment = {
+  production: false,
+  // baseUrl:"https://api.printlab.stepwaysoftwares.com/api",
+ baseUrl: "http://localhost:8080/api",
+  jsonUrl: "http://localhost:3000"
 
-  }
+}
 
   /*
   * For easier debugging in development mode, you can import the following file

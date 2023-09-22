@@ -1,7 +1,6 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import com.PrintLab.dto.projectEnums.Type;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -28,8 +26,8 @@ public class ProductField {
     private LocalDate created_at;
     private Integer sequence;
 
-//    @Enumerated(EnumType.STRING)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     @OneToMany(mappedBy = "productField", cascade = CascadeType.ALL)
     private List<ProductFieldValues> productFieldValuesList;

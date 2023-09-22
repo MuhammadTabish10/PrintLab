@@ -5,6 +5,7 @@ import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SettingsService } from 'src/app/services/settings.service';
 import { VendorService } from 'src/app/services/vendor.service';
+import { ProductProcessService } from 'src/app/services/product-process.service';
 
 @Component({
   selector: 'app-add-paper-market',
@@ -39,12 +40,16 @@ export class AddPaperMarketComponent implements OnInit {
   paperStockIndex: any
   vendorArray: any = []
   vendorValue: any;
-  disabled:boolean = false;
+  disabled: boolean = false;
+  productProcessArray: any[] = [];
 
-  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService, private settingservice: SettingsService, private vendorService: VendorService) { }
+  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute,
+    private router: Router, private productFieldService: ProductDefinitionService,
+    private settingservice: SettingsService, private vendorService: VendorService,
+    private productProcess: ProductProcessService) { }
 
   ngOnInit(): void {
-    this.getVendors()
+    this.getProductProcess();
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
@@ -160,8 +165,36 @@ export class AddPaperMarketComponent implements OnInit {
     this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
   }
 
-  getVendors() {
-    this.vendorService.getVendor().subscribe(res => {
+
+  getProductProcess() {
+    this.productProcess.getProductProcess().subscribe(
+      (res: any) => {
+        if (Array.isArray(res)) {
+          this.productProcessArray = res;
+
+          let pressProcess: any;
+
+          for (const process of this.productProcessArray) {
+            if (process.name === 'PaperMart' || process.name === 'paperMart') {
+              pressProcess = process;
+              break
+            }
+          }
+          if (pressProcess) {
+            const pressProcessId = pressProcess.id;
+            this.getVendors(pressProcessId);
+          }
+        }
+      },
+      (error) => {
+        this.error = error.error.error;
+        this.visible = true;
+      }
+    );
+  }
+
+  getVendors(processId: any) {
+    this.vendorService.getVendorByProductProcess(processId).subscribe(res => {
       this.vendorArray = res
     })
   }

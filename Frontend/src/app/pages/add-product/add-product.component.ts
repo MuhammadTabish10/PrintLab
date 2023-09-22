@@ -4,6 +4,7 @@ import { PressMachineService } from 'src/app/services/press-machine.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { ProductProcessService } from 'src/app/services/product-process.service';
 import { ProductService } from 'src/app/services/product.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-add-product',
@@ -12,6 +13,7 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class AddProductComponent implements OnInit {
 
+  private gsmFieldIndex: number = 1;
   visible!: boolean
   error: string = ''
   fieldList: any = []
@@ -36,8 +38,12 @@ export class AddProductComponent implements OnInit {
   machineIndex!: number
   arr = [{ id: 1, name: "a" }, { id: 2, name: "b" }, { id: 3, name: "c" }, { id: 4, name: "d" }, { id: 5, name: "e" }]
   elementGenerated: boolean = false;
+  fieldsToDisplay: any;
+  gsmArray: any;
+  gsmField: any = [];
 
-  constructor(private service: ProductService, private route: ActivatedRoute, private router: Router, private productProcessService: ProductProcessService, private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService) { }
+  constructor(private service: ProductService, private route: ActivatedRoute, private router: Router, private productProcessService: ProductProcessService, private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService,
+    private settingService: SettingsService) { }
 
   ngOnInit(): void {
     this.getFields()
@@ -114,9 +120,37 @@ export class AddProductComponent implements OnInit {
     flag ? this.publicArray[i] = !this.publicArray[i] : null
   }
 
+
+  // selectPaperStock(paperStock: any, obj: any, index: number):any {
+  //   this.settingService.getGsmByPaperStock(obj.itemValue.name).subscribe(
+  //     (res) => {
+  //       this.gsmArray = res;
+  //        this.gsmField = {
+  //         type: 'MULTIDROPDOWN',
+  //         name: `GSM For ${obj.itemValue.name}`,
+  //         productFieldValuesList: {id:index,name:this.gsmArray[1]}
+  //       };
+  //       debugger
+  //       this.fieldsToDisplay.splice(this.gsmFieldIndex++, 0, this.gsmField);
+  //     },
+  //     (error) => {
+  //       this.error = error.error.error;
+  //       this.visible = true;
+  //     }
+  //   );
+  // }
+
+
+
+
+
   productDefinitionComposing(field: any, obj: any, publicIndex: any) {
     let object: any
     obj.hasOwnProperty('itemValue') ? object = obj.itemValue : object = obj.value
+    debugger
+    // if (publicIndex === 0) {
+    //   this.selectPaperStock(field,obj,publicIndex)
+    // }
     if (this.productDefinition.length == 0) {
       if (Array.isArray(object)) {
         let values: any = []
@@ -137,14 +171,12 @@ export class AddProductComponent implements OnInit {
         })
       }
     } else {
-      debugger
       for (const element of this.productDefinition) {
         if (element.productField.id == field.id) {
           if (Array.isArray(object)) {
             if (element.selectedValues.length == field.productFieldValuesList.length) {
               const indoxOfElement = this.productDefinition.indexOf(element);
               this.productDefinition.splice(indoxOfElement, 1);
-
             }
             else {
               element.selectedValues = []
@@ -230,6 +262,8 @@ export class AddProductComponent implements OnInit {
         pressMachine: this.selectedMachine,
         productDefinitionProcessList: this.process,
       };
+      console.log(obj);
+
       this.service.addProduct(obj).subscribe(res => {
         this.router.navigateByUrl('/products')
       }, error => {
@@ -272,22 +306,28 @@ export class AddProductComponent implements OnInit {
     })
   }
   getFields() {
-    this.productFieldService.getProductField().subscribe(res => {
-      this.fieldList = res
-      this.fieldList.forEach((field: any) => {
-        field.type != 'TEXTFIELD' && field.type != 'TOGGLE' ? this.publicArray.push(false) : this.publicArray.push(null)
-        if (field.type == 'TOGGLE') {
-          this.toggleFlag.push(true)
-        } else {
-          this.toggleFlag.push(null)
-        }
-        field.type == 'TEXTFIELD' ? this.titleObj = field : null
-      })
-    }, error => {
-      this.error = error.error.error
-      this.visible = true;
-    })
+    this.productFieldService.getProductField().subscribe(
+      (res) => {
+        this.fieldList = res;
+        const fieldNamesToDisplay = ['Paper Stock', 'GSM', 'Size', 'Quantity', 'Print Side', 'JobColor(Front)', 'JobColor(Back)', 'Imposition'];
+        this.fieldsToDisplay = this.fieldList.filter((field: any) => fieldNamesToDisplay.includes(field.name));
+        this.fieldList.forEach((field: any) => {
+          field.type != 'TEXTFIELD' && field.type != 'TOGGLE' ? this.publicArray.push(false) : this.publicArray.push(null);
+          if (field.type == 'TOGGLE') {
+            this.toggleFlag.push(true);
+          } else {
+            this.toggleFlag.push(null);
+          }
+          field.type == 'TEXTFIELD' ? (this.titleObj = field) : null;
+        });
+      },
+      (error) => {
+        this.error = error.error.error;
+        this.visible = true;
+      }
+    );
   }
+
   getProductProcessList() {
     this.productProcessService.getProductProcess().subscribe(res => {
       this.productProcessList = res

@@ -55,7 +55,6 @@ export class OrdersService {
   }
 
   postImage(formData: any) {
-
     let url = `${this._url}/image`
     return this.http.post(url, formData, { responseType: 'text' })
   }

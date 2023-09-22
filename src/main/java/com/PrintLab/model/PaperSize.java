@@ -1,4 +1,4 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,14 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "uping")
-public class Uping
-{
+@Table(name = "paper_size")
+public class PaperSize {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String productSize;
 
-    @OneToMany(mappedBy = "uping", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<UpingPaperSize> upingPaperSize;
+    private String label;
+    private String status;
+
+    @OneToMany(mappedBy = "paperSize", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PressMachineSize> pressMachineSize;
 }

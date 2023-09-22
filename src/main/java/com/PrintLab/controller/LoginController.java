@@ -3,7 +3,7 @@ package com.PrintLab.controller;
 import com.PrintLab.config.security.JwtUtil;
 import com.PrintLab.dto.AuthenticationResponse;
 import com.PrintLab.dto.LoginCredentials;
-import com.PrintLab.modal.User;
+import com.PrintLab.model.User;
 import com.PrintLab.service.UserService;
 import com.PrintLab.service.impl.MyUserDetailServiceImplementation;
 import org.springframework.http.ResponseEntity;

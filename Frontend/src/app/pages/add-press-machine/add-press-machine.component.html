@@ -23,15 +23,7 @@
             </div>
             <div class="col-6 my-3">
               <label class="add-order-label m-0">Plate Dimension</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="plateDimension"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Plates"
-                name="name"
-                required
-              />
+              <p-dropdown styleClass="w-100" [options]="plateDimensions" placeholder="Select Plates" [(ngModel)]="plateDimension"></p-dropdown>
             </div>
             <div class="col-6 my-3">
               <label class="add-order-label m-0">Gripper Margin(mm)</label>

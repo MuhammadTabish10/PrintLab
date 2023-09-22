@@ -1,6 +1,6 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.modal.Customer;
+import com.PrintLab.model.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

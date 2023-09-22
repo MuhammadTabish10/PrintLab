@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CtpService } from 'src/app/services/ctp.service';
 import { PaperSizeService } from 'src/app/services/paper-size.service';
 import { PressMachineService } from 'src/app/services/press-machine.service';
+import { ProductProcessService } from 'src/app/services/product-process.service';
 import { VendorService } from 'src/app/services/vendor.service';
 
 @Component({
@@ -37,9 +39,15 @@ export class AddPressMachineComponent implements OnInit {
   vendorArray: any;
   vendorIndex: any;
   ctpToUpdate: any;
+  platesArray: any;
+  plateDimensions: any;
+  productProcessArray: any[] = [];
 
-  constructor(private paperSizeService: PaperSizeService, private pressMachineService: PressMachineService, private route: ActivatedRoute, private router: Router,
-    private vendorService: VendorService,) { }
+
+  constructor(private paperSizeService: PaperSizeService, private pressMachineService: PressMachineService,
+    private route: ActivatedRoute, private router: Router,
+    private vendorService: VendorService, private ctpService: CtpService,
+    private productProcess: ProductProcessService) { }
 
   ngOnInit(): void {
     this.getPaperSizes()
@@ -47,7 +55,8 @@ export class AddPressMachineComponent implements OnInit {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add'
-        this.getVendors();
+        this.getProductProcess();
+        this.getPlates();
       } else {
         this.pressMachineService.getPressMachineById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
@@ -67,7 +76,7 @@ export class AddPressMachineComponent implements OnInit {
             this.pressMachineSizeId.push(item.id)
             this.value.push(item.value)
             this.obj.push(item.paperSize)
-            this.getVendors();
+            this.getProductProcess();
             this.placeHolder.push(item.paperSize.label)
             this.paperSize.push({})
             this.paperSizesArray.forEach((el: any) => {
@@ -122,9 +131,9 @@ export class AddPressMachineComponent implements OnInit {
     }
     this.pressMachineSizeId.splice(index, 1)
     this.obj[index] ? this.paperSizesArray.push(this.obj[index]) : null
-    this.obj.splice(index, 1);          //Containing objects of paper size
+    this.obj.splice(index, 1);
     this.value.splice(index, 1);
-    this.paperSize.splice(index, 1)     //To show cards
+    this.paperSize.splice(index, 1)
     this.placeHolder.splice(index, 1)
   }
 
@@ -141,7 +150,7 @@ export class AddPressMachineComponent implements OnInit {
         maxSheetSize: this.maxSheetSize,
         minSheetSize: this.minSheetSize,
         maxSPH: this.maxSph,
-        vendor:this.vendorValue,
+        vendor: this.vendorValue,
         ctp_rate: this.ctpRateValue,
         impression_1000_rate: this.impressionRateValue,
         is_selected: this.select,
@@ -168,7 +177,7 @@ export class AddPressMachineComponent implements OnInit {
         maxSheetSize: this.maxSheetSize,
         minSheetSize: this.minSheetSize,
         maxSPH: this.maxSph,
-        vendor:this.vendorValue,
+        vendor: this.vendorValue,
         ctp_rate: this.ctpRateValue,
         impression_1000_rate: this.impressionRateValue,
         is_selected: this.select,
@@ -183,10 +192,40 @@ export class AddPressMachineComponent implements OnInit {
     }
   }
 
-  getVendors() {
-    this.vendorService.getVendor().subscribe(res => {
+
+  getProductProcess() {
+    this.productProcess.getProductProcess().subscribe(
+      (res: any) => {
+        if (Array.isArray(res)) {
+          this.productProcessArray = res;
+
+          let pressProcess: any;
+
+          for (const process of this.productProcessArray) {
+            if (process.name === 'Press' || process.name === 'press') {
+              pressProcess = process;
+              break
+            }
+          }
+          if (pressProcess) {
+            const pressProcessId = pressProcess.id;
+            this.getVendors(pressProcessId);
+          }
+        }
+      },
+      (error) => {
+        this.error = error.error.error;
+        this.visible = true;
+      }
+    );
+  }
+
+
+
+
+  getVendors(processId: any) {
+    this.vendorService.getVendorByProductProcess(processId).subscribe(res => {
       this.vendorArray = res
-      debugger
       if (!Number.isNaN(this.idFromQueryParam)) {
         this.vendorIndex = this.vendorArray.findIndex((el: any) => el.id === this.pressMachineToUpdate.vendor.id)
         this.vendorValue = this.vendorArray[this.vendorIndex]
@@ -195,6 +234,25 @@ export class AddPressMachineComponent implements OnInit {
       this.visible = true
       this.error = error.error.error
     })
+  }
+
+  getPlates() {
+    this.ctpService.getCtp().subscribe(
+      (res) => {
+        this.platesArray = res;
+        const uniqueDimensions = new Set<string>();
+        this.platesArray.forEach((plate: { plateDimension: string; }) => {
+          if (plate.plateDimension) {
+            uniqueDimensions.add(plate.plateDimension);
+          }
+        });
+        this.plateDimensions = Array.from(uniqueDimensions);
+      },
+      (error) => {
+        this.visible = true;
+        this.error = error.error.error;
+      }
+    );
   }
 
   getSelectedValue() {

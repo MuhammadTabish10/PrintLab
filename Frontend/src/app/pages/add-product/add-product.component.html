@@ -52,7 +52,7 @@
           <div
             class="col-md-6 form-group my-3"
             style="padding: 0 10px"
-            *ngFor="let item of fieldList; let i = index"
+            *ngFor="let item of fieldsToDisplay; let i = index"
           >
             <div *ngIf="item.type == 'TEXTFIELD'">
               <!--Textfield -->
@@ -69,7 +69,9 @@
             <div *ngIf="item.type == 'MULTIDROPDOWN'">
               <!--MultiSelect -->
               <div class="d-flex justify-content-between">
-                <label for="exampleInputEmail1" class="form-label me-2">{{ item.name }}</label>
+                <label for="exampleInputEmail1" class="form-label me-2">{{
+                  item.name
+                }}</label>
                 <small
                   >Show as public
                   <input

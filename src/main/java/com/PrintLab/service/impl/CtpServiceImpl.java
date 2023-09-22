@@ -2,13 +2,12 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.CtpDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.Ctp;
+import com.PrintLab.model.Ctp;
 import com.PrintLab.repository.CtpRepository;
 import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.CtpService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +25,6 @@ public class CtpServiceImpl implements CtpService {
 
     @Override
     public CtpDto save(CtpDto ctpDto) {
-        if(ctpDto.getDate() == null) {
-            ctpDto.setDate(LocalDate.now());
-        }
         Ctp ctp = ctpRepository.save(toEntity(ctpDto));
         return toDto(ctp);
     }

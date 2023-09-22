@@ -1,4 +1,4 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -12,8 +12,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name = "product_definition_process")
-public class ProductDefinitionProcess
+@Entity
+public class PressMachineSize
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,16 +21,13 @@ public class ProductDefinitionProcess
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "product_definition_id")
-    private ProductDefinition productDefinition;
+    @JoinColumn(name = "press_machine_id")
+    private PressMachine pressMachine;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "product_process_id")
-    private ProductProcess productProcess;
+    @JoinColumn(name = "paper_size_id")
+    private PaperSize paperSize;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "vendor_id")
-    private Vendor vendor;
+    private Integer value;
 }

@@ -1,9 +1,10 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -19,7 +20,10 @@ public class Inventory
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @CreationTimestamp
     private LocalDate created_at;
+
     private String paperStock;
     private String availableGsm;
     private String availableSizes;

@@ -27,6 +27,7 @@ export class AddInventoryComponent implements OnInit {
   paperSizeArray: any = []
   quantityArray: any = [100, 500]
   vendorArray: any = []
+  brandArray:any = []
   statusArray: any = ['Hoarding', 'In Stock', 'Out of stock']
   inventoryToUpdate: any = {}
 
@@ -58,7 +59,6 @@ export class AddInventoryComponent implements OnInit {
         this.buttonName = 'Update'
         this.inventoryService.getInventoryById(this.idFromQueryParam).subscribe(res => {
           this.inventoryToUpdate = res
-          debugger
           this.madeInValue = this.inventoryToUpdate.madeIn
           this.brandValue = this.inventoryToUpdate.brandName
           this.rateValue = this.inventoryToUpdate.rate
@@ -205,11 +205,13 @@ export class AddInventoryComponent implements OnInit {
       pfArr.forEach((el: any) => {
         el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperStockArray = el.productFieldValuesList : null
         el.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmArray = el.productFieldValuesList : null
+        el.name.toLowerCase().replace(/\s/g, '') == 'brand' ? this.brandArray = el.productFieldValuesList : null
       })
       if (!Number.isNaN(this.idFromQueryParam)) {
         let paperIndex = this.paperStockArray.findIndex((el: any) => el.name == this.inventoryToUpdate.paperStock)
         this.paperStockValue = this.paperStockArray[paperIndex]
         this.gsmValues = this.gsmArray.filter((el: any) => this.gsmSelectedValues.includes(el.name))
+        this.brandValue = this.brandArray.filter((el: any) => this.brandValue.includes(el.name))
       }
     })
   }

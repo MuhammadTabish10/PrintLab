@@ -152,6 +152,7 @@ export class CalculatorHeaderComponent implements OnInit {
       this.visible = true;
     })
   }
+  
   onImpositionValueChange(): void {
     if (this.impositionValue === 'Applied' || this.sideOptionValue === 'SINGLE_SIDED') {
       setTimeout(() => {

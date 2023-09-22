@@ -4,7 +4,6 @@ import { environment } from 'src/Environments/environment';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
 import { ProductService } from 'src/app/services/product.service';
-
 @Component({
   selector: 'app-add-order',
   templateUrl: './add-order.component.html',
@@ -245,17 +244,26 @@ export class AddOrderComponent implements OnInit {
   }
 
   uploadFile(event: any) {
-    const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
-    this.orderService.postImage(formData).subscribe(response => {
-      this.imgUrl = environment.baseUrl + response
-    }, error => {
-      this.error = error.error.error
-      this.visible = true;
-    });
-  }
+    const fileList: FileList = event.target.files;
+    if (fileList.length > 0) {
+      const file: File = fileList[0];
 
+      const formData: FormData = new FormData();
+      formData.append('file', file);
+
+      this.orderService.postImage(formData).subscribe(
+        (response) => {
+          debugger
+          console.log('File uploaded successfully:', response);
+          this.imgUrl = environment.baseUrl + response;
+        },
+        (error) => {
+          // Handle error
+          console.error('Error uploading file:', error);
+        }
+      );
+    }
+  }
   putValuesOnUpdate() {
     this.productArray.forEach((el: any) => {
       el.title == this.orderToUpdate.product ? this.productToUpdate = el : null

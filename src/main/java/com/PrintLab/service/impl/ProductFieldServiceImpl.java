@@ -1,11 +1,10 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.ProductDefinitionDto;
 import com.PrintLab.dto.ProductFieldDto;
 import com.PrintLab.dto.ProductFieldValuesDto;
 import com.PrintLab.dto.projectEnums.Type;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.*;
+import com.PrintLab.model.*;
 import com.PrintLab.repository.ProductFieldRepository;
 import com.PrintLab.repository.ProductFieldValuesRepository;
 import com.PrintLab.service.ProductFieldService;
@@ -33,7 +32,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
         if(productFieldDto.getCreated_at() == null) {
             productFieldDto.setCreated_at(LocalDate.now());
         }
-        if (productFieldDto.getType().equalsIgnoreCase("TOGGLE") || productFieldDto.getType().equalsIgnoreCase("TEXTFIELD")) {
+        if (Type.TOGGLE.equals(productFieldDto.getType()) || Type.TEXTFIELD.equals(productFieldDto.getType())) {
             productFieldDto.getProductFieldValuesList().clear();
         }
         ProductField productField = toEntity(productFieldDto);
@@ -144,7 +143,7 @@ public class ProductFieldServiceImpl implements ProductFieldService {
             existingPf.setType(productField.getType());
             existingPf.setSequence(productField.getSequence());
 
-            if (productField.getType().equalsIgnoreCase("TOGGLE") || productField.getType().equalsIgnoreCase("TEXTFIELD")) {
+            if (Type.TOGGLE.equals(productField.getType()) || Type.TEXTFIELD.equals(productField.getType())) {
                 for(ProductFieldValues productFieldValues : existingPf.getProductFieldValuesList()){
                     productFieldValuesRepository.deleteById(productFieldValues.getId());
                 }

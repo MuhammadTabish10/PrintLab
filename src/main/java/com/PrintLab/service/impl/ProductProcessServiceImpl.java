@@ -1,10 +1,8 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.PressMachine;
-import com.PrintLab.modal.ProductProcess;
+import com.PrintLab.model.ProductProcess;
 import com.PrintLab.repository.ProductProcessRepository;
 import com.PrintLab.service.ProductProcessService;
 import org.springframework.stereotype.Service;
