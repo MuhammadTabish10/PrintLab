@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { PaperSizeService } from 'src/app/services/paper-size.service';
 
 @Component({
@@ -18,7 +19,8 @@ export class AddPaperSizeComponent implements OnInit {
   idFromQueryParam!: number
   sizeToUpdate: any = []
 
-  constructor(private paperSizeService: PaperSizeService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private paperSizeService: PaperSizeService, private route: ActivatedRoute, private router: Router
+    ,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -34,7 +36,7 @@ export class AddPaperSizeComponent implements OnInit {
           this.statusValue = this.sizeToUpdate.status
           this.statusValue == "Active" ? this.statusFlag = true : this.statusFlag = false
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -56,16 +58,19 @@ export class AddPaperSizeComponent implements OnInit {
       this.paperSizeService.postPaperSize(obj).subscribe(() => {
         this.router.navigateByUrl('/paperSize')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
       this.paperSizeService.updatePaperSize(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/paperSize')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

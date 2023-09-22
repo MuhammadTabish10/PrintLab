@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class AddSettingsComponent implements OnInit {
   idFromQueryParam!: number
   settingToUpdate: any = []
 
-  constructor(private settingService: SettingsService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private settingService: SettingsService, private route: ActivatedRoute, private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -31,7 +32,7 @@ export class AddSettingsComponent implements OnInit {
           this.keyData = this.settingToUpdate.key
           this.valueData = this.settingToUpdate.value
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -47,16 +48,19 @@ export class AddSettingsComponent implements OnInit {
       this.settingService.postSettings(obj).subscribe(() => {
         this.router.navigateByUrl('/settings')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
       this.settingService.updateSettings(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/settings')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

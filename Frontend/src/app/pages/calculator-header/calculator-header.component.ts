@@ -8,7 +8,7 @@ import { ProductDefinitionService } from 'src/app/services/product-definition.se
 import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { DatePipe } from '@angular/common';
 import { ProductService } from 'src/app/services/product.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-calculator-header',
   templateUrl: './calculator-header.component.html',
@@ -74,7 +74,8 @@ export class CalculatorHeaderComponent implements OnInit {
     private paperSizeService: PaperSizeService,
     private papers: PaperMarketService,
     private datePipe: DatePipe,
-    private productService: ProductService) { }
+    private productService: ProductService,
+    private messageService: MessageService) { }
   ngOnInit(): void {
     this.configuration = "Configuration";
     this.fields = this.calculatorService.getFields();
@@ -147,8 +148,8 @@ export class CalculatorHeaderComponent implements OnInit {
     this.orderService.calculations(obj).subscribe(res => {
       this.calculateedObj.emit(res);
     }, (error) => {
-      debugger
-      this.error = error.error.error
+      
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -220,7 +221,7 @@ export class CalculatorHeaderComponent implements OnInit {
         }
       }
     }, error => {
-      this.error = error.error.error;
+      this.showError(error);
       this.visible = true;
     });
   }
@@ -242,7 +243,7 @@ export class CalculatorHeaderComponent implements OnInit {
 
       },
       (error) => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       }
     );
@@ -326,8 +327,12 @@ export class CalculatorHeaderComponent implements OnInit {
       this.productDefinitionArray = res
       console.log(this.productDefinitionArray);
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+  }
+
 }

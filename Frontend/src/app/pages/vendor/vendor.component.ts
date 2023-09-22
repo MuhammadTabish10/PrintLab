@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { VendorService } from 'src/app/services/vendor.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-vendor',
@@ -16,7 +17,7 @@ export class VendorComponent implements OnInit {
   error: string = ''
   process: any = []
 
-  constructor(private vendorService: VendorService, private router: Router) { }
+  constructor(private vendorService: VendorService, private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getVendors()
@@ -35,16 +36,17 @@ export class VendorComponent implements OnInit {
       })
       this.vendorArray.length == 0 ? this.tableData = true : this.tableData = false
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
+  
 
   deleteVendor(id: any) {
     this.vendorService.deleteVendor(id).subscribe(() => {
       this.getVendors()
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -60,9 +62,12 @@ export class VendorComponent implements OnInit {
         this.vendorArray = res
         this.vendorArray.length == 0 ? this.tableData = true : this.tableData = false;
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { tap } from 'rxjs';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { LoginService } from 'src/app/services/login.service';
+
+
 
 @Component({
   selector: 'app-login-form',
@@ -11,7 +14,7 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class LoginFormComponent implements OnInit {
 
-  visible!: boolean
+  visible: boolean = false;
   error: string = ''
   userNamevalue: string = ''
   passwordValue: string = ''
@@ -19,7 +22,7 @@ export class LoginFormComponent implements OnInit {
   passwordToggle: string = 'password'
   showPassword: boolean = false
 
-  constructor(private router: Router, private loginService: LoginService) {
+  constructor(private router: Router, private loginService: LoginService,private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -35,13 +38,18 @@ export class LoginFormComponent implements OnInit {
       localStorage.setItem("token", this.token.jwt)
       this.router.navigateByUrl('/dashboard')
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
+      
     })
   }
 
   togglePasswordVisiblity() {
     this.passwordToggle == 'password' ? this.passwordToggle = 'text' : this.passwordToggle = 'password'
     this.showPassword = !this.showPassword
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+    
   }
 }

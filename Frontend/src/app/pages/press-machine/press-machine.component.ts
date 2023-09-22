@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PressMachineService } from 'src/app/services/press-machine.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-press-machine',
   templateUrl: './press-machine.component.html',
@@ -14,7 +14,7 @@ export class PressMachineComponent implements OnInit {
   pressMachineArray: any = []
   search: string = ''
 
-  constructor(private pressMachineService: PressMachineService, private router: Router) { }
+  constructor(private pressMachineService: PressMachineService, private router: Router,private messageService: MessageService) { }
   ngOnInit(): void {
     this.getPressMachine()
   }
@@ -24,7 +24,7 @@ export class PressMachineComponent implements OnInit {
       this.pressMachineArray = res
       this.pressMachineArray.length == 0 ? this.tableData = true : this.tableData = false
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -33,7 +33,7 @@ export class PressMachineComponent implements OnInit {
     this.pressMachineService.deletePressMachine(id).subscribe(res => {
       this.getPressMachine()
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -50,9 +50,12 @@ export class PressMachineComponent implements OnInit {
         this.pressMachineArray = res
         this.pressMachineArray.length == 0 ? this.tableData = true : this.tableData = false;
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }
