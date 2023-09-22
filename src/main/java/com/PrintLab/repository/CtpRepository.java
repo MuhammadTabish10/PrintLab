@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CtpRepository extends JpaRepository<Ctp,Long> {
+
+
+    Ctp findByPlateDimension(String plateDimension);
 }

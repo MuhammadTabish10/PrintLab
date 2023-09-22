@@ -154,7 +154,6 @@ public class PressMachineServiceImpl implements PressMachineService {
             existingPressMachine.setMaxSheetSize(pressMachine.getMaxSheetSize());
             existingPressMachine.setMinSheetSize(pressMachine.getMinSheetSize());
             existingPressMachine.setMaxSPH(pressMachine.getMaxSPH());
-            existingPressMachine.setCtp_rate(pressMachine.getCtp_rate());
             existingPressMachine.setStatus(pressMachine.getStatus());
             existingPressMachine.setImpression_1000_rate(pressMachine.getImpression_1000_rate());
 
@@ -246,7 +245,6 @@ public class PressMachineServiceImpl implements PressMachineService {
                 .maxSheetSize(pressMachine.getMaxSheetSize())
                 .minSheetSize(pressMachine.getMinSheetSize())
                 .maxSPH(pressMachine.getMaxSPH())
-                .ctp_rate(pressMachine.getCtp_rate())
                 .impression_1000_rate(pressMachine.getImpression_1000_rate())
                 .is_selected(pressMachine.getIs_selected())
                 .status(pressMachine.getStatus())
@@ -281,7 +279,6 @@ public class PressMachineServiceImpl implements PressMachineService {
                 .maxSheetSize(pressMachineDto.getMaxSheetSize())
                 .minSheetSize(pressMachineDto.getMinSheetSize())
                 .maxSPH(pressMachineDto.getMaxSPH())
-                .ctp_rate(pressMachineDto.getCtp_rate())
                 .impression_1000_rate(pressMachineDto.getImpression_1000_rate())
                 .is_selected(pressMachineDto.getIs_selected())
                 .status(pressMachineDto.getStatus())
