@@ -1,8 +1,7 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.dto.ProductDefinitionDto;
 import com.PrintLab.dto.ProductFieldDto;
-import com.PrintLab.modal.ProductField;
+import com.PrintLab.model.ProductField;
 import com.PrintLab.service.ProductFieldService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

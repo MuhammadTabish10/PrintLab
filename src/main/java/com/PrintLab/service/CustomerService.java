@@ -1,8 +1,7 @@
 package com.PrintLab.service;
 
 import com.PrintLab.dto.CustomerDto;
-import com.PrintLab.dto.SettingDto;
-import com.PrintLab.modal.Customer;
+import com.PrintLab.model.Customer;
 
 import java.util.List;
 

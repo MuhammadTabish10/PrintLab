@@ -1,15 +1,12 @@
-package com.PrintLab.modal;
+package com.PrintLab.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -28,7 +25,6 @@ public class PressMachine {
     private String maxSheetSize;
     private String minSheetSize;
     private Integer maxSPH;
-    private Double ctp_rate;
     private Double impression_1000_rate;
     private Boolean is_selected;
     private String status;

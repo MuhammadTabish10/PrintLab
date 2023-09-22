@@ -1,8 +1,7 @@
 package com.PrintLab.service;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
-import com.PrintLab.dto.ProductFieldDto;
-import com.PrintLab.modal.PaperMarketRates;
+import com.PrintLab.model.PaperMarketRates;
 
 import java.util.List;
 

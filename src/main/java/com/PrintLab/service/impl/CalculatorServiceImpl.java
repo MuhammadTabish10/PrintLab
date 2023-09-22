@@ -2,7 +2,7 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.Calculator;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.*;
+import com.PrintLab.model.*;
 import com.PrintLab.repository.*;
 import com.PrintLab.service.CalculatorService;
 import org.slf4j.Logger;
@@ -33,13 +33,14 @@ public class CalculatorServiceImpl implements CalculatorService {
     private final ProductFieldRepository productFieldRepository;
     private final ProductFieldValuesRepository productFieldValuesRepository;
     private final ProductDefinitionRepository productDefinitionRepository;
+    private final CtpRepository ctpRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(CalculatorServiceImpl.class);
 
     public CalculatorServiceImpl(PressMachineRepository pressMachineRepository, UpingRepository upingRepository,
                                  PaperSizeRepository paperSizeRepository, PaperMarketRatesRepository paperMarketRatesRepository,
                                  SettingRepository settingRepository, ProductFieldRepository productFieldRepository,
-                                 ProductFieldValuesRepository productFieldValuesRepository, ProductDefinitionRepository productDefinitionRepository) {
+                                 ProductFieldValuesRepository productFieldValuesRepository, ProductDefinitionRepository productDefinitionRepository, CtpRepository ctpRepository) {
 
         this.pressMachineRepository = pressMachineRepository;
         this.upingRepository = upingRepository;
@@ -49,6 +50,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         this.productFieldRepository = productFieldRepository;
         this.productFieldValuesRepository = productFieldValuesRepository;
         this.productDefinitionRepository = productDefinitionRepository;
+        this.ctpRepository = ctpRepository;
     }
 
     @Override
@@ -99,14 +101,14 @@ public class CalculatorServiceImpl implements CalculatorService {
         //Checking provided Uping/ProductSize in database
         Uping uping = upingRepository.findByProductSize(calculator.getSizeValue());
         if (uping == null) {
-            throw new RecordNotFoundException("Uping not found for size: " + calculator.getSheetSizeValue());
+            throw new RecordNotFoundException("Uping not found for size: " + uping.getProductSize());
         }
         logger.info("Uping found for size: " + uping.getProductSize());
 
         //Checking provided PaperSize/SheetSize in database
         PaperSize paperSize = paperSizeRepository.findByLabel(calculator.getSheetSizeValue());
         if (paperSize == null) {
-            throw new RecordNotFoundException("PaperSize not found for size: " +  calculator.getSheetSizeValue());
+            throw new RecordNotFoundException("PaperSize not found for size: " +  paperSize.getLabel());
         }
         logger.info("PaperSize found for size: " + paperSize.getLabel());
 
@@ -165,7 +167,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         Double sheets = calculateSheets(productQty, upingValue);
         Double paperMart = calculatePaperMart(calculator, sheets, foundPaperMarketRates);
         Double slicing = calculateSlicing(calculator, sheets);
-        List<Double> ctpAndPress = calculateCtpAndPress(calculator, pressMachine);
+        List<Double> ctpAndPress = calculateCtpAndPress(calculator, pressMachine, foundPaperMarketRates);
         Double ctp = ctpAndPress.get(0);
         Double press = ctpAndPress.get(1);
         Double fixedCost = calculateFixedCost(paperMart, slicing, ctp, press);
@@ -291,11 +293,18 @@ public class CalculatorServiceImpl implements CalculatorService {
         return slicing;
     }
 
-    private List<Double> calculateCtpAndPress(Calculator calculator, PressMachine pressMachine) {
+    private List<Double> calculateCtpAndPress(Calculator calculator, PressMachine pressMachine, PaperMarketRates paperMarketRates) {
         // Calculation logic for CTP and press
         // CALCULATION OF CTP AND PRESS
         Double ctp = null;
         Double press = null;
+
+        Optional<Ctp> ctpRateOptional = Optional.ofNullable(ctpRepository.findByPlateDimension(pressMachine.getPlateDimension()));
+        if(!ctpRateOptional.isPresent()){
+            throw new RecordNotFoundException("Ctp Rate not found");
+        }
+        Ctp ctpFound = ctpRateOptional.get();
+        Double ctpRate = ctpFound.getRate();
 
         // Checking provided jobColor(Front) in database.
         Long jobColorFront = null;
@@ -341,7 +350,7 @@ public class CalculatorServiceImpl implements CalculatorService {
             }
 
             // Get CTP by Adding Front and Back Job color and Multiplying them with selected pressMachine ctp rate.
-            ctp = (jobColorFront + jobColorBack) * pressMachine.getCtp_rate();
+            ctp = (jobColorFront + jobColorBack) * ctpRate;
             logger.info("Ctp: " + ctp);
 
             // Get Press by Adding Front and Back Job color and Multiplying them with selected pressMachine impression rate.
@@ -351,7 +360,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         } else if ((calculator.getSideOptionValue().equalsIgnoreCase(DOUBLE_SIDED) && calculator.getImpositionValue().equals(true)) || calculator.getSideOptionValue().equalsIgnoreCase(SINGLE_SIDED)) {
             logger.info("Side Option is Double Sided and Imposition is Applied OR Side option is Single Sided");
             // Get CTP by Adding Front Job color and Multiplying it with selected pressMachine ctp rate.
-            ctp = jobColorFront * pressMachine.getCtp_rate();
+            ctp = jobColorFront * ctpRate;
             logger.info("Ctp: " + ctp);
 
             // Get Press by Adding Front Job color and Multiplying it with selected pressMachine impression.

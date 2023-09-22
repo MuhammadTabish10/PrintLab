@@ -1,17 +1,21 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PaperSizeDto
-{
+public class UserDto {
     private Long id;
-    private String label;
-    private String status;
+    private String name;
+    private String password;
+    private Set<Role> roles = new HashSet<>();
 }

@@ -1,7 +1,6 @@
 package com.PrintLab.controller;
 import com.PrintLab.dto.CustomerDto;
-import com.PrintLab.dto.OrderDto;
-import com.PrintLab.modal.Customer;
+import com.PrintLab.model.Customer;
 import com.PrintLab.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

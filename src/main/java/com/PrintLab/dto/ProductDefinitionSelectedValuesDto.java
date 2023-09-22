@@ -1,6 +1,6 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.modal.ProductFieldValues;
+import com.PrintLab.model.ProductFieldValues;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
