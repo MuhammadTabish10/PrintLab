@@ -41,18 +41,6 @@ export class SidebarComponent {
     permission() {
         this.router.navigateByUrl('/permission');
     }
-    region() {
-        this.router.navigateByUrl('region/view')
-    }
-    salesReports() {
-        this.router.navigateByUrl('reports')
-    }
-    permissions() {
-        this.router.navigateByUrl('permissions')
-    }
-    sheetHistory() {
-        this.router.navigateByUrl('sheetHistory')
-    }
 
     // options: any = [
     //     {
