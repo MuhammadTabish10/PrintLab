@@ -29,9 +29,7 @@ public class ProductDefinition {
     private PressMachine pressMachine;
 
     @OneToMany(mappedBy = "productDefinition", cascade = CascadeType.ALL)
-    private List<ProductDefinitionField> productDefinitionFieldList = new ArrayList<>();
+    private List<NewProduct> newProductList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "productDefinition", cascade = CascadeType.ALL)
-    private List<ProductDefinitionProcess> productDefinitionProcessList = new ArrayList<>();
 }
 

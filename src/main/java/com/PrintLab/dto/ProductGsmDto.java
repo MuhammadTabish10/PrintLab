@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductDefinitionProcessDto
-{
+public class ProductGsmDto {
     private Long id;
-    private ProductProcessDto productProcess;
-    private VendorDto vendor;
+    private String name;
+    private String value;
+    private Boolean isPublic;
 }
