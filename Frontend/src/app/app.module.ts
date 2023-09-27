@@ -56,6 +56,7 @@ import { DashboardChartComponent } from './components/dashboard-chart/dashboard-
 import { ChartModule } from 'primeng/chart';
 import { DashboardChartPieComponent } from './components/dashboard-chart-pie/dashboard-chart-pie.component';
 
+import { PermissionComponent } from './pages/permission/permission.component';
 
 
 @NgModule({
@@ -97,9 +98,6 @@ import { DashboardChartPieComponent } from './components/dashboard-chart-pie/das
     AddCtpComponent,
     InventoryComponent,
     AddInventoryComponent,
-    DashboardCardsComponent,
-    DashboardChartComponent,
-    DashboardChartPieComponent,
   ],
   imports: [
     BrowserModule,
@@ -111,12 +109,8 @@ import { DashboardChartPieComponent } from './components/dashboard-chart-pie/das
     BrowserAnimationsModule,
     DropdownModule,
     DialogModule,
-    ToastModule,
-    CardModule,
-    ChartModule
-
   ],
-  providers: [AuthInterceptorProvider, InterceptorService,MessageService,
+  providers: [AuthInterceptorProvider, InterceptorService,
     provideRouter(routes, withHashLocation()), DatePipe],
   bootstrap: [AppComponent]
 })
