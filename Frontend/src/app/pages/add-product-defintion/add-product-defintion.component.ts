@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 @Component({
   selector: 'app-add-product-defintion',
@@ -22,7 +23,8 @@ export class AddProductDefintionComponent implements OnInit {
   visible!: boolean
   error: string = ''
 
-  constructor(private productFieldService: ProductDefinitionService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private productFieldService: ProductDefinitionService, private route: ActivatedRoute, private router: Router
+    ,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -42,7 +44,7 @@ export class AddProductDefintionComponent implements OnInit {
           this.statusValue = this.fieldToUpdate.status
           this.typeValue = this.fieldToUpdate.type
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -67,7 +69,7 @@ export class AddProductDefintionComponent implements OnInit {
     if (!Number.isNaN(this.idFromQueryParam)) {
       this.productFieldService.deleteProductFieldValue(this.idFromQueryParam, this.pfvaluesArray[i].id).subscribe(() => {
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
@@ -91,19 +93,22 @@ export class AddProductDefintionComponent implements OnInit {
       this.productFieldService.postProductField(obj).subscribe(() => {
         this.router.navigateByUrl('/productField')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
       this.productFieldService.updateField(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/productField')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
   }
   isTypeValueEmpty(): boolean {
     return !this.typeValue; // Returns true if typeValue is empty, otherwise false
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

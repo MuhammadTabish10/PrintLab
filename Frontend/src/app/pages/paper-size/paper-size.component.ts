@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaperSizeService } from 'src/app/services/paper-size.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-paper-size',
   templateUrl: './paper-size.component.html',
@@ -15,7 +15,7 @@ export class PaperSizeComponent implements OnInit {
   error:string=''
   visible!:boolean
 
-  constructor(private paperSizeService: PaperSizeService, private router: Router) { }
+  constructor(private paperSizeService: PaperSizeService, private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getPaperSizes()
@@ -26,7 +26,7 @@ export class PaperSizeComponent implements OnInit {
       this.paperSizesArray = res
       this.paperSizesArray.length == 0 ? this.tableData = true : this.tableData = false
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -35,7 +35,7 @@ export class PaperSizeComponent implements OnInit {
     this.paperSizeService.deletePaperSize(id).subscribe(res => {
       this.getPaperSizes()
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -52,9 +52,12 @@ export class PaperSizeComponent implements OnInit {
         this.paperSizesArray = res
         this.paperSizesArray.length == 0 ? this.tableData = true : this.tableData = false;
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

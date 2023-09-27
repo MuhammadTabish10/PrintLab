@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UpingService } from 'src/app/services/uping.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-uping',
   templateUrl: './uping.component.html',
@@ -15,7 +15,7 @@ export class UpingComponent implements OnInit {
   visible!: boolean
   error: string = ''
 
-  constructor(private upingService: UpingService, private router: Router) { }
+  constructor(private upingService: UpingService, private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getUping()
@@ -26,7 +26,7 @@ export class UpingComponent implements OnInit {
       this.upingArray = res
       this.upingArray.length == 0 ? this.tableData = true : this.tableData = false
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -39,7 +39,7 @@ export class UpingComponent implements OnInit {
     this.upingService.deleteUping(id).subscribe(() => {
       this.getUping()
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -52,9 +52,12 @@ export class UpingComponent implements OnInit {
         this.upingArray = res
         this.upingArray.length == 0 ? this.tableData = true : this.tableData = false;
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

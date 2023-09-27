@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 import { OrdersService } from 'src/app/services/orders.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -22,7 +22,7 @@ export class OrdersComponent implements OnInit {
   currentUser: any
   search: string = ''
 
-  constructor(private orderService: OrdersService, private router: Router) { }
+  constructor(private orderService: OrdersService, private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getOrders()
@@ -33,7 +33,7 @@ export class OrdersComponent implements OnInit {
       this.ordersArray = res;
       this.ordersArray.length == 0 ? this.tableData = true : this.tableData == false
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -50,7 +50,7 @@ export class OrdersComponent implements OnInit {
     this.orderService.deleteOrder(id).subscribe(() => {
       this.getOrders()
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -59,7 +59,7 @@ export class OrdersComponent implements OnInit {
     this.orderService.statusSorting(find).subscribe(res => {
       this.ordersArray = res
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -71,9 +71,12 @@ export class OrdersComponent implements OnInit {
       this.orderService.searchById(order.value).subscribe(res => {
         this.ordersArray = res
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

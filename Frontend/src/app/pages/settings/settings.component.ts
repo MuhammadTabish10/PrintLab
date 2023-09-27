@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from 'src/app/services/settings.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -15,7 +15,7 @@ export class SettingsComponent {
   visible!: boolean
   error: string = ''
 
-  constructor(private settingsService: SettingsService, private router: Router) { }
+  constructor(private settingsService: SettingsService, private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getSettings()
@@ -52,9 +52,12 @@ export class SettingsComponent {
       this.settingsArray = res
       this.settingsArray.length == 0 ? this.tableData = true : this.tableData = false;
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

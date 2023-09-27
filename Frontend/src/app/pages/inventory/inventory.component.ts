@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { InventoryService } from 'src/app/services/inventory.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
@@ -18,7 +18,7 @@ export class InventoryComponent implements OnInit {
   gsm: any = []
   sizes: any = []
 
-  constructor(private inventoryService: InventoryService, private router: Router, private datePipe: DatePipe) { }
+  constructor(private inventoryService: InventoryService, private router: Router, private datePipe: DatePipe,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getInventory()
@@ -56,8 +56,11 @@ export class InventoryComponent implements OnInit {
 
   updatePaperMarket(id: any) {
     this.inventoryService.updatePaperMarket(id).subscribe(() => { }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

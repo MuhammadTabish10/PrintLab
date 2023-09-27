@@ -23,4 +23,6 @@ public interface ProductDefinitionRepository extends JpaRepository<ProductDefini
     void setStatusInactive(@Param("id") Long id);
     @Query("SELECT pd FROM ProductDefinition pd WHERE pd.title LIKE %:searchName%")
     List<ProductDefinition> findProductDefinitionsByName(@Param("searchName") String searchName);
+    @Query("Select count(*) FROM ProductDefinition")
+    Long getAllProductCount();
 }
