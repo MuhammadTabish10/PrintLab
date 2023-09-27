@@ -1,5 +1,6 @@
 package com.PrintLab.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +19,10 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-//    private Boolean value;
+    private Boolean value;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 }
