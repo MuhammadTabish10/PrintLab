@@ -17,6 +17,8 @@ export class PermissionComponent {
     queryParamRole?: String
     selectedRole: any;
     updatePermissionPayload: any
+    selectedRoleName: any;
+    find: any;
 
     constructor(
         protected fb: FormBuilder,
@@ -76,20 +78,20 @@ export class PermissionComponent {
         })
     }
 
+    getSelectedRoleName(){
+        this.find=this.roles.find((el:any)=> el.id == this.selectedRole)
+        return this.find.name
+    }
     onSubmit() {
         const permissionOfRole = {
             id: this.selectedRole,
+            name: this.getSelectedRoleName(),
             permissions: this.permissions,
         }
 
         this.updatePermissionPayload = permissionOfRole.permissions
 
-        const jsonObject = { ...this.updatePermissionPayload };
-        console.log(jsonObject);
-
-        debugger
-
-        this.roleService.updatePermissionOfRoles(jsonObject, permissionOfRole.id).subscribe((res) => {
+        this.roleService.updatePermissionOfRoles(permissionOfRole, permissionOfRole.id).subscribe((res) => {
             alert("success")
             //  this.toastr.success("succesfully changed the permissions")
         }, error => {
