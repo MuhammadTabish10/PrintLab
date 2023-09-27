@@ -20,9 +20,4 @@ public class Permission {
     private Long id;
     private String name;
     private Boolean value;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
 }

@@ -111,7 +111,6 @@ public class RoleServiceImpl implements RoleService {
                     Permission existingPerValue = existingValue.get();
                     existingPerValue.setValue(newValue.getValue());
                 } else {
-                    newValue.setRole(existingRole);
                     newValuesToAdd.add(newValue);
                     count++;
                 }
