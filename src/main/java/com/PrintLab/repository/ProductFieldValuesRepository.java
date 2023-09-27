@@ -1,8 +1,7 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.modal.ProductField;
-import com.PrintLab.modal.ProductFieldValues;
-import com.PrintLab.modal.ProductProcess;
+import com.PrintLab.model.ProductField;
+import com.PrintLab.model.ProductFieldValues;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

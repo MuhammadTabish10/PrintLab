@@ -1,6 +1,5 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.modal.PressMachine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class Calculator
     private String sizeValue;
     private String paper;
     private Integer gsm;
-    private Long quantity;
+    private Double quantity;
     private String sheetSizeValue;
     private String sideOptionValue;
     private Boolean impositionValue;

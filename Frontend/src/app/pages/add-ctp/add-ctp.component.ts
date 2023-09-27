@@ -1,6 +1,7 @@
 import { VendorService } from './../../services/vendor.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { CtpService } from 'src/app/services/ctp.service';
 
 @Component({
@@ -25,7 +26,8 @@ export class AddCtpComponent implements OnInit {
   vendorArray: any = []
   vendorIndex!: number
 
-  constructor(private ctpService: CtpService, private vendorService: VendorService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private ctpService: CtpService, private vendorService: VendorService, 
+    private router: Router, private route: ActivatedRoute,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -56,7 +58,7 @@ export class AddCtpComponent implements OnInit {
       }
     }, error => {
       this.visible = true
-      this.error = error.error.error
+      this.showError(error);
     })
   }
 
@@ -73,7 +75,7 @@ export class AddCtpComponent implements OnInit {
         this.router.navigateByUrl('/ctp')
       }, error => {
         this.visible = true
-        this.error = error.error.error
+        this.showError(error);
       })
     } else {
       let obj = {
@@ -88,12 +90,15 @@ export class AddCtpComponent implements OnInit {
         this.router.navigateByUrl('/ctp')
       }, error => {
         this.visible = true
-        this.error = error.error.error
+        this.showError(error);
       })
     }
   }
 
   dimension() {
     this.LOneValue != "" && this.LTwoValue != "" ? this.dimensionValue = this.LOneValue + '" x ' + this.LTwoValue + '"' : this.dimensionValue = ''
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

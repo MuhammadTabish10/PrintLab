@@ -1,7 +1,7 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.modal.CustomUserDetail;
-import com.PrintLab.modal.User;
+import com.PrintLab.model.CustomUserDetail;
+import com.PrintLab.model.User;
 import com.PrintLab.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

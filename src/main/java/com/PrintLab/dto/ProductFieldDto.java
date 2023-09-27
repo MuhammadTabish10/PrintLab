@@ -1,7 +1,6 @@
 package com.PrintLab.dto;
 
 import com.PrintLab.dto.projectEnums.Type;
-import com.PrintLab.modal.ProductFieldValues;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,7 +16,7 @@ public class ProductFieldDto {
     private String status;
     private LocalDate created_at;
     private Integer sequence;
-    private String type;
+    private Type type;
 
     private List<ProductFieldValuesDto> productFieldValuesList;
 

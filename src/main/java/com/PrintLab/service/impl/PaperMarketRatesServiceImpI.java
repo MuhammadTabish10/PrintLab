@@ -2,13 +2,12 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.PaperMarketRates;
+import com.PrintLab.model.PaperMarketRates;
 
 import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

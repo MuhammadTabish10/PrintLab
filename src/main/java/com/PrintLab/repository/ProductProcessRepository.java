@@ -1,8 +1,6 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.modal.Customer;
-import com.PrintLab.modal.PressMachine;
-import com.PrintLab.modal.ProductProcess;
+import com.PrintLab.model.ProductProcess;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,6 +1,6 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.modal.Vendor;
+import com.PrintLab.model.Vendor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +21,6 @@ public class PressMachineDto
     private String maxSheetSize;
     private String minSheetSize;
     private Integer maxSPH;
-    private Double ctp_rate;
     private Double impression_1000_rate;
     private Boolean is_selected;
     private String status;

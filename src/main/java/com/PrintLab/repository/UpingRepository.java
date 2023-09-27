@@ -1,7 +1,6 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.modal.Uping;
-import com.PrintLab.modal.Vendor;
+import com.PrintLab.model.Uping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

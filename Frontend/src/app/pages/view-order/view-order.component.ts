@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrdersService } from 'src/app/services/orders.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-view-order',
   templateUrl: './view-order.component.html',
@@ -13,7 +13,7 @@ export class ViewOrderComponent implements OnInit {
   visible!: boolean
   error: string = ''
 
-  constructor(private route: ActivatedRoute, private orderService: OrdersService) { }
+  constructor(private route: ActivatedRoute, private orderService: OrdersService,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -26,8 +26,12 @@ export class ViewOrderComponent implements OnInit {
     this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
       this.order = res
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+    
   }
 }

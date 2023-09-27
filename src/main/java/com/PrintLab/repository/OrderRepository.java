@@ -1,7 +1,6 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.modal.Order;
-import com.PrintLab.modal.PressMachine;
+import com.PrintLab.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +16,7 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
     @Query("SELECT o FROM Order o WHERE o.product LIKE %:searchName%")
     List<Order> findOrderByProduct(@Param("searchName") String searchName);
+
+    @Query("SELECT count(*) FROM Order")
+    Long getAllOrderCount();
 }

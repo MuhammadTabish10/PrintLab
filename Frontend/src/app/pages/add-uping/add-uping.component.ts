@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { PaperSizeService } from 'src/app/services/paper-size.service';
 import { PressMachineService } from 'src/app/services/press-machine.service';
 import { UpingService } from 'src/app/services/uping.service';
@@ -25,7 +26,10 @@ export class AddUpingComponent implements OnInit {
   placeHolder: any = []
   upingSizeId: any = []
   elementsGenerated: boolean = false;
-  constructor(private upingService: UpingService, private paperSizeService: PaperSizeService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private upingService: UpingService,
+     private paperSizeService: PaperSizeService,
+      private route: ActivatedRoute,
+       private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getPaperSizes()
@@ -52,7 +56,7 @@ export class AddUpingComponent implements OnInit {
             })
           })
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -75,7 +79,7 @@ export class AddUpingComponent implements OnInit {
       this.upingService.postUping(obj).subscribe(() => {
         this.router.navigateByUrl('/uping')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
@@ -93,7 +97,7 @@ export class AddUpingComponent implements OnInit {
       this.upingService.updateUping(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/uping')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
@@ -108,7 +112,7 @@ export class AddUpingComponent implements OnInit {
   removeElement(index: number) {
     if (!Number.isNaN(this.idFromQueryParam)) {
       this.upingService.deleteUpingSize(this.idFromQueryParam, this.upingSizeId[index]).subscribe(() => { }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
       this.upingSizeId.splice(index, 1)
@@ -135,8 +139,12 @@ export class AddUpingComponent implements OnInit {
       this.paperSizesArray = res
       this.maxLength = this.paperSizesArray.length
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
+  }
+
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

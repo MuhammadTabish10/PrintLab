@@ -1,6 +1,6 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.modal.PaperSize;
+import com.PrintLab.model.PaperSize;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface PaperSizeRepository extends JpaRepository<PaperSize,Long> {

@@ -3,8 +3,8 @@ package com.PrintLab.service.impl;
 import com.PrintLab.dto.InventoryDto;
 import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.modal.Inventory;
-import com.PrintLab.modal.PaperMarketRates;
+import com.PrintLab.model.Inventory;
+import com.PrintLab.model.PaperMarketRates;
 import com.PrintLab.repository.InventoryRepository;
 import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.service.InventoryService;
@@ -22,19 +22,14 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
     private final PaperMarketRatesRepository paperMarketRatesRepository;
 
-
     public InventoryServiceImpl(InventoryRepository inventoryRepository, PaperMarketRatesRepository paperMarketRatesRepository) {
         this.inventoryRepository = inventoryRepository;
         this.paperMarketRatesRepository = paperMarketRatesRepository;
     }
 
-
     @Override
     @Transactional
     public InventoryDto save(InventoryDto inventoryDto) {
-        if (inventoryDto.getCreated_at() == null) {
-            inventoryDto.setCreated_at(LocalDate.now());
-        }
         Inventory inventory = inventoryRepository.save(toEntity(inventoryDto));
         return toDto(inventory);
     }

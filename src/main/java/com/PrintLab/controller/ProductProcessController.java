@@ -1,8 +1,7 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.dto.ProductProcessDto;
-import com.PrintLab.modal.ProductProcess;
+import com.PrintLab.model.ProductProcess;
 import com.PrintLab.service.ProductProcessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { PressMachineService } from 'src/app/services/press-machine.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { ProductProcessService } from 'src/app/services/product-process.service';
@@ -37,7 +38,10 @@ export class AddProductComponent implements OnInit {
   arr = [{ id: 1, name: "a" }, { id: 2, name: "b" }, { id: 3, name: "c" }, { id: 4, name: "d" }, { id: 5, name: "e" }]
   elementGenerated: boolean = false;
 
-  constructor(private service: ProductService, private route: ActivatedRoute, private router: Router, private productProcessService: ProductProcessService, private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService) { }
+  constructor(private service: ProductService, private route: ActivatedRoute, 
+    private router: Router, private productProcessService: ProductProcessService, 
+    private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService
+    ,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getFields()
@@ -61,7 +65,7 @@ export class AddProductComponent implements OnInit {
             this.service.getVendorByProcessId(el.productProcess.id).subscribe(res => {
               this.vendorList.push(res)
             }, error => {
-              this.error = error.error.error
+              this.showError(error);
               this.visible = true;
             })
           })
@@ -89,7 +93,7 @@ export class AddProductComponent implements OnInit {
             }
           }
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -169,7 +173,7 @@ export class AddProductComponent implements OnInit {
                   this.service.deleteSelectedField(this.idFromQueryParam, element.id, element.selectedValues[index].id).subscribe(() => {
                     element.selectedValues.splice(index, 1);
                   }, error => {
-                    this.error = error.error.error
+                    this.showError(error);
                     this.visible = true;
                   })
                 }
@@ -232,7 +236,7 @@ export class AddProductComponent implements OnInit {
       this.service.addProduct(obj).subscribe(res => {
         this.router.navigateByUrl('/products')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
@@ -252,7 +256,7 @@ export class AddProductComponent implements OnInit {
       this.service.updateProduct(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/products')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
@@ -266,7 +270,7 @@ export class AddProductComponent implements OnInit {
         this.vendorList.push(res)
       }
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -283,7 +287,7 @@ export class AddProductComponent implements OnInit {
         field.type == 'TEXTFIELD' ? this.titleObj = field : null
       })
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -291,7 +295,7 @@ export class AddProductComponent implements OnInit {
     this.productProcessService.getProductProcess().subscribe(res => {
       this.productProcessList = res
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -311,7 +315,7 @@ export class AddProductComponent implements OnInit {
         this.vendorList.splice(index, 1);
 
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
@@ -325,7 +329,7 @@ export class AddProductComponent implements OnInit {
       this.pressMachineArray = res
       !Number.isNaN(this.idFromQueryParam) ? this.machineIndex = this.pressMachineArray.findIndex((el: any) => el.id == this.selectedMachine.id) : null
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -336,5 +340,9 @@ export class AddProductComponent implements OnInit {
 
   get id(): boolean {
     return Number.isNaN(this.idFromQueryParam)
+  }
+
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { environment } from 'src/Environments/environment';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
@@ -43,7 +44,9 @@ export class AddOrderComponent implements OnInit {
   error: string = ''
   machineId!: number
 
-  constructor(private orderService: OrdersService, private router: Router, private productService: ProductService, private route: ActivatedRoute, private customerService: CustomerService) { }
+  constructor(private orderService: OrdersService, private router: Router,
+     private productService: ProductService, private route: ActivatedRoute, 
+     private customerService: CustomerService,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getCustomers()
@@ -63,7 +66,7 @@ export class AddOrderComponent implements OnInit {
           this.designValue ? this.design = this.customerDesign : this.design = this.printLabDesign
           this.getProducts()
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -105,7 +108,7 @@ export class AddOrderComponent implements OnInit {
       obj = res
       this.totalAmount = Math.round(obj.TotalProfit * 100) / 100
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -131,7 +134,7 @@ export class AddOrderComponent implements OnInit {
       this.orderService.addOrder(obj).subscribe(res => {
         this.router.navigateByUrl('/orders')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
@@ -155,7 +158,7 @@ export class AddOrderComponent implements OnInit {
       this.orderService.updateOrder(this.idFromQueryParam, obj).subscribe(res => {
         this.router.navigateByUrl('/orders')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
@@ -230,7 +233,7 @@ export class AddOrderComponent implements OnInit {
       this.productArray = res
       !Number.isNaN(this.idFromQueryParam) ? this.putValuesOnUpdate() : null
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -239,7 +242,7 @@ export class AddOrderComponent implements OnInit {
     this.customerService.getCustomer().subscribe(res => {
       this.customersArray = res
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -251,7 +254,7 @@ export class AddOrderComponent implements OnInit {
     this.orderService.postImage(formData).subscribe(response => {
       this.imgUrl = environment.baseUrl + response
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     });
   }
@@ -362,5 +365,8 @@ export class AddOrderComponent implements OnInit {
         })
       }
     })
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }
