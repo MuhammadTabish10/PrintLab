@@ -9,7 +9,10 @@ import com.PrintLab.service.RoleService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -52,7 +55,6 @@ public class RoleServiceImpl implements RoleService {
 
         if (optionalRole.isPresent()) {
             Role existingRole = optionalRole.get();
-            existingRole.setName(role.getName());
 
             Set<Permission> existingPerValues = existingRole.getPermissions();
             Set<Permission> newPerValues = roleDto.getPermissions();
@@ -70,6 +72,36 @@ public class RoleServiceImpl implements RoleService {
             throw new RecordNotFoundException(String.format("Role not found for id => %d", id));
         }
     }
+
+//    @Transactional
+//    @Override
+//    public RoleDto updateRole(Long id, RoleDto roleDto) {
+//        Optional<Role> optionalRole = roleRepository.findById(id);
+//
+//        if (optionalRole.isPresent()) {
+//            Role existingRole = optionalRole.get();
+//
+//            Set<Permission> existingPerValues = existingRole.getPermissions();
+//            Set<Permission> newPerValues = roleDto.getPermissions();
+//
+//            for (Permission newValue : newPerValues) {
+//                Optional<Permission> existingValue = existingPerValues.stream()
+//                        .filter(pfValue -> pfValue.getId().equals(newValue.getId())).findFirst();
+//                if (existingValue.isPresent()) {
+//                    Permission existingPerValue = existingValue.get();
+//                    existingPerValue.setValue(newValue.getValue());
+//                } else {
+//                    throw new RecordNotFoundException("Permissions not found");
+//                }
+//            }
+//
+//            Role updatedRole = roleRepository.save(existingRole);
+//            return toDto(updatedRole);
+//        }
+//        else {
+//            throw new RecordNotFoundException(String.format("Product Field not found for id => %d", id));
+//        }
+//    }
 
 
     public RoleDto toDto(Role role) {
