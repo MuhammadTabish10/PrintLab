@@ -2,6 +2,7 @@ package com.PrintLab.service;
 
 import com.PrintLab.dto.CustomerDto;
 import com.PrintLab.model.Customer;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface CustomerService {
     CustomerDto save(CustomerDto customerDto);
     String deleteById(Long id);
     CustomerDto updateCustomer(Long id, Customer customer);
+
 }

@@ -36,7 +36,7 @@ export class AddCustomerComponent implements OnInit {
           this.status = this.customerToUpdate.status
           this.status == 'Active' ? this.statusFlag = true : this.statusFlag = false
         }, error => {
-          debugger
+          
           this.showError(error);
           this.visible = true;
         })
