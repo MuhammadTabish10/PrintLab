@@ -12,9 +12,9 @@ import java.util.List;
 
 @Repository
 public interface ProductDefinitionRepository extends JpaRepository<ProductDefinition, Long> {
-    List<ProductDefinition> findByProductDefinitionFieldList_ProductField_Id(Long productDefinitionFieldId);
-    List<ProductDefinition> findByProductDefinitionProcessList_ProductProcess_Id(Long productDefinitionProcessId);
-    List<ProductDefinition> findByProductDefinitionProcessList_Vendor_Id(Long productDefinitionProcessId);
+//    List<ProductDefinition> findByProductDefinitionFieldList_ProductField_Id(Long productDefinitionFieldId);
+//    List<ProductDefinition> findByProductDefinitionProcessList_ProductProcess_Id(Long productDefinitionProcessId);
+//    List<ProductDefinition> findByProductDefinitionProcessList_Vendor_Id(Long productDefinitionProcessId);
     ProductDefinition findByTitle(String title);
     List<ProductDefinition> findByStatus(Boolean status);
     @Modifying
