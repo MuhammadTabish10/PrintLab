@@ -5,6 +5,7 @@ import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SettingsService } from 'src/app/services/settings.service';
 import { VendorService } from 'src/app/services/vendor.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-add-paper-market',
@@ -40,7 +41,9 @@ export class AddPaperMarketComponent implements OnInit {
   vendorArray: any = []
   vendorValue: any = {}
 
-  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router, private productFieldService: ProductDefinitionService, private settingservice: SettingsService, private vendorService: VendorService) { }
+  constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute, private router: Router,
+     private productFieldService: ProductDefinitionService, private settingservice: SettingsService, 
+     private vendorService: VendorService,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -63,7 +66,7 @@ export class AddPaperMarketComponent implements OnInit {
           this.getProductFields()
           this.getGsm(this.rateToUpdate.paperStock)
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -92,14 +95,14 @@ export class AddPaperMarketComponent implements OnInit {
       this.paperMarketService.postPaperMarket(obj).subscribe(res => {
         this.router.navigateByUrl('/paperMarket')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
       this.paperMarketService.updatePaperMarket(this.idFromQueryParam, obj).subscribe(res => {
         this.router.navigateByUrl('/paperMarket')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
@@ -110,7 +113,7 @@ export class AddPaperMarketComponent implements OnInit {
       this.gsmArray = res
       this.gsmValue = this.rateToUpdate.gsm
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -128,7 +131,7 @@ export class AddPaperMarketComponent implements OnInit {
         })
       }
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -146,4 +149,8 @@ export class AddPaperMarketComponent implements OnInit {
       this.vendorArray = res
     })
   }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+  }
+
 }

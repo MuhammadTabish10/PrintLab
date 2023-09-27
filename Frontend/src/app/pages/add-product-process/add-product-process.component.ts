@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ProductProcessService } from 'src/app/services/product-process.service';
 
 @Component({
@@ -18,7 +19,8 @@ export class AddProductProcessComponent implements OnInit {
   idFromQueryParam!: number
   productProcessToUpdate: any = []
 
-  constructor(private productProcessService: ProductProcessService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private productProcessService: ProductProcessService, private route: ActivatedRoute, 
+    private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -33,7 +35,7 @@ export class AddProductProcessComponent implements OnInit {
           this.statusValue = this.productProcessToUpdate.status
           this.statusValue == 'Active' ? this.statusFlag = true : this.statusFlag = false
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -49,14 +51,14 @@ export class AddProductProcessComponent implements OnInit {
       this.productProcessService.postProductProcess(obj).subscribe(() => {
         this.router.navigateByUrl('/productProcess')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
       this.productProcessService.updateProductProcess(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/productProcess')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
@@ -65,5 +67,8 @@ export class AddProductProcessComponent implements OnInit {
   getStatusValue() {
     this.statusFlag = !this.statusFlag
     this.statusFlag ? this.statusValue = 'Active' : this.statusValue = 'Inactive'
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

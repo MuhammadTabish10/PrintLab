@@ -48,6 +48,14 @@ import { AddInventoryComponent } from './pages/add-inventory/add-inventory.compo
 import { DatePipe } from '@angular/common';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app-routing.module';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { DashboardCardsComponent } from './components/dashboard-cards/dashboard-cards.component';
+import { CardModule } from 'primeng/card';
+import { DashboardChartComponent } from './components/dashboard-chart/dashboard-chart.component';
+import { ChartModule } from 'primeng/chart';
+import { DashboardChartPieComponent } from './components/dashboard-chart-pie/dashboard-chart-pie.component';
+
 import { PermissionComponent } from './pages/permission/permission.component';
 
 
@@ -90,7 +98,6 @@ import { PermissionComponent } from './pages/permission/permission.component';
     AddCtpComponent,
     InventoryComponent,
     AddInventoryComponent,
-    PermissionComponent,
   ],
   imports: [
     BrowserModule,

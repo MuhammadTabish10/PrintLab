@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductProcessService } from 'src/app/services/product-process.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-product-process',
   templateUrl: './product-process.component.html',
@@ -15,7 +15,7 @@ export class ProductProcessComponent {
   visible!: boolean
   error: string = ''
 
-  constructor(private productProcessService: ProductProcessService, private router: Router) { }
+  constructor(private productProcessService: ProductProcessService, private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getProductProcess()
@@ -26,7 +26,7 @@ export class ProductProcessComponent {
       this.productProcessArray = res
       this.productProcessArray.length == 0 ? this.tableData = true : this.tableData = false
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -39,7 +39,7 @@ export class ProductProcessComponent {
     this.productProcessService.deleteProductProcess(id).subscribe(res => {
       this.getProductProcess()
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -52,9 +52,12 @@ export class ProductProcessComponent {
         this.productProcessArray = res
         this.productProcessArray.length == 0 ? this.tableData = true : this.tableData = false;
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

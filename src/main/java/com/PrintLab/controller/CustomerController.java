@@ -54,4 +54,5 @@ public class CustomerController {
         CustomerDto updatedCustomer = customerService.updateCustomer(id, customer);
         return ResponseEntity.ok(updatedCustomer);
     }
+
 }

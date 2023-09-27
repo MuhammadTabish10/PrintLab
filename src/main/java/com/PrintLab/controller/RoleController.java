@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.RoleDto;
+import com.PrintLab.model.Role;
 import com.PrintLab.service.RoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,13 @@ public class RoleController {
     private final RoleService roleService;
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
+    }
+
+    @PostMapping("/role")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<RoleDto> addRole(@RequestBody RoleDto roleDto) {
+        RoleDto updatedRole = roleService.addRole(roleDto);
+        return ResponseEntity.ok(updatedRole);
     }
 
     @GetMapping("/role")

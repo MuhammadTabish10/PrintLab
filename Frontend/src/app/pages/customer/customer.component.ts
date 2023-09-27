@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CustomerService } from 'src/app/services/customer.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
@@ -15,7 +15,7 @@ export class CustomerComponent implements OnInit {
   customersArray: any = []
   search: string = ''
 
-  constructor(private customerService: CustomerService, private router: Router) { }
+  constructor(private customerService: CustomerService, private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getcustomers()
@@ -26,7 +26,7 @@ export class CustomerComponent implements OnInit {
       this.customersArray = res
       this.customersArray.length == 0 ? this.tableData = true : this.tableData = false
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -35,7 +35,7 @@ export class CustomerComponent implements OnInit {
     this.customerService.deleteCustomer(id).subscribe(() => {
       this.getcustomers()
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -52,9 +52,12 @@ export class CustomerComponent implements OnInit {
         this.customersArray = res
         this.customersArray.length == 0 ? this.tableData = true : this.tableData = false;
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }
