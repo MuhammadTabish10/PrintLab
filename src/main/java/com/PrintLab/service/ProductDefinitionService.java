@@ -1,8 +1,6 @@
 package com.PrintLab.service;
 
-import com.PrintLab.dto.PaperSizeDto;
 import com.PrintLab.dto.ProductDefinitionDto;
-import com.PrintLab.dto.ProductFieldDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,14 +12,14 @@ public interface ProductDefinitionService {
     ProductDefinitionDto findByTitle(String title);
     List<ProductDefinitionDto> searchByTitle(String title);
 
-    List<ProductDefinitionDto> getProductDefinitionByProductFieldId(Long productFieldId);
-    List<ProductDefinitionDto> getProductDefinitionByProductProcessId(Long productProcessId);
-    List<ProductDefinitionDto> getProductDefinitionByVendorId(Long vendorId);
+//    List<ProductDefinitionDto> getProductDefinitionByProductFieldId(Long productFieldId);
+//    List<ProductDefinitionDto> getProductDefinitionByProductProcessId(Long productProcessId);
+//    List<ProductDefinitionDto> getProductDefinitionByVendorId(Long vendorId);
     ProductDefinitionDto updateProductDefinition(Long id, ProductDefinitionDto productDefinitionDto);
     void deleteProductDefinition(Long id);
-    void deleteProductDefinitionFieldById(Long id, Long productDefinitionFieldId);
-    void deleteSelectedValueById(Long id, Long productDefinitionFieldId, Long selectedValueId);
-    void deleteAllSelectedValues(Long id, Long productDefinitionFieldId);
-    void deleteProductDefinitionProcessById(Long id, Long productDefinitionProcessId);
+    void deleteNewProductById(Long id, Long productDefinitionFieldId);
+    //void deleteSelectedValueById(Long id, Long productDefinitionFieldId, Long selectedValueId);
+    //void deleteAllSelectedValues(Long id, Long productDefinitionFieldId);
+   // void deleteProductDefinitionProcessById(Long id, Long productDefinitionProcessId);
 
 }
