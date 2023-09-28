@@ -50,6 +50,13 @@ import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app-routing.module';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { DashboardCardsComponent } from './components/dashboard-cards/dashboard-cards.component';
+import { CardModule } from 'primeng/card';
+import { DashboardChartComponent } from './components/dashboard-chart/dashboard-chart.component';
+import { ChartModule } from 'primeng/chart';
+import { DashboardChartPieComponent } from './components/dashboard-chart-pie/dashboard-chart-pie.component';
+
+
 
 @NgModule({
   declarations: [
@@ -90,6 +97,9 @@ import { MessageService } from 'primeng/api';
     AddCtpComponent,
     InventoryComponent,
     AddInventoryComponent,
+    DashboardCardsComponent,
+    DashboardChartComponent,
+    DashboardChartPieComponent,
   ],
   imports: [
     BrowserModule,
@@ -102,6 +112,9 @@ import { MessageService } from 'primeng/api';
     DropdownModule,
     DialogModule,
     ToastModule,
+    CardModule,
+    ChartModule
+
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,
     provideRouter(routes, withHashLocation()), DatePipe],

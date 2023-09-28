@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -9,4 +10,8 @@ import { Component, OnInit } from '@angular/core';
 export class AddProductComponent implements OnInit {
   ngOnInit(): void {
   }
+
+  // showError(error:any) {
+  //   this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  // }
 }

@@ -20,7 +20,7 @@ export class CalculatorComponent implements OnInit {
     this.calculation.calculateedObj.subscribe((data: any) => {
       this.receivedData = data;
     }, () => {
-      this.error = 'Press'
+      // this.error = 'Press'
       this.visible = true;
     });
   }

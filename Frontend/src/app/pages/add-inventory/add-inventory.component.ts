@@ -4,7 +4,7 @@ import { InventoryService } from 'src/app/services/inventory.service';
 import { PaperSizeService } from 'src/app/services/paper-size.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { VendorService } from 'src/app/services/vendor.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-add-inventory',
   templateUrl: './add-inventory.component.html',
@@ -47,7 +47,8 @@ export class AddInventoryComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private productFieldService: ProductDefinitionService,
-    private paperSizeService: PaperSizeService
+    private paperSizeService: PaperSizeService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -160,7 +161,7 @@ export class AddInventoryComponent implements OnInit {
         this.router.navigateByUrl('/inventory')
       }, error => {
         this.visible = true
-        this.error = error.error.error
+        this.showError(error);
       })
     } else {
       let obj = {
@@ -180,7 +181,7 @@ export class AddInventoryComponent implements OnInit {
         this.router.navigateByUrl('/inventory')
       }, error => {
         this.visible = true
-        this.error = error.error.error
+        this.showError(error);
       })
     }
   }
@@ -194,7 +195,7 @@ export class AddInventoryComponent implements OnInit {
       }
     }, error => {
       this.visible = true
-      this.error = error.error.error
+      this.showError(error);
     })
   }
 
@@ -223,8 +224,11 @@ export class AddInventoryComponent implements OnInit {
         this.sizeValues = this.paperSizeArray.filter((el: any) => this.sizeSelectedValues.includes(el.label))
       }
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

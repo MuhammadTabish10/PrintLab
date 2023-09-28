@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { CtpService } from 'src/app/services/ctp.service';
 import { PaperSizeService } from 'src/app/services/paper-size.service';
 import { PressMachineService } from 'src/app/services/press-machine.service';
@@ -45,7 +46,7 @@ export class AddPressMachineComponent implements OnInit {
   constructor(private paperSizeService: PaperSizeService, private pressMachineService: PressMachineService,
     private route: ActivatedRoute, private router: Router,
     private vendorService: VendorService, private ctpService: CtpService,
-    private productProcess: ProductProcessService) { }
+    private productProcess: ProductProcessService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getPaperSizes()
@@ -85,7 +86,7 @@ export class AddPressMachineComponent implements OnInit {
             })
           })
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -97,7 +98,7 @@ export class AddPressMachineComponent implements OnInit {
       this.paperSizesArray = res
       this.maxLength = this.paperSizesArray.length
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
   }
@@ -123,7 +124,7 @@ export class AddPressMachineComponent implements OnInit {
 
     if (!Number.isNaN(this.idFromQueryParam)) {
       this.pressMachineService.deletePressMachineSize(this.idFromQueryParam, this.pressMachineSizeId[index]).subscribe(() => { }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
@@ -156,7 +157,7 @@ export class AddPressMachineComponent implements OnInit {
       this.pressMachineService.postPressMachine(obj).subscribe(() => {
         this.router.navigateByUrl('/pressMachine')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
@@ -182,7 +183,7 @@ export class AddPressMachineComponent implements OnInit {
       this.pressMachineService.updatePressMachine(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/pressMachine')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
@@ -228,7 +229,7 @@ export class AddPressMachineComponent implements OnInit {
       }
     }, error => {
       this.visible = true
-      this.error = error.error.error
+      this.showError(error);
     })
   }
 
@@ -253,5 +254,8 @@ export class AddPressMachineComponent implements OnInit {
 
   getSelectedValue() {
     this.select = !this.select
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

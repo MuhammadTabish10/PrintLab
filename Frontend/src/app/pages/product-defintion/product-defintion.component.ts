@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { ProductService } from 'src/app/services/product.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-product-defintion',
   templateUrl: './product-defintion.component.html',
@@ -18,7 +18,7 @@ export class ProductDefintionComponent implements OnInit {
   visible!: boolean
   error: string = ''
 
-  constructor(private productFieldService: ProductDefinitionService, private productService: ProductService, private router: Router, private datePipe : DatePipe) { }
+  constructor(private productFieldService: ProductDefinitionService, private productService: ProductService, private router: Router, private datePipe : DatePipe, private messageService: MessageService) { }
 
 
   ngOnInit(): void {
@@ -38,9 +38,9 @@ export class ProductDefintionComponent implements OnInit {
 
       this.fieldList.length == 0 ? this.tableData = true : this.tableData = false;
     }, error => {
-      this.error = error.error.error;
-      this.visible = true;
-    });
+      this.showError(error);
+      this.visible = true
+    })
   }
 
 
@@ -50,7 +50,7 @@ export class ProductDefintionComponent implements OnInit {
     this.productFieldService.deleteField(id).subscribe(() => {
       this.getFields()
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -67,9 +67,12 @@ export class ProductDefintionComponent implements OnInit {
         this.fieldList = res
         this.fieldList.length == 0 ? this.tableData = true : this.tableData = false
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

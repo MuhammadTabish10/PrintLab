@@ -67,6 +67,20 @@ public class ProductDefinitionController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}/new-product/{new-product-id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> deleteNewProductFromProductDefinition(@PathVariable Long id,@PathVariable(name = "new-product-id") Long newProductId) {
+        productDefinitionService.deleteNewProductById(id,newProductId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/new-product/{new-product-id}/product-gsm/{gsm-id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> deleteProductGsmFromNewProduct(@PathVariable Long id, @PathVariable(name = "new-product-id") Long newProductId, @PathVariable(name = "gsm-id") Long gsmId){
+        productDefinitionService.deleteProductGsmById(id,newProductId,gsmId);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}/{pdfId}/product-definition-field")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteProductDefinitionField(@PathVariable Long id, @PathVariable Long pdfId) {

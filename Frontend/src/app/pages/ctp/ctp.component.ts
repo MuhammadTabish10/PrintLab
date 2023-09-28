@@ -2,7 +2,7 @@ import { CtpService } from 'src/app/services/ctp.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-ctp',
   templateUrl: './ctp.component.html',
@@ -16,7 +16,7 @@ export class CtpComponent implements OnInit {
   visible: boolean = false
   error: string = ''
 
-  constructor(private ctpService: CtpService, private router: Router,private datePipe:DatePipe) { }
+  constructor(private ctpService: CtpService, private router: Router,private datePipe:DatePipe,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getCtp()
@@ -34,6 +34,9 @@ export class CtpComponent implements OnInit {
       });
 
       this.tableData = this.ctpArray.length === 0;
+    },error =>{
+      this.showError(error);
+      this.visible=true;
     });
   }
 
@@ -41,10 +44,16 @@ export class CtpComponent implements OnInit {
   delteCtp(id: any) {
     this.ctpService.deleteCtp(id).subscribe(res => {
       this.getCtp()
+    },error =>{
+      this.showError(error);
+      this.visible=true;
     })
   }
 
   editCtp(id: any) {
     this.router.navigate(['/addCtp'], { queryParams: { id: id } });
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

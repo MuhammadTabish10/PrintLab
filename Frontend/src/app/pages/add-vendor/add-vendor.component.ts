@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ProductProcessService } from 'src/app/services/product-process.service';
 import { VendorService } from 'src/app/services/vendor.service';
 
@@ -31,7 +32,9 @@ export class AddVendorComponent implements OnInit {
   selectedVendorProcess: any = []
   vendorProcessId: any = []
   elementGenerated: boolean = false;
-  constructor(private vendorService: VendorService, private productProcessService: ProductProcessService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private vendorService: VendorService,
+     private productProcessService: ProductProcessService,
+      private route: ActivatedRoute, private router: Router,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getproductProcess()
@@ -66,7 +69,7 @@ export class AddVendorComponent implements OnInit {
             })
           })
         }, error => {
-          this.error = error.error.error
+          this.showError(error);
           this.visible = true;
         })
       }
@@ -97,7 +100,7 @@ export class AddVendorComponent implements OnInit {
 
     if (!Number.isNaN(this.idFromQueryParam)) {
       this.vendorService.deleteVendorProcess(this.idFromQueryParam, this.vendorProcessId[i]).subscribe(() => { }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
       this.vendorProcessId.splice(i, 1)
@@ -134,7 +137,7 @@ export class AddVendorComponent implements OnInit {
       this.vendorService.postVendor(obj).subscribe(() => {
         this.router.navigateByUrl('/vendor')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     } else {
@@ -159,7 +162,7 @@ export class AddVendorComponent implements OnInit {
       this.vendorService.updateVendor(this.idFromQueryParam, obj).subscribe(() => {
         this.router.navigateByUrl('/vendor')
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true;
       })
     }
@@ -170,8 +173,11 @@ export class AddVendorComponent implements OnInit {
       this.productProcessArray = res
       this.maxLength = this.productProcessArray.length
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true;
     })
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }

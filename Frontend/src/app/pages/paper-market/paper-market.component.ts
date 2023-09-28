@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaperMarketService } from 'src/app/services/paper-market.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-paper-market',
   templateUrl: './paper-market.component.html',
@@ -16,7 +16,7 @@ export class PaperMarketComponent implements OnInit {
   tableData: Boolean = false
   search: string = ''
 
-  constructor(private paperMarketService: PaperMarketService, private router: Router, private datePipe: DatePipe) { }
+  constructor(private paperMarketService: PaperMarketService, private router: Router, private datePipe: DatePipe,private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getPaperMarketRates()
@@ -35,7 +35,7 @@ export class PaperMarketComponent implements OnInit {
       });
       this.paperMarketArray.length == 0 ? this.tableData = true : this.tableData = false;
     }, error => {
-      this.error = error.error.error;
+      this.showError(error);
       this.visible = true;
     });
   }
@@ -46,7 +46,7 @@ export class PaperMarketComponent implements OnInit {
     this.paperMarketService.deletePaperMarket(id).subscribe(() => {
       this.getPaperMarketRates()
     }, error => {
-      this.error = error.error.error
+      this.showError(error);
       this.visible = true
     })
   }
@@ -63,9 +63,12 @@ export class PaperMarketComponent implements OnInit {
         this.paperMarketArray = res
         this.paperMarketArray.length == 0 ? this.tableData = true : this.tableData = false;
       }, error => {
-        this.error = error.error.error
+        this.showError(error);
         this.visible = true
       })
     }
+  }
+  showError(error:any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
   }
 }
