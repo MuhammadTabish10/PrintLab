@@ -16,17 +16,66 @@
               <h4>Title</h4>
               <div>{{productToView?.title}}</div>
             </div>
-            <div class="col-6 my-2" *ngFor="let value of productToView?.productDefinitionFieldList; let last = last">
-              <div *ngIf="value.isPublic!=null">
-                <h4 class="me-2 d-inline-block">{{value.productField.name}}</h4>
-                <span class="text-danger" *ngIf="value.isPublic">Public</span><br>
-                <span *ngFor="let item of value.selectedValues; let last = last">
-                  {{ item?.productFieldValue?.name }}{{ last ? '' : ', ' }}
+            <div class="col-6 my-2" *ngFor="let value of productToView?.newProductList; let last = last">
+              <div *ngIf="value.isPaperStockPublic!=null">
+                <h4 class="me-2 d-inline-block">Paper Stock</h4>
+                <span class="text-danger" *ngIf="value.isPaperStockPublic">Public</span><br>
+                <span>
+                  {{ value.paperStock }}{{ last ? '' : ', ' }}
                 </span>
               </div>
-              <div *ngIf="value?.isPublic==null">
-                <h4 class="me-2">{{value?.productField?.name}}</h4>
-                <span>{{value?.selectedValues[0]?.value}}</span>
+              <div *ngIf="value.isPaperStockPublic!=null">
+                <h4 class="me-2 d-inline-block">Quantity</h4>
+                <span class="text-danger" *ngIf="value.isQuantityPublic">Public</span><br>
+                <span>
+                  {{ value.quantity }}{{ last ? '' : ', ' }}
+                </span>
+              </div>
+              <div *ngIf="value.isPaperStockPublic!=null">
+                <h4 class="me-2 d-inline-block">Print Side</h4>
+                <span class="text-danger" *ngIf="value.isPrintSidePublic">Public</span><br>
+                <span>
+                  {{ value.printSide }}{{ last ? '' : ', ' }}
+                </span>
+              </div>
+              <div *ngIf="value.isPaperStockPublic!=null">
+                <h4 class="me-2 d-inline-block">JobColor(Back)</h4>
+                <span class="text-danger" *ngIf="value.isJobColorBackPublic">Public</span><br>
+                <span>
+                  {{ value.jobColorBack }}{{ last ? '' : ', ' }}
+                </span>
+              </div>
+            </div>
+            <div class="col-6 my-2" *ngFor="let value of productToView?.newProductList; let last = last">
+              <div *ngIf="value.isPaperStockPublic!=null">
+                <h4 class="me-2 d-inline-block">Size</h4>
+                <span class="text-danger" *ngIf="value.isSizePublic">Public</span><br>
+                <span>
+                  {{ value.size }}{{ last ? '' : ', ' }}
+                </span>
+              </div>
+              <!-- <div *ngFor="let item of value.productGsm; let last = last"> -->
+              <div *ngIf="value.isPaperStockPublic!=null">
+                <h4 class="me-2 d-inline-block">GSM</h4>
+                <span class="text-danger" *ngIf="value.isPaperStockPublic">Public</span><br>
+                <span *ngFor="let item of value.productGsm">
+                  {{ item.value }}{{ last ? '' : ', ' }}
+                </span>
+              </div>
+            <!-- </div> -->
+              <div *ngIf="value.isPaperStockPublic!=null">
+                <h4 class="me-2 d-inline-block">JobColor(Front)</h4>
+                <span class="text-danger" *ngIf="value.isJobColorFrontPublic">Public</span><br>
+                <span>
+                  {{ value.jobColorFront }}{{ last ? '' : ', ' }}
+                </span>
+              </div>
+              <div *ngIf="value.isPaperStockPublic!=null">
+                <h4 class="me-2 d-inline-block">Imposition</h4>
+                <span class="text-danger" *ngIf="value.imposition">Public</span><br>
+                <span>
+                  {{ value.imposition }}{{ last ? '' : ', ' }}
+                </span>
               </div>
             </div>
           </div>
@@ -38,7 +87,7 @@
         <div>{{productToView?.pressMachine.name}}</div>
       </div>
 
-      <div class=" order-body p-3 my-3">
+      <!-- <div class=" order-body p-3 my-3">
         <h3 class="mb-3">Process</h3>
         <div class="container">
           <div class="row">
@@ -48,7 +97,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>

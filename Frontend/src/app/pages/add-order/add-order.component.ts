@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { environment } from 'src/Environments/environment';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
@@ -32,6 +33,7 @@ export class AddOrderComponent implements OnInit {
   design: any
   designValue = true
   imgUrl: string = ''
+  pdfUrl: string = ''
   idFromQueryParam!: number
   buttonName: string = 'Add'
   orderToUpdate: any
@@ -41,8 +43,12 @@ export class AddOrderComponent implements OnInit {
   visible: boolean = false
   error: string = ''
   machineId!: number
+  fileUrl: string | null = null;
+  file: File | null = null;
 
-  constructor(private orderService: OrdersService, private router: Router, private productService: ProductService, private route: ActivatedRoute, private customerService: CustomerService) { }
+  constructor(private orderService: OrdersService, private router: Router,
+    private productService: ProductService, private route: ActivatedRoute,
+    private customerService: CustomerService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getCustomers()
@@ -104,7 +110,8 @@ export class AddOrderComponent implements OnInit {
       obj = res
       this.totalAmount = Math.round(obj.TotalProfit * 100) / 100
     }, error => {
-      this.error = error.error.error
+      debugger
+      this.showToast(error);
       this.visible = true;
     })
   }
@@ -248,22 +255,51 @@ export class AddOrderComponent implements OnInit {
     if (fileList.length > 0) {
       const file: File = fileList[0];
 
-      const formData: FormData = new FormData();
-      formData.append('file', file);
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
 
-      this.orderService.postImage(formData).subscribe(
-        (response) => {
-          debugger
-          console.log('File uploaded successfully:', response);
-          this.imgUrl = environment.baseUrl + response;
-        },
-        (error) => {
-          // Handle error
-          console.error('Error uploading file:', error);
-        }
-      );
+        this.orderService.postImage(formData).subscribe(
+          (response) => {
+            const fileType = this.determineFileType(file.name);
+            debugger
+            if (fileType === 'image') {
+              this.imgUrl = environment.baseUrl + response;
+            } else if (fileType === 'pdf') {
+              // Handle PDF, e.g., display a PDF viewer or link
+              // You can implement PDF viewer here
+              this.pdfUrl = environment.baseUrl + response;
+            } else if (fileType === 'ai') {
+            } else if (fileType === 'psd') {
+            } else if (fileType === 'cdr') {
+            }
+          },
+          (error) => {
+            this.showToast(error);
+            this.visible = true;
+          }
+        );
+      }
     }
   }
+
+  determineFileType(fileName: string): string {
+    if (fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
+      return 'image';
+    } else if (fileName.endsWith('.pdf')) {
+      return 'pdf';
+    } else if (fileName.endsWith('.ai')) {
+      return 'ai';
+    } else if (fileName.endsWith('.psd')) {
+      return 'psd';
+    } else if (fileName.endsWith('.cdr')) {
+      return 'cdr';
+    } else {
+      return 'other';
+    }
+  }
+
+
   putValuesOnUpdate() {
     this.productArray.forEach((el: any) => {
       el.title == this.orderToUpdate.product ? this.productToUpdate = el : null
@@ -370,5 +406,8 @@ export class AddOrderComponent implements OnInit {
         })
       }
     })
+  }
+  showToast(error: any) {
+    this.messageService.add({ severity: 'error', summary: 'Error Message', detail: error.error.error });
   }
 }

@@ -48,7 +48,8 @@ import { AddInventoryComponent } from './pages/add-inventory/add-inventory.compo
 import { DatePipe } from '@angular/common';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app-routing.module';
-
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -100,8 +101,9 @@ import { routes } from './app-routing.module';
     BrowserAnimationsModule,
     DropdownModule,
     DialogModule,
+    ToastModule,
   ],
-  providers: [AuthInterceptorProvider, InterceptorService,
+  providers: [AuthInterceptorProvider, InterceptorService,MessageService,
     provideRouter(routes, withHashLocation()), DatePipe],
   bootstrap: [AppComponent]
 })

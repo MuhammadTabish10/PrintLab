@@ -39,11 +39,14 @@ export class AddCtpComponent implements OnInit {
         this.getProductProcess();
       } else {
         this.buttonName = 'Update'
+        this.getProductProcess();
         this.ctpService.getCtpById(this.idFromQueryParam).subscribe(res => {
           this.ctpToUpdate = res
+          debugger
           this.LOneValue = this.ctpToUpdate.l1
           this.LTwoValue = this.ctpToUpdate.l2
           this.dimensionValue = this.ctpToUpdate.plateDimension
+          this.vendorValue = this.ctpToUpdate.vendor
           this.rateValue = this.ctpToUpdate.rate
           this.getProductProcess()
         })

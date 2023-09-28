@@ -23,7 +23,6 @@ export class AddPressMachineComponent implements OnInit {
   minSheetSize: string = ''
   maxSph!: number;
   vendorValue: string = '';
-  ctpRateValue!: number
   impressionRateValue!: number
   paperSize: any = []
   paperSizesArray: any = []
@@ -38,7 +37,6 @@ export class AddPressMachineComponent implements OnInit {
   elementsGenerated: boolean = false;
   vendorArray: any;
   vendorIndex: any;
-  ctpToUpdate: any;
   platesArray: any;
   plateDimensions: any;
   productProcessArray: any[] = [];
@@ -60,6 +58,7 @@ export class AddPressMachineComponent implements OnInit {
       } else {
         this.pressMachineService.getPressMachineById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
+          this.getPlates();
           this.pressMachineToUpdate = res
           this.nameValue = this.pressMachineToUpdate.name
           this.plateDimension = this.pressMachineToUpdate.plateDimension
@@ -69,7 +68,6 @@ export class AddPressMachineComponent implements OnInit {
           this.maxSph = this.pressMachineToUpdate.maxSPH
           this.vendorValue = this.pressMachineToUpdate.vendor.name
           this.impressionRateValue = this.pressMachineToUpdate.impression_1000_rate
-          this.ctpRateValue = this.pressMachineToUpdate.ctp_rate
           this.select = this.pressMachineToUpdate.is_selected
 
           this.pressMachineToUpdate.pressMachineSize.forEach((item: any) => {
@@ -151,7 +149,6 @@ export class AddPressMachineComponent implements OnInit {
         minSheetSize: this.minSheetSize,
         maxSPH: this.maxSph,
         vendor: this.vendorValue,
-        ctp_rate: this.ctpRateValue,
         impression_1000_rate: this.impressionRateValue,
         is_selected: this.select,
         pressMachineSize: this.obj
@@ -178,7 +175,6 @@ export class AddPressMachineComponent implements OnInit {
         minSheetSize: this.minSheetSize,
         maxSPH: this.maxSph,
         vendor: this.vendorValue,
-        ctp_rate: this.ctpRateValue,
         impression_1000_rate: this.impressionRateValue,
         is_selected: this.select,
         pressMachineSize: this.obj

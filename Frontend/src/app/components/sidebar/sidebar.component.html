@@ -33,6 +33,17 @@
         </span>
       </span>
     </li>
+    <li class="settingOptions" *ngFor="let el of process">
+      <span *ngIf="flags.processFlag">
+        <a
+          routerLink="/{{ el.link }}"
+          class="sidebar-list-hover-settings nav-link cursor-pointer"
+        >
+          <i class="fa fa-gear fa-2x"></i>
+          <span class="nav-text">{{ el.name }}</span>
+        </a>
+      </span>
+    </li>
     <li>
       <span class="sidebar-list-hover" (click)="toggleDropdown('settingFlag')">
         <i class="fa fa-bars fa-2x"></i>
@@ -51,17 +62,6 @@
     </li>
     <li class="settingOptions" *ngFor="let el of configurationOptions">
       <span *ngIf="flags.settingFlag">
-        <a
-          routerLink="/{{ el.link }}"
-          class="sidebar-list-hover-settings nav-link cursor-pointer"
-        >
-          <i class="fa fa-gear fa-2x"></i>
-          <span class="nav-text">{{ el.name }}</span>
-        </a>
-      </span>
-    </li>
-    <li class="settingOptions" *ngFor="let el of process">
-      <span *ngIf="flags.processFlag">
         <a
           routerLink="/{{ el.link }}"
           class="sidebar-list-hover-settings nav-link cursor-pointer"

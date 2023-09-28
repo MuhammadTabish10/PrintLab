@@ -10,7 +10,7 @@ import { ProductService } from 'src/app/services/product.service';
 export class ViewProductComponent implements OnInit {
 
   idFromQueryParam: any
-  productToView: any
+  productToView: any=[];
   visible!: boolean
   error: string = ''
 
@@ -20,7 +20,9 @@ export class ViewProductComponent implements OnInit {
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       this.service.getById(this.idFromQueryParam).subscribe(res => {
+        debugger
         this.productToView = res
+        console.log(this.productToView);
       }, error => {
         this.error = error.error.error
         this.visible = true
