@@ -5,15 +5,81 @@
                 <img class="w-75 nav-text ms-2 nav-logo" src="../../../assets/images/print-lab-logo.png" alt="">
             </span>
         </li>
-        <li *ngFor="let option of options">
+        <!-- <li *ngFor="let option of options">
             <span class="sidebar-list-hover">
               <a routerLink="/{{option.link}}" class="nav-link">
                 <i class="{{option.icon}}"></i>
                 <h6 class="nav-text">{{option.name}}</h6>
               </a>
             </span>
-          </li>
-        <li>
+          </li> -->
+
+          <li>
+            <span class="sidebar-list-hover" (click)="dashboard()">
+                <i class="fa fa-home fa-2x"></i>
+                <h6 class="nav-text">
+                    Dashboard
+                </h6>
+            </span>
+        </li>
+        <li *ngIf="sessionStorageService.hasPermission('Products')">
+            <span class="sidebar-list-hover" (click)="products()">
+                <i class="fa fa-shopping-bag fa-2x"></i>
+                <span class="nav-text">
+                    Products
+                </span>
+            </span>
+
+        </li>
+        <li *ngIf="sessionStorageService.hasPermission('Customers')">
+            <span class="sidebar-list-hover" (click)="customer()">
+                <i class="fa fa-user fa-2x"></i>
+                <span class="nav-text">
+                    Customers
+                </span> 
+            </span>
+
+        </li>
+        <li *ngIf="sessionStorageService.hasPermission('Orders')">
+            <span class="sidebar-list-hover" (click)="order()">
+                <i class="fa fa-shopping-cart fa-2x"></i> <!-- Change the class to the currency icon you want -->
+                <span class="nav-text">
+                    Orders
+                </span>
+            </span>
+        </li>
+        
+        <li *ngIf="sessionStorageService.hasPermission('Products')">
+            <span class="sidebar-list-hover" (click)="addProduct()">
+                <i class="fa fa-add fa-2x"></i>
+                <span class="nav-text">
+                    Add Product
+                </span>
+            </span>
+
+        </li>
+
+        <li *ngIf="sessionStorageService.hasPermission('Calculator')">
+            <span class="sidebar-list-hover" (click)="calculator()">
+                <i class="fa fa-calculator"></i>
+                <span class="nav-text">
+                  Calculator
+                </span>
+            </span>
+
+        </li>
+
+        <li *ngIf="sessionStorageService.hasPermission('Permissions')">
+          <span class="sidebar-list-hover" (click)="permission()">
+              <i class="fa fa-plus"></i>
+              <span class="nav-text">
+                Permissions
+              </span>
+          </span>
+
+      </li>
+
+        <li *ngIf="sessionStorageService.hasPermission('Configuration')">
             <span class="sidebar-list-hover" (click)="toggleSettings()">
                 <i class="fa fa-bars fa-2x"></i>
                 <span class="nav-text">
