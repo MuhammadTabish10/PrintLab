@@ -21,5 +21,5 @@ public class ProductDefinitionDto {
     private String title;
     private Boolean status;
     private PressMachine pressMachine;
-    private List<NewProductDto> newProductList = new ArrayList<>();
+    private NewProductDto newProduct;
 }

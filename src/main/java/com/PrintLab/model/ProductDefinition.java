@@ -28,8 +28,7 @@ public class ProductDefinition {
     @JoinColumn(name = "press_machine_id")
     private PressMachine pressMachine;
 
-    @OneToMany(mappedBy = "productDefinition", cascade = CascadeType.ALL)
-    private List<NewProduct> newProductList = new ArrayList<>();
-
+    @OneToOne(mappedBy = "productDefinition", cascade = CascadeType.ALL)
+    private NewProduct newProduct;
 }
 

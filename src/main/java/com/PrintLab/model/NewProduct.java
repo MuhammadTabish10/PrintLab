@@ -38,7 +38,7 @@ public class NewProduct {
     private List<ProductGsm> productGsm = new ArrayList<>();
 
     @JsonIgnore
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "product_definition_id")
     private ProductDefinition productDefinition;
 }
