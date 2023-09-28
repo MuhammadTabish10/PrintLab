@@ -55,6 +55,7 @@ import { CardModule } from 'primeng/card';
 import { DashboardChartComponent } from './components/dashboard-chart/dashboard-chart.component';
 import { ChartModule } from 'primeng/chart';
 import { DashboardChartPieComponent } from './components/dashboard-chart-pie/dashboard-chart-pie.component';
+import { PermisionComponent } from './pages/permision/permision.component';
 
 
 
@@ -100,6 +101,7 @@ import { DashboardChartPieComponent } from './components/dashboard-chart-pie/das
     DashboardCardsComponent,
     DashboardChartComponent,
     DashboardChartPieComponent,
+    PermisionComponent,
   ],
   imports: [
     BrowserModule,
