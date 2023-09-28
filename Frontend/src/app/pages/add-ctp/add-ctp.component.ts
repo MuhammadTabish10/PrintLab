@@ -29,28 +29,29 @@ export class AddCtpComponent implements OnInit {
   productProcessArray: any[] = [];
 
   constructor(private ctpService: CtpService, private vendorService: VendorService,
-    private router: Router, private route: ActivatedRoute,private messageService: MessageService,
-    private productProcess:ProductProcessService) { }
+    private router: Router, private route: ActivatedRoute, private messageService: MessageService,
+    private productProcess: ProductProcessService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add'
-        this.getProductProcess();
       } else {
+        this.getProductProcess()
         this.buttonName = 'Update'
-        this.getProductProcess();
         this.ctpService.getCtpById(this.idFromQueryParam).subscribe(res => {
           this.ctpToUpdate = res
+          this.getProductProcess()
+          debugger
           this.LOneValue = this.ctpToUpdate.l1
           this.LTwoValue = this.ctpToUpdate.l2
           this.dimensionValue = this.ctpToUpdate.plateDimension
           this.vendorValue = this.ctpToUpdate.vendor
           this.rateValue = this.ctpToUpdate.rate
-          this.getProductProcess()
         })
       }
+      this.getProductProcess()
     })
   }
 
@@ -84,7 +85,7 @@ export class AddCtpComponent implements OnInit {
   }
 
 
-  getVendors(processId:any) {
+  getVendors(processId: any) {
     this.vendorService.getVendorByProductProcess(processId).subscribe(res => {
       this.vendorArray = res
       if (!Number.isNaN(this.idFromQueryParam)) {
@@ -133,7 +134,7 @@ export class AddCtpComponent implements OnInit {
   dimension() {
     this.LOneValue != "" && this.LTwoValue != "" ? this.dimensionValue = this.LOneValue + '" x ' + this.LTwoValue + '"' : this.dimensionValue = ''
   }
-  showError(error:any) {
+  showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

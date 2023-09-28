@@ -229,6 +229,6 @@ export class AddInventoryComponent implements OnInit {
     })
   }
   showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }
