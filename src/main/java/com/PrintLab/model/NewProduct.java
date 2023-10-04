@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.xml.soap.Text;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +21,16 @@ public class NewProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(columnDefinition = "TEXT")
     private String paperStock;
+
+    @Column(columnDefinition = "TEXT")
     private String size;
+
+    @Column(columnDefinition = "TEXT")
     private String quantity;
+
     private String printSide;
     private String jobColorFront;
     private String jobColorBack;
