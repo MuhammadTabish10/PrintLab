@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.xml.soap.Text;
 import java.util.ArrayList;
 import java.util.List;
 
