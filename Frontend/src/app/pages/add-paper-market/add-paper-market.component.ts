@@ -60,6 +60,7 @@ export class AddPaperMarketComponent implements OnInit {
         this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
           this.rateToUpdate = res
+          debugger
           const selectedVendor = this.vendorArray.find((vendor: any) => vendor.name === this.rateToUpdate.vendor);
           this.timeStampValue = this.formatDate(this.rateToUpdate.timeStamp)
           this.disabled = true
@@ -96,8 +97,9 @@ export class AddPaperMarketComponent implements OnInit {
 
 
   addPapermarketRate() {
+    debugger
     let obj = {
-      timeStamp: this.timeStampValue,
+      // timeStamp: this.timeStampValue,
       paperStock: this.paperStockValue.name,
       brand: this.brandValue,
       madeIn: this.madeInValue,

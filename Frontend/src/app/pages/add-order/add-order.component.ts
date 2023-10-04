@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { environment } from 'src/Environments/environment';
@@ -46,10 +46,25 @@ export class AddOrderComponent implements OnInit {
   machineId!: number
   fileUrl: string | null = null;
   file: File | null = null;
+  paperStock: any
+  paperStockItem: any
+  size: any
+  jobFront: any
+  jobColorBack: any
+  quantity: any
+  printSide: any
+  dynamicFields: any;
+  gsms: any
+  foundGsm: any;
+  optionsGsm: any = [
+    { name: '', value: '' }
+  ];
+  selectedGsm: any;
 
   constructor(private orderService: OrdersService, private router: Router,
-     private productService: ProductService, private route: ActivatedRoute,
-     private customerService: CustomerService,private messageService: MessageService) { }
+    private productService: ProductService, private route: ActivatedRoute,
+    private customerService: CustomerService, private messageService: MessageService,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.getCustomers()
@@ -62,6 +77,8 @@ export class AddOrderComponent implements OnInit {
         this.buttonName = 'Update'
         this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
           this.orderToUpdate = res
+          debugger
+          this.paperStockItem = this.orderToUpdate.paper
           this.selectedCustomer = this.orderToUpdate.customer
           this.totalAmount = this.orderToUpdate.price
           this.imgUrl = this.orderToUpdate.url
@@ -77,34 +94,18 @@ export class AddOrderComponent implements OnInit {
   }
 
   calculate() {
-    this.selectedProdDefArray.forEach((el: any) => {
-      el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'size' ? this.sizeValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'gsm' ? this.gsmValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'quantity' ? this.qtyValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(front)' ? this.jobFrontValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'printside' ? this.sideOptionValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)' ? this.jobBackValue = el.selected.productFieldValue.name : null
-      el.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.sheetValue = el.selected.productFieldValue.name : null
-    })
-    if (this.sideOptionValue != undefined) {
-      if (this.sideOptionValue == "SINGLE_SIDED") {
-        this.jobBackValue = null
-        this.impositionValue = false
-      }
-    }
+    debugger
     let obj = {
       pressMachineId: this.machineId,
       productValue: this.productName,
-      paper: this.paperValue,
+      paper: this.paperStockItem.name,
       sizeValue: this.sizeValue,
-      gsm: this.gsmValue,
+      gsm: Number(this.selectedGsm.name),
       quantity: this.qtyValue,
-      jobColorsFront: this.jobFrontValue,
-      sideOptionValue: this.sideOptionValue,
+      jobColorsFront: Number(this.jobFrontValue),
+      // sideOptionValue: this.sideOptionValue,
       impositionValue: this.impositionValue,
-      jobColorsBack: this.jobBackValue
+      jobColorsBack: Number(this.jobBackValue)
     }
     this.orderService.calculations(obj).subscribe(res => {
       let obj: any
@@ -118,12 +119,13 @@ export class AddOrderComponent implements OnInit {
 
   addOrder() {
     if (Number.isNaN(this.idFromQueryParam)) {
+      debugger
       let obj = {
         product: this.productName,
-        paper: this.paperValue,
+        paper: this.paperStockItem.name,
         size: this.sizeValue,
         sheetSizeValue: "18\"x23\"",
-        gsm: this.gsmValue,
+        gsm: this.selectedGsm.name,
         quantity: this.qtyValue,
         price: this.totalAmount,
         providedDesign: this.designValue,
@@ -140,6 +142,7 @@ export class AddOrderComponent implements OnInit {
         this.showError(error);
         this.visible = true;
       })
+      debugger
     } else {
       let obj = {
         id: this.idFromQueryParam,
@@ -167,64 +170,86 @@ export class AddOrderComponent implements OnInit {
     }
   }
 
+  // toggleFields(title: any) {
+  //   this.selectedProduct = []
+  //   this.productName = title.title
+  //   this.machineId = title.pressMachine.id
+  //   debugger
+  //   title.productDefinitionFieldList.forEach((el: any) => {
+  //     el.isPublic ? this.selectedProduct.push(el) : null
+  //     el.productField.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selectedValues[0].value : null
+  //     if (!Number.isNaN(this.idFromQueryParam) && this.orderToUpdate.jobColorsBack == null && el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
+  //       let index = this.selectedProduct.findIndex((item: any) => item.id == el.id)
+  //       this.selectedProduct.splice(index, 1)
+  //     }
+  //   })
+  //   this.selectedProdDefArray = []
+  // }
+
   toggleFields(title: any) {
-    this.selectedProduct = []
-    this.productName = title.title
-    this.machineId = title.pressMachine.id
-    title.productDefinitionFieldList.forEach((el: any) => {
-      el.isPublic ? this.selectedProduct.push(el) : null
-      el.productField.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selectedValues[0].value : null
-      if (!Number.isNaN(this.idFromQueryParam) && this.orderToUpdate.jobColorsBack == null && el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
-        let index = this.selectedProduct.findIndex((item: any) => item.id == el.id)
-        this.selectedProduct.splice(index, 1)
-      }
-    })
-    this.selectedProdDefArray = []
+    this.cdr.detectChanges();
+    this.productName = title.title;
+    this.machineId = title.pressMachine.id;
+    this.impositionValue = title.newProduct.imposition;
+    this.paperStock = title.newProduct.isPaperStockPublic ? JSON.parse(title.newProduct.paperStock) : null
+    this.size = title.newProduct.isSizePublic ? JSON.parse(title.newProduct.size) : null
+    this.quantity = title.newProduct.isQuantityPublic ? JSON.parse(title.newProduct.quantity) : null
+    this.printSide = title.newProduct.isPrintSidePublic ? JSON.parse(title.newProduct.printSide) : null
+    this.jobFront = title.newProduct.isJobColorFrontPublic ? JSON.parse(title.newProduct.jobColorFront) : null
+    this.jobColorBack = title.newProduct.isJobColorBackPublic ? JSON.parse(title.newProduct.jobColorBack) : null;
+    debugger
+
+    this.gsms = title.newProduct.productGsm
+
   }
 
-  selectProductDef(product: any, productDef: any) {
-    this.totalAmount = null
-    if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'SINGLE_SIDED') {
-      this.selectedProduct.forEach((el: any) => {
-        if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
-          let i = this.selectedProduct.indexOf(el)
-          this.jobBack = this.selectedProduct[i]
-          this.selectedProduct.splice(i, 1)
-        }
-      })
-    } else if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'DOUBLE_SIDED' && this.impositionValue == "true") {
-      this.selectedProduct.forEach((el: any) => {
-        if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
-          let i = this.selectedProduct.indexOf(el)
-          this.jobBack = this.selectedProduct[i]
-          this.selectedProduct.splice(i, 1)
-        }
-      })
-    } else if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'DOUBLE_SIDED' && this.impositionValue == "false") {
-      this.jobBack != null ? this.selectedProduct.push(this.jobBack) : null
-    }
-    let obj = {
-      id: product.id,
-      name: product.productField.name,
-      selected: productDef
-    }
-    if (this.selectedProdDefArray.length == 0) {
-      this.selectedProdDefArray.push(obj)
-    } else {
-      let flag = false
-      for (const el of this.selectedProdDefArray) {
-        if (el.id == product.id) {
-          const i = this.selectedProdDefArray.indexOf(el)
-          this.selectedProdDefArray[i] = obj
-          flag = false
-          break
-        } else {
-          flag = true
-        }
-      }
-      flag ? this.selectedProdDefArray.push(obj) : null
-    }
-  }
+
+
+
+  // selectProductDef(product: any, productDef: any) {
+  //   debugger
+  //   this.totalAmount = null
+  //   if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'SINGLE_SIDED') {
+  //     this.selectedProduct.forEach((el: any) => {
+  //       if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
+  //         let i = this.selectedProduct.indexOf(el)
+  //         this.jobBack = this.selectedProduct[i]
+  //         this.selectedProduct.splice(i, 1)
+  //       }
+  //     })
+  //   } else if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'DOUBLE_SIDED' && this.impositionValue == "true") {
+  //     this.selectedProduct.forEach((el: any) => {
+  //       if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
+  //         let i = this.selectedProduct.indexOf(el)
+  //         this.jobBack = this.selectedProduct[i]
+  //         this.selectedProduct.splice(i, 1)
+  //       }
+  //     })
+  //   } else if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'DOUBLE_SIDED' && this.impositionValue == "false") {
+  //     this.jobBack != null ? this.selectedProduct.push(this.jobBack) : null
+  //   }
+  //   let obj = {
+  //     id: product.id,
+  //     name: product.productField.name,
+  //     selected: productDef
+  //   }
+  //   if (this.selectedProdDefArray.length == 0) {
+  //     this.selectedProdDefArray.push(obj)
+  //   } else {
+  //     let flag = false
+  //     for (const el of this.selectedProdDefArray) {
+  //       if (el.id == product.id) {
+  //         const i = this.selectedProdDefArray.indexOf(el)
+  //         this.selectedProdDefArray[i] = obj
+  //         flag = false
+  //         break
+  //       } else {
+  //         flag = true
+  //       }
+  //     }
+  //     flag ? this.selectedProdDefArray.push(obj) : null
+  //   }
+  // }
 
   designToggle(design: any) {
     this.design = design
@@ -299,6 +324,27 @@ export class AddOrderComponent implements OnInit {
     }
   }
 
+  gsmFields() {
+    debugger
+    let value = this.paperStockItem.name;
+    this.dynamicFields = value;
+    let fgsm = this.gsms!.find((item: any) => item.name == value)
+    if (fgsm) {
+      this.foundGsm = true
+      let sGsm = fgsm.value.replace(/,/g, ' ').split(' ');
+      this.optionsGsm = sGsm.map((g: any) => {
+        return {
+          name: g,
+          value: g
+        }
+      })
+    }
+  }
+
+
+  getOptionsGsm(): any {
+    return this.optionsGsm == null ? [] : this.optionsGsm
+  }
 
   putValuesOnUpdate() {
     this.productArray.forEach((el: any) => {
@@ -407,7 +453,7 @@ export class AddOrderComponent implements OnInit {
       }
     })
   }
-  showError(error:any) {
+  showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

@@ -1,7 +1,7 @@
 <app-sidebar></app-sidebar>
 <div class="body-position">
   <app-dashboard-head></app-dashboard-head>
-  <div style="background-color: #f8f9fa;">
+  <div style="background-color: #f8f9fa">
     <div class="container-fluid">
       <div class="row">
         <div class="col-6">
@@ -24,23 +24,91 @@
             </div>
           </div>
 
-
           <div class="main-container">
             <div class="order-body py-2 px-3">
-              <div
-                *ngFor="let product of selectedProduct; let i = index"
-                class="my-3"
-              >
-                <label class="add-order-label m-0">{{
-                  product?.productField.name
-                }}</label>
+              <div *ngIf="paperStock" class="my-3">
+                <label class="add-order-label m-0">PaperStock</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  [(ngModel)]="paperStockItem"
+                  (ngModelChange)="gsmFields()"
+                >
+                  <option *ngFor="let paper of paperStock" [ngValue]="paper">
+                    {{ paper.name }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="size" class="my-3">
+                <label class="add-order-label m-0">Size</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  [(ngModel)]="sizeValue"
+                >
+                  <option *ngFor="let sizes of size" [value]="sizes.name">
+                    {{ sizes.name }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="quantity" class="my-3">
+                <label class="add-order-label m-0">Quantity</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  [(ngModel)]="qtyValue"
+                >
+                  <option *ngFor="let qty of quantity" [value]="qty.name">
+                    {{ qty.name }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="printSide" class="my-3">
+                <label class="add-order-label m-0">Print Side</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  [(ngModel)]="sideOptionValue"
+                >
+                  <option *ngFor="let side of printSide" [value]="side.name">
+                    {{ side.name }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="jobFront" class="my-3">
+                <label class="add-order-label m-0">Job Color Front</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  [(ngModel)]="jobFrontValue"
+                >
+                  <option *ngFor="let front of jobFront" [value]="front.name">
+                    {{ front.name }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="jobColorBack" class="my-3">
+                <label class="add-order-label m-0">job Color Back</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  [(ngModel)]="jobBackValue"
+                >
+                  <option *ngFor="let back of jobColorBack" [value]="back.name">
+                    {{ back.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-3" [hidden]="!foundGsm">
+                <label class="add-order-label m-0"
+                  >GSM FOR {{ dynamicFields }}</label
+                >
                 <p-dropdown
+                  [style]="{ height: '40px' }"
                   styleClass="w-100"
-                  [options]="product?.selectedValues"
-                  (onChange)="selectProductDef(product, $event.value)"
-                  [(ngModel)]="valuesToUpdate[i]"
-                  optionLabel="productFieldValue.name"
-                  placeholder="Select Product"
+                  [options]="optionsGsm"
+                  optionLabel="name"
+                  [(ngModel)]="selectedGsm"
                 ></p-dropdown>
               </div>
               <button
@@ -52,7 +120,6 @@
               </button>
             </div>
           </div>
-
 
           <div class="main-container">
             <div class="order-body py-2 px-3">
@@ -119,11 +186,8 @@
           </div>
         </div>
 
-
-
         <div class="col-6 mt-5 p-3 h-100 invoice">
           <h4 class="text-center">Order Summary</h4>
-
 
           <div class="my-3">
             <h5 class="text-decoration-underline">Order Summary:</h5>
@@ -140,8 +204,6 @@
               <h6 class="d-inline-block">Rs, {{ totalAmount }}</h6>
             </div>
           </div>
-
-
 
           <div class="my-3">
             <h5 class="text-decoration-underline">Design Information:</h5>
@@ -180,4 +242,3 @@
   </div>
 </div>
 <p-toast></p-toast>
-

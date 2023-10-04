@@ -28,6 +28,7 @@ export class ProductsComponent implements OnInit {
 
   getProducts() {
     this.productService.getProducts().subscribe(res => {
+      debugger
       this.productDefinitionArray = res
       this.productDefinitionArray.length == 0 ? this.tableData = true : this.tableData = false
     }, error => {
@@ -67,6 +68,6 @@ export class ProductsComponent implements OnInit {
     this.router.navigate(['/viewProduct'], { queryParams: { id: id } });
   }
   showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

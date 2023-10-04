@@ -164,6 +164,7 @@ export class AddInventoryComponent implements OnInit {
         this.showError(error);
       })
     } else {
+      debugger
       let obj = {
         id: this.idFromQueryParam,
         created_at: this.inventoryToUpdate.created_at,

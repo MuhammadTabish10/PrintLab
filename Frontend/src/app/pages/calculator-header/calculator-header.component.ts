@@ -136,7 +136,7 @@ export class CalculatorHeaderComponent implements OnInit {
       gsm: this.gsmValue,
       jobColorsFront: this.jobFrontValue,
       sheetSizeValue: this.sheetValue,
-      sideOptionValue: this.sideOptionValue,
+      // sideOptionValue: this.sideOptionValue,
       impositionValue: this.impositionValue,
       jobColorsBack: this.jobBackValue,
       margin: this.receivedData?.margin,
@@ -148,12 +148,12 @@ export class CalculatorHeaderComponent implements OnInit {
     this.orderService.calculations(obj).subscribe(res => {
       this.calculateedObj.emit(res);
     }, (error) => {
-      
+
       this.showError(error);
       this.visible = true;
     })
   }
-  
+
   onImpositionValueChange(): void {
     if (this.impositionValue === 'Applied' || this.sideOptionValue === 'SINGLE_SIDED') {
       setTimeout(() => {
@@ -332,7 +332,7 @@ export class CalculatorHeaderComponent implements OnInit {
     })
   }
   showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 
 }

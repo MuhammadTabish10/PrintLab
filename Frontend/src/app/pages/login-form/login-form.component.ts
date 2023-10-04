@@ -26,6 +26,7 @@ export class LoginFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    localStorage.removeItem('token')
   }
 
   addUser() {
@@ -40,7 +41,7 @@ export class LoginFormComponent implements OnInit {
     }, error => {
       this.showError(error);
       this.visible = true
-      
+
     })
   }
 
@@ -50,6 +51,6 @@ export class LoginFormComponent implements OnInit {
   }
   showError(error:any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
-    
+
   }
 }

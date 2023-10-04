@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 import { OrdersService } from 'src/app/services/orders.service';
@@ -22,10 +22,12 @@ export class OrdersComponent implements OnInit {
   currentUser: any
   search: string = ''
 
-  constructor(private orderService: OrdersService, private router: Router,private messageService: MessageService) { }
+  constructor(private orderService: OrdersService, private router: Router,private messageService: MessageService,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.getOrders()
+    this.cdr.detectChanges();
   }
 
   getOrders() {
@@ -77,6 +79,6 @@ export class OrdersComponent implements OnInit {
     }
   }
   showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }
