@@ -29,6 +29,7 @@ export class LoginFormComponent implements OnInit {
     localStorage.removeItem('token')
   }
 
+
   addUser() {
     let obj = {
       name: this.userNamevalue,
@@ -38,6 +39,7 @@ export class LoginFormComponent implements OnInit {
       this.token = res
       localStorage.setItem("token", this.token.jwt)
       this.router.navigateByUrl('/dashboard')
+      // window.location.reload()
     }, error => {
       this.showError(error);
       this.visible = true

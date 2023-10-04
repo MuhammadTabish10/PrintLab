@@ -8,6 +8,8 @@ import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -123,6 +125,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             existingPmr.setVerified(paperMarketRates.getVerified());
             existingPmr.setNotes(paperMarketRates.getNotes());
             existingPmr.setStatus(paperMarketRates.getStatus());
+            existingPmr.setTimeStamp(LocalDateTime.now());
 
             PaperMarketRates updatedPmr = paperMarketRatesRepository.save(existingPmr);
             return toDto(updatedPmr);
