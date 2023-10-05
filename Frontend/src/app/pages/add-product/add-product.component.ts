@@ -7,342 +7,325 @@ import { ProductProcessService } from 'src/app/services/product-process.service'
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
-  selector: 'app-add-product',
-  templateUrl: './add-product.component.html',
-  styleUrls: ['./add-product.component.css']
+    selector: 'app-add-product',
+    templateUrl: './add-product.component.html',
+    styleUrls: ['./add-product.component.css']
 })
 export class AddProductComponent implements OnInit {
+    buttonName: String = 'Add'
 
-  visible!: boolean
-  error: string = ''
-  fieldList: any = []
-  productDefinition: any = [];
-  valuesArr: any = []
-  valuesAddFlag: Boolean = false
-  toggleFlag: any = []
-  productProcessList: any = []
-  vendorList: any = []
-  process: any = []
-  titleInput: String = ''
-  buttonName: String = 'Add'
-  idFromQueryParam: any
-  productToUpdate: any
-  valuesSelected: any = []
-  titleObj: any = {}
-  impostionObj: any = {}
-  publicArray: any = []
-  status: boolean = true
-  pressMachineArray: any = []
-  selectedMachine: any = {}
-  machineIndex!: number
-  arr = [{ id: 1, name: "a" }, { id: 2, name: "b" }, { id: 3, name: "c" }, { id: 4, name: "d" }, { id: 5, name: "e" }]
-  elementGenerated: boolean = false;
+    titleInput: any;
+    status: boolean = true
+    fieldList: any = []
+    paperStockFields: any;
+    paperStockIsPublic: boolean = true
+    valuesSelected: any = []
+    gsmSizes: any = []
+    gsmFields: any = []
+    productGsm: any = []
+    size: any = []
+    selectedSizes: any = '' || []
+    sizeIsPublic: boolean = true
+    paperStockNames: string = '';
+    quantityList: any = []
+    selectedQuantity: any = ''
+    quantityIsPublic: boolean = true
+    PressMachines: any = []
+    selectedPressMachine: any
 
-  constructor(private service: ProductService, private route: ActivatedRoute, 
-    private router: Router, private productProcessService: ProductProcessService, 
-    private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService
-    ,private messageService: MessageService) { }
+    productGsmNames: any = ''
 
-  ngOnInit(): void {
-    this.getFields()
-    this.getProductProcessList()
-    this.route.queryParams.subscribe(param => {
-      this.idFromQueryParam = +param['id']
-      if (Number.isNaN(this.idFromQueryParam)) {
+    printSideList: any = []
+    selectedPrintSide: any = ''
+    printSideIsPublic: boolean = true
+
+    jobColorFrontList: any = []
+    selectedJobColorFront: any = ''
+    jobColorFrontIsPublic: boolean = true
+
+    jobColorBackList: any = []
+    selectedJobColorBack: any = ''
+    jobColorBackIsPublic: boolean = true
+
+    imposition: boolean = false
+    createValue: any;
+
+    selectedSizesForEdit: any = []
+    selectedQuantityForEdit: any = []
+
+    object: any = {
+        name: '',
+        value: '',
+        isPublic: ''
+    }
+    productId: any;
+    selectedPrintSideForEdit: any = [];
+    selectedJobColorFrontForEdit: any = [];
+    selectedJobColorbackForEdit: any = [];
+
+    constructor(private service: ProductService, private route: ActivatedRoute,
+        private router: Router, private productProcessService: ProductProcessService,
+        private productFieldService: ProductDefinitionService, private pressMachineService: PressMachineService
+        , private messageService: MessageService) { }
+
+    ngOnInit(): void {
+
+        this.getFields()
+
         this.getPressMachines()
-        this.buttonName = 'Add'
-      } else {
-        this.buttonName = 'Update'
-        this.service.getById(this.idFromQueryParam).subscribe(res => {
-          this.productToUpdate = res
-          this.titleInput = this.productToUpdate.title
-          this.status = this.productToUpdate.status
-          this.productDefinition = this.productToUpdate.productDefinitionFieldList
-          this.selectedMachine = this.productToUpdate.pressMachine
-          this.process = this.productToUpdate.productDefinitionProcessList
-          this.getPressMachines()
-          this.process.forEach((el: any) => {
-            this.service.getVendorByProcessId(el.productProcess.id).subscribe(res => {
-              this.vendorList.push(res)
-            }, error => {
-              this.showError(error);
-              this.visible = true;
+        this.route.queryParams.subscribe(param => {
+            this.productId = +param['id'];
+            if (this.productId) {
+                this.fetchId(this.productId);
+                this.getFields()
+
+            }
+        });
+
+
+    }
+
+    fetchId(id: number) {
+        debugger
+        this.service.getById(id).subscribe((res: any) => {
+            this.titleInput = res.title;
+            this.status = res.status;
+
+            let collectSizes = res.newProduct.size.split(',')
+            collectSizes.forEach((element: any) => {
+                let findSize = this.size.productFieldValuesList.find((el: any) => el.name == element)
+                if (findSize) {
+                    this.selectedSizesForEdit.push(findSize)
+
+                }
+
+            });
+
+            let collectQuantity = res.newProduct.quantity.split(',')
+            collectQuantity.forEach((element: any) => {
+                let findQuantity = this.quantityList.productFieldValuesList.find((el: any) => el.name == element)
+                if (findQuantity) {
+                    this.selectedQuantityForEdit.push(findQuantity)
+                }
             })
-          })
-          for (let i = 0; i < this.fieldList.length; i++) {
-            if (this.productDefinition[i] != undefined) {
-              if (this.fieldList[i].id == this.productDefinition[i].productField.id) {
-                this.publicArray[i] = this.productDefinition[i].isPublic
-                this.valuesSelected[i] = []
-                this.productDefinition[i].selectedValues.forEach((el: any) => {
-                  this.valuesSelected[i].push(el.productFieldValue)
-                })
-              }
-            }
-            if (this.fieldList[i].type == 'TOGGLE') {
-              this.toggleFlag = []
-              this.productToUpdate.productDefinitionFieldList.forEach((el: any) => {
-                if (el.productField.type == 'TOGGLE' && this.fieldList[i].id == el.productField.id) {
-                  let v = undefined
-                  el.selectedValues[0].value == 'true' ? v = true : v = false
-                  this.toggleFlag.push(v)
-                } else {
-                  this.toggleFlag.push(null)
+
+            let collectPrintSide = res.newProduct.printSide.split(',')
+            collectPrintSide.forEach((element: any) => {
+                let printSide = this.printSideList.productFieldValuesList.find((el: any) => el.name == element)
+                if (printSide) {
+                    this.selectedPrintSideForEdit.push(printSide)
                 }
-              })
-            }
-          }
-        }, error => {
-          this.showError(error);
-          this.visible = true;
-        })
-      }
-    })
-  }
+            })
 
-  getStatusValue() {
-    this.status = !this.status
-  }
-
-  showPublic(i: any, id: any) {
-    let flag = false
-    for (const el of this.productDefinition) {
-      if (el.productField.id == id) {
-        el.isPublic = !el.isPublic
-        flag = false
-        break
-      } else {
-        flag = true
-      }
-    }
-    flag ? this.publicArray[i] = !this.publicArray[i] : null
-  }
-
-  productDefinitionComposing(field: any, obj: any, publicIndex: any) {
-    let object: any
-    obj.hasOwnProperty('itemValue') ? object = obj.itemValue : object = obj.value
-    if (this.productDefinition.length == 0) {
-      if (Array.isArray(object)) {
-        let values: any = []
-        for (let i = 0; i < object.length; i++) {
-          values[i] = { productFieldValue: object[i] }
-        }
-        this.productDefinition.push({
-          isPublic: this.publicArray[publicIndex],
-          productField: field,
-          selectedValues: values
-        })
-      } else {
-        this.valuesArr.push({ productFieldValue: object })
-        this.productDefinition.push({
-          isPublic: this.publicArray[publicIndex],
-          productField: field,
-          selectedValues: this.valuesArr
-        })
-      }
-    } else {
-      for (const element of this.productDefinition) {
-        if (element.productField.id == field.id) {
-          if (Array.isArray(object)) {
-            if (element.selectedValues.length == field.productFieldValuesList.length) {
-              const indoxOfElement = this.productDefinition.indexOf(element);
-              this.productDefinition.splice(indoxOfElement, 1);
-
-            }
-            else {
-              element.selectedValues = []
-              let values: any = []
-              for (let k = 0; k < object.length; k++) {
-                values[k] = { productFieldValue: object[k] }
-              }
-              element.selectedValues = values
-            }
-            this.valuesAddFlag = false
-            break
-          } else {
-            if (field.type == "DROPDOWN") {
-              element.selectedValues[0].productFieldValue = object
-              this.valuesAddFlag = false
-              break
-            } else {
-              const index = element.selectedValues.findIndex((el: any) => el.productFieldValue.id === object.id);
-              if (index == -1) {
-                element.selectedValues.push({ productFieldValue: object });
-              } else {
-                if (!Number.isNaN(this.idFromQueryParam)) {
-                  this.service.deleteSelectedField(this.idFromQueryParam, element.id, element.selectedValues[index].id).subscribe(() => {
-                    element.selectedValues.splice(index, 1);
-                  }, error => {
-                    this.showError(error);
-                    this.visible = true;
-                  })
+            let collectJobColorFront = res.newProduct.jobColorFront.split(',')
+            collectJobColorFront.forEach((element: any) => {
+                let jobcolorFront = this.jobColorFrontList.productFieldValuesList.find((el: any) => el.name == element)
+                if (jobcolorFront) {
+                    this.selectedJobColorFrontForEdit.push(jobcolorFront)
                 }
-                if (element.selectedValues.length == 0) {
-                  const indoxOfElement = this.productDefinition.indexOf(element);
-                  this.productDefinition.splice(indoxOfElement, 1);
+            })
+
+            let collectJobColorBack = res.newProduct.jobColorBack.split(',')
+            collectJobColorBack.forEach((element: any) => {
+                let jobcolorBack = this.jobColorBackList.productFieldValuesList.find((el: any) => el.name == element)
+                if (jobcolorBack) {
+                    this.selectedJobColorbackForEdit.push(jobcolorBack)
                 }
-              }
-              this.valuesAddFlag = false
-              break
+            })
+
+            // Populate press machine dropdown
+            this.selectedPressMachine = res.pressMachine.id;
+            this.PressMachines.forEach((element:any) => {
+                if(element.id == this.selectedPressMachine){
+                    this.selectedPressMachine = element
+                }
+            });
+
+            this.gsmFields = res.newProduct.productGsm
+        });
+    }
+
+    getPressMachines() {
+        this.pressMachineService.getPressMachine().subscribe((res: any) => {
+            this.PressMachines = res
+        })
+    }
+    getFields() {
+        this.productFieldService.getProductField().subscribe(res => {
+            this.fieldList = res
+
+            var [
+                paperStock,
+                size,
+                quantity,
+                gsm,
+                printSide,
+                jobColorFront,
+                jobColorBack,
+                imposition
+            ] = this.fieldList;
+
+            this.paperStockFields = paperStock
+            this.size = size
+            this.quantityList = quantity
+            this.printSideList = printSide
+            this.jobColorFrontList = jobColorFront
+            this.jobColorBackList = jobColorBack
+
+
+            this.fieldList.forEach((element: any) => {
+                if (element.name == 'GSM') {
+                    element.productFieldValuesList.forEach((size: any) => {
+                        this.gsmSizes.push(size)
+
+                    });
+                }
+            });
+        })
+    }
+
+    machine(obj: any) {
+        this.selectedPressMachine = obj.value.id
+
+    }
+
+    togglePublic(element: any) {
+        element.isPublic = !element.isPublic;
+    }
+
+    productDefinitionComposing(paperStock: any) {
+
+        this.paperStockNames = ''
+        this.paperStockNames = paperStock.value.map((element: any) => element.name).join(',');
+
+        this.paperStockNames = paperStock.itemValue
+
+        let obj = {
+            gsmNameFor: paperStock.itemValue.name,
+            gsmSizes: this.gsmSizes,
+            isPublic: true
+        }
+
+        let findIndex = this.gsmFields.findIndex((el: any) => el.gsmNameFor == paperStock.itemValue.name)
+
+        if (findIndex == -1) {
+            this.gsmFields.push(obj)
+        } else {
+            this.gsmFields.splice(findIndex, 1)
+            this.productGsm.splice(findIndex, 1)
+        }
+
+    }
+
+    collectGsmSizes(obj: any, paper: any) {
+
+        if (obj.itemValue == undefined) {
+            this.createValue = '';
+            this.createValue = obj.value.map((element: any) => element.name).join(',');
+
+            this.object = {
+                name: paper.gsmNameFor,
+                value: this.createValue,
+                isPublic: paper.isPublic
             }
-          }
         } else {
-          this.valuesAddFlag = true
+            this.object = {
+                name: paper.gsmNameFor,
+                value: obj?.itemValue?.name,
+                isPublic: paper.isPublic
+            }
         }
-      }
 
-      if (this.valuesAddFlag) {
-        if (Array.isArray(object)) {
-          let values: any = []
-          for (let i = 0; i < object.length; i++) {
-            values[i] = { productFieldValue: object[i] }
-          }
-          this.productDefinition.push({
-            isPublic: this.publicArray[publicIndex],
-            productField: field,
-            selectedValues: values
-          })
+        let findExisting = this.productGsm.find((el: any) => el.name == paper.gsmNameFor)
+
+        if (findExisting) {
+            findExisting.value = ""
+            findExisting.value = obj.value.map((element: any) => element.name).join(',');
+
         } else {
-          let valueSelected = []
-          valueSelected.push({ productFieldValue: object })
-          this.productDefinition.push({
-            isPublic: this.publicArray[publicIndex],
-            productField: field,
-            selectedValues: valueSelected
-          })
+            this.productGsm.push(this.object)
         }
-      }
     }
-    this.valuesAddFlag = false
-  }
 
-  postProduct() {
-    if (Number.isNaN(this.idFromQueryParam)) {
-      for (let i = 0; i < this.fieldList.length; i++) {
-        if (this.fieldList[i].type == 'TOGGLE') {
-          this.productDefinition.push({
-            selectedValues: [{ value: this.toggleFlag[i] }],
-            productField: this.fieldList[i]
-          })
-        }
-      }
-      const obj = {
-        title: this.titleInput,
-        status: this.status,
-        productDefinitionFieldList: this.productDefinition,
-        pressMachine: this.selectedMachine,
-        productDefinitionProcessList: this.process,
-      };
-      this.service.addProduct(obj).subscribe(res => {
-        this.router.navigateByUrl('/products')
-      }, error => {
-        this.showError(error);
-        this.visible = true;
-      })
-    } else {
-      for (let i = 0; i < this.productDefinition.length; i++) {
-        for (let j = 0; j < this.fieldList.length; j++) {
-          this.productDefinition[i].productField.id == this.fieldList[j].id ? this.productDefinition[i].selectedValues[0].value = this.toggleFlag[i] : null
-        }
-      }
-      const obj = {
-        id: this.idFromQueryParam,
-        title: this.titleInput,
-        status: this.status,
-        productDefinitionFieldList: this.productDefinition,
-        pressMachine: this.selectedMachine,
-        productDefinitionProcessList: this.process,
-      };
-      this.service.updateProduct(this.idFromQueryParam, obj).subscribe(() => {
-        this.router.navigateByUrl('/products')
-      }, error => {
-        this.showError(error);
-        this.visible = true;
-      })
+    sizes(obj: any) {
+        debugger
+        const selectedSizeNames = obj.value.map((element: any) => element.name);
+        this.selectedSizes = selectedSizeNames.join(',');
     }
-  }
 
-  selectProcess(obj: any, i: any) {
-    this.service.getVendorByProcessId(obj.id).subscribe(res => {
-      if (this.process[i].productProcess.id == obj.id) {
-        this.vendorList[i] = res
-      } else {
-        this.vendorList.push(res)
-      }
-    }, error => {
-      this.showError(error);
-      this.visible = true
-    })
-  }
-  getFields() {
-    this.productFieldService.getProductField().subscribe(res => {
-      this.fieldList = res
-      this.fieldList.forEach((field: any) => {
-        field.type != 'TEXTFIELD' && field.type != 'TOGGLE' ? this.publicArray.push(false) : this.publicArray.push(null)
-        if (field.type == 'TOGGLE') {
-          this.toggleFlag.push(true)
+    quantity(obj: any) {
+        const selectedQuantityNames = obj.value.map((element: any) => element.name);
+        this.selectedQuantity = selectedQuantityNames.join(',');
+    }
+
+
+    printSide(obj: any) {
+        const selectedPrintSideNames = obj.value.map((element: any) => element.name);
+        this.selectedPrintSide = selectedPrintSideNames.join(',');
+    }
+
+
+    jobColorFront(obj: any) {
+        const selectedJobColorFrontNames = obj.value.map((element: any) => element.name);
+        this.selectedJobColorFront = selectedJobColorFrontNames.join(',');
+    }
+
+
+    jobColorBack(obj: any) {
+        const selectedJobColorBackNames = obj.value.map((element: any) => element.name);
+        this.selectedJobColorBack = selectedJobColorBackNames.join(',');
+    }
+
+
+    extractPaperStock() {
+        const productGsmNames = this.productGsm.map((element: any) => element.name);
+        this.productGsmNames = productGsmNames.join(',');
+    }
+
+
+    postProduct() {
+        this.extractPaperStock();
+
+        const payload = {
+            title: this.titleInput,
+            status: true,
+            pressMachine: {
+                id: this.selectedPressMachine
+            },
+            newProduct: {
+                paperStock: this.productGsmNames,
+                size: this.selectedSizes,
+                quantity: this.selectedQuantity,
+                printSide: this.selectedPrintSide,
+                jobColorFront: this.selectedJobColorFront,
+                jobColorBack: this.selectedJobColorBack,
+                imposition: this.imposition,
+                isPaperStockPublic: this.paperStockIsPublic,
+                isSizePublic: this.sizeIsPublic,
+                isQuantityPublic: this.quantityIsPublic,
+                isPrintSidePublic: this.printSideIsPublic,
+                isJobColorFrontPublic: this.jobColorFrontIsPublic,
+                isJobColorBackPublic: this.jobColorBackIsPublic,
+                productGsm: this.productGsm
+            }
+        };
+
+        if (this.productId) {
+            // Update existing product
+            this.service.updateProduct(this.productId, payload).subscribe((res: any) => {
+                console.log(res);
+                // Redirect to the product list page or perform other actions
+                this.router.navigateByUrl('/products');
+            });
         } else {
-          this.toggleFlag.push(null)
+            // Add new product
+            this.service.addProduct(payload).subscribe((res: any) => {
+                console.log(res);
+                // Redirect to the product list page or perform other actions
+                this.router.navigateByUrl('/products');
+            });
         }
-        field.type == 'TEXTFIELD' ? this.titleObj = field : null
-      })
-    }, error => {
-      this.showError(error);
-      this.visible = true;
-    })
-  }
-  getProductProcessList() {
-    this.productProcessService.getProductProcess().subscribe(res => {
-      this.productProcessList = res
-    }, error => {
-      this.showError(error);
-      this.visible = true;
-    })
-  }
-  getToggleValue(i: any) {
-
-    this.toggleFlag[i] = !this.toggleFlag[i]
-  }
-  generateElement() {
-    this.elementGenerated = true;
-    this.process.push({ productProcess: null, vendor: null });
-  }
-  removeElement(index: number) {
-
-    if (!Number.isNaN(this.idFromQueryParam)) {
-      this.service.deleteProcess(this.idFromQueryParam, this.process[index].id).subscribe(res => {
-        this.process.splice(index, 1);
-        this.vendorList.splice(index, 1);
-
-      }, error => {
-        this.showError(error);
-        this.visible = true;
-      })
-    } else {
-      this.process.splice(index, 1);
-      this.vendorList.splice(index, 1);
     }
-  }
 
-  getPressMachines() {
-    this.pressMachineService.getPressMachine().subscribe(res => {
-      this.pressMachineArray = res
-      !Number.isNaN(this.idFromQueryParam) ? this.machineIndex = this.pressMachineArray.findIndex((el: any) => el.id == this.selectedMachine.id) : null
-    }, error => {
-      this.showError(error);
-      this.visible = true
-    })
-  }
 
-  machine(obj: any) {
-    this.selectedMachine = obj
-  }
-
-  get id(): boolean {
-    return Number.isNaN(this.idFromQueryParam)
-  }
-
-  showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
-  }
 }

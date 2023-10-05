@@ -11,28 +11,15 @@
         <div class="row">
           <div class="col-9 mb-3">
             <div class="mb-3">
-              <label for="formGroupExampleInput" class="form-label"
-                >Title</label
-              >
-              <input
-                type="text"
-                class="form-control bg-white"
-                id="formGroupExampleInput"
-                placeholder="Enter title"
-                name="titleInput"
-                [(ngModel)]="titleInput"
-                required
-              />
+              <label for="formGroupExampleInput" class="form-label">Title</label>
+              <input type="text" class="form-control bg-white" id="formGroupExampleInput" placeholder="Enter title"
+                name="titleInput" [(ngModel)]="titleInput" required />
             </div>
           </div>
           <div class="col-3 mb-3">
             <label class="add-order-label m-0">Status</label><br />
             <label class="switch mt-2">
-              <input
-                type="checkbox"
-                [checked]="status"
-                (click)="getStatusValue()"
-              />
+              <input type="checkbox" [checked]="status" />
               <span class="slider round"></span>
             </label>
           </div>
@@ -49,178 +36,142 @@
     <div class="order-body py-2">
       <div class="container">
         <div class="row">
-          <div
-            class="col-md-6 form-group my-3"
-            style="padding: 0 10px"
-            *ngFor="let item of fieldList; let i = index"
-          >
-            <div *ngIf="item.type == 'TEXTFIELD'">
-              <!--Textfield -->
-              <label class="add-order-label m-0">{{ item.name }}</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter {{ item.name }}"
-                name="item-name"
-                required
-              />
+          <div class="col-md-6 form-group my-3" style="padding: 0 10px">
+
+            <!--MultiSelect -->
+            <div class="d-flex justify-content-between">
+              <label for="exampleInputEmail1" class="form-label me-2">{{ paperStockFields?.name }}</label>
+              <small>Show as public
+                <input type="checkbox" [checked]="paperStockIsPublic" [(ngModel)]="paperStockIsPublic" /></small>
+              <!-- (click)="showPublic(i, item.id)" -->
             </div>
-            <div *ngIf="item.type == 'MULTIDROPDOWN'">
-              <!--MultiSelect -->
-              <div class="d-flex justify-content-between">
-                <label for="exampleInputEmail1" class="form-label me-2">{{ item.name }}</label>
-                <small
-                  >Show as public
-                  <input
-                    type="checkbox"
-                    (click)="showPublic(i, item.id)"
-                    [(ngModel)]="publicArray[i]"
-                /></small>
+
+            <p-multiSelect id="demo" (onChange)="productDefinitionComposing($event)" styleClass="w-100"
+              [options]="paperStockFields?.productFieldValuesList" defaultLabel="Select {{ paperStockFields?.name }}"
+              [(ngModel)]="valuesSelected" optionLabel="name" display="chip" name="valuesSelected">
+              
+            </p-multiSelect>
+
+
+          </div>
+
+          <div class="col-md-6 form-group my-3" style="padding: 0 10px" *ngFor="let el of gsmFields">
+            <div class="d-flex justify-content-between">
+            <label for="exampleInputEmail1" class="form-label me-2">Gsm For {{ el.gsmNameFor || el.name }}</label>
+            <small>Show as public
+              <input type="checkbox" [checked]="el.isPublic" (change)="togglePublic(el)" /></small>
+            </div>
+            <!-- (onChange)="productDefinitionComposing($event)" -->
+            <!-- [(ngModel)]="valuesSelected" -->
+            <!-- name="valuesSelected" -->
+            <p-multiSelect styleClass="w-100" (onChange)="collectGsmSizes($event , el)" [options]="gsmSizes"
+              defaultLabel="Select Gsm" optionLabel="name" display="chip"></p-multiSelect>
+          </div>
+
+          <div class="col-md-6 form-group my-3" style="padding: 0 10px" >
+            <div class="d-flex justify-content-between">
+
+            <label for="exampleInputEmail1" class="form-label me-2">Size</label>
+            <small>Show as public
+              <input type="checkbox" [checked]="sizeIsPublic" [(ngModel)]="sizeIsPublic" /></small>
+            </div>
+              <p-multiSelect styleClass="w-100" (onChange)="sizes($event)" [options]="size.productFieldValuesList"
+                defaultLabel="Select Gsm" optionLabel="name" display="chip" name="valuesSelected" [(ngModel)]="selectedSizesForEdit"></p-multiSelect>
+          
+
+          </div>
+
+          <div class="col-md-6 form-group my-3" style="padding: 0 10px" >
+            <div class="d-flex justify-content-between">
+            <label for="exampleInputEmail1" class="form-label me-2">Quantity</label>
+            <small>Show as public
+              <input type="checkbox" [checked]="quantityIsPublic" [(ngModel)]="quantityIsPublic" /></small>
+            </div>
+              <p-multiSelect styleClass="w-100"  (onChange)="quantity($event)" [options]="quantityList.productFieldValuesList"
+              defaultLabel="Select Gsm" optionLabel="name" display="chip" [(ngModel)]="selectedQuantityForEdit"></p-multiSelect>
+
+          </div>
+
+          <div class="col-md-6 form-group my-3" style="padding: 0 10px" >
+            <div class="d-flex justify-content-between">
+            <label for="exampleInputEmail1" class="form-label me-2">Print Side</label>
+            <small>Show as public
+              <input type="checkbox" [checked]="printSideIsPublic" [(ngModel)]="printSideIsPublic" /></small>
+            </div>
+              <p-multiSelect styleClass="w-100"  (onChange)="printSide($event)" [options]="printSideList.productFieldValuesList"
+              defaultLabel="Select Gsm" optionLabel="name" display="chip" [(ngModel)]="selectedPrintSideForEdit"></p-multiSelect>
+
+          </div>
+
+          <div class="col-md-6 form-group my-3" style="padding: 0 10px" >
+            <div class="d-flex justify-content-between">
+            <label for="exampleInputEmail1" class="form-label me-2">JobColor(Front)</label>
+            <small>Show as public
+              <input type="checkbox" [checked]="jobColorFrontIsPublic" [(ngModel)]="jobColorFrontIsPublic" /></small>
+            </div>
+              <p-multiSelect styleClass="w-100"  (onChange)="jobColorFront($event)" [options]="jobColorFrontList.productFieldValuesList"
+              defaultLabel="Select Gsm" optionLabel="name" display="chip" [(ngModel)]="selectedJobColorFrontForEdit"></p-multiSelect>
+
+          </div>
+
+          <div class="col-md-6 form-group my-3" style="padding: 0 10px" >
+            <div class="d-flex justify-content-between">
+            <label for="exampleInputEmail1" class="form-label me-2">JobColor(Back)</label>
+            <small>Show as public
+              <input type="checkbox" [checked]="jobColorBackIsPublic" [(ngModel)]="jobColorBackIsPublic" /></small>
+            </div>
+              <p-multiSelect styleClass="w-100"  (onChange)="jobColorBack($event)" [options]="jobColorBackList.productFieldValuesList"
+              defaultLabel="Select Gsm" optionLabel="name" display="chip"  [(ngModel)]="selectedJobColorbackForEdit"></p-multiSelect>
+
+          </div>
+
+          <div class="col-md-6 form-group my-3" style="padding: 0 10px" >
+            <label class="add-order-label m-0">Imposition</label><br />
+            <label class="switch mt-2">
+              <input type="checkbox" [checked]="imposition" [(ngModel)]="imposition" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+        </div>
+
+        <h4>Press Machine</h4>
+        <div class="order-body py-2 my-2">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <p-dropdown
+                  [options]="PressMachines"
+                  optionLabel="name"
+                  placeholder="Select Press Machine"
+                  (onChange)="machine($event)"
+                  styleClass="w-100"
+                  name="pressMachine"
+                  [(ngModel)]="selectedPressMachine"
+                ></p-dropdown>
               </div>
-              <p-multiSelect
-                (onChange)="productDefinitionComposing(item, $event, i)"
-                styleClass="w-100"
-                [options]="item.productFieldValuesList"
-                defaultLabel="Select {{ item.name }}"
-                [(ngModel)]="valuesSelected[i]"
-                optionLabel="name"
-                display="chip"
-                name="valuesSelected"
-              ></p-multiSelect>
-            </div>
-            <div *ngIf="item.type == 'DROPDOWN'">
-              <!--DropDown -->
-              <div class="d-flex justify-content-between">
-                <label class="add-order-label m-0">{{ item?.name }}</label>
-                <span
-                  >Show as public &nbsp;&nbsp;
-                  <input
-                    type="checkbox"
-                    (click)="showPublic(i, item.id)"
-                    [(ngModel)]="publicArray[i]"
-                /></span>
-              </div>
-              <p-dropdown
-                [options]="item.productFieldValuesList"
-                optionLabel="name"
-                styleClass="w-100"
-                (onChange)="productDefinitionComposing(item, $event, i)"
-                placeholder="Select {{ item.name }}"
-                name="name"
-              ></p-dropdown>
-            </div>
-            <div *ngIf="item.type == 'TOGGLE'">
-              <!--Toggle -->
-              <label class="add-order-label m-0">{{ item.name }}</label
-              ><br />
-              <label class="switch mt-2">
-                <input
-                  type="checkbox"
-                  [checked]="toggleFlag[i]"
-                  (click)="getToggleValue(i)"
-                />
-                <span class="slider round"></span>
-              </label>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="main-container">
-    <h4>Press Machine</h4>
-    <div class="order-body py-2 my-2">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <p-dropdown
-              [options]="pressMachineArray"
-              optionLabel="name"
-              placeholder="Select Press Machine"
-              (ngModelChange)="machine($event)"
-              styleClass="w-100"
-              [(ngModel)]="id ? null : pressMachineArray[machineIndex]"
-              name="pressMachine"
-            ></p-dropdown>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="main-container">
-    <div class="d-flex justify-content-between">
-      <h4>Product Process</h4>
-      <button
-        type="button"
-        class="btn order-table-btn btn-search-panel py-2 px-3"
-        (click)="generateElement()"
-      >
-        <i class="fa-solid fa-plus"></i>
-      </button>
-    </div>
-
-    <div
-      class="order-body py-2 my-2"
-      *ngFor="let element of process; let i = index"
-    >
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-5 col-0">
-            <label for="exampleInputEmail1" class="form-label"
-              >Product processing</label
-            ><br />
-            <p-dropdown
-              (onChange)="selectProcess($event.value, i)"
-              [options]="productProcessList"
-              [(ngModel)]="element.productProcess"
-              styleClass="w-100"
-              optionLabel="name"
-              placeholder="Select product process"
-              name="product"
-            ></p-dropdown>
-          </div>
-          <div class="col-lg-5 col-0">
-            <label for="exampleInputEmail1" class="form-label">Vendor</label
-            ><br />
-            <p-dropdown
-              styleClass="w-100"
-              [options]="vendorList[i]"
-              [(ngModel)]="element.vendor"
-              optionLabel="name"
-              placeholder="Select vendor"
-              name="vendor"
-            ></p-dropdown>
-          </div>
-          <div class="col-12 col-lg-1 text-center mt-3 align-self-lg-end">
+        <div class="order-body mt-5 py-3">
+          <div class="text-end">
             <button
-              type="button"
-              class="btn order-table-btn"
-              (click)="removeElement(i)"
+              type="submit"
+              class="btn order-table-btn btn-search-panel"
+              (click)="postProduct()"
             >
-              <i class="fa-solid fa-trash"></i>
+              {{ buttonName }}
             </button>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="order-body mt-5 py-3">
-      <div class="text-end">
-        <button
-          type="submit"
-          class="btn order-table-btn btn-search-panel"
-          (click)="postProduct()"
-        >
-          {{ buttonName }}
-        </button>
       </div>
     </div>
   </div>
+
 </div>
-<p-toast>{{error}}</p-toast>
+<!-- <p-toast>{{error}}</p-toast> -->
 <!-- <p-dialog
   header="Error"
   [(visible)]="visible"
