@@ -5,10 +5,10 @@ import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.PaperMarketRates;
 
 import com.PrintLab.repository.PaperMarketRatesRepository;
+import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +18,19 @@ import java.util.Optional;
 public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 {
     private final PaperMarketRatesRepository paperMarketRatesRepository;
+    private final VendorRepository vendorRepository;
 
-    public PaperMarketRatesServiceImpI(PaperMarketRatesRepository paperMarketRatesRepository) {
+    public PaperMarketRatesServiceImpI(PaperMarketRatesRepository paperMarketRatesRepository, VendorRepository vendorRepository) {
         this.paperMarketRatesRepository = paperMarketRatesRepository;
+        this.vendorRepository = vendorRepository;
     }
 
     @Override
     public PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto) {
         paperMarketRatesDto.setRecordType("manual");
-        PaperMarketRates paperMarketRates = paperMarketRatesRepository.save(toEntity(paperMarketRatesDto));
-        return toDto(paperMarketRates);
+        PaperMarketRates paperMarketRates = toEntity(paperMarketRatesDto);
+        PaperMarketRates savedPaperMarketRates = paperMarketRatesRepository.save(paperMarketRates);
+        return toDto(savedPaperMarketRates);
     }
 
     @Override
@@ -129,12 +132,14 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             existingPmr.setDimension(paperMarketRates.getDimension());
             existingPmr.setQty(paperMarketRates.getQty());
             existingPmr.setKg(paperMarketRates.getKg());
-            existingPmr.setVendor(paperMarketRates.getVendor());
             existingPmr.setRatePkr(paperMarketRates.getRatePkr());
             existingPmr.setVerified(paperMarketRates.getVerified());
             existingPmr.setNotes(paperMarketRates.getNotes());
             existingPmr.setStatus(paperMarketRates.getStatus());
             existingPmr.setRecordType(paperMarketRates.getRecordType());
+
+            existingPmr.setVendor(vendorRepository.findById(paperMarketRates.getVendor())
+                    .orElseThrow(() -> new RecordNotFoundException("Vendor not found")).getId());
 
             if(paperMarketRates.getRecordType() == null){
                 existingPmr.setRecordType("manual");
@@ -161,12 +166,13 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
                 .dimension(paperMarketRates.getDimension())
                 .qty(paperMarketRates.getQty())
                 .kg(paperMarketRates.getKg())
-                .vendor(paperMarketRates.getVendor())
                 .recordType(paperMarketRates.getRecordType())
                 .ratePkr(paperMarketRates.getRatePkr())
                 .verified(paperMarketRates.getVerified())
                 .notes(paperMarketRates.getNotes())
                 .status(paperMarketRates.getStatus())
+                .vendor(vendorRepository.findById(paperMarketRates.getVendor())
+                        .orElseThrow(() -> new RecordNotFoundException("Vendor not found")))
                 .build();
     }
 
@@ -183,12 +189,13 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
                 .dimension(paperMarketRatesDto.getDimension())
                 .qty(paperMarketRatesDto.getQty())
                 .kg(paperMarketRatesDto.getKg())
-                .vendor(paperMarketRatesDto.getVendor())
                 .recordType(paperMarketRatesDto.getRecordType())
                 .ratePkr(paperMarketRatesDto.getRatePkr())
                 .verified(paperMarketRatesDto.getVerified())
                 .notes(paperMarketRatesDto.getNotes())
                 .status(paperMarketRatesDto.getStatus())
+                .vendor(vendorRepository.findById(paperMarketRatesDto.getVendor().getId())
+                        .orElseThrow(() -> new RecordNotFoundException("Vendor not found")).getId())
                 .build();
     }
 

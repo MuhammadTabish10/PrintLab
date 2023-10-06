@@ -30,9 +30,9 @@ public class Inventory
     private Integer qty;
     private String madeIn;
     private String brandName;
-    private String vendor;
     private LocalDate dateUpdated;
     private Double rate;
     private String status;
     private Double oldRate;
+    private Long vendor;
 }

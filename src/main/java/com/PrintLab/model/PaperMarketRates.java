@@ -33,10 +33,10 @@ public class PaperMarketRates
     private String dimension;
     private Integer qty;
     private Double kg;
-    private String vendor;
     private String recordType;
     private Double ratePkr;
     private Boolean verified;
     private String notes;
     private String status;
+    private Long vendor;
 }

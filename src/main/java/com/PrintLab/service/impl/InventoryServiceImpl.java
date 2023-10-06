@@ -7,6 +7,7 @@ import com.PrintLab.model.Inventory;
 import com.PrintLab.model.PaperMarketRates;
 import com.PrintLab.repository.InventoryRepository;
 import com.PrintLab.repository.PaperMarketRatesRepository;
+import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.InventoryService;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +22,12 @@ public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final PaperMarketRatesRepository paperMarketRatesRepository;
+    private final VendorRepository vendorRepository;
 
-    public InventoryServiceImpl(InventoryRepository inventoryRepository, PaperMarketRatesRepository paperMarketRatesRepository) {
+    public InventoryServiceImpl(InventoryRepository inventoryRepository, PaperMarketRatesRepository paperMarketRatesRepository, VendorRepository vendorRepository) {
         this.inventoryRepository = inventoryRepository;
         this.paperMarketRatesRepository = paperMarketRatesRepository;
+        this.vendorRepository = vendorRepository;
     }
 
     @Override
@@ -82,7 +85,10 @@ public class InventoryServiceImpl implements InventoryService {
             existingInventory.setQty(inventoryDto.getQty());
             existingInventory.setMadeIn(inventoryDto.getMadeIn());
             existingInventory.setBrandName(inventoryDto.getBrandName());
-            existingInventory.setVendor(inventoryDto.getVendor());
+
+            existingInventory.setVendor(vendorRepository.findById(inventoryDto.getVendor().getId())
+                    .orElseThrow(() -> new RecordNotFoundException("Vendor not found")).getId());
+
             existingInventory.setDateUpdated(LocalDate.now());
             if (inventoryDto.getRate() != null) {
                 existingInventory.setOldRate(existingInventory.getRate());
@@ -244,11 +250,12 @@ public class InventoryServiceImpl implements InventoryService {
                 .qty(inventoryDto.getQty())
                 .madeIn(inventoryDto.getMadeIn())
                 .brandName(inventoryDto.getBrandName())
-                .vendor(inventoryDto.getVendor())
                 .dateUpdated(inventoryDto.getDateUpdated())
                 .rate(inventoryDto.getRate())
                 .status(inventoryDto.getStatus())
                 .oldRate(inventoryDto.getOldRate())
+                .vendor(vendorRepository.findById(inventoryDto.getVendor().getId())
+                        .orElseThrow(() -> new RecordNotFoundException("Vendor not found")).getId())
                 .build();
     }
 
@@ -262,11 +269,12 @@ public class InventoryServiceImpl implements InventoryService {
                 .qty(inventory.getQty())
                 .madeIn(inventory.getMadeIn())
                 .brandName(inventory.getBrandName())
-                .vendor(inventory.getVendor())
                 .dateUpdated(inventory.getDateUpdated())
                 .rate(inventory.getRate())
                 .status(inventory.getStatus())
                 .oldRate(inventory.getOldRate())
+                .vendor(vendorRepository.findById(inventory.getVendor())
+                        .orElseThrow(() -> new RecordNotFoundException("Vendor not found")))
                 .build();
     }
 }

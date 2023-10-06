@@ -1,5 +1,6 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.Vendor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +22,9 @@ public class InventoryDto
     private Integer qty;
     private String madeIn;
     private String brandName;
-    private String vendor;
     private LocalDate dateUpdated;
     private Double rate;
     private String status;
     private Double oldRate;
+    private Vendor vendor;
 }

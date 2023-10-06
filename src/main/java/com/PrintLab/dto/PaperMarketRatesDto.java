@@ -1,5 +1,6 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.Vendor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,10 +26,10 @@ public class PaperMarketRatesDto
     private String dimension;
     private Integer qty;
     private Double kg;
-    private String vendor;
     private String recordType;
     private Double ratePkr;
     private Boolean verified;
     private String notes;
     private String status;
+    private Vendor vendor;
 }
