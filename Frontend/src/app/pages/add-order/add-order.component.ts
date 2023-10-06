@@ -60,6 +60,7 @@ export class AddOrderComponent implements OnInit {
     { name: '', value: '' }
   ];
   selectedGsm: any;
+  isJobColorBackHidden: boolean = false;
 
   constructor(private orderService: OrdersService, private router: Router,
     private productService: ProductService, private route: ActivatedRoute,
@@ -95,17 +96,23 @@ export class AddOrderComponent implements OnInit {
 
   calculate() {
     debugger
+    if (this.sideOptionValue.name != undefined) {
+      if (this.sideOptionValue.name == "SINGLE_SIDED") {
+        this.jobBackValue = null
+        this.impositionValue = false
+      }
+    }
     let obj = {
       pressMachineId: this.machineId,
       productValue: this.productName,
       paper: this.paperStockItem.name,
-      sizeValue: this.sizeValue,
+      sizeValue: this.sizeValue.name,
       gsm: Number(this.selectedGsm.name),
-      quantity: this.qtyValue,
-      jobColorsFront: Number(this.jobFrontValue),
-      // sideOptionValue: this.sideOptionValue,
+      quantity: this.qtyValue.name,
+      jobColorsFront: Number(this.jobFrontValue.name),
+      sideOptionValue: this.sideOptionValue.name,
       impositionValue: this.impositionValue,
-      jobColorsBack: Number(this.jobBackValue)
+      jobColorsBack: this.jobBackValue ? Number(this.jobBackValue.name) : null
     }
     this.orderService.calculations(obj).subscribe(res => {
       let obj: any
@@ -123,18 +130,18 @@ export class AddOrderComponent implements OnInit {
       let obj = {
         product: this.productName,
         paper: this.paperStockItem.name,
-        size: this.sizeValue,
+        size: this.sizeValue.name,
         sheetSizeValue: "18\"x23\"",
-        gsm: this.selectedGsm.name,
-        quantity: this.qtyValue,
+        gsm: Number(this.selectedGsm.name),
+        quantity: Number(this.qtyValue.name),
         price: this.totalAmount,
         providedDesign: this.designValue,
         url: this.imgUrl,
-        sideOptionValue: this.sideOptionValue,
+        sideOptionValue: this.sideOptionValue.name,
         impositionValue: this.impositionValue,
-        jobColorsFront: this.jobFrontValue,
-        jobColorsBack: this.jobBackValue,
-        customer: this.selectedCustomer
+        jobColorsFront: Number(this.jobFrontValue.name),
+        jobColorsBack: this.jobBackValue ? Number(this.jobBackValue.name) : null,
+        customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
       }
       this.orderService.addOrder(obj).subscribe(res => {
         this.router.navigateByUrl('/orders')
@@ -156,7 +163,7 @@ export class AddOrderComponent implements OnInit {
         providedDesign: this.designValue,
         url: this.imgUrl,
         sideOptionValue: this.sideOptionValue,
-        impositionValue: this.impositionValue,
+        impositionValue: this.impositionValue ? this.impositionValue: null,
         jobColorsFront: this.jobFrontValue,
         jobColorsBack: this.jobBackValue,
         customer: this.selectedCustomer
@@ -188,6 +195,7 @@ export class AddOrderComponent implements OnInit {
 
   toggleFields(title: any) {
     this.cdr.detectChanges();
+    debugger
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
     this.impositionValue = title.newProduct.imposition;
@@ -197,10 +205,13 @@ export class AddOrderComponent implements OnInit {
     this.printSide = title.newProduct.isPrintSidePublic ? JSON.parse(title.newProduct.printSide) : null
     this.jobFront = title.newProduct.isJobColorFrontPublic ? JSON.parse(title.newProduct.jobColorFront) : null
     this.jobColorBack = title.newProduct.isJobColorBackPublic ? JSON.parse(title.newProduct.jobColorBack) : null;
-    debugger
-
     this.gsms = title.newProduct.productGsm
+  }
 
+  jobColorOptions(value: any) {
+    debugger;
+    const singleSide = "SINGLE_SIDED";
+    this.isJobColorBackHidden = value.name.toLowerCase() === singleSide.toLowerCase();
   }
 
 
@@ -324,11 +335,9 @@ export class AddOrderComponent implements OnInit {
     }
   }
 
-  gsmFields() {
-    debugger
-    let value = this.paperStockItem.name;
-    this.dynamicFields = value;
-    let fgsm = this.gsms!.find((item: any) => item.name == value)
+  gsmFields(value: any) {
+    this.dynamicFields = value.name;
+    let fgsm = this.gsms!.find((item: any) => item.name == this.dynamicFields)
     if (fgsm) {
       this.foundGsm = true
       let sGsm = fgsm.value.replace(/,/g, ' ').split(' ');

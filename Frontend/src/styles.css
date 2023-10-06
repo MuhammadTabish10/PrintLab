@@ -14635,7 +14635,7 @@ input:checked+.slider:before {
 
 .sidebar-list-hover-settings:hover {
     background-color: #fcf673;
-    display: block;
+    display: table-cell;
     cursor: pointer;
     color: black;
 }

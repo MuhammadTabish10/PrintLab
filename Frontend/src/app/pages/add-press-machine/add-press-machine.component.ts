@@ -49,6 +49,7 @@ export class AddPressMachineComponent implements OnInit {
     private productProcess: ProductProcessService, private messageService: MessageService) { }
 
   ngOnInit(): void {
+    debugger
     this.getPaperSizes()
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']

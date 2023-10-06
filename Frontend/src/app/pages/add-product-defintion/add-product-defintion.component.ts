@@ -14,7 +14,7 @@ export class AddProductDefintionComponent implements OnInit {
   typeValue: String = ''
   nameValue: String = ''
   sequenceValue: String = ''
-  statusValue: String = ''
+  statusValue: String = 'Active'
   pfvalueFlag: Boolean = false
   pfvaluesArray: any = []
   idFromQueryParam!: number
@@ -24,7 +24,7 @@ export class AddProductDefintionComponent implements OnInit {
   error: string = ''
 
   constructor(private productFieldService: ProductDefinitionService, private route: ActivatedRoute, private router: Router
-    ,private messageService: MessageService) { }
+    , private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -55,7 +55,7 @@ export class AddProductDefintionComponent implements OnInit {
   type() {
     if (this.typeValue == "DROPDOWN" || this.typeValue == "MULTIDROPDOWN") {
       if (Number.isNaN(this.idFromQueryParam)) {
-        this.pfvaluesArray.length == 0 ? this.pfvaluesArray.push({ name: null, status: null }) : null;
+        this.pfvaluesArray.length == 0 ? this.pfvaluesArray.push({ name: null, status: 'Active' }) : null;
       }
       this.pfvalueFlag = true
     }
@@ -108,7 +108,7 @@ export class AddProductDefintionComponent implements OnInit {
   isTypeValueEmpty(): boolean {
     return !this.typeValue; // Returns true if typeValue is empty, otherwise false
   }
-  showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+  showError(error: any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

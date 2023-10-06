@@ -10,7 +10,7 @@ import { SessionStorageService } from 'src/app/services/session-storage.service'
 export class SidebarComponent {
 
   permissions1!: String[]
-  processFlag: any;
+  processFlag: boolean = false;
 
   constructor(private router: Router, public sessionStorageService: SessionStorageService) {
 

@@ -49,7 +49,7 @@
           </span>
       </li>
 
-      <li *ngIf="sessionStorageService.hasPermission('Products')">
+      <!-- <li *ngIf="sessionStorageService.hasPermission('Products')">
           <span class="sidebar-list-hover" (click)="addProduct()">
               <i class="fa fa-add fa-2x"></i>
               <span class="nav-text">
@@ -57,7 +57,7 @@
               </span>
           </span>
 
-      </li>
+      </li> -->
 
       <li *ngIf="sessionStorageService.hasPermission('Calculator')">
           <span class="sidebar-list-hover" (click)="calculator()">
@@ -79,8 +79,8 @@
 
     </li>
 
-      <li *ngIf="sessionStorageService.hasPermission('Configuration')">
-          <span class="sidebar-list-hover" (click)="toggleSettings()">
+      <li class="sidebar-list-hover" *ngIf="sessionStorageService.hasPermission('Configuration')">
+          <span (click)="toggleSettings()">
               <i class="fa fa-bars fa-2x"></i>
               <span class="nav-text">
                   Configuration
@@ -150,8 +150,8 @@
       </li>
 
 
-      <li *ngIf="sessionStorageService.hasPermission('Configuration')">
-        <span class="sidebar-list-hover" (click)="toggleProcess()">
+      <li  class="sidebar-list-hover" *ngIf="sessionStorageService.hasPermission('Configuration')">
+        <span (click)="toggleProcess()">
             <i class="fa fa-bars fa-2x"></i>
             <span class="nav-text">
                 Process

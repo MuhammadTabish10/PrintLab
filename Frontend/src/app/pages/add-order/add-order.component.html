@@ -28,83 +28,71 @@
             <div class="order-body py-2 px-3">
               <div *ngIf="paperStock" class="my-3">
                 <label class="add-order-label m-0">PaperStock</label>
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="paperStock"
+                  optionLabel="name"
                   [(ngModel)]="paperStockItem"
-                  (ngModelChange)="gsmFields()"
-                >
-                  <option *ngFor="let paper of paperStock" [ngValue]="paper">
-                    {{ paper.name }}
-                  </option>
-                </select>
+                  (onChange)="gsmFields($event.value)"
+                  placeholder="Select Paper"
+                ></p-dropdown>
               </div>
               <div *ngIf="size" class="my-3">
                 <label class="add-order-label m-0">Size</label>
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="size"
+                  optionLabel="name"
                   [(ngModel)]="sizeValue"
-                >
-                  <option *ngFor="let sizes of size" [value]="sizes.name">
-                    {{ sizes.name }}
-                  </option>
-                </select>
+                  placeholder="Select Size"
+                ></p-dropdown>
               </div>
               <div *ngIf="quantity" class="my-3">
                 <label class="add-order-label m-0">Quantity</label>
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="quantity"
+                  optionLabel="name"
                   [(ngModel)]="qtyValue"
-                >
-                  <option *ngFor="let qty of quantity" [value]="qty.name">
-                    {{ qty.name }}
-                  </option>
-                </select>
+                  placeholder="Select Qty"
+                ></p-dropdown>
               </div>
               <div *ngIf="printSide" class="my-3">
                 <label class="add-order-label m-0">Print Side</label>
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="printSide"
+                  (onChange)="jobColorOptions($event.value)"
+                  optionLabel="name"
                   [(ngModel)]="sideOptionValue"
-                >
-                  <option *ngFor="let side of printSide" [value]="side.name">
-                    {{ side.name }}
-                  </option>
-                </select>
+                  placeholder="Select Side Option"
+                ></p-dropdown>
               </div>
               <div *ngIf="jobFront" class="my-3">
                 <label class="add-order-label m-0">Job Color Front</label>
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="jobFront"
+                  optionLabel="name"
                   [(ngModel)]="jobFrontValue"
-                >
-                  <option *ngFor="let front of jobFront" [value]="front.name">
-                    {{ front.name }}
-                  </option>
-                </select>
+                  placeholder="Select Front Color"
+                ></p-dropdown>
               </div>
-              <div *ngIf="jobColorBack" class="my-3">
+              <div *ngIf="!isJobColorBackHidden && jobColorBack" class="my-3">
                 <label class="add-order-label m-0">job Color Back</label>
-                <select
-                  class="form-select"
-                  aria-label="Default select example"
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="jobColorBack"
+                  optionLabel="name"
                   [(ngModel)]="jobBackValue"
-                >
-                  <option *ngFor="let back of jobColorBack" [value]="back.name">
-                    {{ back.name }}
-                  </option>
-                </select>
+                  placeholder="Select Back Color"
+                ></p-dropdown>
               </div>
               <div class="mb-3" [hidden]="!foundGsm">
                 <label class="add-order-label m-0"
                   >GSM FOR {{ dynamicFields }}</label
                 >
                 <p-dropdown
-                  [style]="{ height: '40px' }"
                   styleClass="w-100"
                   [options]="optionsGsm"
                   optionLabel="name"
@@ -195,9 +183,14 @@
               <span>Product Name: </span>
               <span>{{ productName }}</span>
             </div>
-            <div *ngFor="let product of selectedProdDefArray; let i = index">
-              <span>{{ product?.name }}: </span>
-              <span>{{ product?.selected?.productFieldValue?.name }}</span>
+            <div class="py-1">
+              <h6 class="fw-normal" *ngIf="paperStockItem?.name">Paper: {{paperStockItem?.name}}</h6>
+              <h6 class="fw-normal" *ngIf="sizeValue?.name">Size: {{sizeValue?.name}}</h6>
+              <h6 class="fw-normal" *ngIf="qtyValue?.name">Qty: {{qtyValue?.name}}</h6>
+              <h6 class="fw-normal" *ngIf="sideOptionValue?.name">Side: {{sideOptionValue?.name}}</h6>
+              <h6 class="fw-normal" *ngIf="jobFrontValue?.name">FronColor: {{jobFrontValue?.name}}</h6>
+              <h6 class="fw-normal" *ngIf="jobBackValue?.name">BackColor: {{jobBackValue?.name}}</h6>
+              <h6 class="fw-normal" *ngIf="selectedGsm?.name">{{dynamicFields}} GSM: {{selectedGsm?.name}}</h6>
             </div>
             <div class="mt-4">
               <span>Total: </span>

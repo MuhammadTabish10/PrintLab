@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { VendorService } from 'src/app/services/vendor.service';
 import { MessageService } from 'primeng/api';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-vendor',
@@ -17,7 +18,8 @@ export class VendorComponent implements OnInit {
   error: string = ''
   process: any = []
 
-  constructor(private vendorService: VendorService, private router: Router,private messageService: MessageService) { }
+  constructor(private vendorService: VendorService, private router: Router, private messageService: MessageService,
+    private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.getVendors()
@@ -28,6 +30,8 @@ export class VendorComponent implements OnInit {
       this.vendorArray = res
       let i = 0
       this.vendorArray.forEach((item: any) => {
+        item.date = this.datePipe.transform(item.date, 'EEEE, MMMM d, yyyy')
+        debugger
         this.process.push([])
         item.vendorProcessList.forEach((el: any) => {
           this.process[i].push(el.productProcess.name)
@@ -40,7 +44,7 @@ export class VendorComponent implements OnInit {
       this.visible = true
     })
   }
-  
+
 
   deleteVendor(id: any) {
     this.vendorService.deleteVendor(id).subscribe(() => {
@@ -67,7 +71,7 @@ export class VendorComponent implements OnInit {
       })
     }
   }
-  showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+  showError(error: any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

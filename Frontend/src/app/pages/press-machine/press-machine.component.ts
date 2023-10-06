@@ -23,6 +23,7 @@ export class PressMachineComponent implements OnInit {
     this.pressMachineService.getPressMachine().subscribe(res => {
       this.pressMachineArray = res
       this.pressMachineArray.length == 0 ? this.tableData = true : this.tableData = false
+      
     }, error => {
       this.showError(error);
       this.visible = true
@@ -56,6 +57,6 @@ export class PressMachineComponent implements OnInit {
     }
   }
   showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }
