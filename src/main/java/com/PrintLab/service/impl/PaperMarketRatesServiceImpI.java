@@ -110,6 +110,16 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);
         if(optionalPaperMarketRates.isPresent()){
             PaperMarketRates existingPmr = optionalPaperMarketRates.get();
+
+            // Round off both ratePkr values to 1 decimal place
+            double existingRate = Math.round(existingPmr.getRatePkr() * 10.0) / 10.0;
+            double newRate = Math.round(paperMarketRates.getRatePkr() * 10.0) / 10.0;
+
+            // Check if rounded ratePkr values are different
+            if (existingRate != newRate) {
+                existingPmr.setTimeStamp(LocalDateTime.now());
+            }
+
             existingPmr.setPaperStock(paperMarketRates.getPaperStock());
             existingPmr.setBrand(paperMarketRates.getBrand());
             existingPmr.setMadeIn(paperMarketRates.getMadeIn());
@@ -120,12 +130,15 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             existingPmr.setQty(paperMarketRates.getQty());
             existingPmr.setKg(paperMarketRates.getKg());
             existingPmr.setVendor(paperMarketRates.getVendor());
-            existingPmr.setRecordType(paperMarketRates.getRecordType());
             existingPmr.setRatePkr(paperMarketRates.getRatePkr());
             existingPmr.setVerified(paperMarketRates.getVerified());
             existingPmr.setNotes(paperMarketRates.getNotes());
             existingPmr.setStatus(paperMarketRates.getStatus());
-            existingPmr.setTimeStamp(LocalDateTime.now());
+            existingPmr.setRecordType(paperMarketRates.getRecordType());
+
+            if(paperMarketRates.getRecordType() == null){
+                existingPmr.setRecordType("manual");
+            }
 
             PaperMarketRates updatedPmr = paperMarketRatesRepository.save(existingPmr);
             return toDto(updatedPmr);
