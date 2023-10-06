@@ -14,5 +14,5 @@ public interface PaperMarketRatesService
     List<PaperMarketRatesDto> searchByPaperStock(String paperStock);
     PaperMarketRatesDto findById(Long id);
     String deleteById(Long id);
-    PaperMarketRatesDto updatePaperMarketRates(Long id, PaperMarketRates paperMarketRates);
+    PaperMarketRatesDto updatePaperMarketRates(Long id, PaperMarketRatesDto paperMarketRatesDto);
 }

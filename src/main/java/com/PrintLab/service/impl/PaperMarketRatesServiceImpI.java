@@ -9,6 +9,7 @@ import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Paper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +110,8 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
-    public PaperMarketRatesDto updatePaperMarketRates(Long id, PaperMarketRates paperMarketRates) {
+    public PaperMarketRatesDto updatePaperMarketRates(Long id, PaperMarketRatesDto paperMarketRatesDto) {
+        PaperMarketRates paperMarketRates = toEntity(paperMarketRatesDto);
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);
         if(optionalPaperMarketRates.isPresent()){
             PaperMarketRates existingPmr = optionalPaperMarketRates.get();
