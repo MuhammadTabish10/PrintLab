@@ -184,7 +184,7 @@ export class CalculatorHeaderComponent implements OnInit {
 
   onGSMSelection(gsmValue: any): void {
     this.gsmValue = parseFloat(gsmValue);
-    debugger
+
     this.getLastUpdatedInfoForPaperAndGSM(this.paperValue, this.gsmValue);
   }
 
@@ -231,7 +231,7 @@ export class CalculatorHeaderComponent implements OnInit {
     this.settingService.getGsmByPaperStock(papervalue).subscribe(
       (res: any) => {
         this.gsmArray = res;
-        debugger
+
         if (this.gsmArray.length) {
           this.gsmValue = this.gsmArray[0];
           this.onGSMSelection(this.gsmValue);
@@ -292,7 +292,7 @@ export class CalculatorHeaderComponent implements OnInit {
 
   private getFields() {
     this.productFieldService.getProductField().subscribe((res: { [key: string]: any }) => {
-      debugger;
+      ;
 
       const paperStockField = this.getFieldByName(res, 'Paper Stock');
       const frontJobColorsField = this.getFieldByName(res, 'JobColor(Front)');
@@ -318,7 +318,7 @@ export class CalculatorHeaderComponent implements OnInit {
 
   getPaperSizes() {
     this.paperSizeService.getPaperSize().subscribe(res => {
-      debugger
+
       this.paperSizesArray = res
     })
   }

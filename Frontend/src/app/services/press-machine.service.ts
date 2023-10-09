@@ -11,7 +11,7 @@ export class PressMachineService {
   constructor(private http: HttpClient) { }
 
   postPressMachine(obj: any) {
-    debugger
+
     let url = `${this._url}/press-machine`
     console.log(obj);
 

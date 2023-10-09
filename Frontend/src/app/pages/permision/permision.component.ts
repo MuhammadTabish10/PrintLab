@@ -82,7 +82,7 @@ export class PermisionComponent {
         return this.find.name
     }
     onSubmit() {
-      debugger
+
         const permissionOfRole = {
             id: this.selectedRole,
             name: this.getSelectedRoleName(),

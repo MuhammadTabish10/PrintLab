@@ -31,7 +31,7 @@ export class VendorComponent implements OnInit {
       let i = 0
       this.vendorArray.forEach((item: any) => {
         item.date = this.datePipe.transform(item.date, 'EEEE, MMMM d, yyyy')
-        debugger
+
         this.process.push([])
         item.vendorProcessList.forEach((el: any) => {
           this.process[i].push(el.productProcess.name)

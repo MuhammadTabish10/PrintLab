@@ -15,21 +15,16 @@ export class AddOrderComponent implements OnInit {
 
   productArray: any = []
   productName: any = ''
-  selectedProdDefArray: any = []
   customersArray: any = []
   selectedCustomer: any = {}
-  selectedProduct: any = []
   customerDesign: string = 'Customer will provide the design'
   printLabDesign: string = 'Design by PrintLab'
   totalAmount: any
-  paperValue: any
   sizeValue: any
-  gsmValue: any
   jobFrontValue: any
   sideOptionValue: any
   impositionValue: any
   jobBackValue: any
-  sheetValue: any
   qtyValue: any
   design: any
   designValue = true
@@ -39,8 +34,6 @@ export class AddOrderComponent implements OnInit {
   buttonName: string = 'Add'
   orderToUpdate: any
   productToUpdate: any
-  valuesToUpdate: any = []
-  jobBack: any = null
   visible: boolean = false
   error: string = ''
   machineId!: number
@@ -56,9 +49,7 @@ export class AddOrderComponent implements OnInit {
   dynamicFields: any;
   gsms: any
   foundGsm: any;
-  optionsGsm: any = [
-    { name: '', value: '' }
-  ];
+  optionsGsm: any;
   selectedGsm: any;
   isJobColorBackHidden: boolean = false;
 
@@ -78,8 +69,6 @@ export class AddOrderComponent implements OnInit {
         this.buttonName = 'Update'
         this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
           this.orderToUpdate = res
-          debugger
-          this.paperStockItem = this.orderToUpdate.paper
           this.selectedCustomer = this.orderToUpdate.customer
           this.totalAmount = this.orderToUpdate.price
           this.imgUrl = this.orderToUpdate.url
@@ -95,7 +84,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   calculate() {
-    debugger
     if (this.sideOptionValue.name != undefined) {
       if (this.sideOptionValue.name == "SINGLE_SIDED") {
         this.jobBackValue = null
@@ -125,8 +113,8 @@ export class AddOrderComponent implements OnInit {
   }
 
   addOrder() {
+
     if (Number.isNaN(this.idFromQueryParam)) {
-      debugger
       let obj = {
         product: this.productName,
         paper: this.paperStockItem.name,
@@ -149,24 +137,23 @@ export class AddOrderComponent implements OnInit {
         this.showError(error);
         this.visible = true;
       })
-      debugger
     } else {
       let obj = {
         id: this.idFromQueryParam,
         product: this.productName,
-        paper: this.paperValue,
-        size: this.sizeValue,
+        paper: this.paperStockItem.name,
+        size: this.sizeValue.name,
         sheetSizeValue: "18\"x23\"",
-        gsm: this.gsmValue,
-        quantity: this.qtyValue,
+        gsm: Number(this.selectedGsm.name),
+        quantity: Number(this.qtyValue.name),
         price: this.totalAmount,
         providedDesign: this.designValue,
         url: this.imgUrl,
-        sideOptionValue: this.sideOptionValue,
-        impositionValue: this.impositionValue ? this.impositionValue: null,
-        jobColorsFront: this.jobFrontValue,
-        jobColorsBack: this.jobBackValue,
-        customer: this.selectedCustomer
+        sideOptionValue: this.sideOptionValue.name,
+        impositionValue: this.impositionValue,
+        jobColorsFront: Number(this.jobFrontValue.name),
+        jobColorsBack: this.jobBackValue ? Number(this.jobBackValue.name) : null,
+        customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
       }
       this.orderService.updateOrder(this.idFromQueryParam, obj).subscribe(res => {
         this.router.navigateByUrl('/orders')
@@ -176,22 +163,6 @@ export class AddOrderComponent implements OnInit {
       })
     }
   }
-
-  // toggleFields(title: any) {
-  //   this.selectedProduct = []
-  //   this.productName = title.title
-  //   this.machineId = title.pressMachine.id
-  //   debugger
-  //   title.productDefinitionFieldList.forEach((el: any) => {
-  //     el.isPublic ? this.selectedProduct.push(el) : null
-  //     el.productField.name.toLowerCase().replace(/\s/g, '') == 'imposition' ? this.impositionValue = el.selectedValues[0].value : null
-  //     if (!Number.isNaN(this.idFromQueryParam) && this.orderToUpdate.jobColorsBack == null && el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
-  //       let index = this.selectedProduct.findIndex((item: any) => item.id == el.id)
-  //       this.selectedProduct.splice(index, 1)
-  //     }
-  //   })
-  //   this.selectedProdDefArray = []
-  // }
 
   toggleFields(title: any) {
     this.cdr.detectChanges();
@@ -209,58 +180,11 @@ export class AddOrderComponent implements OnInit {
   }
 
   jobColorOptions(value: any) {
-    debugger;
+    ;
     const singleSide = "SINGLE_SIDED";
     this.isJobColorBackHidden = value.name.toLowerCase() === singleSide.toLowerCase();
   }
 
-
-
-
-  // selectProductDef(product: any, productDef: any) {
-  //   debugger
-  //   this.totalAmount = null
-  //   if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'SINGLE_SIDED') {
-  //     this.selectedProduct.forEach((el: any) => {
-  //       if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
-  //         let i = this.selectedProduct.indexOf(el)
-  //         this.jobBack = this.selectedProduct[i]
-  //         this.selectedProduct.splice(i, 1)
-  //       }
-  //     })
-  //   } else if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'DOUBLE_SIDED' && this.impositionValue == "true") {
-  //     this.selectedProduct.forEach((el: any) => {
-  //       if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
-  //         let i = this.selectedProduct.indexOf(el)
-  //         this.jobBack = this.selectedProduct[i]
-  //         this.selectedProduct.splice(i, 1)
-  //       }
-  //     })
-  //   } else if (product.productField.name.toLowerCase().replace(/\s/g, '') == 'printside' && productDef.productFieldValue.name == 'DOUBLE_SIDED' && this.impositionValue == "false") {
-  //     this.jobBack != null ? this.selectedProduct.push(this.jobBack) : null
-  //   }
-  //   let obj = {
-  //     id: product.id,
-  //     name: product.productField.name,
-  //     selected: productDef
-  //   }
-  //   if (this.selectedProdDefArray.length == 0) {
-  //     this.selectedProdDefArray.push(obj)
-  //   } else {
-  //     let flag = false
-  //     for (const el of this.selectedProdDefArray) {
-  //       if (el.id == product.id) {
-  //         const i = this.selectedProdDefArray.indexOf(el)
-  //         this.selectedProdDefArray[i] = obj
-  //         flag = false
-  //         break
-  //       } else {
-  //         flag = true
-  //       }
-  //     }
-  //     flag ? this.selectedProdDefArray.push(obj) : null
-  //   }
-  // }
 
   designToggle(design: any) {
     this.design = design
@@ -298,12 +222,10 @@ export class AddOrderComponent implements OnInit {
         this.orderService.postImage(formData).subscribe(
           (response) => {
             const fileType = this.determineFileType(file.name);
-            debugger
+
             if (fileType === 'image') {
               this.imgUrl = environment.baseUrl + response;
             } else if (fileType === 'pdf') {
-              // Handle PDF, e.g., display a PDF viewer or link
-              // You can implement PDF viewer here
               this.pdfUrl = environment.baseUrl + response;
             } else if (fileType === 'ai') {
             } else if (fileType === 'psd') {
@@ -340,19 +262,16 @@ export class AddOrderComponent implements OnInit {
     let fgsm = this.gsms!.find((item: any) => item.name == this.dynamicFields)
     if (fgsm) {
       this.foundGsm = true
+      let i = 1
       let sGsm = fgsm.value.replace(/,/g, ' ').split(' ');
       this.optionsGsm = sGsm.map((g: any) => {
         return {
+          id: i++,
           name: g,
-          value: g
+          status: 'Active'
         }
       })
     }
-  }
-
-
-  getOptionsGsm(): any {
-    return this.optionsGsm == null ? [] : this.optionsGsm
   }
 
   putValuesOnUpdate() {
@@ -360,107 +279,23 @@ export class AddOrderComponent implements OnInit {
       el.title == this.orderToUpdate.product ? this.productToUpdate = el : null
     })
     this.toggleFields(this.productToUpdate)
-    this.selectedProduct.forEach((el: any) => {
-      if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'paperstock') {
-        this.paperValue = this.orderToUpdate.paper
-        let item;
-        el.selectedValues.forEach((subEl: any) => {
-          if (subEl.productFieldValue.name == this.paperValue) {
-            this.valuesToUpdate.push(subEl)
-            item = subEl
-          }
-        });
-        this.selectedProdDefArray.push({
-          id: el.id,
-          name: el.productField.name,
-          selected: item
-        })
-      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'gsm') {
-        this.gsmValue = this.orderToUpdate.gsm
-        let item;
-        el.selectedValues.forEach((subEl: any) => {
-          if (subEl.productFieldValue.name == this.gsmValue) {
-            this.valuesToUpdate.push(subEl)
-            item = subEl
-          }
-        });
-        this.selectedProdDefArray.push({
-          id: el.id,
-          name: el.productField.name,
-          selected: item
-        })
-      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'size') {
-        this.sizeValue = this.orderToUpdate.size
-        let item;
-        el.selectedValues.forEach((subEl: any) => {
-          if (subEl.productFieldValue.name == this.sizeValue) {
-            this.valuesToUpdate.push(subEl)
-            item = subEl
-          }
-        });
-        this.selectedProdDefArray.push({
-          id: el.id,
-          name: el.productField.name,
-          selected: item
-        })
-      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'quantity') {
-        this.qtyValue = this.orderToUpdate.quantity
-        let item;
-        el.selectedValues.forEach((subEl: any) => {
-          if (subEl.productFieldValue.name == this.qtyValue) {
-            this.valuesToUpdate.push(subEl)
-            item = subEl
-          }
-        });
-        this.selectedProdDefArray.push({
-          id: el.id,
-          name: el.productField.name,
-          selected: item
-        })
-      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'printside') {
-        this.sideOptionValue = this.orderToUpdate.sideOptionValue
-        let item;
-        el.selectedValues.forEach((subEl: any) => {
-          if (subEl.productFieldValue.name == this.sideOptionValue) {
-            this.valuesToUpdate.push(subEl)
-            item = subEl
-          }
-        });
-        this.selectedProdDefArray.push({
-          id: el.id,
-          name: el.productField.name,
-          selected: item
-        })
-      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(front)') {
-        this.jobFrontValue = this.orderToUpdate.jobColorsFront
-        let item;
-        el.selectedValues.forEach((subEl: any) => {
-          if (subEl.productFieldValue.name == this.jobFrontValue) {
-            this.valuesToUpdate.push(subEl)
-            item = subEl
-          }
-        });
-        this.selectedProdDefArray.push({
-          id: el.id,
-          name: el.productField.name,
-          selected: item
-        })
-      } else if (el.productField.name.toLowerCase().replace(/\s/g, '') == 'jobcolor(back)') {
-        this.jobBackValue = this.orderToUpdate.jobColorsBack
-        let item;
-        el.selectedValues.forEach((subEl: any) => {
-          if (subEl.productFieldValue.name == this.jobBackValue) {
-            this.valuesToUpdate.push(subEl)
-            item = subEl
-          }
-        });
-        this.selectedProdDefArray.push({
-          id: el.id,
-          name: el.productField.name,
-          selected: item
-        })
-      }
-    })
+    const conditionBackColor = this.orderToUpdate.jobColorsBack ? this.orderToUpdate.jobColorsBack.toString() : ''
+    const foundPaperStockItem = this.paperStock != null ? this.paperStock.find((item: { name: any; }) => item.name === this.orderToUpdate.paper) : null;
+    this.gsmFields(foundPaperStockItem)
+    const foundsizeItem = this.size != null ? this.size.find((item: { name: any; }) => item.name === this.orderToUpdate.size) : null;
+    const foundQtyItem = this.quantity != null ? this.quantity.find((item: { name: any; }) => item.name === this.orderToUpdate.quantity.toString()) : null;
+    const foundSideOptItem = this.printSide != null ? this.printSide.find((item: { name: any; }) => item.name === this.orderToUpdate.sideOptionValue) : null;
+    const foundFrontColorItem = this.jobFront != null ? this.jobFront.find((item: { name: any; }) => item.name === this.orderToUpdate.jobColorsFront.toString()) : null;
+    const foundBackColorItem = this.jobColorBack != null ? this.jobColorBack.find((item: { name: any; }) => item.name === conditionBackColor) : null;
+    const foundGsmItem = this.optionsGsm != null ? this.optionsGsm.find((item: { name: any; }) => item.name === this.orderToUpdate.gsm.toString()) : null;
+    this.paperStockItem = foundPaperStockItem
+    this.sizeValue = foundsizeItem
+    this.qtyValue = foundQtyItem
+    this.sideOptionValue = foundSideOptItem
+    this.jobFrontValue = foundFrontColorItem
+    this.jobColorOptions(this.sideOptionValue)
+    this.jobBackValue = foundBackColorItem
+    this.selectedGsm = foundGsmItem
   }
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });

@@ -36,16 +36,16 @@ export class LoginFormComponent implements OnInit {
       password: this.passwordValue
     }
     this.loginService.post(obj).subscribe(res => {
-      this.token = res
-      localStorage.setItem("token", this.token.jwt)
-      this.router.navigateByUrl('/dashboard')
-      // window.location.reload()
+      this.token = res;
+      localStorage.setItem("token", this.token.jwt);
+      localStorage.setItem("isLoggedIn", "true");
+      this.router.navigateByUrl('/dashboard');
     }, error => {
       this.showError(error);
-      this.visible = true
-
+      this.visible = true;
     })
   }
+
 
   togglePasswordVisiblity() {
     this.passwordToggle == 'password' ? this.passwordToggle = 'text' : this.passwordToggle = 'password'

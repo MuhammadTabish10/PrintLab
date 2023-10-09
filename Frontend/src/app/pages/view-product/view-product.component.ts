@@ -20,7 +20,7 @@ export class ViewProductComponent implements OnInit {
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       this.service.getById(this.idFromQueryParam).subscribe(res => {
-        debugger
+
         this.productToView = res
         console.log(this.productToView);
       }, error => {
@@ -31,6 +31,6 @@ export class ViewProductComponent implements OnInit {
 
   }
   showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

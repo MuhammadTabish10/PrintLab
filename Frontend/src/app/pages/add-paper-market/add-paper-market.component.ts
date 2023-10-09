@@ -63,7 +63,7 @@ export class AddPaperMarketComponent implements OnInit {
   //       this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
   //         this.buttonName = 'Update'
   //         this.rateToUpdate = res
-  //         debugger
+  //
   //         this.timeStampValue = this.formatDate(this.rateToUpdate.timeStamp)
   //         this.disabled = true
   //         this.brandValue = this.rateToUpdate.brand
@@ -105,7 +105,7 @@ export class AddPaperMarketComponent implements OnInit {
     ]).subscribe(
       ([paperMarketData, paperStockArray, vendors]) => {
         // Handle the responses here
-        debugger
+
         this.rateToUpdate = paperMarketData;
         this.paperStockArray = paperStockArray;
         this.getGsm(this.rateToUpdate.paperStock)
@@ -189,7 +189,7 @@ export class AddPaperMarketComponent implements OnInit {
 
   getVendors(processId: any): Observable<any> {
     // Return the observable from vendorService without subscribing here
-    debugger
+
     return this.vendorService.getVendorByProductProcess(processId);
   }
 
@@ -215,7 +215,7 @@ export class AddPaperMarketComponent implements OnInit {
 
 
   addPapermarketRate() {
-    debugger
+
     let obj = {
       // timeStamp: this.timeStampValue,
       paperStock: this.paperStockValue.name,
@@ -317,7 +317,7 @@ export class AddPaperMarketComponent implements OnInit {
 
   // getVendors(processId: any) {
   //   this.vendorService.getVendorByProductProcess(processId).subscribe(res => {
-  //     debugger
+  //
   //     this.vendorArray = res
   //   }, error => {
   //     this.visible = true

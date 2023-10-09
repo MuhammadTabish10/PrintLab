@@ -147,7 +147,7 @@ export class AddInventoryComponent implements OnInit {
       this.getInventoryById()
     ]).subscribe(
       ([vendors, paperStockAndGsm, paperSize, inventoryData]) => {
-        debugger
+
         this.vendorArray = vendors;
         this.paperStockArray = paperStockAndGsm[0];
         this.gsmArray = paperStockAndGsm[1];
@@ -155,7 +155,7 @@ export class AddInventoryComponent implements OnInit {
         this.paperSizeArray = paperSize;
         this.inventoryToUpdate = inventoryData;
         if (!Number.isNaN(this.idFromQueryParam)) {
-          debugger
+
           let vendorIndex = this.vendorArray.findIndex((el: any) => el.name === this.inventoryToUpdate.vendor.name)
           this.vendorValue = this.vendorArray[vendorIndex]
           let paperIndex = this.paperStockArray.findIndex((el: any) => el.name == this.inventoryToUpdate.paperStock)
