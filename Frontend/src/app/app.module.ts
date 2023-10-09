@@ -113,8 +113,7 @@ import { DashboardChartPieComponent } from './components/dashboard-chart-pie/das
     DialogModule,
     ToastModule,
     CardModule,
-    ChartModule
-
+    ChartModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,
     provideRouter(routes, withHashLocation()), DatePipe],
