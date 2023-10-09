@@ -22,7 +22,11 @@ export class DashboardComponent implements OnInit {
   // }
   // ];
   ngOnInit(): void {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (isLoggedIn === "true") {
+      localStorage.removeItem("isLoggedIn");
+      window.location.reload();
+    }
   }
-  
 
 }

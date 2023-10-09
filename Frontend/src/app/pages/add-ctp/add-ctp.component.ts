@@ -43,7 +43,7 @@ export class AddCtpComponent implements OnInit {
         this.ctpService.getCtpById(this.idFromQueryParam).subscribe(res => {
           this.ctpToUpdate = res
           this.getProductProcess()
-          debugger
+
           this.LOneValue = this.ctpToUpdate.l1
           this.LTwoValue = this.ctpToUpdate.l2
           this.dimensionValue = this.ctpToUpdate.plateDimension

@@ -20,12 +20,8 @@ export class SidebarComponent {
 
   }
 
-  dashboard() {
-    this.router.navigateByUrl('/dashboard');
-  }
-  products() {
-    this.router.navigateByUrl('/products');
-  }
+
+
   customer() {
     this.router.navigateByUrl('/customers');
   }

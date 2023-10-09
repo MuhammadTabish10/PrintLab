@@ -116,7 +116,7 @@ export class AddProductComponent implements OnInit {
                         this.finalArray.push({id:j++,name:value});
                       }
                       if (fieldsForGsm == keysForGsm) {
-                        debugger
+
                       }
                     }
                   }
@@ -139,7 +139,7 @@ export class AddProductComponent implements OnInit {
                       if (this.fieldsToDisplay[i].name === "Paper Stock") {
                         this.fieldsToDisplay[i].selectedValues.forEach((element: any) => {
                           this.valuesSelected[i] = (this.fieldsToDisplay[i].selectedValues)
-                          debugger;
+                          ;
                           let data = element;
                           data['selectedValues'] = this.finalArray
                           this.selectPaperStock(element, i)
@@ -241,7 +241,7 @@ export class AddProductComponent implements OnInit {
 
 
   selectPaperStock(obj: any, index: any): any {
-    debugger
+
     this.gsmName = obj.itemValue?.name || obj.name;
     let containPaperIndex = this.fieldsToDisplay.findIndex((f: any) => f.name === `GSM For ${this.gsmName}`);
     if (containPaperIndex > -1) {

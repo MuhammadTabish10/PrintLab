@@ -28,7 +28,7 @@ export class ProductsComponent implements OnInit {
 
   getProducts() {
     this.productService.getProducts().subscribe(res => {
-      debugger
+
       this.productDefinitionArray = res
       this.productDefinitionArray.length == 0 ? this.tableData = true : this.tableData = false
     }, error => {
