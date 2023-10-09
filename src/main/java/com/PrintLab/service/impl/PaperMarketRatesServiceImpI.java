@@ -4,6 +4,7 @@ import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.PaperMarketRates;
 
+import com.PrintLab.model.Vendor;
 import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.PaperMarketRatesService;
@@ -11,9 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.awt.print.Paper;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
@@ -37,6 +37,42 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     @Override
     public List<PaperMarketRatesDto> getAll() {
         List<PaperMarketRates> paperMarketRatesList = paperMarketRatesRepository.findAll();
+        List<PaperMarketRatesDto> paperMarketRatesDtoList = new ArrayList<>();
+
+        for (PaperMarketRates paperMarketRates : paperMarketRatesList) {
+            PaperMarketRatesDto paperMarketRatesDto = toDto(paperMarketRates);
+            paperMarketRatesDtoList.add(paperMarketRatesDto);
+        }
+        return paperMarketRatesDtoList;
+    }
+
+    @Override
+    public Set<String> findDistinctPaperStocks() {
+        return paperMarketRatesRepository.findDistinctPaperStocks();
+    }
+
+    @Override
+    public Set<String> findDistinctVendorsByPaperStock(String paperStock) {
+        Set<Long> vendorIdList = paperMarketRatesRepository.findDistinctVendorsByPaperStock(paperStock);
+        return vendorRepository.findAllById(vendorIdList)
+                .stream()
+                .map(Vendor::getName).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<String> findDistinctBrandsByPaperStockAndVendor(String paperStock, Long vendorId) {
+        return paperMarketRatesRepository.findDistinctBrandsByPaperStockAndVendor(paperStock,vendorId);
+    }
+
+    @Override
+    public Set<String> findMadeInByPaperStockAndVendorAndBrand(String paperStock, Long vendorId, String brand) {
+        return paperMarketRatesRepository.findDistinctMadeInByPaperStockAndVendorAndBrand(paperStock,vendorId,brand);
+    }
+
+    @Override
+    public List<PaperMarketRatesDto> findAllPaperMarketRatesByPaperStock(String paperStock) {
+        List<PaperMarketRates> paperMarketRatesList =
+                paperMarketRatesRepository.findAllPaperMarketRatesByPaperStockOrderByTimestampDesc(paperStock);
         List<PaperMarketRatesDto> paperMarketRatesDtoList = new ArrayList<>();
 
         for (PaperMarketRates paperMarketRates : paperMarketRatesList) {

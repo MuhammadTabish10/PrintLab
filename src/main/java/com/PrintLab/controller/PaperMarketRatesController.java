@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
+import com.PrintLab.dto.PaperMarketRequestBody;
 import com.PrintLab.model.PaperMarketRates;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,11 @@ import java.util.List;
 @RequestMapping("/api/paper-market-rates")
 public class PaperMarketRatesController
 {
+    private static final String PAPER_STOCK = "paper";
+    private static final String VENDOR = "vendor";
+    private static final String BRAND = "brand";
+    private static final String MADE_IN = "madein";
+
     private final PaperMarketRatesService marketRatesService;
     public PaperMarketRatesController(PaperMarketRatesService marketRatesService) {
         this.marketRatesService = marketRatesService;
@@ -73,4 +79,31 @@ public class PaperMarketRatesController
         PaperMarketRatesDto updatedPmrDto = marketRatesService.updatePaperMarketRates(id, paperMarketRatesDto);
         return ResponseEntity.ok(updatedPmrDto);
     }
+
+    @GetMapping("/paper-stock")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<PaperMarketRatesDto>> getPaperRatesByStock(@RequestParam String paperStock) {
+        List<PaperMarketRatesDto> paperMarketRatesDtoList = marketRatesService.findAllPaperMarketRatesByPaperStock(paperStock);
+        return ResponseEntity.ok(paperMarketRatesDtoList);
+    }
+
+    @GetMapping("/product-rule")
+    public ResponseEntity<?> getPaperMarketRates(@RequestParam String action, @RequestBody PaperMarketRequestBody requestBody) {
+        switch (action) {
+            case PAPER_STOCK:
+                return ResponseEntity.ok(marketRatesService.findDistinctPaperStocks());
+            case VENDOR:
+                return ResponseEntity.ok(marketRatesService.findDistinctVendorsByPaperStock(requestBody.getPaperStock()));
+            case BRAND:
+                return ResponseEntity.ok(marketRatesService.findDistinctBrandsByPaperStockAndVendor(requestBody.getPaperStock(), requestBody.getVendorId()));
+            case MADE_IN:
+                return ResponseEntity.ok(marketRatesService.findMadeInByPaperStockAndVendorAndBrand(requestBody.getPaperStock(), requestBody.getVendorId(), requestBody.getBrand()));
+            default:
+                return ResponseEntity.badRequest().body("Invalid action parameter. Supported actions: paper, vendor, brand, madein");
+        }
+    }
+
+//    http://localhost:8080/api/paper-market-rates/product-rule?action=paper
+//    http://localhost:8080/api/paper-market-rates/product-rule?action=vendor&paperStock=Art_Card
+//    http://localhost:8080/api/paper-market-rates/product-rule?action=brand&paperStock=Art_Card&vendorId=3
 }
