@@ -7,20 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  // cardList:any=[
-  //   { id:1,
-  //   name:"Product"
-  // },
-  // { id:2,
-  //   name:"Order"
-  // },
-  // { id:3,
-  //   name:"Vendor"
-  // },
-  // { id:4,
-  //   name:"Customer"
-  // }
-  // ];
   ngOnInit(): void {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     if (isLoggedIn === "true") {

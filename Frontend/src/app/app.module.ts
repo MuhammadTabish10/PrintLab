@@ -115,8 +115,7 @@ import { PermisionComponent } from './pages/permision/permision.component';
     DialogModule,
     ToastModule,
     CardModule,
-    ChartModule
-
+    ChartModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,
     provideRouter(routes, withHashLocation()), DatePipe],

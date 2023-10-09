@@ -14,5 +14,13 @@ export class DashboardService {
     return this.http.get(url)
   }
 
+  getChartPieData() {
+    let urlPieChart = `${this._url}/printlab-count`
+    return this.http.get(urlPieChart);
+  }
+  getChartData() {
+    let urlPieChart = `${this._url}/printlab-count`
+    return this.http.get(urlPieChart);
+  }
 
 }
