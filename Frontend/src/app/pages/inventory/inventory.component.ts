@@ -17,8 +17,9 @@ export class InventoryComponent implements OnInit {
   error: string = ''
   gsm: any = []
   sizes: any = []
+  brand: any = []
 
-  constructor(private inventoryService: InventoryService, private router: Router, private datePipe: DatePipe,private messageService: MessageService) { }
+  constructor(private inventoryService: InventoryService, private router: Router, private datePipe: DatePipe, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getInventory()
@@ -34,6 +35,8 @@ export class InventoryComponent implements OnInit {
       this.inventoryArray.forEach((element: any) => {
         this.gsm.push(JSON.parse(element.availableGsm))
         this.sizes.push(JSON.parse(element.availableSizes))
+        debugger
+        this.brand.push(JSON.parse(element.brandName))
         element.created_at = this.datePipe.transform(element.created_at, 'EEEE, MMMM d, yyyy')
         element.dateUpdated = this.datePipe.transform(element.created_at, 'EEEE, MMMM d, yyyy')
       });
@@ -61,7 +64,7 @@ export class InventoryComponent implements OnInit {
       this.visible = true
     })
   }
-  showError(error:any) {
+  showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }
