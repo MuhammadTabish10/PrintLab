@@ -29,12 +29,14 @@ public class PaperStockServiceImpl implements PaperStockService {
     @Override
     public PaperStockDto save(PaperStockDto paperStockDto) {
         PaperStock paperStock = toEntity(paperStockDto);
+        paperStock.setStatus(true);
         PaperStock createdPaperStock = paperStockRepository.save(paperStock);
 
         List<Brand> brandList = paperStock.getBrands();
         if(brandList != null && !brandList.isEmpty()){
             for (Brand brand : brandList) {
                 brand.setPaperStock(createdPaperStock);
+                brand.setStatus(true);
                 brandRepository.save(brand);
             }
             createdPaperStock.setBrands(brandList);
@@ -117,6 +119,7 @@ public class PaperStockServiceImpl implements PaperStockService {
                 if (existingValue.isPresent()) {
                     Brand existingBrandValue = existingValue.get();
                     existingBrandValue.setName(newValue.getName());
+                    existingBrandValue.setStatus(newValue.getStatus());
                 } else {
                     newValue.setPaperStock(existingPaperStock);
                     newValuesToAdd.add(newValue);
