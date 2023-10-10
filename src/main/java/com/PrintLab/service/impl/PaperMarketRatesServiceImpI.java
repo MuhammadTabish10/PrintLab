@@ -70,6 +70,16 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
+    public Set<String> findDimensionByPaperStockAndVendorAndBrandAndMadeIn(String paperStock, Long vendorId, String brand, String madeIn) {
+        return paperMarketRatesRepository.findDistinctDimensionByPaperStockAndVendorAndBrandAndMadeIn(paperStock, vendorId, brand, madeIn);
+    }
+
+    @Override
+    public Set<String> findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(String paperStock, Long vendorId, String brand, String madeIn, String dimension) {
+        return paperMarketRatesRepository.findDistinctGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(paperStock, vendorId, brand, madeIn, dimension);
+    }
+
+    @Override
     public List<PaperMarketRatesDto> findAllPaperMarketRatesByPaperStock(String paperStock) {
         List<PaperMarketRates> paperMarketRatesList =
                 paperMarketRatesRepository.findAllPaperMarketRatesByPaperStockOrderByTimestampDesc(paperStock);

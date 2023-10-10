@@ -20,10 +20,23 @@ public interface PaperMarketRatesRepository extends JpaRepository<PaperMarketRat
     Set<Long> findDistinctVendorsByPaperStock(@Param("paperStock") String paperStock);
     @Query("SELECT DISTINCT p.brand FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND p.vendor = :vendorId")
     Set<String> findDistinctBrandsByPaperStockAndVendor(@Param("paperStock") String paperStock, @Param("vendorId") Long vendorId);
-    @Query("SELECT DISTINCT p.madeIn FROM PaperMarketRates p WHERE paper_stock = :paperStock AND vendor = :vendorId AND brand = :brand")
+    @Query("SELECT DISTINCT p.madeIn FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND vendor = :vendorId AND brand = :brand")
     Set<String> findDistinctMadeInByPaperStockAndVendorAndBrand(@Param("paperStock") String paperStock,
                                                                 @Param("vendorId") Long vendorId,
                                                                 @Param("brand") String brand);
+
+    @Query("SELECT DISTINCT p.dimension FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND vendor = :vendorId AND brand = :brand AND madeIn = :madeIn")
+    Set<String> findDistinctDimensionByPaperStockAndVendorAndBrandAndMadeIn(@Param("paperStock") String paperStock,
+                                                                            @Param("vendorId") Long vendorId,
+                                                                            @Param("brand") String brand,
+                                                                            @Param("madeIn") String madeIn);
+    @Query("SELECT DISTINCT p.GSM FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND vendor = :vendorId AND brand = :brand AND madeIn = :madeIn And dimension = :dimension")
+    Set<String> findDistinctGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(@Param("paperStock") String paperStock,
+                                                                                  @Param("vendorId") Long vendorId,
+                                                                                  @Param("brand") String brand,
+                                                                                  @Param("madeIn") String madeIn,
+                                                                                  @Param("dimension") String dimension);
+
     PaperMarketRates findByPaperStockAndGSMAndDimension(String paperStock, Integer gsm, String dimension);
     @Query("SELECT pmr FROM PaperMarketRates pmr WHERE pmr.paperStock LIKE %:searchName%")
     List<PaperMarketRates> findPaperMarketRatesByPaperStock(@Param("searchName") String searchName);

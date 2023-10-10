@@ -1,6 +1,7 @@
 package com.PrintLab.repository;
 
 import com.PrintLab.model.PressMachine;
+import com.PrintLab.model.Vendor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,10 @@ public interface PressMachineRepository extends JpaRepository<PressMachine,Long>
 {
     List<PressMachine> findByPressMachineSize_PaperSize_Id(Long paperSizeId);
     PressMachine findByName(String name);
+    @Query("SELECT DISTINCT p.name FROM PressMachine p")
+    List<String> findDistinctNames();
+    @Query("SELECT p.vendor from PressMachine p WHERE p.name = :name")
+    Vendor findVendorByName(@Param("name") String name);
     @Query("SELECT pm FROM PressMachine pm where pm.is_selected = true")
     PressMachine findSelectedPressMachine();
     List<PressMachine> findByStatus(String status);

@@ -13,4 +13,7 @@ public class PaperMarketRequestBody {
     private String paperStock;
     private Long vendorId;
     private String brand;
+    private String madeIn;
+    private String dimension;
+    private String gsm;
 }

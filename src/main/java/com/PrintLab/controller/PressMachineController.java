@@ -1,5 +1,6 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PaperMarketRequestBody;
 import com.PrintLab.dto.PressMachineDto;
 import com.PrintLab.service.PressMachineService;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,8 @@ import java.util.List;
 @RequestMapping("/api/press-machine")
 public class PressMachineController
 {
+    private static final String PRESS = "press";
+    private static final String VENDOR = "vendor";
     private final PressMachineService pressMachineService;
     public PressMachineController(PressMachineService pressMachineService) {
         this.pressMachineService = pressMachineService;
@@ -77,4 +80,18 @@ public class PressMachineController
         PressMachineDto updatedPmDto = pressMachineService.updatePressMachine(id, pressMachineDto);
         return ResponseEntity.ok(updatedPmDto);
     }
+
+    @GetMapping("/product-rule")
+    public ResponseEntity<?> getPressMachine(@RequestParam String action,
+                                             @RequestParam (required = false) String press) {
+        switch (action) {
+            case PRESS:
+                return ResponseEntity.ok(pressMachineService.findDistinctNames());
+            case VENDOR:
+                return ResponseEntity.ok(pressMachineService.findVendorByPressMachine(press));
+            default:
+                return ResponseEntity.badRequest().body("Invalid action parameter.");
+        }
+    }
+
 }

@@ -97,6 +97,21 @@ public class PressMachineServiceImpl implements PressMachineService {
     }
 
     @Override
+    public String findVendorByPressMachine(String name) {
+        Vendor vendor = pressMachineRepository.findVendorByName(name);
+        if (vendor != null) {
+            return vendor.getName();
+        } else {
+            return "Vendor Not Found";
+        }
+    }
+
+    @Override
+    public List<String> findDistinctNames() {
+        return pressMachineRepository.findDistinctNames();
+    }
+
+    @Override
     public List<PressMachineDto> searchByName(String name) {
         List<PressMachine> pressMachineList = pressMachineRepository.findPressMachinesByName(name);
         List<PressMachineDto> pressMachineDtoList = new ArrayList<>();

@@ -18,6 +18,8 @@ public class PaperMarketRatesController
     private static final String VENDOR = "vendor";
     private static final String BRAND = "brand";
     private static final String MADE_IN = "madein";
+    private static final String DIMENSION = "dimension";
+    private static final String GSM = "gsm";
 
     private final PaperMarketRatesService marketRatesService;
     public PaperMarketRatesController(PaperMarketRatesService marketRatesService) {
@@ -98,12 +100,14 @@ public class PaperMarketRatesController
                 return ResponseEntity.ok(marketRatesService.findDistinctBrandsByPaperStockAndVendor(requestBody.getPaperStock(), requestBody.getVendorId()));
             case MADE_IN:
                 return ResponseEntity.ok(marketRatesService.findMadeInByPaperStockAndVendorAndBrand(requestBody.getPaperStock(), requestBody.getVendorId(), requestBody.getBrand()));
+            case DIMENSION:
+                return ResponseEntity.ok(marketRatesService.findDimensionByPaperStockAndVendorAndBrandAndMadeIn(requestBody.getPaperStock(), requestBody.getVendorId(), requestBody.getBrand(), requestBody.getMadeIn()));
+            case GSM:
+                return ResponseEntity.ok(marketRatesService.findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(requestBody.getPaperStock(), requestBody.getVendorId(), requestBody.getBrand(), requestBody.getMadeIn(), requestBody.getDimension()));
             default:
-                return ResponseEntity.badRequest().body("Invalid action parameter. Supported actions: paper, vendor, brand, madein");
+                return ResponseEntity.badRequest().body("Invalid action parameter. Supported actions: paper, vendor, brand, madein, dimension, gsm");
         }
     }
 
 //    http://localhost:8080/api/paper-market-rates/product-rule?action=paper
-//    http://localhost:8080/api/paper-market-rates/product-rule?action=vendor&paperStock=Art_Card
-//    http://localhost:8080/api/paper-market-rates/product-rule?action=brand&paperStock=Art_Card&vendorId=3
 }
