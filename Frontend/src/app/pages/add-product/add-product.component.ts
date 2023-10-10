@@ -12,6 +12,9 @@ import { ProductService } from 'src/app/services/product.service';
     styleUrls: ['./add-product.component.css']
 })
 export class AddProductComponent implements OnInit {
+
+    
+
     buttonName: String = 'Add'
 
     titleInput: any;
@@ -19,6 +22,7 @@ export class AddProductComponent implements OnInit {
     fieldList: any = []
     paperStockFields: any;
     paperStockIsPublic: boolean = true
+    selectedPaperStock: any = []
     valuesSelected: any = []
     gsmSizes: any = []
     gsmFields: any = []
@@ -86,10 +90,17 @@ export class AddProductComponent implements OnInit {
     }
 
     fetchId(id: number) {
-        debugger
         this.service.getById(id).subscribe((res: any) => {
             this.titleInput = res.title;
             this.status = res.status;
+
+            this.paperStockFields.productFieldValuesList.forEach((fullPaperStock:any) => {
+                res.newProduct.productGsm.forEach((selectedGsm:any) => {
+                    if(fullPaperStock.name == selectedGsm.name){
+                        this.selectedPaperStock.push(fullPaperStock)
+                    }
+                });
+            });
 
             let collectSizes = res.newProduct.size.split(',')
             collectSizes.forEach((element: any) => {
@@ -141,7 +152,13 @@ export class AddProductComponent implements OnInit {
                 }
             });
 
-            this.gsmFields = res.newProduct.productGsm
+            res.newProduct.productGsm.forEach((el:any) => {
+                el.value = el.value.split(',').map(Number);
+                
+            })
+            debugger
+            this.gsmFields=res.newProduct.productGsm
+            // this.gsmFields = res.newProduct.productGsm
         });
     }
 
@@ -194,6 +211,7 @@ export class AddProductComponent implements OnInit {
     }
 
     productDefinitionComposing(paperStock: any) {
+        debugger
 
         this.paperStockNames = ''
         this.paperStockNames = paperStock.value.map((element: any) => element.name).join(',');
@@ -248,7 +266,6 @@ export class AddProductComponent implements OnInit {
     }
 
     sizes(obj: any) {
-        debugger
         const selectedSizeNames = obj.value.map((element: any) => element.name);
         this.selectedSizes = selectedSizeNames.join(',');
     }
@@ -326,6 +343,7 @@ export class AddProductComponent implements OnInit {
             });
         }
     }
+    
 
 
 }

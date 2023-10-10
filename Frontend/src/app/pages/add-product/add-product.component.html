@@ -48,14 +48,14 @@
 
             <p-multiSelect id="demo" (onChange)="productDefinitionComposing($event)" styleClass="w-100"
               [options]="paperStockFields?.productFieldValuesList" defaultLabel="Select {{ paperStockFields?.name }}"
-              [(ngModel)]="valuesSelected" optionLabel="name" display="chip" name="valuesSelected">
+              [(ngModel)]="selectedPaperStock" optionLabel="name" display="chip" name="valuesSelected">
               
             </p-multiSelect>
 
 
           </div>
 
-          <div class="col-md-6 form-group my-3" style="padding: 0 10px" *ngFor="let el of gsmFields">
+          <div class="col-md-6 form-group my-3" style="padding: 0 10px" *ngFor="let el of gsmFields ; let i =index">
             <div class="d-flex justify-content-between">
             <label for="exampleInputEmail1" class="form-label me-2">Gsm For {{ el.gsmNameFor || el.name }}</label>
             <small>Show as public
@@ -65,7 +65,7 @@
             <!-- [(ngModel)]="valuesSelected" -->
             <!-- name="valuesSelected" -->
             <p-multiSelect styleClass="w-100" (onChange)="collectGsmSizes($event , el)" [options]="gsmSizes"
-              defaultLabel="Select Gsm" optionLabel="name" display="chip"></p-multiSelect>
+              defaultLabel="Select Gsm" optionLabel="name" display="chip" [(ngModel)]="el[i]"></p-multiSelect>
           </div>
 
           <div class="col-md-6 form-group my-3" style="padding: 0 10px" >
