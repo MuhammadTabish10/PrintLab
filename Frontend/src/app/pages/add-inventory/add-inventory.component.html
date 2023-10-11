@@ -38,8 +38,8 @@
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Brand name</label>
-              <p-multiSelect styleClass="w-100" [options]="brandArray"
-              [(ngModel)]="brandValue" defaultLabel="Select Brand" optionLabel="name" display="chip"></p-multiSelect>
+            <p-dropdown styleClass="w-100" [options]="brandArray" optionLabel="name" [(ngModel)]="brandValue"
+            placeholder="Select Quantity"></p-dropdown>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Vendor</label>

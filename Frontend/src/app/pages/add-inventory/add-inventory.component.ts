@@ -155,16 +155,16 @@ export class AddInventoryComponent implements OnInit {
         this.paperSizeArray = paperSize;
         this.inventoryToUpdate = inventoryData;
         if (!Number.isNaN(this.idFromQueryParam)) {
-
           let vendorIndex = this.vendorArray.findIndex((el: any) => el.name === this.inventoryToUpdate.vendor.name)
           this.vendorValue = this.vendorArray[vendorIndex]
           let paperIndex = this.paperStockArray.findIndex((el: any) => el.name == this.inventoryToUpdate.paperStock)
           this.paperStockValue = this.paperStockArray[paperIndex]
           this.gsmValues = this.gsmArray.filter((el: any) => JSON.parse(this.inventoryToUpdate.availableGsm).includes(el.name))
-          this.brandValue = this.brandArray.filter((el: any) => JSON.parse(this.inventoryToUpdate.brandName).includes(el.name))
+          let brandIndex = this.brandArray.findIndex((el: any) => el.name.toLowerCase() == this.inventoryToUpdate.brandName.toLowerCase());
+          this.brandValue = this.brandArray[brandIndex];
           this.sizeValues = this.paperSizeArray.filter((el: any) => JSON.parse(this.inventoryToUpdate.availableSizes).includes(el.label))
           this.madeInValue = this.inventoryToUpdate.madeIn;
-          this.brandSelectedValues = JSON.parse(this.inventoryToUpdate.brandName);
+          this.brandSelectedValues = this.inventoryToUpdate.brandName;
           this.rateValue = this.inventoryToUpdate.rate;
           this.quantityValue = this.inventoryToUpdate.qty;
           this.statusValue = this.inventoryToUpdate.status;
@@ -286,10 +286,8 @@ export class AddInventoryComponent implements OnInit {
   addInventory() {
     let gsms: any = []
     let sizes: any = []
-    let brands: any = []
     this.gsmValues.forEach((el: any) => gsms.push(el.name))
     this.sizeValues.forEach((el: any) => sizes.push(el.label));
-    this.brandValue.forEach((el: any) => brands.push(el.name));
     if (Number.isNaN(this.idFromQueryParam)) {
       let obj = {
         paperStock: this.paperStockValue.name,
@@ -297,7 +295,7 @@ export class AddInventoryComponent implements OnInit {
         availableSizes: JSON.stringify(sizes),
         qty: this.quantityValue,
         madeIn: this.madeInValue,
-        brandName: JSON.stringify(brands),
+        brandName: this.brandValue.name,
         vendor: {id:this.vendorValue.id},
         rate: this.rateValue,
         status: this.statusValue
@@ -309,7 +307,7 @@ export class AddInventoryComponent implements OnInit {
         this.showError(error);
       })
     } else {
-
+      debugger
       let obj = {
         id: this.idFromQueryParam,
         created_at: this.inventoryToUpdate.created_at,
@@ -318,7 +316,7 @@ export class AddInventoryComponent implements OnInit {
         availableSizes: JSON.stringify(sizes),
         qty: this.quantityValue,
         madeIn: this.madeInValue,
-        brandName: JSON.stringify(brands),
+        brandName: this.brandValue.name,
         vendor: {id:this.vendorValue.id},
         rate: this.rateValue,
         status: this.statusValue

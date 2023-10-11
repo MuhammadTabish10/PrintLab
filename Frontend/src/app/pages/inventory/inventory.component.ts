@@ -29,7 +29,6 @@ export class InventoryComponent implements OnInit {
   getInventory() {
     this.inventoryService.getInventory().subscribe((res) => {
       this.inventoryArray = res;
-      debugger;
       console.log(this.inventoryArray[0].oldRate);
       this.inventoryArray.forEach((element: any) => {
         this.gsm.push(JSON.parse(element.availableGsm));
@@ -38,7 +37,7 @@ export class InventoryComponent implements OnInit {
           element.created_at,
           'EEEE, MMMM d, yyyy'
         );
-        debugger;
+        debugger
         if (element.dateUpdated !== null) {
           element.dateUpdated = this.datePipe.transform(
             element.created_at,
