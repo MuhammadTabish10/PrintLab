@@ -9,7 +9,6 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./inventory.component.css']
 })
 export class InventoryComponent implements OnInit {
-
   search: string = ''
   tableData: boolean = true
   inventoryArray: any = []
@@ -28,16 +27,24 @@ export class InventoryComponent implements OnInit {
   searchInventory(inventory: any) { }
 
   getInventory() {
-    this.inventoryService.getInventory().subscribe(res => {
-      this.inventoryArray = res
-
+    this.inventoryService.getInventory().subscribe((res) => {
+      this.inventoryArray = res;
+      debugger;
       console.log(this.inventoryArray[0].oldRate);
       this.inventoryArray.forEach((element: any) => {
-        this.gsm.push(JSON.parse(element.availableGsm))
-        this.sizes.push(JSON.parse(element.availableSizes))
-        this.brand.push(JSON.parse(element.brandName))
-        element.created_at = this.datePipe.transform(element.created_at, 'EEEE, MMMM d, yyyy')
-        element.dateUpdated = this.datePipe.transform(element.created_at, 'EEEE, MMMM d, yyyy')
+        this.gsm.push(JSON.parse(element.availableGsm));
+        this.sizes.push(JSON.parse(element.availableSizes));
+        element.created_at = this.datePipe.transform(
+          element.created_at,
+          'EEEE, MMMM d, yyyy'
+        );
+        debugger;
+        if (element.dateUpdated !== null) {
+          element.dateUpdated = this.datePipe.transform(
+            element.created_at,
+            'EEEE, MMMM d, yyyy'
+          );
+        }
       });
       this.inventoryArray.length == 0 ? this.tableData = true : this.tableData = false
     })
