@@ -89,7 +89,7 @@ public class PaperMarketRatesController
         return ResponseEntity.ok(paperMarketRatesDtoList);
     }
 
-    @GetMapping("/product-rule")
+    @PostMapping("/product-rule")
     public ResponseEntity<?> getPaperMarketRates(@RequestParam String action, @RequestBody PaperMarketRequestBody requestBody) {
         switch (action) {
             case PAPER_STOCK:

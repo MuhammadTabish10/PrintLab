@@ -56,6 +56,8 @@ import { DashboardChartComponent } from './components/dashboard-chart/dashboard-
 import { ChartModule } from 'primeng/chart';
 import { DashboardChartPieComponent } from './components/dashboard-chart-pie/dashboard-chart-pie.component';
 import { PermisionComponent } from './pages/permision/permision.component';
+import { ProductRuleComponent } from './pages/product-rule/product-rule.component';
+import { AddProductRuleComponent } from './pages/add-product-rule/add-product-rule.component';
 
 
 
@@ -102,6 +104,8 @@ import { PermisionComponent } from './pages/permision/permision.component';
     DashboardChartComponent,
     DashboardChartPieComponent,
     PermisionComponent,
+    ProductRuleComponent,
+    AddProductRuleComponent
   ],
   imports: [
     BrowserModule,

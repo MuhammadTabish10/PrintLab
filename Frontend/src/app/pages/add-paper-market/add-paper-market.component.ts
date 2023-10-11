@@ -52,41 +52,6 @@ export class AddPaperMarketComponent implements OnInit {
     private settingservice: SettingsService, private vendorService: VendorService,
     private productProcess: ProductProcessService, private messageService: MessageService) { }
 
-  // ngOnInit(): void {
-  //   const selectedVendor = this.vendorArray.find((vendor: any) => vendor.name === this.rateToUpdate.vendor);
-  //   this.route.queryParams.subscribe(param => {
-  //     this.idFromQueryParam = +param['id']
-  //     if (Number.isNaN(this.idFromQueryParam)) {
-  //       this.buttonName = 'Add'
-  //     }
-  //      else {
-  //       this.paperMarketService.getPaperMarketById(this.idFromQueryParam).subscribe(res => {
-  //         this.buttonName = 'Update'
-  //         this.rateToUpdate = res
-  //
-  //         this.timeStampValue = this.formatDate(this.rateToUpdate.timeStamp)
-  //         this.disabled = true
-  //         this.brandValue = this.rateToUpdate.brand
-  //         this.madeInValue = this.rateToUpdate.madeIn
-  //         this.lengthValue = this.rateToUpdate.length
-  //         this.widthValue = this.rateToUpdate.width
-  //         this.dimensionValue = this.rateToUpdate.dimension
-  //         this.qtyValue = this.rateToUpdate.qty
-  //         this.kgValue = this.rateToUpdate.kg.toFixed(2)
-  //         this.vendorValue = selectedVendor
-  //         this.rateValue = this.rateToUpdate.ratePkr.toFixed(2)
-  //         this.statusValue = this.rateToUpdate.status
-  //         this.noteValue = this.rateToUpdate.notes
-  //         this.verifiedValue = this.rateToUpdate.verified
-  //         this.getProductFields()
-  //         this.getGsm(this.rateToUpdate.paperStock)
-  //       }, error => {
-  //         this.showError(error);
-  //         this.visible = true;
-  //       })
-  //     }
-  //   })
-  // }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -111,8 +76,6 @@ export class AddPaperMarketComponent implements OnInit {
         this.getGsm(this.rateToUpdate.paperStock)
         this.vendorArray = vendors
         if (!Number.isNaN(this.idFromQueryParam)) {
-          // Handle the case where you have received responses and need to update your component's data
-          // For example:
           paperStockArray.forEach(el => {
             el.name == this.rateToUpdate.paperStock ? this.paperStockValue = el : null;
           });
@@ -137,10 +100,6 @@ export class AddPaperMarketComponent implements OnInit {
       }
     );
   }
-
-  // getGsm(papervalue: string) {
-  //   return this.settingservice.getGsmByPaperStock(papervalue);
-  // }
 
   getProductFields() {
     return this.productFieldService.getProductField().pipe(

@@ -33,6 +33,8 @@ import { AddCtpComponent } from './pages/add-ctp/add-ctp.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { AddInventoryComponent } from './pages/add-inventory/add-inventory.component';
 import { PermisionComponent } from './pages/permision/permision.component';
+import { AddProductRuleComponent } from './pages/add-product-rule/add-product-rule.component';
+import { ProductRuleComponent } from './pages/product-rule/product-rule.component';
 
 export const routes: Routes = [
   {
@@ -61,6 +63,16 @@ export const routes: Routes = [
   {
     path: 'products',
     component: ProductsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'ProductRule',
+    component: ProductRuleComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'addProductRule',
+    component: AddProductRuleComponent,
     canActivate: [AuthguardService]
   },
   {

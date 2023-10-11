@@ -55,16 +55,20 @@ export class AuthguardService implements CanActivate {
       permissions: 'Dashboard'
     }
     const customerObj = {
-      url: ['/customers','/addCustomer'],
+      url: ['/customers', '/addCustomer'],
       permissions: 'Customers'
     }
 
     const userObj = {
-      url: ['/orders','/addOrder','/viewOrder'],
+      url: ['/orders', '/addOrder', '/viewOrder'],
       permissions: 'Orders'
     }
+    const ProductRule = {
+      url: ['/ProductRule','/addProductRule'],
+      permissions: 'ProductRule'
+    }
     const productObj = {
-      url: ['/products','/addProduct'],
+      url: ['/products', '/addProduct'],
       permissions: 'Products'
     }
     const addproductObj = {
@@ -80,53 +84,53 @@ export class AuthguardService implements CanActivate {
       permissions: 'Permissions'
     }
     const permissionConfiguration_Product_Field = {
-      url : ['/productField','/addProductField'],
+      url: ['/productField', '/addProductField'],
       permissions: 'Configuration_Product_Field'
     }
     const permissionConfiguration_Settings = {
-      url : ['/settings','/addSettings'],
+      url: ['/settings', '/addSettings'],
       permissions: 'Configuration_Settings'
     }
     const permissionConfiguration_Inventory = {
-      url : ['/inventory','/addInventory'],
+      url: ['/inventory', '/addInventory'],
       permissions: 'Configuration_Inventory'
     }
     const permissionConfiguration_Vendor = {
-      url : ['/vendor','/addVendor'],
+      url: ['/vendor', '/addVendor'],
       permissions: 'Configuration_Vendor'
     }
     const permissionConfiguration_CTP = {
-      url : ['/ctp','/addCtp'],
+      url: ['/ctp', '/addCtp'],
       permissions: 'Configuration_CTP'
     }
     const permissionConfiguration_Paper_Size = {
-      url : ['/paperSize','/addPaperSize'],
+      url: ['/paperSize', '/addPaperSize'],
       permissions: 'Configuration_Paper_Size'
     }
     const permissionConfiguration_Press_Machine = {
-      url : ['/pressMachine','/addPressMachine'],
+      url: ['/pressMachine', '/addPressMachine'],
       permissions: 'Configuration_Press_Machine'
     }
     const permissionConfiguration_Paper_Market_Rate = {
-      url : ['/paperMarket','/addPaperMarket'],
+      url: ['/paperMarket', '/addPaperMarket'],
       permissions: 'Configuration_Paper_Market_Rate'
     }
     const permissionConfiguration_Uping = {
-      url : ['/uping','/addUping'],
+      url: ['/uping', '/addUping'],
       permissions: 'Configuration_Uping'
     }
     const permissionConfiguration_Product_Process = {
-      url : ['/productProcess','/addProductProcess'],
+      url: ['/productProcess', '/addProductProcess'],
       permissions: 'Configuration_Product_Process'
     }
 
 
-    return [customerObj, userObj, productObj, dashboardObj, addproductObj, calculatorObj, permissionObj, permissionConfiguration_Product_Field,
-            permissionConfiguration_Settings,permissionConfiguration_Inventory,permissionConfiguration_Vendor,permissionConfiguration_CTP,permissionConfiguration_Paper_Size,
-            permissionConfiguration_Press_Machine,permissionConfiguration_Paper_Market_Rate,permissionConfiguration_Uping,permissionConfiguration_Product_Process]
+    return [customerObj, userObj, ProductRule, productObj, dashboardObj, addproductObj, calculatorObj, permissionObj, permissionConfiguration_Product_Field,
+      permissionConfiguration_Settings, permissionConfiguration_Inventory, permissionConfiguration_Vendor, permissionConfiguration_CTP, permissionConfiguration_Paper_Size,
+      permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate, permissionConfiguration_Uping, permissionConfiguration_Product_Process]
 
 
-                // const configurationObj = {
+    // const configurationObj = {
     //   url: ['/productField','/paperMarket','/addPaperMarket','/paperSize','/addPaperSize','/pressMachine','/addPressMachine','/uping',
     //         '/addUping','/vendor','/addVendor','/productProcess','/addProductProcess','/settings','/addSettings','/ctp','/addCtp',
     //         '/inventory','/addInventory'],

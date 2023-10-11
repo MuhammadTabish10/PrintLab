@@ -32,6 +32,10 @@ export class SidebarComponent {
   addProduct() {
     this.router.navigateByUrl('/addProduct');
   }
+  addProductRule() {
+
+    this.router.navigateByUrl('/ProductRule');
+  }
   calculator() {
     this.router.navigateByUrl('/calculator');
   }

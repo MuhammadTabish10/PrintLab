@@ -30,8 +30,17 @@
                   Products
               </span>
           </span>
-
       </li>
+
+      <li *ngIf="sessionStorageService.hasPermission('ProductRule')">
+        <span [routerLink]="['/ProductRule']" class="sidebar-list-hover">
+            <i class="fa fa-plus"></i>
+            <span class="nav-text">
+              Product Rule
+            </span>
+        </span>
+    </li>
+
       <li *ngIf="sessionStorageService.hasPermission('Customers')">
           <span class="sidebar-list-hover" (click)="customer()">
               <i class="fa fa-user fa-2x"></i>

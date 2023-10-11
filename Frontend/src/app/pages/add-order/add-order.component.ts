@@ -166,7 +166,7 @@ export class AddOrderComponent implements OnInit {
 
   toggleFields(title: any) {
     this.cdr.detectChanges();
-    debugger
+
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
     this.impositionValue = title.newProduct.imposition;

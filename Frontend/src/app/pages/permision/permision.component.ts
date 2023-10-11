@@ -28,6 +28,7 @@ export class PermisionComponent {
     // private permissionService: PermissionService,
 
     ngOnInit() {
+
         this.rolesPermissionForm = this.fb.group({
             role: ['', [Validators.required]],
             permissionCheckboxes: this.fb.array([])
@@ -62,7 +63,6 @@ export class PermisionComponent {
             // this.permissions = res
 
             if (res) {
-
                 this.permissions = res;
                 this.permissions = this.permissions.map((d: any) => {
                     return {

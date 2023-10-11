@@ -12,14 +12,16 @@ export class SessionStorageService {
 
     const token = localStorage.getItem('token');
     const decodedToken = authGuardSerivce.getDecodedAccessToken(token!);
-    
+
     if (decodedToken) {
+
     let  decodedTokenPermissions= decodedToken.PERMISSIONS;
     this.userPermissions=decodedTokenPermissions
     }
   }
 
   hasPermission(requiredPermission: string): boolean {
+
     return this.userPermissions.includes(requiredPermission);
   }
 }
