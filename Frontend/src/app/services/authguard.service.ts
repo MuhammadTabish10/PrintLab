@@ -79,6 +79,14 @@ export class AuthguardService implements CanActivate {
       url: ['/permission'],
       permissions: 'Permissions'
     }
+    const paperStock = {
+      url: ['/paperStock'],
+      permissions: 'PaperStock'
+    }
+    const addPaperStock = {
+      url: ['/addPaperStock'],
+      permissions: 'AddPaperStock'
+    }
     const permissionConfiguration_Product_Field = {
       url : ['/productField','/addProductField'],
       permissions: 'Configuration_Product_Field'
@@ -121,7 +129,7 @@ export class AuthguardService implements CanActivate {
     }
 
 
-    return [customerObj, userObj, productObj, dashboardObj, addproductObj, calculatorObj, permissionObj, permissionConfiguration_Product_Field,
+    return [customerObj, userObj, productObj, dashboardObj, addproductObj, calculatorObj, permissionObj, paperStock,addPaperStock,permissionConfiguration_Product_Field,
             permissionConfiguration_Settings,permissionConfiguration_Inventory,permissionConfiguration_Vendor,permissionConfiguration_CTP,permissionConfiguration_Paper_Size,
             permissionConfiguration_Press_Machine,permissionConfiguration_Paper_Market_Rate,permissionConfiguration_Uping,permissionConfiguration_Product_Process]
 

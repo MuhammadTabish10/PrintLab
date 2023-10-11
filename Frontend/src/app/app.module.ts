@@ -56,6 +56,8 @@ import { DashboardChartComponent } from './components/dashboard-chart/dashboard-
 import { ChartModule } from 'primeng/chart';
 import { DashboardChartPieComponent } from './components/dashboard-chart-pie/dashboard-chart-pie.component';
 import { PermisionComponent } from './pages/permision/permision.component';
+import { PaperStockComponent } from './pages/paper-stock/paper-stock.component';
+import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.component';
 
 
 
@@ -102,6 +104,8 @@ import { PermisionComponent } from './pages/permision/permision.component';
     DashboardChartComponent,
     DashboardChartPieComponent,
     PermisionComponent,
+    PaperStockComponent,
+    AddPaperStockComponent,
   ],
   imports: [
     BrowserModule,

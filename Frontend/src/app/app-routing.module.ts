@@ -33,6 +33,8 @@ import { AddCtpComponent } from './pages/add-ctp/add-ctp.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { AddInventoryComponent } from './pages/add-inventory/add-inventory.component';
 import { PermisionComponent } from './pages/permision/permision.component';
+import { PaperStockComponent } from './pages/paper-stock/paper-stock.component';
+import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.component';
 
 export const routes: Routes = [
   {
@@ -171,6 +173,16 @@ export const routes: Routes = [
   {
     path: 'calculator',
     component: CalculatorComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'paperStock',
+    component: PaperStockComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'addPaperStock',
+    component: AddPaperStockComponent,
     canActivate: [AuthguardService]
   },
   {
