@@ -4,7 +4,7 @@
 
   <div class="main-container">
     <div>
-      <h4>{{buttonName}} Inventory</h4>
+      <h4>{{ buttonName }} Inventory</h4>
     </div>
 
     <div class="order-body py-2">
@@ -12,53 +12,102 @@
         <div class="row">
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Paper Stock</label>
-            <p-dropdown styleClass="w-100" [options]="paperStockArray" [(ngModel)]="paperStockValue" optionLabel="name"
-              placeholder="Select Paper Stock"></p-dropdown>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="paperStockArray"
+              [(ngModel)]="paperStockValue"
+              (onChange)="onChangePaperStock($event.value)"
+              optionLabel="name"
+              placeholder="Select Paper Stock"
+            ></p-dropdown>
           </div>
           <div class="col-6 my-3">
-            <label class="add-order-label m-0">Available GSM</label><br>
-            <p-multiSelect styleClass="w-100" [options]=" gsmArray"
-              [(ngModel)]="gsmValues" defaultLabel="Select GSM" optionLabel="name" display="chip"></p-multiSelect>
+            <label class="add-order-label m-0">Available GSM</label><br />
+            <p-multiSelect
+              styleClass="w-100"
+              [options]="gsmArray"
+              [(ngModel)]="gsmValues"
+              defaultLabel="Select GSM"
+              optionLabel="name"
+              display="chip"
+            ></p-multiSelect>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Available Sizes</label>
-            <p-multiSelect styleClass="w-100" [options]=" paperSizeArray" defaultLabel="Select Sizes"
-              [(ngModel)]="sizeValues" optionLabel="label"
-              display="chip"></p-multiSelect>
+            <p-multiSelect
+              styleClass="w-100"
+              [options]="paperSizeArray"
+              defaultLabel="Select Sizes"
+              [(ngModel)]="sizeValues"
+              optionLabel="label"
+              display="chip"
+            ></p-multiSelect>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Quantity</label>
-            <p-dropdown styleClass="w-100" [options]="quantityArray" [(ngModel)]="quantityValue"
-              placeholder="Select Quantity"></p-dropdown>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="quantityArray"
+              [(ngModel)]="quantityValue"
+              placeholder="Select Quantity"
+            ></p-dropdown>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Made in</label>
-            <input type="text" class="order-search form-control order-form-input m-0" [(ngModel)]="madeInValue"
-              style="border:1px solid #ced4da;" placeholder="Enter Made place">
+            <input
+              type="text"
+              class="order-search form-control order-form-input m-0"
+              [(ngModel)]="madeInValue"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Made place"
+            />
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Brand name</label>
-            <p-dropdown styleClass="w-100" [options]="brandArray" optionLabel="name" [(ngModel)]="brandValue"
-            placeholder="Select Quantity"></p-dropdown>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="brandArray"
+              [(ngModel)]="brandValue"
+              optionLabel="name"
+              placeholder="Select Brand"
+            ></p-dropdown>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Vendor</label>
-            <p-dropdown styleClass="w-100" [options]="vendorArray" [(ngModel)]="vendorValue" optionLabel="name"
-              placeholder="Select Vendor"></p-dropdown>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="vendorArray"
+              [(ngModel)]="vendorValue"
+              optionLabel="name"
+              placeholder="Select Vendor"
+            ></p-dropdown>
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Rate (KG)</label>
-            <input type="number" class="order-search form-control order-form-input m-0" [(ngModel)]="rateValue"
-              style="border:1px solid #ced4da;" placeholder="Enter Rate">
+            <input
+              type="number"
+              class="order-search form-control order-form-input m-0"
+              [(ngModel)]="rateValue"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Rate"
+            />
           </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Status</label>
-            <p-dropdown styleClass="w-100" [options]="statusArray" [(ngModel)]="statusValue"
-              placeholder="Select Status"></p-dropdown>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="statusArray"
+              [(ngModel)]="statusValue"
+              placeholder="Select Status"
+            ></p-dropdown>
           </div>
           <div class="col-12 my-3 d-flex justify-content-center mx-0">
-            <button type="submit" class="btn order-table-btn btn-search-panel w-25"
-              (click)="addInventory()">{{buttonName}}
+            <button
+              type="submit"
+              class="btn order-table-btn btn-search-panel w-25"
+              (click)="addInventory()"
+            >
+              {{ buttonName }}
             </button>
           </div>
         </div>
