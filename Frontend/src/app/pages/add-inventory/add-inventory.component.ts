@@ -12,7 +12,7 @@ import { PaperStockService } from 'src/app/services/paper-stock.service';
   templateUrl: './add-inventory.component.html',
   styleUrls: ['./add-inventory.component.css']
 })
-export class AddInventoryComponent implements OnInit {
+export class AddInventoryComponent {
 
   visible: boolean = false
   error: string = ''
@@ -55,55 +55,55 @@ export class AddInventoryComponent implements OnInit {
     private messageService: MessageService
   ) { }
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(param => {
-      this.idFromQueryParam = +param['id'];
-      if (Number.isNaN(this.idFromQueryParam)) {
-        this.buttonName = 'Add';
-      } else {
-        this.buttonName = 'Update';
-      }
-    });
+  // ngOnInit(): void {
+  //   this.route.queryParams.subscribe(param => {
+  //     this.idFromQueryParam = +param['id'];
+  //     if (Number.isNaN(this.idFromQueryParam)) {
+  //       this.buttonName = 'Add';
+  //     } else {
+  //       this.buttonName = 'Update';
+  //     }
+  //   });
 
-    forkJoin([
-      this.getVendors(),
-      this.getPaperStockAndBrand(),
-      this.getGsm(),
-      this.getPaperSize(),
-      this.getInventoryById()
-    ]).subscribe(
-      ([vendors, paperStockAndBrand, Gsm, paperSize, inventoryData]) => {
-        this.vendorArray = vendors;
-        this.paperStockArray = paperStockAndBrand[0];
-        this.gsmArray = Gsm[0];
-        debugger
-        this.paperSizeArray = paperSize;
-        this.inventoryToUpdate = inventoryData;
-        if (!Number.isNaN(this.idFromQueryParam)) {
+  //   forkJoin([
+  //     this.getVendors(),
+  //     this.getPaperStockAndBrand(),
+  //     this.getGsm(),
+  //     this.getPaperSize(),
+  //     this.getInventoryById()
+  //   ]).subscribe(
+  //     ([vendors, paperStockAndBrand, Gsm, paperSize, inventoryData]) => {
+  //       this.vendorArray = vendors;
+  //       this.paperStockArray = paperStockAndBrand[0];
+  //       this.gsmArray = Gsm[0];
+  //       debugger
+  //       this.paperSizeArray = paperSize;
+  //       this.inventoryToUpdate = inventoryData;
+  //       if (!Number.isNaN(this.idFromQueryParam)) {
 
-          let vendorIndex = this.vendorArray.findIndex((el: any) => el.name === this.inventoryToUpdate.vendor.name)
-          this.vendorValue = this.vendorArray[vendorIndex]
-          debugger
-          let paperIndex = this.paperStockArray.findIndex((el: any) => el.name == this.inventoryToUpdate.paperStock)
-          this.paperStockValue = this.paperStockArray[paperIndex]
-          this.gsmValues = this.gsmArray.filter((el: any) => JSON.parse(this.inventoryToUpdate.availableGsm).includes(el.name))
-          let brandIndex = this.brandArray.findIndex((el: any) => el.name == this.inventoryToUpdate.brandName)
-          this.brandValue = this.brandArray[brandIndex]
-          this.sizeValues = this.paperSizeArray.filter((el: any) => JSON.parse(this.inventoryToUpdate.availableSizes).includes(el.label))
-          this.madeInValue = this.inventoryToUpdate.madeIn;
-          this.rateValue = this.inventoryToUpdate.rate;
-          this.quantityValue = this.inventoryToUpdate.qty;
-          this.statusValue = this.inventoryToUpdate.status;
-          this.gsmSelectedValues = JSON.parse(this.inventoryToUpdate.availableGsm);
-          this.sizeSelectedValues = JSON.parse(this.inventoryToUpdate.availableSizes);
-        }
-      },
-      error => {
-        this.visible = true;
-        this.showError(error);
-      }
-    );
-  }
+  //         let vendorIndex = this.vendorArray.findIndex((el: any) => el.name === this.inventoryToUpdate.vendor.name)
+  //         this.vendorValue = this.vendorArray[vendorIndex]
+  //         debugger
+  //         let paperIndex = this.paperStockArray.findIndex((el: any) => el.name == this.inventoryToUpdate.paperStock)
+  //         this.paperStockValue = this.paperStockArray[paperIndex]
+  //         this.gsmValues = this.gsmArray.filter((el: any) => JSON.parse(this.inventoryToUpdate.availableGsm).includes(el.name))
+  //         let brandIndex = this.brandArray.findIndex((el: any) => el.name == this.inventoryToUpdate.brandName)
+  //         this.brandValue = this.brandArray[brandIndex]
+  //         this.sizeValues = this.paperSizeArray.filter((el: any) => JSON.parse(this.inventoryToUpdate.availableSizes).includes(el.label))
+  //         this.madeInValue = this.inventoryToUpdate.madeIn;
+  //         this.rateValue = this.inventoryToUpdate.rate;
+  //         this.quantityValue = this.inventoryToUpdate.qty;
+  //         this.statusValue = this.inventoryToUpdate.status;
+  //         this.gsmSelectedValues = JSON.parse(this.inventoryToUpdate.availableGsm);
+  //         this.sizeSelectedValues = JSON.parse(this.inventoryToUpdate.availableSizes);
+  //       }
+  //     },
+  //     error => {
+  //       this.visible = true;
+  //       this.showError(error);
+  //     }
+  //   );
+  // }
 
   getInventoryById() {
     if (!Number.isNaN(this.idFromQueryParam)) {
@@ -134,15 +134,15 @@ export class AddInventoryComponent implements OnInit {
     );
   }
 
-  getPaperStockAndBrand() {
-    return this.paperStock.getPaperStock().pipe(
-      map(res => {
-        let papers: any = [];
-        papers = res;
-        return [papers];
-      })
-    );
-  }
+  // getPaperStockAndBrand() {
+  //   return this.paperStock.getPaperStock().pipe(
+  //     map(res => {
+  //       let papers: any = [];
+  //       papers = res;
+  //       return [papers];
+  //     })
+  //   );
+  // }
 
   onChangePaperStock(value: any) {
     this.brandArray = value.brands
