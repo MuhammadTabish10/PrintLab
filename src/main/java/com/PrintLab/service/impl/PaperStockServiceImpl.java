@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,6 +94,7 @@ public class PaperStockServiceImpl implements PaperStockService {
         }
         return null;
     }
+
     @Transactional
     @Override
     public PaperStockDto updatedPaperStock(Long id, PaperStockDto paperStockDto) {
@@ -108,9 +110,16 @@ public class PaperStockServiceImpl implements PaperStockService {
             List<Brand> newBrandValues = paperStock.getBrands();
             List<Brand> newValuesToAdd = new ArrayList<>();
 
-            // Remove existing brands that are not present in the new PaperStock
-            existingBrandValues.removeIf(existingBrand ->
-                    newBrandValues.stream().noneMatch(newBrand -> newBrand.getId().equals(existingBrand.getId())));
+            // Delete brands not present in the new PaperStock
+            Iterator<Brand> iterator = existingBrandValues.iterator();
+            while (iterator.hasNext()) {
+                Brand existingBrand = iterator.next();
+                if (newBrandValues.stream().noneMatch(newBrand -> newBrand.getId().equals(existingBrand.getId()))) {
+                    // Delete the brand from the database
+                    iterator.remove();
+                    brandRepository.delete(existingBrand);
+                }
+            }
 
             // Update existing brands and add new brands
             for (Brand newValue : newBrandValues) {
@@ -136,6 +145,7 @@ public class PaperStockServiceImpl implements PaperStockService {
             throw new RecordNotFoundException(String.format("PaperStock not found for id => %d", id));
         }
     }
+
 
 
     @Override
