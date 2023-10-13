@@ -1,5 +1,6 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { SelectItem } from 'primeng/api';
+import { Router } from '@angular/router';
 import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
 
@@ -23,13 +24,13 @@ export class AddProductRuleComponent implements OnInit {
   plates: any
   productRule: any
   paperMarketArray: any = [];
-  updateAllPapers: any;
+  tableData: any[] = new Array(this.containers.length);
   filteredPapers: any;
-  idFromQueryParam: unknown;
-
 
   constructor(private paperMarketService: PaperMarketService,
-    private productRuleService: ProductRuleService) { }
+    private productRuleService: ProductRuleService,
+    private router: Router,
+    private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.productRuleService.getProductRule('paper', null).subscribe((productRule: any) => {
@@ -58,7 +59,7 @@ export class AddProductRuleComponent implements OnInit {
       };
       this.containers.push(newContainer);
     } else {
-      debugger
+
       let newContainer: Container = {
         allPaper: this.filteredPapers ? this.filteredPapers : this.containers[0].allPaper,
         paper: null,
@@ -80,7 +81,7 @@ export class AddProductRuleComponent implements OnInit {
 
 
     if (i < this.containers.length - 1) {
-      debugger
+
       for (let index = i + 1; index <= this.containers.length; index++) {
         this.pop();
       }
@@ -89,11 +90,12 @@ export class AddProductRuleComponent implements OnInit {
     this.productRuleService.getProductRule('vendor', { paperStock: value.name }).subscribe((v: any) => {
       let vendors = v.map((vend: any) => {
         return {
-          name: vend
+          name: vend.name,
+          id: vend.id
         }
       });
       this.containers[i].allVendor = vendors;
-
+      debugger
     }, err => {
 
     });
@@ -106,7 +108,7 @@ export class AddProductRuleComponent implements OnInit {
     this.productRuleService.getProductRule('brand',
       {
         paperStock: this.containers[i].paper.name,
-        vendorId: 3
+        vendor: { id: this.containers[i].vendor.id }
       }).subscribe((b: any) => {
         const brands = b.map((brand: any) => {
           return {
@@ -120,12 +122,12 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   changeBrand(i: any, value: any) {
-    debugger
+
     this.containers[i].brand = value;
     this.productRuleService.getProductRule('madein',
       {
         paperStock: this.containers[i].paper.name,
-        vendorId: 3,
+        vendor: { id: this.containers[i].vendor.id },
         brand: this.containers[i].brand.name
       }).subscribe((m: any) => {
         const madeIn = m.map((made: any) => {
@@ -140,17 +142,17 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   changeMadeIn(i: any, value: any) {
-    debugger
+
     this.containers[i].madeIn = value;
     this.productRuleService.getProductRule('dimension',
       {
         paperStock: this.containers[i].paper.name,
-        vendorId: 3,
+        vendor: { id: this.containers[i].vendor.id },
         brand: this.containers[i].brand.name,
         madeIn: this.containers[i].madeIn.name
       }).subscribe((d: any) => {
         const dimensions = d.map((dimen: any) => {
-          debugger
+
           return {
             name: dimen
           }
@@ -162,18 +164,18 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   changeDimension(i: any, value: any) {
-    debugger
+
     this.containers[i].dimension = value;
     this.productRuleService.getProductRule('gsm',
       {
         paperStock: this.containers[i].paper.name,
-        vendorId: 3,
+        vendor: { id: this.containers[i].vendor.id },
         brand: this.containers[i].brand.name,
         madeIn: this.containers[i].madeIn.name,
         dimension: this.containers[i].dimension.name
       }).subscribe((g: any) => {
         const gsm = g.map((gs: any) => {
-          debugger
+
           return {
             name: gs
           }
@@ -184,17 +186,8 @@ export class AddProductRuleComponent implements OnInit {
       });
   }
 
-  getPaper(): any {
-    this.productRuleService.getProductRule('paper', null).subscribe(res => {
-      // console.log(res);
-      return null;
-    }, error => {
-      console.log(error);
-    });
-  }
-
   pop() {
-    debugger
+
     this.containers.pop();
   }
 
@@ -202,29 +195,33 @@ export class AddProductRuleComponent implements OnInit {
     this.containers.splice(index, 1);
   }
 
-  getProductRule() {
-    // this.productRuleService.getProductRule().subscribe(res => {
-    //   this.productRule = res
-    // }, error => {
-    //   console.log(error);
-    // });
-  }
-
   go(i: any) {
-    // if (Number.isNaN(this.idFromQueryParam)) {
-    let obj = {
-      paperStock: this.containers[i].paper.name,
-      vendor: this.containers[i].vendor.name,
-      brand: this.containers[i].brand.name,
-      madeIn: this.containers[i].madeIn.name,
-      dimension: this.containers[i].dimension.name,
-      gsm: this.containers[i].gsm
-    }
-    console.log(obj);
-    // }
-  }
-}
+    if (i >= 0 && i < this.containers.length) {
+      let obj = {
+        paperStock: this.containers[i].paper.name,
+        vendorId: this.containers[i].vendor.id,
+        brand: this.containers[i].brand.name,
+        madeIn: this.containers[i].madeIn.name,
+        dimension: this.containers[i].dimension.name,
+        gsm: this.containers[i].gsm.map((gsm: any) => parseInt(gsm.name, 10))
+      }
+      debugger
+      this.productRuleService.postProductRule(obj).subscribe(res => {
+        console.log(res);
+        this.tableData[i] = res
+        this.tableData.forEach((el: any) => {
 
+          const dateArray = el.timeStamp;
+          el.timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+          el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+        });
+      }, error => {
+        console.log(error);
+      })
+    }
+  }
+
+}
 export interface Container {
   paper?: any;
   allPaper?: any;

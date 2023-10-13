@@ -1,7 +1,9 @@
 package com.PrintLab.service;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
+import com.PrintLab.dto.VendorDto;
 import com.PrintLab.model.PaperMarketRates;
+import com.PrintLab.model.Vendor;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -12,11 +14,12 @@ public interface PaperMarketRatesService
     PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto);
     List<PaperMarketRatesDto> getAll();
     Set<String> findDistinctPaperStocks();
-    Set<String> findDistinctVendorsByPaperStock(String paperStock);
-    Set<String> findDistinctBrandsByPaperStockAndVendor(String paperStock, Long vendorId);
-    Set<String> findMadeInByPaperStockAndVendorAndBrand(String paperStock, Long vendorId, String brand);
-    Set<String> findDimensionByPaperStockAndVendorAndBrandAndMadeIn(String paperStock, Long vendorId, String brand, String madeIn);
-    Set<String> findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(String paperStock, Long vendorId, String brand, String madeIn, String dimension);
+    Set<Vendor> findDistinctVendorsByPaperStock(String paperStock);
+    Set<String> findDistinctBrandsByPaperStockAndVendor(String paperStock, Vendor vendor);
+    Set<String> findMadeInByPaperStockAndVendorAndBrand(String paperStock, Vendor vendor, String brand);
+    Set<String> findDimensionByPaperStockAndVendorAndBrandAndMadeIn(String paperStock, Vendor vendor, String brand, String madeIn);
+    Set<String> findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(String paperStock, Vendor vendor, String brand, String madeIn, String dimension);
+    List<PaperMarketRatesDto> findPaperMarketRateByEveryColumn(String paperStock, Long vendorId, String brand, String madeIn, String dimension, List<Integer> gsm);
     List<PaperMarketRatesDto> findAllPaperMarketRatesByPaperStock(String paperStock);
     List<Integer> getDistinctGSMForPaperStock(String paperStock);
     PaperMarketRatesDto findByPaperStock(String paperStock);

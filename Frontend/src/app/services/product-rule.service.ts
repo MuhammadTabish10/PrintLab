@@ -17,4 +17,8 @@ export class ProductRuleService {
     return this.http.post(url,body ? body : {})
   }
 
+  postProductRule(obj: any) {
+    let url = `${this._url}/paper-market-rates/product-rule/result`
+    return this.http.post(url, obj)
+  }
 }

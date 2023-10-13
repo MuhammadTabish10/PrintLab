@@ -135,7 +135,7 @@ export class AddInventoryComponent implements OnInit {
   }
 
   getPaperStockAndBrand() {
-    return this.paperStock.getPaperStock().pipe(
+    return this.paperStock.getAllPaperStock().pipe(
       map(res => {
         let papers: any = [];
         papers = res;
@@ -145,7 +145,6 @@ export class AddInventoryComponent implements OnInit {
   }
 
   onChangePaperStock(value: any) {
-    debugger
     this.brandArray = value.brands
   }
 

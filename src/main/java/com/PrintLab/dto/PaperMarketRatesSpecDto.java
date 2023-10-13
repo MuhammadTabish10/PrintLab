@@ -1,20 +1,21 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.model.Vendor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PaperMarketRequestBody {
+public class PaperMarketRatesSpecDto {
     private String paperStock;
-    private Vendor vendor;
+    private Long vendorId;
     private String brand;
     private String madeIn;
     private String dimension;
-    private String gsm;
+    private List<Integer> gsm;
 }

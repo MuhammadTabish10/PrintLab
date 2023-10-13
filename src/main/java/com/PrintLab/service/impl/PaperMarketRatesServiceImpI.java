@@ -1,6 +1,7 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
+import com.PrintLab.dto.VendorDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.PaperMarketRates;
 
@@ -52,31 +53,51 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
-    public Set<String> findDistinctVendorsByPaperStock(String paperStock) {
+    public Set<Vendor> findDistinctVendorsByPaperStock(String paperStock) {
         Set<Long> vendorIdList = paperMarketRatesRepository.findDistinctVendorsByPaperStock(paperStock);
-        return vendorRepository.findAllById(vendorIdList)
-                .stream()
-                .map(Vendor::getName).collect(Collectors.toSet());
+        Set<Vendor> vendorSet = new HashSet<>();
+        for (Long vendorId : vendorIdList) {
+            Vendor vendor = vendorRepository.findById(vendorId)
+                    .orElseThrow(() -> new RecordNotFoundException("Vendor not found for id: " + vendorId));
+            vendorSet.add(vendor);
+        }
+        return vendorSet;
     }
 
     @Override
-    public Set<String> findDistinctBrandsByPaperStockAndVendor(String paperStock, Long vendorId) {
-        return paperMarketRatesRepository.findDistinctBrandsByPaperStockAndVendor(paperStock,vendorId);
+    public Set<String> findDistinctBrandsByPaperStockAndVendor(String paperStock, Vendor vendor) {
+        return paperMarketRatesRepository.findDistinctBrandsByPaperStockAndVendor(paperStock,vendor.getId());
     }
 
     @Override
-    public Set<String> findMadeInByPaperStockAndVendorAndBrand(String paperStock, Long vendorId, String brand) {
-        return paperMarketRatesRepository.findDistinctMadeInByPaperStockAndVendorAndBrand(paperStock,vendorId,brand);
+    public Set<String> findMadeInByPaperStockAndVendorAndBrand(String paperStock,Vendor vendor, String brand) {
+        return paperMarketRatesRepository.findDistinctMadeInByPaperStockAndVendorAndBrand(paperStock,vendor.getId(),brand);
     }
 
     @Override
-    public Set<String> findDimensionByPaperStockAndVendorAndBrandAndMadeIn(String paperStock, Long vendorId, String brand, String madeIn) {
-        return paperMarketRatesRepository.findDistinctDimensionByPaperStockAndVendorAndBrandAndMadeIn(paperStock, vendorId, brand, madeIn);
+    public Set<String> findDimensionByPaperStockAndVendorAndBrandAndMadeIn(String paperStock, Vendor vendor, String brand, String madeIn) {
+        return paperMarketRatesRepository.findDistinctDimensionByPaperStockAndVendorAndBrandAndMadeIn(paperStock, vendor.getId(), brand, madeIn);
     }
 
     @Override
-    public Set<String> findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(String paperStock, Long vendorId, String brand, String madeIn, String dimension) {
-        return paperMarketRatesRepository.findDistinctGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(paperStock, vendorId, brand, madeIn, dimension);
+    public Set<String> findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(String paperStock, Vendor vendor, String brand, String madeIn, String dimension) {
+        return paperMarketRatesRepository.findDistinctGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(paperStock, vendor.getId(), brand, madeIn, dimension);
+    }
+
+    @Override
+    public List<PaperMarketRatesDto> findPaperMarketRateByEveryColumn(String paperStock, Long vendorId, String brand, String madeIn, String dimension, List<Integer> gsm) {
+        List<PaperMarketRates> paperMarketRatesList = paperMarketRatesRepository.findPaperMarketRateByEveryColumn(paperStock,vendorId,brand,madeIn,dimension,gsm);
+        List<PaperMarketRatesDto> paperMarketRatesDtoList = new ArrayList<>();
+
+        if (paperMarketRatesList == null) {
+            throw new RecordNotFoundException("Paper market rates not found for the given criteria.");
+        }
+
+        for (PaperMarketRates paperMarketRates : paperMarketRatesList) {
+            PaperMarketRatesDto paperMarketRatesDto = toDto(paperMarketRates);
+            paperMarketRatesDtoList.add(paperMarketRatesDto);
+        }
+        return paperMarketRatesDtoList;
     }
 
     @Override

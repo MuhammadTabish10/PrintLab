@@ -6,37 +6,44 @@ import { environment } from 'src/Environments/environment';
   providedIn: 'root'
 })
 export class PaperStockService {
+
   _url = environment.baseUrl
 
   constructor(private http: HttpClient) { }
 
-  postPaperStock(obj: any) {
+  getBrandsByName(){
+    let url = `${this._url}/product-field/name/Brands`
+    return this.http.get(url)
+  }
+
+  addPaperStock(obj:any){
     let url = `${this._url}/paper-stock`
     return this.http.post(url, obj)
   }
 
-  getPaperStockByid(id: any) {
-    let url = `${this._url}/paper-stock/${id}`
-    return this.http.get(url)
-  }
-
-  getPaperStock() {
+  getAllPaperStock(){
     let url = `${this._url}/paper-stock`
     return this.http.get(url)
   }
 
-  deletePaperStock(id: any) {
+  getById(id: any) {
+    let url = `${this._url}/paper-stock/${id}`
+    return this.http.get(url)
+  }
+
+  updatePaperStock(id:any , obj:any){
+    let url = `${this._url}/paper-stock/${id}`
+    return this.http.put(url, obj)
+  }
+
+  deletePaperStock(id:any){
     let url = `${this._url}/paper-stock/${id}`
     return this.http.delete(url)
   }
 
-  updatePaperStock(id: any, obj: any) {
-    let url = `${this._url}/paperStock/${id}`
-    return this.http.put(url, obj)
-  }
+  searchPaperStock(title: any) {
 
-  searchPaperStock(name: any) {
-    let url = `${this._url}/paperStock/names/${name}`
+    let url = `${this._url}/paper-stock/names/${title}`
     return this.http.get(url)
   }
 }

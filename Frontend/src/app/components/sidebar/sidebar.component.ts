@@ -72,6 +72,9 @@ export class SidebarComponent {
   configurationInventory() {
     this.router.navigateByUrl('/inventory');
   }
+  paperStock(){
+    this.router.navigateByUrl('/paperStock');
+  }
 
   // options: any = [
   //     {

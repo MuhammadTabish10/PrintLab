@@ -35,6 +35,8 @@ import { AddInventoryComponent } from './pages/add-inventory/add-inventory.compo
 import { PermisionComponent } from './pages/permision/permision.component';
 import { AddProductRuleComponent } from './pages/add-product-rule/add-product-rule.component';
 import { ProductRuleComponent } from './pages/product-rule/product-rule.component';
+import { PaperStockComponent } from './pages/paper-stock/paper-stock.component';
+import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.component';
 
 export const routes: Routes = [
   {
@@ -183,6 +185,16 @@ export const routes: Routes = [
   {
     path: 'calculator',
     component: CalculatorComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'paperStock',
+    component: PaperStockComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'addPaperStock',
+    component: AddPaperStockComponent,
     canActivate: [AuthguardService]
   },
   {

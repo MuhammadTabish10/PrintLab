@@ -58,6 +58,8 @@ import { DashboardChartPieComponent } from './components/dashboard-chart-pie/das
 import { PermisionComponent } from './pages/permision/permision.component';
 import { ProductRuleComponent } from './pages/product-rule/product-rule.component';
 import { AddProductRuleComponent } from './pages/add-product-rule/add-product-rule.component';
+import { PaperStockComponent } from './pages/paper-stock/paper-stock.component';
+import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.component';
 
 
 
@@ -105,7 +107,9 @@ import { AddProductRuleComponent } from './pages/add-product-rule/add-product-ru
     DashboardChartPieComponent,
     PermisionComponent,
     ProductRuleComponent,
-    AddProductRuleComponent
+    AddProductRuleComponent,
+    PaperStockComponent,
+    AddPaperStockComponent,
   ],
   imports: [
     BrowserModule,

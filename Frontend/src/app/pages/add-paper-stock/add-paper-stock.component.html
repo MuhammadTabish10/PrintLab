@@ -1,0 +1,52 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid ps-6">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="container-fluid px-0">
+    <div>
+      <h4>PaperStocks</h4>
+    </div>
+    <div class="order-body py-2">
+      <div class="container">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <!-- <div class="mb-3"> -->
+              <label for="formGroupExampleInput" class="add-order-label m-0"
+                >PaperStock Name</label
+              >
+              <input
+                style="height: 51px;"
+                type="text"
+                class="form-control bg-white"
+                id="formGroupExampleInput"
+                placeholder="Enter title"
+                name="titleInput"
+                [(ngModel)]="paperStock"
+                required
+              />
+            <!-- </div> -->
+          </div>
+
+          <div class="col-6 mb-3">
+            <label class="add-order-label m-0"> Brands </label>
+            <p-multiSelect styleClass="w-100" [options]="allBrands" (onChange)="brandsChanged($event)"
+            defaultLabel="Select GSM" optionLabel="name" display="chip" [(ngModel)]="selectedBrandsForEdit1" ></p-multiSelect>
+            <!-- [(ngModel)]="allBrands" -->
+              <!-- (ngModelChange)="machine($event)" -->
+              <!-- [(ngModel)]="id ? null : pressMachineArray[machineIndex]" -->
+          </div>
+
+          <div class="order-body mt-5 py-3">
+            <div class="text-end">
+              <button type="submit" class="btn order-table-btn btn-search-panel" (click)="addPaperStock()">
+                {{ buttonName }}
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>
+

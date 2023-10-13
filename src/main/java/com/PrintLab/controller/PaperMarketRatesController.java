@@ -1,13 +1,16 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.PaperMarketRatesDto;
+import com.PrintLab.dto.PaperMarketRatesSpecDto;
 import com.PrintLab.dto.PaperMarketRequestBody;
 import com.PrintLab.model.PaperMarketRates;
+import com.PrintLab.model.Vendor;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -90,6 +93,7 @@ public class PaperMarketRatesController
     }
 
     @PostMapping("/product-rule")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getPaperMarketRates(@RequestParam String action, @RequestBody PaperMarketRequestBody requestBody) {
         switch (action) {
             case PAPER_STOCK:
@@ -97,17 +101,27 @@ public class PaperMarketRatesController
             case VENDOR:
                 return ResponseEntity.ok(marketRatesService.findDistinctVendorsByPaperStock(requestBody.getPaperStock()));
             case BRAND:
-                return ResponseEntity.ok(marketRatesService.findDistinctBrandsByPaperStockAndVendor(requestBody.getPaperStock(), requestBody.getVendorId()));
+                return ResponseEntity.ok(marketRatesService.findDistinctBrandsByPaperStockAndVendor(requestBody.getPaperStock(), requestBody.getVendor()));
             case MADE_IN:
-                return ResponseEntity.ok(marketRatesService.findMadeInByPaperStockAndVendorAndBrand(requestBody.getPaperStock(), requestBody.getVendorId(), requestBody.getBrand()));
+                return ResponseEntity.ok(marketRatesService.findMadeInByPaperStockAndVendorAndBrand(requestBody.getPaperStock(), requestBody.getVendor(), requestBody.getBrand()));
             case DIMENSION:
-                return ResponseEntity.ok(marketRatesService.findDimensionByPaperStockAndVendorAndBrandAndMadeIn(requestBody.getPaperStock(), requestBody.getVendorId(), requestBody.getBrand(), requestBody.getMadeIn()));
+                return ResponseEntity.ok(marketRatesService.findDimensionByPaperStockAndVendorAndBrandAndMadeIn(requestBody.getPaperStock(), requestBody.getVendor(), requestBody.getBrand(), requestBody.getMadeIn()));
             case GSM:
-                return ResponseEntity.ok(marketRatesService.findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(requestBody.getPaperStock(), requestBody.getVendorId(), requestBody.getBrand(), requestBody.getMadeIn(), requestBody.getDimension()));
+                return ResponseEntity.ok(marketRatesService.findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(requestBody.getPaperStock(), requestBody.getVendor(), requestBody.getBrand(), requestBody.getMadeIn(), requestBody.getDimension()));
             default:
                 return ResponseEntity.badRequest().body("Invalid action parameter. Supported actions: paper, vendor, brand, madein, dimension, gsm");
         }
     }
-
 //    http://localhost:8080/api/paper-market-rates/product-rule?action=paper
+
+    @PostMapping("/product-rule/result")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<PaperMarketRatesDto>> findPaperMarketRatesFromGivenCriteria(@RequestBody PaperMarketRatesSpecDto paperMarketRatesSpecDto) {
+        List<PaperMarketRatesDto> paperMarketRatesDto =
+                marketRatesService.findPaperMarketRateByEveryColumn(paperMarketRatesSpecDto.getPaperStock(),
+                        paperMarketRatesSpecDto.getVendorId(), paperMarketRatesSpecDto.getBrand(),
+                        paperMarketRatesSpecDto.getMadeIn(), paperMarketRatesSpecDto.getDimension(),
+                        paperMarketRatesSpecDto.getGsm());
+        return ResponseEntity.ok(paperMarketRatesDto);
+    }
 }

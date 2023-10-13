@@ -146,12 +146,51 @@
     <div class="row mx-auto d-flex justify-content-end mt-3 pe-2">
       <div class="btn btn-dark col-1" (click)="go(i)">Go</div>
     </div>
-    <div class="mb-3">
+    <div class="mb-3 overflow-x-scroll">
       <label for="exampleFormControlTextarea1" class="form-label"></label>
-      <table border="1" class="text-center">
-        <tr>
-          <th></th>
-        </tr>
+      <table border="2" class="table table-bordered table-striped table-hover text-nowrap" id="goTable" *ngIf="tableData[i]">
+        <thead class="bg-dark text-white">
+          <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">Paper Stock</th>
+            <th class="text-center">Brand</th>
+            <th class="text-center">Made In</th>
+            <th class="text-center">Dimension</th>
+            <th class="text-center">GSM</th>
+            <th class="text-center">KG</th>
+            <th class="text-center">Length</th>
+            <th class="text-center">Qty</th>
+            <th class="text-center">Rate PKR</th>
+            <th class="text-center">Record Type</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Timestamp</th>
+            <th class="text-center">Vendor Name</th>
+            <th class="text-center">Contact Name</th>
+            <th class="text-center">Contact Number</th>
+            <th class="text-center">Verified</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableData[i]">
+            <td class="text-center">{{ item.id }}</td>
+            <td class="text-center">{{ item.paperStock }}</td>
+            <td class="text-center">{{ item.brand }}</td>
+            <td class="text-center">{{ item.madeIn }}</td>
+            <td class="text-center">{{ item.dimension }}</td>
+            <td class="text-center">{{ item.gsm }}</td>
+            <td class="text-center">{{ item.kg.toFixed(2) }}</td>
+            <td class="text-center">{{ item.length }}</td>
+            <td class="text-center">{{ item.qty }}</td>
+            <td class="text-center">{{ item.ratePkr.toFixed(2) }}</td>
+            <td class="text-center">{{ item.recordType }}</td>
+            <td class="text-center">{{ item.status }}</td>
+            <td class="text-center">{{ item.timeStamp }}</td>
+            <td class="text-center">{{ item.vendor.name }}</td>
+            <td class="text-center">{{ item.vendor.contactName }}</td>
+            <td class="text-center">{{ item.vendor.contactNumber }}</td>
+            <td class="text-center">{{ item.verified }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>

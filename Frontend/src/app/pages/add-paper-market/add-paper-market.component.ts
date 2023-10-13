@@ -138,8 +138,6 @@ export class AddPaperMarketComponent implements OnInit {
             return this.getVendors(pressProcessId);
           }
         }
-
-        // Return an observable with default or empty data
         return of([]);
       })
     );
@@ -147,8 +145,6 @@ export class AddPaperMarketComponent implements OnInit {
 
 
   getVendors(processId: any): Observable<any> {
-    // Return the observable from vendorService without subscribing here
-
     return this.vendorService.getVendorByProductProcess(processId);
   }
 
@@ -158,7 +154,6 @@ export class AddPaperMarketComponent implements OnInit {
     if (!Number.isNaN(this.idFromQueryParam)) {
       return this.paperMarketService.getPaperMarketById(this.idFromQueryParam);
     } else {
-      // Return an observable with default or empty data, depending on your requirement
       return of({});
     }
   }
@@ -176,7 +171,6 @@ export class AddPaperMarketComponent implements OnInit {
   addPapermarketRate() {
 
     let obj = {
-      // timeStamp: this.timeStampValue,
       paperStock: this.paperStockValue.name,
       brand: this.brandValue,
       madeIn: this.madeInValue,
@@ -186,7 +180,7 @@ export class AddPaperMarketComponent implements OnInit {
       dimension: this.dimensionValue,
       qty: this.qtyValue,
       kg: this.kgValue,
-      vendor: {id:this.vendorValue.id},
+      vendor: { id: this.vendorValue.id },
       ratePkr: this.rateValue,
       notes: this.noteValue,
       status: this.statusValue
@@ -219,24 +213,6 @@ export class AddPaperMarketComponent implements OnInit {
     })
   }
 
-  // getProductFields() {
-  //   this.productFieldService.getProductField().subscribe(res => {
-  //     let arr: any = []
-  //     arr = res
-  //     arr.forEach((element: any) => {
-  //       element.name.toLowerCase().replace(/\s/g, '') == 'paperstock' ? this.paperStockArray = element.productFieldValuesList : null
-  //     });
-  //     if (!Number.isNaN(this.idFromQueryParam)) {
-  //       this.paperStockArray.forEach((el: any) => {
-  //         el.name == this.rateToUpdate.paperStock ? this.paperStockValue = el : null
-  //       })
-  //     }
-  //   }, error => {
-  //     this.showError(error);
-  //     this.visible = true;
-  //   })
-  // }
-
   get id(): boolean {
     return Number.isNaN(this.idFromQueryParam)
   }
@@ -244,45 +220,6 @@ export class AddPaperMarketComponent implements OnInit {
   dimension() {
     this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
   }
-
-
-  // getProductProcess() {
-  //   this.productProcess.getProductProcess().subscribe(
-  //     (res: any) => {
-  //       if (Array.isArray(res)) {
-  //         this.productProcessArray = res;
-
-  //         let pressProcess: any;
-
-  //         for (const process of this.productProcessArray) {
-  //           if (process.name === 'PaperMart' || process.name === 'paperMart') {
-  //             pressProcess = process;
-  //             break
-  //           }
-  //         }
-  //           const pressProcessId = pressProcess.id;
-  //           this.getVendors(pressProcessId);
-  //       }
-  //     },
-  //     (error) => {
-  //       this.error = error.error.error;
-  //       this.visible = true;
-  //     }
-  //   );
-  // }
-
-
-
-
-  // getVendors(processId: any) {
-  //   this.vendorService.getVendorByProductProcess(processId).subscribe(res => {
-  //
-  //     this.vendorArray = res
-  //   }, error => {
-  //     this.visible = true
-  //     this.showError(error);
-  //   })
-  // }
 
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });

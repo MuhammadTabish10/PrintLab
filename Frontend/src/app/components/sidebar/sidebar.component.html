@@ -79,6 +79,16 @@
 
       </li>
 
+      <li *ngIf="sessionStorageService.hasPermission('PaperStock')">
+        <span class="sidebar-list-hover" (click)="paperStock()">
+            <i class="fa fa-pied-piper"></i>
+            <span class="nav-text">
+              Paper Stock
+            </span>
+        </span>
+
+    </li>
+
       <li *ngIf="sessionStorageService.hasPermission('Permissions')">
         <span class="sidebar-list-hover" (click)="permission()">
             <i class="fa fa-plus"></i>
