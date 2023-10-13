@@ -37,6 +37,14 @@ public interface PaperMarketRatesRepository extends JpaRepository<PaperMarketRat
                                                                                   @Param("madeIn") String madeIn,
                                                                                   @Param("dimension") String dimension);
 
+    @Query("SELECT pmr FROM PaperMarketRates pmr WHERE pmr.paperStock = :paperStock AND pmr.vendor = :vendorId AND pmr.brand = :brand AND pmr.madeIn = :madeIn AND pmr.dimension = :dimension AND pmr.GSM IN :gsm")
+    List<PaperMarketRates> findPaperMarketRateByEveryColumn(@Param("paperStock") String paperStock,
+                                                      @Param("vendorId") Long vendorId,
+                                                      @Param("brand") String brand,
+                                                      @Param("madeIn") String madeIn,
+                                                      @Param("dimension") String dimension,
+                                                      @Param("gsm") List<Integer> gsm);
+
     PaperMarketRates findByPaperStockAndGSMAndDimension(String paperStock, Integer gsm, String dimension);
     @Query("SELECT pmr FROM PaperMarketRates pmr WHERE pmr.paperStock LIKE %:searchName%")
     List<PaperMarketRates> findPaperMarketRatesByPaperStock(@Param("searchName") String searchName);
