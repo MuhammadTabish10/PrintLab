@@ -14,7 +14,6 @@ export class ProductRuleService {
   getProductRule(action:string,body:any) {
     debugger
     let url = `${this._url}/paper-market-rates/product-rule?action=${action}`
-
     return this.http.post(url,body ? body : {})
   }
 

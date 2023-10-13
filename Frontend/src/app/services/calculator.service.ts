@@ -19,20 +19,20 @@ export class CalculatorService {
       id: "productSize",
       values: ["LETTER", "DL", "BUSINESS CARD", "A5", "A4", "A3", "PRESENTATION FOLDER"]
     },
-    {
-      id: "paperStock",
-      values: [
-        "GLOSSY/ART_PAPER",
-        "ART_PAPER_/_MATTE",
-        "CARBONLESS",
-        "MATTE_PAPER",
-        "NEWS_PAPER",
-        "UNCOATED/OFFSET",
-        "WHITE_LINEN",
-        "YELLOW_LAID",
-        "BLEACH_CARD",
-      ],
-    },
+    // {
+    //   id: "paperStock",
+    //   values: [
+    //     "GLOSSY/ART_PAPER",
+    //     "ART_PAPER_/_MATTE",
+    //     "CARBONLESS",
+    //     "MATTE_PAPER",
+    //     "NEWS_PAPER",
+    //     "UNCOATED/OFFSET",
+    //     "WHITE_LINEN",
+    //     "YELLOW_LAID",
+    //     "BLEACH_CARD",
+    //   ],
+    // },
     {
       id: "grams",
       values: [113, 90, 300, 250, 48, 128, 150, 70, 80, 350, 120, 100],

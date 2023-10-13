@@ -1,12 +1,7 @@
 <app-sidebar></app-sidebar>
 <div class="bg-light pb-3 pt-3">
   <div class="container px-0">
-    <form
-      class="was-validated row py-2 mx-auto"
-      #myForm="ngForm"
-      (ngSubmit)="addContainer()"
-      novalidate
-    >
+    <form class="was-validated row py-2 mx-auto" #myForm="ngForm" novalidate>
       <div class="col-md-9">
         <div class="form-group mb-3">
           <label for="formGroupExampleInput" class="form-label fs-4"
@@ -28,8 +23,9 @@
       <div class="col-md-3" style="margin-top: 43px">
         <button
           class="btn btn-dark btn-block"
-          type="submit"
+          type="button"
           [disabled]="!myForm.valid"
+          (click)="addContainer()"
         >
           Add paperStock Rule
         </button>
@@ -44,7 +40,12 @@
       PaperStock Rule {{ i + 1 }}
     </h3>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-dark" (click)="deleteContainer(i)">
+      <button
+        type="button"
+        class="btn btn-dark"
+        *ngIf="i > 0"
+        (click)="deleteContainer(i)"
+      >
         <i class="fa-solid fa-trash text-danger"></i>
       </button>
     </div>
@@ -73,18 +74,18 @@
       </div>
     </div>
     <div class="row py-1 mx-auto">
-      <!-- <div class="col" *ngIf="containers[i].vendor">
+      <div class="col" *ngIf="containers[i].vendor">
         <label class="add-order-label m-0">Brand</label>
         <p-dropdown
           styleClass="w-100"
           [options]="container.allBrand"
-          (onChange)="changeBrand(i,$event.value)"
+          (onChange)="changeBrand(i, $event.value)"
           optionLabel="name"
           [(ngModel)]="containers[i].brand"
           placeholder="Select brand"
         ></p-dropdown>
-      </div> -->
-      <div class="col" *ngIf="containers[i].vendor">
+      </div>
+      <!-- <div class="col" *ngIf="containers[i].vendor">
         <label class="add-order-label m-0">Brand</label>
         <p-multiSelect
           styleClass="w-100"
@@ -94,7 +95,7 @@
           [(ngModel)]="containers[i].brand"
           placeholder="Select MadeIn"
         ></p-multiSelect>
-      </div>
+      </div> -->
       <div class="col" *ngIf="containers[i].brand">
         <label class="add-order-label m-0">MadeIn</label>
         <p-dropdown
@@ -112,25 +113,38 @@
         <label class="add-order-label m-0">Dimensions</label>
         <p-dropdown
           styleClass="w-100"
-          [options]=""
-          optionLabel="title"
-          [(ngModel)]="dimensions"
+          [options]="containers[i].allDimension"
+          (onChange)="changeDimension(i, $event.value)"
+          optionLabel="name"
+          [(ngModel)]="containers[i].dimension"
           placeholder="Select Dimension"
         ></p-dropdown>
       </div>
-      <div class="col" *ngIf="containers[i].dimension">
+      <!-- <div class="col" *ngIf="containers[i].dimension">
         <label class="add-order-label m-0">GSM</label>
         <p-dropdown
           styleClass="w-100"
-          [options]=""
-          optionLabel="title"
-          [(ngModel)]="gsm"
+          [options]="containers[i].allGsm"
+          optionLabel="name"
+          [(ngModel)]="containers[i].gsm"
           placeholder="Select GSM"
         ></p-dropdown>
+      </div> -->
+
+      <div class="col" *ngIf="containers[i].dimension">
+        <label class="add-order-label m-0">Gsm</label>
+        <p-multiSelect
+          styleClass="w-100"
+          [options]="containers[i].allGsm"
+          optionLabel="name"
+          [(ngModel)]="containers[i].gsm"
+          display="chip"
+          placeholder="Select Gsm"
+        ></p-multiSelect>
       </div>
     </div>
     <div class="row mx-auto d-flex justify-content-end mt-3 pe-2">
-      <div class="btn btn-dark col-1">Go</div>
+      <div class="btn btn-dark col-1" (click)="go(i)">Go</div>
     </div>
     <div class="mb-3">
       <label for="exampleFormControlTextarea1" class="form-label"></label>

@@ -292,8 +292,6 @@ export class CalculatorHeaderComponent implements OnInit {
 
   private getFields() {
     this.productFieldService.getProductField().subscribe((res: { [key: string]: any }) => {
-      ;
-
       const paperStockField = this.getFieldByName(res, 'Paper Stock');
       const frontJobColorsField = this.getFieldByName(res, 'JobColor(Front)');
       const sizeField = this.getFieldByName(res, 'Size');

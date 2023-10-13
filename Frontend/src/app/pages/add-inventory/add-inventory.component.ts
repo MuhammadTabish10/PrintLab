@@ -86,6 +86,7 @@ export class AddInventoryComponent implements OnInit {
           let paperIndex = this.paperStockArray.findIndex((el: any) => el.name == this.inventoryToUpdate.paperStock)
           this.paperStockValue = this.paperStockArray[paperIndex]
           this.gsmValues = this.gsmArray.filter((el: any) => JSON.parse(this.inventoryToUpdate.availableGsm).includes(el.name))
+          this.onChangePaperStock(this.paperStockValue);
           let brandIndex = this.brandArray.findIndex((el: any) => el.name == this.inventoryToUpdate.brandName)
           this.brandValue = this.brandArray[brandIndex]
           this.sizeValues = this.paperSizeArray.filter((el: any) => JSON.parse(this.inventoryToUpdate.availableSizes).includes(el.label))
@@ -144,6 +145,7 @@ export class AddInventoryComponent implements OnInit {
   }
 
   onChangePaperStock(value: any) {
+    debugger
     this.brandArray = value.brands
   }
 

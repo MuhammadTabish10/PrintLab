@@ -23,6 +23,9 @@ export class AddProductRuleComponent implements OnInit {
   plates: any
   productRule: any
   paperMarketArray: any = [];
+  updateAllPapers: any;
+  filteredPapers: any;
+  idFromQueryParam: unknown;
 
 
   constructor(private paperMarketService: PaperMarketService,
@@ -30,7 +33,6 @@ export class AddProductRuleComponent implements OnInit {
 
   ngOnInit(): void {
     this.productRuleService.getProductRule('paper', null).subscribe((productRule: any) => {
-      console.log(productRule)
       let paper = productRule.map((p: any) => {
         return {
           name: p
@@ -54,26 +56,49 @@ export class AddProductRuleComponent implements OnInit {
         dimension: null,
         gsm: null
       };
-
+      this.containers.push(newContainer);
+    } else {
+      debugger
+      let newContainer: Container = {
+        allPaper: this.filteredPapers ? this.filteredPapers : this.containers[0].allPaper,
+        paper: null,
+        vendor: null,
+        brand: null,
+        madeIn: null,
+        dimension: null,
+        gsm: null
+      };
       this.containers.push(newContainer);
     }
   }
 
   changePaper(i: any, value: any) {
-    debugger
     this.containers[i].paper = value;
+    this.filteredPapers = this.containers[i].allPaper.filter((papers: any) => {
+      return papers.name != value.name;
+    });
+
+
+    if (i < this.containers.length - 1) {
+      debugger
+      for (let index = i + 1; index <= this.containers.length; index++) {
+        this.pop();
+      }
+    }
+
     this.productRuleService.getProductRule('vendor', { paperStock: value.name }).subscribe((v: any) => {
       let vendors = v.map((vend: any) => {
         return {
           name: vend
         }
-      })
+      });
       this.containers[i].allVendor = vendors;
 
     }, err => {
 
-    })
+    });
   }
+
 
   changeVendor(i: any, value: any) {
     debugger
@@ -83,8 +108,7 @@ export class AddProductRuleComponent implements OnInit {
         paperStock: this.containers[i].paper.name,
         vendorId: 3
       }).subscribe((b: any) => {
-        const brandsArray = JSON.parse(b[0]);
-        const brands = brandsArray.map((brand: any) => {
+        const brands = b.map((brand: any) => {
           return {
             name: brand
           }
@@ -98,13 +122,11 @@ export class AddProductRuleComponent implements OnInit {
   changeBrand(i: any, value: any) {
     debugger
     this.containers[i].brand = value;
-    const brandNames = this.containers[i].brand.map((brand: any) => brand.name);
-    const brandString = JSON.stringify(brandNames);
     this.productRuleService.getProductRule('madein',
       {
         paperStock: this.containers[i].paper.name,
         vendorId: 3,
-        brand: brandString
+        brand: this.containers[i].brand.name
       }).subscribe((m: any) => {
         const madeIn = m.map((made: any) => {
           return {
@@ -120,13 +142,11 @@ export class AddProductRuleComponent implements OnInit {
   changeMadeIn(i: any, value: any) {
     debugger
     this.containers[i].madeIn = value;
-    const brandNames = this.containers[i].brand.map((brand: any) => brand.name);
-    const brandString = JSON.stringify(brandNames);
     this.productRuleService.getProductRule('dimension',
       {
         paperStock: this.containers[i].paper.name,
         vendorId: 3,
-        brand: brandString,
+        brand: this.containers[i].brand.name,
         madeIn: this.containers[i].madeIn.name
       }).subscribe((d: any) => {
         const dimensions = d.map((dimen: any) => {
@@ -141,20 +161,45 @@ export class AddProductRuleComponent implements OnInit {
       });
   }
 
+  changeDimension(i: any, value: any) {
+    debugger
+    this.containers[i].dimension = value;
+    this.productRuleService.getProductRule('gsm',
+      {
+        paperStock: this.containers[i].paper.name,
+        vendorId: 3,
+        brand: this.containers[i].brand.name,
+        madeIn: this.containers[i].madeIn.name,
+        dimension: this.containers[i].dimension.name
+      }).subscribe((g: any) => {
+        const gsm = g.map((gs: any) => {
+          debugger
+          return {
+            name: gs
+          }
+        });
+        this.containers[i].allGsm = gsm;
+      }, err => {
+        console.log(err);
+      });
+  }
+
   getPaper(): any {
     this.productRuleService.getProductRule('paper', null).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       return null;
     }, error => {
       console.log(error);
     });
   }
 
-  deleteContainer(index: number) {
+  pop() {
+    debugger
+    this.containers.pop();
+  }
 
-    if (index >= 0 && index < this.containers.length) {
-      this.containers.splice(index, 1);
-    }
+  deleteContainer(index: any) {
+    this.containers.splice(index, 1);
   }
 
   getProductRule() {
@@ -163,6 +208,20 @@ export class AddProductRuleComponent implements OnInit {
     // }, error => {
     //   console.log(error);
     // });
+  }
+
+  go(i: any) {
+    // if (Number.isNaN(this.idFromQueryParam)) {
+    let obj = {
+      paperStock: this.containers[i].paper.name,
+      vendor: this.containers[i].vendor.name,
+      brand: this.containers[i].brand.name,
+      madeIn: this.containers[i].madeIn.name,
+      dimension: this.containers[i].dimension.name,
+      gsm: this.containers[i].gsm
+    }
+    console.log(obj);
+    // }
   }
 }
 
