@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 
@@ -116,7 +117,7 @@ public class PaperMarketRatesController
 
     @PostMapping("/product-rule/result")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<PaperMarketRatesDto>> findPaperMarketRatesFromGivenCriteria(@RequestBody PaperMarketRatesSpecDto paperMarketRatesSpecDto) {
+    public ResponseEntity<List<PaperMarketRatesDto>> findPaperMarketRatesFromGivenCriteria(@Valid @RequestBody PaperMarketRatesSpecDto paperMarketRatesSpecDto) {
         List<PaperMarketRatesDto> paperMarketRatesDto =
                 marketRatesService.findPaperMarketRateByEveryColumn(paperMarketRatesSpecDto.getPaperStock(),
                         paperMarketRatesSpecDto.getVendorId(), paperMarketRatesSpecDto.getBrand(),
