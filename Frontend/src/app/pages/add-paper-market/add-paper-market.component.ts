@@ -8,6 +8,7 @@ import { VendorService } from 'src/app/services/vendor.service';
 import { MessageService } from 'primeng/api';
 import { ProductProcessService } from 'src/app/services/product-process.service';
 import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
+import { PaperStockService } from 'src/app/services/paper-stock.service';
 
 @Component({
   selector: 'app-add-paper-market',
@@ -45,12 +46,14 @@ export class AddPaperMarketComponent implements OnInit {
   disabled: boolean = false;
   productProcessArray: any[] = [];
   pressProcess: any;
+  extractedPaperStock:any[] = []
 
 
   constructor(private paperMarketService: PaperMarketService, private route: ActivatedRoute,
     private router: Router, private productFieldService: ProductDefinitionService,
     private settingservice: SettingsService, private vendorService: VendorService,
-    private productProcess: ProductProcessService, private messageService: MessageService) { }
+    private productProcess: ProductProcessService, private messageService: MessageService,
+    private paperStockService: PaperStockService) { }
 
   // ngOnInit(): void {
   //   const selectedVendor = this.vendorArray.find((vendor: any) => vendor.name === this.rateToUpdate.vendor);
@@ -113,7 +116,8 @@ export class AddPaperMarketComponent implements OnInit {
         if (!Number.isNaN(this.idFromQueryParam)) {
           // Handle the case where you have received responses and need to update your component's data
           // For example:
-          paperStockArray.forEach(el => {
+          debugger
+          this.extractedPaperStock.forEach(el => {
             el.name == this.rateToUpdate.paperStock ? this.paperStockValue = el : null;
           });
           this.timeStampValue = this.formatDate(this.rateToUpdate.timeStamp);
@@ -142,6 +146,12 @@ export class AddPaperMarketComponent implements OnInit {
   //   return this.settingservice.getGsmByPaperStock(papervalue);
   // }
 
+  extractPaperStock(){
+    this.paperStockService.getAllPaperStock().subscribe((res:any) => {
+      this.extractedPaperStock = res
+    })
+  }
+
   getProductFields() {
     return this.productFieldService.getProductField().pipe(
       map(res => {
@@ -154,9 +164,11 @@ export class AddPaperMarketComponent implements OnInit {
         });
 
 
+
+        this.extractPaperStock()
         return paperStockArray;
       })
-    );
+      );
   }
 
   getProductProcess(): Observable<any[]> {

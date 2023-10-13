@@ -144,7 +144,7 @@
           [(ngModel)]="paperValue"
           (ngModelChange)="onPaperSelection()"
         >
-          <option *ngFor="let paper of papersStock" [value]="paper.name">
+          <option *ngFor="let paper of extractedPaperStock" [value]="paper.name">
             {{ paper.name }}
           </option>
         </select>

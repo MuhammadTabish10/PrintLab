@@ -9,6 +9,7 @@ import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { DatePipe } from '@angular/common';
 import { ProductService } from 'src/app/services/product.service';
 import { MessageService } from 'primeng/api';
+import { PaperStockService } from 'src/app/services/paper-stock.service';
 @Component({
   selector: 'app-calculator-header',
   templateUrl: './calculator-header.component.html',
@@ -66,6 +67,7 @@ export class CalculatorHeaderComponent implements OnInit {
   frontJobColors: any[] = [];
   uppingSizes: any[] = [];
   backJobColors: any[] = [];
+  extractedPaperStock:any[] = [];
   constructor(private calculatorService: CalculatorService,
     private orderService: OrdersService,
     private renderer: Renderer2,
@@ -75,11 +77,13 @@ export class CalculatorHeaderComponent implements OnInit {
     private papers: PaperMarketService,
     private datePipe: DatePipe,
     private productService: ProductService,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+    private paperStockService: PaperStockService) { }
   ngOnInit(): void {
     this.configuration = "Configuration";
     this.fields = this.calculatorService.getFields();
     this.updateDatetime();
+    this.extractPaperStock()
     setInterval(() => this.updateDatetime(), 1000);
     this.paperMarket = this.papers.getPaperMarket();
     this.upping = this.calculatorService.getUpping();
@@ -127,6 +131,7 @@ export class CalculatorHeaderComponent implements OnInit {
       this.impositionValue = false
     }
     this.impositionValue == "Applied" ? this.impositionValue = "true" : this.impositionValue = "false";
+    debugger
     let obj = {
       pressMachineId: this.receivedData?.press,
       quantity: this.qty,
@@ -290,16 +295,22 @@ export class CalculatorHeaderComponent implements OnInit {
     this.receivedData = obj;
   }
 
+  extractPaperStock(){
+    this.paperStockService.getAllPaperStock().subscribe((res:any) => {
+      this.extractedPaperStock = res
+    })
+  }
+
   private getFields() {
     this.productFieldService.getProductField().subscribe((res: { [key: string]: any }) => {
       ;
 
-      const paperStockField = this.getFieldByName(res, 'Paper Stock');
+      // const paperStockField = this.getFieldByName(res, 'Paper Stock');
       const frontJobColorsField = this.getFieldByName(res, 'JobColor(Front)');
       const sizeField = this.getFieldByName(res, 'Size');
       const backJobColorsField = this.getFieldByName(res, 'JobColor(Back)');
 
-      this.processFieldValues(paperStockField, this.papersStock);
+      // this.processFieldValues(paperStockField, this.papersStock);
       this.processFieldValues(frontJobColorsField, this.frontJobColors);
       this.processFieldValues(sizeField, this.uppingSizes);
       this.processFieldValues(backJobColorsField, this.backJobColors);
