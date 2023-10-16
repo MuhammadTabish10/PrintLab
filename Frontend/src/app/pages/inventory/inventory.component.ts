@@ -37,10 +37,10 @@ export class InventoryComponent implements OnInit {
           element.created_at,
           'EEEE, MMMM d, yyyy'
         );
-        debugger
+
         if (element.dateUpdated !== null) {
           element.dateUpdated = this.datePipe.transform(
-            element.created_at,
+            element.dateUpdated,
             'EEEE, MMMM d, yyyy'
           );
         }

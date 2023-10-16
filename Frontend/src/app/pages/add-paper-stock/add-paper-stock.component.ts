@@ -38,7 +38,7 @@ export class AddPaperStockComponent {
   getBrands() {
     this.paperStockService.getBrandsByName().subscribe((res: any) => {
       this.allBrands = res.productFieldValuesList
-      debugger
+
     })
   }
 
@@ -46,7 +46,7 @@ export class AddPaperStockComponent {
     this.paperStockService.getById(id).subscribe((res: any) => {
       this.getBrands()
       this.selectedBrandsForEdit = res.brands
-      debugger
+
       this.selectedBrandsForEdit.forEach((selectedBrandName: any) => {
         this.selectedBrandsForEdit1.push(this.allBrands.find((el: any) => el.name.toLowerCase() == selectedBrandName.name.toLowerCase()))
       });

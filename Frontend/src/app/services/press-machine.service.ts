@@ -7,6 +7,7 @@ import { environment } from 'src/Environments/environment';
 })
 export class PressMachineService {
   _url = environment.baseUrl
+  id: any;
 
   constructor(private http: HttpClient) { }
 

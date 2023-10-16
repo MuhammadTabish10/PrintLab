@@ -105,7 +105,7 @@ export class AddPressMachineComponent implements OnInit {
   }
 
   addSize(object: any, i: any) {
-    debugger
+
     this.obj[i] ? this.paperSizesArray.push(this.obj[i]) : null;
     this.obj[i] = object
     for (let i = this.paperSizesArray.length - 1; i >= 0; i--) {
@@ -123,7 +123,7 @@ export class AddPressMachineComponent implements OnInit {
   }
 
   removeElement(index: number) {
-    debugger
+
     if (!Number.isNaN(this.idFromQueryParam)) {
       this.pressMachineService.deletePressMachineSize(this.idFromQueryParam, this.pressMachineSizeId[index]).subscribe(() => { }, error => {
         this.showError(error);

@@ -76,7 +76,7 @@ export class AddInventoryComponent implements OnInit {
         this.vendorArray = vendors;
         this.paperStockArray = paperStockAndBrand[0];
         this.gsmArray = Gsm[0];
-        debugger
+
         this.paperSizeArray = paperSize;
         this.inventoryToUpdate = inventoryData;
         if (!Number.isNaN(this.idFromQueryParam)) {

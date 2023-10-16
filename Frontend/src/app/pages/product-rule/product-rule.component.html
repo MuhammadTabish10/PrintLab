@@ -8,8 +8,8 @@
     </div>
     <div class="container-fluid px-0 mt-5">
       <div class="order-search-panel">
-        <!-- <input type="text" placeholder="Search by Product Size" [(ngModel)]="search" class="order-search form-control"
-          (keyup)="searchProduct($event.target)"> -->
+        <input type="text" placeholder="Search by Product Size" [(ngModel)]="search" class="order-search form-control"
+          (keyup)="searchProductRule($event.target)">
         <div>
           <button type="button" class="btn order-table-btn btn-search-panel" routerLink="/addProductRule">
             <i class="fa-solid fa-plus"></i>&nbsp;Add
@@ -20,32 +20,37 @@
         <table class="table table-responsive text-center">
           <thead>
             <tr>
-              <th scope="col" class="col-1">ID</th>
-              <th scope="col" class="col-8">Title</th>
-              <th scope="col" class="col-3">Action</th>
+              <th scope="col" class="col">ID</th>
+              <th scope="col" class="col">Brand</th>
+              <th scope="col" class="col">Dimension</th>
+              <th scope="col" class="col">GSM</th>
+              <th scope="col" class="col">Made In</th>
+              <th scope="col" class="col">Paper Stock</th>
+              <th scope="col" class="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngIf="tableData">
-              <td colspan="3" class="text-center">
+            <tr *ngIf="!tableData">
+              <td colspan="7" class="text-center">
                 No record found
               </td>
             </tr>
-            <tr *ngFor="let product of productDefinitionArray">
+            <tr *ngFor="let product of tableData; let i = index">
               <td>{{ product.id }}</td>
-              <td>{{ product.title }}</td>
+              <td>{{ product.brand }}</td>
+              <td>{{ product.dimension }}</td>
+              <td>{{ gsm[i] }}</td>
+              <td>{{ product.madeIn }}</td>
+              <td>{{ product.paperStock }}</td>
               <td>
-                <!-- <div class="btn-group" role="group">
-                  <button type="button" class="btn order-table-btn" (click)="viewProduct(product.id)">
-                    <i class="fa-solid fa-hand-pointer pe-lg-2"></i>&nbsp;<small>View</small>
-                  </button>
+                <div class="btn-group" role="group">
                   <button type="button" class="btn order-table-btn" (click)="editProduct(product.id)">
                     <i class="fa-solid fa-pen pe-lg-2"></i><small>Edit</small>
                   </button>
                   <button type="button" class="btn order-table-btn" (click)="deleteProduct(product.id)">
                     <i class="fa-solid fa-trash pe-lg-2"></i><small class="">Delete</small>
                   </button>
-                </div> -->
+                </div>
               </td>
             </tr>
           </tbody>

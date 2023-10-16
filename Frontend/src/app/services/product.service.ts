@@ -19,7 +19,6 @@ export class ProductService {
   }
 
   deleteProcess(id: any, processId: any) {
-
     let url = `${this._url}/product-definition/${id}/${processId}/product-definition-process`
     return this.http.delete(url)
   }
