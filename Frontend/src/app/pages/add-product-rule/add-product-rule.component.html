@@ -270,6 +270,7 @@
           styleClass="w-100"
           [options]="ctpArray"
           optionLabel="name"
+          (onChange)="getMachineAndVendorId($event.value)"
           [(ngModel)]="pressVendor"
           placeholder="Select Vendor"
         ></p-dropdown>

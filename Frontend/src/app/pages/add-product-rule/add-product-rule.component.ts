@@ -40,6 +40,7 @@ export class AddProductRuleComponent implements OnInit {
   ctpVendors: any = [];
   buttonName: any;
   dimensionArray: any[] | undefined;
+  selectedVendor: any;
   // updateMode: boolean = false;
 
   constructor(
@@ -493,7 +494,6 @@ export class AddProductRuleComponent implements OnInit {
       const selectedMachines = machinesForSelectedPress?.machines;
 
       const vendors = selectedMachines?.map(machine => machine.vendor);
-      console.log(vendors);
       this.ctpArray = vendors;
 
       const dimension = (selectedMachines?.map(machine => ({ name: machine.plateDimension })) || []);
@@ -512,6 +512,10 @@ export class AddProductRuleComponent implements OnInit {
     });
   }
 
+  getMachineAndVendorId(value:any){
+    this.selectedVendor = value;
+  }
+
   getCtp(value: any) {
     this.ctpService.getCtp().subscribe(res => {
       this.ctpVendors = res;
@@ -526,9 +530,11 @@ export class AddProductRuleComponent implements OnInit {
 
   addProductRule() {
     debugger
+    const PressId = this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name)
+    const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
     const payload = {
       title: this.productName,
-      produtRulePaper: this.containers.map((container: any) => ({
+      productRulePaperStockList: this.containers.map((container: any) => ({
         paperStock: container.paper.name,
         brand: container.brand.name,
         madeIn: container.madeIn.name,
@@ -537,32 +543,31 @@ export class AddProductRuleComponent implements OnInit {
         vendor: { id: container.vendor.id },
       })),
       pressMachine: {
-        id: this.press.id,
+        id: PressId.id
       },
       ctp: {
-        id: this.plates.id,
+        id: ctpId.id
       },
     };
 
     if (!this.idFromQueryParam) {
-      console.log(payload);
-      // this.productRuleService.postProductRule(payload).subscribe(
-      //   (res) => {
-      //     this.router.navigate(['/ProductRule']);
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //   }
-      // );
+      this.productRuleService.postProductRule(payload).subscribe(
+        (res) => {
+          this.router.navigate(['/ProductRule']);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     } else {
-      // this.productRuleService.updateProductRule(this.idFromQueryParam, payload).subscribe(
-      //   (res) => {
-      //     this.router.navigate(['/ProductRule']);
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //   }
-      // );
+      this.productRuleService.updateProductRule(this.idFromQueryParam, payload).subscribe(
+        (res) => {
+          this.router.navigate(['/ProductRule']);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     }
   }
 
