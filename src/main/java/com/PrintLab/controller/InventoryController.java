@@ -31,6 +31,13 @@ public class InventoryController {
         return ResponseEntity.ok(inventoryList);
     }
 
+    @GetMapping("/inventory/paper-stock/{stock}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<InventoryDto>> getAllInventoryByPaperStock(@PathVariable String stock) {
+        List<InventoryDto> inventoryDtoList = inventoryService.searchByPaperStock(stock);
+        return ResponseEntity.ok(inventoryDtoList);
+    }
+
     @GetMapping("/inventory/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<InventoryDto> getInventoryById(@PathVariable Long id) {
