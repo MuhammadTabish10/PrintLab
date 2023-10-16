@@ -30,6 +30,13 @@ public class ProductRuleController {
         return ResponseEntity.ok(productRuleDtoList);
     }
 
+    @GetMapping("/product-rule/paper-stock/{stock}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<ProductRuleDto>> getAllProductRuleByPaperStock(@PathVariable String stock) {
+        List<ProductRuleDto> productRuleDtoList = productRuleService.searchByPaperStock(stock);
+        return ResponseEntity.ok(productRuleDtoList);
+    }
+
     @GetMapping("/product-rule/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ProductRuleDto> getProductRuleById(@PathVariable Long id) {

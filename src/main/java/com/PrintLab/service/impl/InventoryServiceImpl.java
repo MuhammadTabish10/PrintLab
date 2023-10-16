@@ -50,6 +50,18 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public List<InventoryDto> searchByPaperStock(String paperStock) {
+        List<Inventory> inventoryList = inventoryRepository.findInventoryByPaperStock(paperStock);
+        List<InventoryDto> inventoryDtoList = new ArrayList<>();
+
+        for (Inventory inventory : inventoryList) {
+            InventoryDto inventoryDto = toDto(inventory);
+            inventoryDtoList.add(inventoryDto);
+        }
+        return inventoryDtoList;
+    }
+
+    @Override
     public InventoryDto findById(Long id) {
         Optional<Inventory> optionalInventory = inventoryRepository.findById(id);
 

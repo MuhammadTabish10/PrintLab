@@ -50,6 +50,18 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     }
 
     @Override
+    public List<ProductRuleDto> searchByPaperStock(String paperStock) {
+        List<ProductRule> productRuleList = productRuleRepository.findProductRuleByPaperStock(paperStock);
+        List<ProductRuleDto> productRuleDtoList = new ArrayList<>();
+
+        for (ProductRule productRule : productRuleList) {
+            ProductRuleDto productRuleDto = toDto(productRule);
+            productRuleDtoList.add(productRuleDto);
+        }
+        return productRuleDtoList;
+    }
+
+    @Override
     public ProductRuleDto getProductRuleById(Long id) {
         Optional<ProductRule> optionalProductRule = productRuleRepository.findById(id);
 
