@@ -10,6 +10,5 @@ import java.util.List;
 
 @Repository
 public interface ProductRuleRepository extends JpaRepository<ProductRule,Long> {
-    @Query("SELECT pr FROM ProductRule pr WHERE pr.paperStock LIKE %:searchName%")
-    List<ProductRule> findProductRuleByPaperStock(@Param("searchName") String searchName);
+
 }

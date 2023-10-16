@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -17,16 +18,7 @@ public class ProductRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String paperStock;
-    private String brand;
-    private String madeIn;
-    private String dimension;
-    private String gsm;
-    private Boolean status;
-
-    @ManyToOne
-    @JoinColumn(name = "vendor_id")
-    private Vendor vendor;
+    private String title;
 
     @ManyToOne
     @JoinColumn(name = "press_machine_id")
@@ -35,4 +27,7 @@ public class ProductRule {
     @ManyToOne
     @JoinColumn(name = "ctp_id")
     private Ctp ctp;
+
+    @OneToMany(mappedBy = "productRule", cascade = CascadeType.ALL)
+    private List<ProductRulePaperStock> productRulePaperStockList;
 }

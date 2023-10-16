@@ -2,7 +2,7 @@ package com.PrintLab.dto;
 
 import com.PrintLab.model.Ctp;
 import com.PrintLab.model.PressMachine;
-import com.PrintLab.model.Vendor;
+import com.PrintLab.model.ProductRulePaperStock;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,14 +16,8 @@ import java.util.List;
 @Data
 public class ProductRuleDto {
     private Long id;
-    private String paperStock;
-    private String brand;
-    private String madeIn;
-    private String dimension;
-    private String gsm;
-    private Boolean status;
-    private Vendor vendor;
+    private String title;
     private PressMachine pressMachine;
     private Ctp ctp;
+    private List<ProductRulePaperStockDto> productRulePaperStockList;
 }
-//rule many to one

@@ -1,18 +1,18 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductRuleDto;
+import com.PrintLab.dto.ProductRulePaperStockDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.ProductRule;
-import com.PrintLab.repository.CtpRepository;
-import com.PrintLab.repository.PressMachineRepository;
-import com.PrintLab.repository.ProductRuleRepository;
-import com.PrintLab.repository.VendorRepository;
+import com.PrintLab.model.ProductRulePaperStock;
+import com.PrintLab.repository.*;
 import com.PrintLab.service.ProductRuleService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductRuleServiceImpl implements ProductRuleService {
@@ -20,38 +20,46 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     private final ProductRuleRepository productRuleRepository;
     private final VendorRepository vendorRepository;
     private final PressMachineRepository pressMachineRepository;
+    private final ProductRulePaperStockRepository productRulePaperStockRepository;
     private final CtpRepository ctpRepository;
 
-    public ProductRuleServiceImpl(ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, PressMachineRepository pressMachineRepository, CtpRepository ctpRepository) {
+    public ProductRuleServiceImpl(ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, PressMachineRepository pressMachineRepository, ProductRulePaperStockRepository productRulePaperStockRepository, CtpRepository ctpRepository) {
         this.productRuleRepository = productRuleRepository;
         this.vendorRepository = vendorRepository;
         this.pressMachineRepository = pressMachineRepository;
+        this.productRulePaperStockRepository = productRulePaperStockRepository;
         this.ctpRepository = ctpRepository;
     }
 
     @Override
     public ProductRuleDto save(ProductRuleDto productRuleDto) {
         ProductRule productRule = toEntity(productRuleDto);
-        productRule.setStatus(true);
         ProductRule createdProductRule = productRuleRepository.save(productRule);
+
+        List<ProductRulePaperStock> productRulePaperStockList = productRule.getProductRulePaperStockList();
+        if (productRulePaperStockList != null && !productRulePaperStockList.isEmpty()) {
+            for (ProductRulePaperStock productRulePaperStock : productRulePaperStockList) {
+                productRulePaperStock.setProductRule(createdProductRule);
+                productRulePaperStock.setVendor(vendorRepository.findById(productRulePaperStock.getVendor().getId())
+                        .orElseThrow(() -> new RecordNotFoundException(String.format("Vendor not found for id => %d", productRulePaperStock.getProductRule().getId()))));
+                productRulePaperStock.setPaperStock(productRulePaperStock.getPaperStock());
+                productRulePaperStock.setBrand(productRulePaperStock.getBrand());
+                productRulePaperStock.setMadeIn(productRulePaperStock.getMadeIn());
+                productRulePaperStock.setDimension(productRulePaperStock.getDimension());
+                productRulePaperStock.setGsm(productRulePaperStock.getGsm());
+                productRulePaperStock.setStatus(true);
+                productRulePaperStockRepository.save(productRulePaperStock);
+            }
+            createdProductRule.setProductRulePaperStockList(productRulePaperStockList);
+            productRuleRepository.save(createdProductRule);
+        }
+
         return toDto(createdProductRule);
     }
 
     @Override
     public List<ProductRuleDto> getAllProductRule() {
         List<ProductRule> productRuleList = productRuleRepository.findAll();
-        List<ProductRuleDto> productRuleDtoList = new ArrayList<>();
-
-        for (ProductRule productRule : productRuleList) {
-            ProductRuleDto productRuleDto = toDto(productRule);
-            productRuleDtoList.add(productRuleDto);
-        }
-        return productRuleDtoList;
-    }
-
-    @Override
-    public List<ProductRuleDto> searchByPaperStock(String paperStock) {
-        List<ProductRule> productRuleList = productRuleRepository.findProductRuleByPaperStock(paperStock);
         List<ProductRuleDto> productRuleDtoList = new ArrayList<>();
 
         for (ProductRule productRule : productRuleList) {
@@ -75,21 +83,48 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public ProductRuleDto update(Long id, ProductRuleDto productRuleDto) {
+        ProductRule productRule = toEntity(productRuleDto);
         Optional<ProductRule> optionalProductRule = productRuleRepository.findById(id);
+        int count = 0;
         if (optionalProductRule.isPresent()) {
             ProductRule existingProductRule = optionalProductRule.get();
-            existingProductRule.setPaperStock(productRuleDto.getPaperStock());
-            existingProductRule.setBrand(productRuleDto.getBrand());
-            existingProductRule.setMadeIn(productRuleDto.getMadeIn());
-            existingProductRule.setDimension(productRuleDto.getDimension());
-            existingProductRule.setGsm(productRuleDto.getGsm());
-            existingProductRule.setStatus(productRuleDto.getStatus());
-            existingProductRule.setVendor(vendorRepository.findById(productRuleDto.getVendor().getId())
-                    .orElseThrow(() -> new RecordNotFoundException("Vendor not found")));
+            existingProductRule.setTitle(productRule.getTitle());
+            existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
+                    .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")));
             existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
                     .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")));
             existingProductRule.setCtp(ctpRepository.findById(productRuleDto.getCtp().getId())
                     .orElseThrow(() -> new RecordNotFoundException("Ctp not found")));
+
+            List<ProductRulePaperStock> existingPrpsValues = existingProductRule.getProductRulePaperStockList();
+            List<ProductRulePaperStock> newPrpsValues = productRule.getProductRulePaperStockList();
+            List<ProductRulePaperStock> newValuesToAdd = new ArrayList<>();
+
+            for (ProductRulePaperStock newValue : newPrpsValues) {
+                Optional<ProductRulePaperStock> existingValue = existingPrpsValues.stream()
+                        .filter(prValue -> prValue.getId().equals(newValue.getId())).findFirst();
+                if (existingValue.isPresent()) {
+                    ProductRulePaperStock existingPrpsValue = existingValue.get();
+
+                    existingPrpsValue.setPaperStock(newValue.getPaperStock());
+                    existingPrpsValue.setBrand(newValue.getBrand());
+                    existingPrpsValue.setMadeIn(newValue.getMadeIn());
+                    existingPrpsValue.setDimension(newValue.getDimension());
+                    existingPrpsValue.setGsm(newValue.getGsm());
+                    existingPrpsValue.setStatus(newValue.getStatus());
+
+                    existingPrpsValue.setVendor(vendorRepository.findById(newValue.getVendor().getId())
+                            .orElseThrow(() -> new RecordNotFoundException(String.format("Vendor not found for id => %d", newValue.getProductRule().getId()))));
+
+                } else {
+                    newValue.setProductRule(existingProductRule);
+                    newValuesToAdd.add(newValue);
+                    count++;
+                }
+            }
+            if(count > 0){
+                existingPrpsValues.addAll(newValuesToAdd);
+            }
 
             ProductRule updatedProductRule = productRuleRepository.save(existingProductRule);
             return toDto(updatedProductRule);
@@ -112,36 +147,58 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
 
     public ProductRuleDto toDto(ProductRule productRule) {
+        List<ProductRulePaperStockDto> productRulePaperStockDtoList = productRule.getProductRulePaperStockList().stream()
+                .map(prps -> {
+                    ProductRulePaperStockDto productRulePaperStockDto = new ProductRulePaperStockDto();
+                    productRulePaperStockDto.setId(prps.getId());
+                    productRulePaperStockDto.setPaperStock(prps.getPaperStock());
+                    productRulePaperStockDto.setBrand(prps.getBrand());
+                    productRulePaperStockDto.setMadeIn(prps.getMadeIn());
+                    productRulePaperStockDto.setDimension(prps.getDimension());
+                    productRulePaperStockDto.setGsm(prps.getGsm());
+                    productRulePaperStockDto.setStatus(prps.getStatus());
+                    productRulePaperStockDto.setVendor(vendorRepository.findById(prps.getVendor().getId())
+                            .orElseThrow(() -> new RecordNotFoundException("Vendor not found")));
+                    return productRulePaperStockDto;
+                }).collect(Collectors.toList());
+
         return ProductRuleDto.builder()
                 .id(productRule.getId())
-                .paperStock(productRule.getPaperStock())
-                .brand(productRule.getBrand())
-                .madeIn(productRule.getMadeIn())
-                .dimension(productRule.getDimension())
-                .gsm(productRule.getGsm())
-                .vendor(vendorRepository.findById(productRule.getVendor().getId())
-                        .orElseThrow(() -> new RecordNotFoundException("Vendor not found")))
+                .title(productRule.getTitle())
                 .pressMachine(pressMachineRepository.findById(productRule.getPressMachine().getId())
                         .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")))
                 .ctp(ctpRepository.findById(productRule.getCtp().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Ctp not found")))
+                .productRulePaperStockList(productRulePaperStockDtoList)
                 .build();
     }
 
     public ProductRule toEntity(ProductRuleDto productRuleDto) {
+        List<ProductRulePaperStock> productRulePaperStocks =  productRuleDto.getProductRulePaperStockList().stream()
+                .map(prps -> {
+                    ProductRulePaperStock productRulePaperStock = new ProductRulePaperStock();
+                    productRulePaperStock.setId(prps.getId());
+                    productRulePaperStock.setPaperStock(prps.getPaperStock());
+                    productRulePaperStock.setBrand(prps.getBrand());
+                    productRulePaperStock.setMadeIn(prps.getMadeIn());
+                    productRulePaperStock.setDimension(prps.getDimension());
+                    productRulePaperStock.setGsm(prps.getGsm());
+                    productRulePaperStock.setStatus(prps.getStatus());
+                    productRulePaperStock.setVendor(vendorRepository.findById(prps.getVendor().getId())
+                            .orElseThrow(() -> new RecordNotFoundException("Vendor not found")));
+                    return productRulePaperStock;
+                }).collect(Collectors.toList());
+
+
+
         return ProductRule.builder()
                 .id(productRuleDto.getId())
-                .paperStock(productRuleDto.getPaperStock())
-                .brand(productRuleDto.getBrand())
-                .madeIn(productRuleDto.getMadeIn())
-                .dimension(productRuleDto.getDimension())
-                .gsm(productRuleDto.getGsm())
-                .vendor(vendorRepository.findById(productRuleDto.getVendor().getId())
-                        .orElseThrow(() -> new RecordNotFoundException("Vendor not found")))
+                .title(productRuleDto.getTitle())
                 .pressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
                         .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")))
                 .ctp(ctpRepository.findById(productRuleDto.getCtp().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Ctp not found")))
+                .productRulePaperStockList(productRulePaperStocks)
                 .build();
     }
 }
