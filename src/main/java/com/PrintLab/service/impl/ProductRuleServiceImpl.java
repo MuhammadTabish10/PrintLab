@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductRuleServiceImpl implements ProductRuleService {
+    private static final String DOUBLE_SIDED = "DOUBLE_SIDED";
+    private static final String SINGLE_SIDED = "SINGLE_SIDED";
 
     private final ProductRuleRepository productRuleRepository;
     private final VendorRepository vendorRepository;
@@ -34,6 +36,9 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     @Override
     public ProductRuleDto save(ProductRuleDto productRuleDto) {
         ProductRule productRule = toEntity(productRuleDto);
+        if(productRule.getPrintSide().equals(SINGLE_SIDED)){
+            productRule.setImpositionValue(false);
+        }
         ProductRule createdProductRule = productRuleRepository.save(productRule);
 
         List<ProductRulePaperStock> productRulePaperStockList = productRule.getProductRulePaperStockList();
@@ -89,6 +94,17 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         if (optionalProductRule.isPresent()) {
             ProductRule existingProductRule = optionalProductRule.get();
             existingProductRule.setTitle(productRule.getTitle());
+            existingProductRule.setPrintSide(productRule.getPrintSide());
+            existingProductRule.setJobColorFront(productRule.getJobColorFront());
+            existingProductRule.setJobColorBack(productRule.getJobColorBack());
+            existingProductRule.setSize(productRule.getSize());
+            existingProductRule.setQuantity(productRule.getQuantity());
+            if(existingProductRule.getPrintSide().equals(DOUBLE_SIDED)){
+                existingProductRule.setImpositionValue(productRule.getImpositionValue());
+            }
+            else{
+                existingProductRule.setImpositionValue(false);
+            }
             existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
                     .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")));
             existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
@@ -165,6 +181,12 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         return ProductRuleDto.builder()
                 .id(productRule.getId())
                 .title(productRule.getTitle())
+                .printSide(productRule.getPrintSide())
+                .jobColorBack(productRule.getJobColorBack())
+                .jobColorFront(productRule.getJobColorFront())
+                .size(productRule.getSize())
+                .quantity(productRule.getQuantity())
+                .impositionValue(productRule.getImpositionValue())
                 .pressMachine(pressMachineRepository.findById(productRule.getPressMachine().getId())
                         .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")))
                 .ctp(ctpRepository.findById(productRule.getCtp().getId())
@@ -194,6 +216,12 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         return ProductRule.builder()
                 .id(productRuleDto.getId())
                 .title(productRuleDto.getTitle())
+                .printSide(productRuleDto.getPrintSide())
+                .jobColorBack(productRuleDto.getJobColorBack())
+                .jobColorFront(productRuleDto.getJobColorFront())
+                .size(productRuleDto.getSize())
+                .quantity(productRuleDto.getQuantity())
+                .impositionValue(productRuleDto.getImpositionValue())
                 .pressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
                         .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")))
                 .ctp(ctpRepository.findById(productRuleDto.getCtp().getId())
