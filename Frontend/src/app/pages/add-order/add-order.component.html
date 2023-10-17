@@ -57,15 +57,35 @@
                   placeholder="Select Qty"
                 ></p-dropdown>
               </div>
-              <div *ngIf="printSide" class="my-3">
-                <label class="add-order-label m-0">Print Side</label>
+              <div *ngIf="madeIn" class="my-3">
+                <label class="add-order-label m-0">Made In</label>
                 <p-dropdown
                   styleClass="w-100"
-                  [options]="printSide"
+                  [options]="madeIn"
+                  optionLabel="name"
+                  [(ngModel)]="madeInValue"
+                  placeholder="Select madeIn"
+                ></p-dropdown>
+              </div>
+              <div *ngIf="brand" class="my-3">
+                <label class="add-order-label m-0">Brand</label>
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="brand"
+                  optionLabel="name"
+                  [(ngModel)]="brandValue"
+                  placeholder="Select Brand"
+                ></p-dropdown>
+              </div>
+              <div *ngIf="gsms" class="my-3">
+                <label class="add-order-label m-0">GSM</label>
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="gsms"
                   (onChange)="jobColorOptions($event.value)"
                   optionLabel="name"
-                  [(ngModel)]="sideOptionValue"
-                  placeholder="Select Side Option"
+                  [(ngModel)]="selectedGsm"
+                  placeholder="Select Gsms"
                 ></p-dropdown>
               </div>
               <div *ngIf="jobFront" class="my-3">
@@ -190,6 +210,8 @@
               <h6 class="fw-normal" *ngIf="sideOptionValue?.name">Side: {{sideOptionValue?.name}}</h6>
               <h6 class="fw-normal" *ngIf="jobFrontValue?.name">FronColor: {{jobFrontValue?.name}}</h6>
               <h6 class="fw-normal" *ngIf="jobBackValue?.name">BackColor: {{jobBackValue?.name}}</h6>
+              <h6 class="fw-normal" *ngIf="madeInValue">Brand: {{madeInValue?.name}}</h6>
+              <h6 class="fw-normal" *ngIf="brandValue?.name">Brand: {{brandValue?.name}}</h6>
               <h6 class="fw-normal" *ngIf="selectedGsm?.name">{{dynamicFields}} GSM: {{selectedGsm?.name}}</h6>
             </div>
             <div class="mt-4">

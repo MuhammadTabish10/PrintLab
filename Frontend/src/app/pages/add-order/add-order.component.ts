@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { environment } from 'src/Environments/environment';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
+import { ProductRuleService } from 'src/app/services/product-rule.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -42,19 +43,28 @@ export class AddOrderComponent implements OnInit {
   paperStock: any
   paperStockItem: any
   size: any
+  brand: any
+  brandValue: any
+  madeIn: any
+  madeInValue: any
   jobFront: any
   jobColorBack: any
   quantity: any
   printSide: any
   dynamicFields: any;
   gsms: any
+  gsmsValue: any
   foundGsm: any;
   optionsGsm: any;
   selectedGsm: any;
   isJobColorBackHidden: boolean = false;
+  sizeArray: any = ["A4", "A3", "A2", "A1"];
+  qtyArray: any = [1000, 2000, 3000, 4000];
+
+
 
   constructor(private orderService: OrdersService, private router: Router,
-    private productService: ProductService, private route: ActivatedRoute,
+    private productService: ProductRuleService, private route: ActivatedRoute,
     private customerService: CustomerService, private messageService: MessageService,
     private cdr: ChangeDetectorRef) { }
 
@@ -84,23 +94,26 @@ export class AddOrderComponent implements OnInit {
   }
 
   calculate() {
-    if (this.sideOptionValue.name != undefined) {
-      if (this.sideOptionValue.name == "SINGLE_SIDED") {
-        this.jobBackValue = null
-        this.impositionValue = false
-      }
-    }
+    // if (this.sideOptionValue.name != undefined) {
+    //   if (this.sideOptionValue.name == "SINGLE_SIDED") {
+    //     this.jobBackValue = null
+    //     this.impositionValue = false
+    //   }
+    // }
+    debugger
     let obj = {
       pressMachineId: this.machineId,
-      productValue: this.productName,
+      // productValue: this.productName,
       paper: this.paperStockItem.name,
       sizeValue: this.sizeValue.name,
       gsm: Number(this.selectedGsm.name),
+      jobColorsFront: 2,
+      jobColorsBack: 3,
       quantity: this.qtyValue.name,
-      jobColorsFront: Number(this.jobFrontValue.name),
-      sideOptionValue: this.sideOptionValue.name,
-      impositionValue: this.impositionValue,
-      jobColorsBack: this.jobBackValue ? Number(this.jobBackValue.name) : null
+      // jobColorsFront: Number(this.jobFrontValue.name),
+      // sideOptionValue: this.sideOptionValue.name,
+      // impositionValue: this.impositionValue,
+      // jobColorsBack: this.jobBackValue ? Number(this.jobBackValue.name) : null
     }
     this.orderService.calculations(obj).subscribe(res => {
       let obj: any
@@ -166,14 +179,34 @@ export class AddOrderComponent implements OnInit {
 
   toggleFields(title: any) {
     this.cdr.detectChanges();
+    debugger
+    title.productRulePaperStockList.forEach((element: any) => {
+      this.paperStock = [{ name: element.paperStock }];
+      // this.dropdownSize = [{value:element.dropdownSize}]
+      // this.size = [{name:element.size}];
+      // this.quantity = [{name:element.quantity}];
+      this.brand = [{ name: element.brand }];
+      this.madeIn = [{ name: element.madeIn }];
+      this.gsms = JSON.parse(element.gsm); // Assuming element.gsm is a JSON string
+      this.gsms = this.gsms.map((value: any) => ({ name: value }));
+
+      this.size = this.sizeArray.map((value: any) => ({ name: value }));
+      debugger
+      this.quantity = this.qtyArray.map((value: any) => ({ name: value }));
+
+      //this.printSide = [JSON.parse(element.gsm)];
+      //this.printSide.map((value:any) => ({ name: value }));
+
+    });
 
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
     this.impositionValue = title.newProduct.imposition;
-    this.paperStock = title.newProduct.isPaperStockPublic ? JSON.parse(title.newProduct.paperStock) : null
-    this.size = title.newProduct.isSizePublic ? JSON.parse(title.newProduct.size) : null
-    this.quantity = title.newProduct.isQuantityPublic ? JSON.parse(title.newProduct.quantity) : null
-    this.printSide = title.newProduct.isPrintSidePublic ? JSON.parse(title.newProduct.printSide) : null
+    // this.paperStock = title.newProduct.isPaperStockPublic ? JSON.parse(title.newProduct.paperStock) : null
+    // this.size = title.newProduct.isSizePublic ? JSON.parse(title.newProduct.size) : null
+    // this.quantity = title.newProduct.isQuantityPublic ? JSON.parse(title.newProduct.quantity) : null
+    // this.printSide = title.newProduct.isPrintSidePublic ? JSON.parse(title.newProduct.printSide) : null
+    debugger
     this.jobFront = title.newProduct.isJobColorFrontPublic ? JSON.parse(title.newProduct.jobColorFront) : null
     this.jobColorBack = title.newProduct.isJobColorBackPublic ? JSON.parse(title.newProduct.jobColorBack) : null;
     this.gsms = title.newProduct.productGsm
@@ -192,8 +225,11 @@ export class AddOrderComponent implements OnInit {
   }
 
   getProducts() {
-    this.productService.getProducts().subscribe(res => {
+    this.productService.getProductRuleTable().subscribe(res => {
+
       this.productArray = res
+      debugger
+
       !Number.isNaN(this.idFromQueryParam) ? this.putValuesOnUpdate() : null
     }, error => {
       this.showError(error);
