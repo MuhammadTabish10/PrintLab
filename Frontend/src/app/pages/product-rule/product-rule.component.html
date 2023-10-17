@@ -21,12 +21,10 @@
           <thead>
             <tr>
               <th scope="col" class="col">ID</th>
-              <th scope="col" class="col">Brand</th>
-              <th scope="col" class="col">Dimension</th>
-              <th scope="col" class="col">GSM</th>
-              <th scope="col" class="col">Made In</th>
-              <th scope="col" class="col">Paper Stock</th>
-              <th scope="col" class="col">Action</th>
+              <th scope="col" class="col">Title</th>
+              <th scope="col" class="col">Ctp</th>
+              <th scope="col" class="col">Press</th>
+              <th scope="col" class="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -35,13 +33,11 @@
                 No record found
               </td>
             </tr>
-            <tr *ngFor="let product of tableProduct; let i = index">
+            <tr *ngFor="let product of tableData; let i = index">
               <td>{{ product.id }}</td>
-              <td>{{ product.brand }}</td>
-              <td>{{ product.dimension }}</td>
-              <td>{{ gsm[i] }}</td>
-              <td>{{ product.madeIn }}</td>
-              <td>{{ product.paperStock }}</td>
+              <td>{{ product.title }}</td>
+              <td>{{ product.ctp.plateDimension }}</td>
+              <td>{{ product.pressMachine.name }}</td>
               <td>
                 <div class="btn-group" role="group">
                   <button type="button" class="btn order-table-btn" (click)="editProduct(product.id)">

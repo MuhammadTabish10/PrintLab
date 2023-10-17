@@ -41,11 +41,6 @@ export class ProductRuleComponent implements OnInit {
   getProductRule() {
     this.productRuleService.getProductRuleTable().subscribe((res: any) => {
       this.tableData = res
-      this.tableProduct = this.tableData[0].productRulePaperStockList
-      debugger
-      this.tableProduct.forEach((element: any) => {
-        this.gsm.push(JSON.parse(element.gsm));
-      });
     })
   }
   searchProductRule(value: any) { }

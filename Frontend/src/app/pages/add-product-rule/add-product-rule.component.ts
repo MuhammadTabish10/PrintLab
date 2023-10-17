@@ -41,7 +41,6 @@ export class AddProductRuleComponent implements OnInit {
   buttonName: any;
   dimensionArray: any[] | undefined;
   selectedVendor: any;
-  // updateMode: boolean = false;
 
   constructor(
     private productRuleService: ProductRuleService,
@@ -52,50 +51,9 @@ export class AddProductRuleComponent implements OnInit {
     private ctpService: CtpService,
     private ngZone: NgZone) { }
 
-  // ngOnInit(): void {
-  //   this.getPressMachine(null);
-  //   this.productRuleService.getProductRule('paper', null).subscribe((productRule: any) => {
-  //     let paper = productRule.map((p: any) => {
-  //       return {
-  //         name: p
-  //       }
-  //     })
-  //     this.addContainer(paper);
-  //   }, err => {
-  //     console.log(err);
-  //   })
-  //   this.route.queryParams.subscribe(param => {
-  //     this.idFromQueryParam = +param['id']
-  //     if (Number.isNaN(this.idFromQueryParam)) {
-  //       this.buttonName = 'Add'
-  //     } else {
-  //       this.productRuleService.getProductRuleById(this.idFromQueryParam).subscribe((res: any) => {
-  //         this.productName = res.productName
-
-
-  //         for (let i = 0; i < this.containers.length; i++) {
-  //           this.containers[i].paper = { name: res.paperStock }
-  //           // this.changePaper(i, { name: res.paperStock })
-  //           this.containers[i].allVendor = [{ name: "Nadeem & Sons" }]
-  //           this.containers[i].vendor = { name: res.vendor.name }
-  //           this.containers[i].allBrand = [{ name: "Pindo" }]
-  //           this.containers[i].brand = { name: res.brand }
-  //           this.containers[i].allMadeIn = [{ name: "Indonesia" }]
-  //           this.containers[i].madeIn = { name: res.madeIn }
-  //         }
-  //
-  //         this.press = this.pressMachineArray.find((el: any) => el.name === res?.pressMachine.name)
-  //         this.pressVendor = this.pressMachineArray.find((el: any) => el.vendor === res?.pressMachine.vendor)
-  //       }, error => {
-  //         console.log(error);
-  //       })
-  //     }
-  //   })
-  // }
-
   ngOnInit(): void {
-    this.getPressMachine(null);
-    this.getCtp(null);
+    // this.getPressMachine(null);
+    // this.getCtp(null);
     this.productRuleService.getProductRule('paper', null).subscribe((productRule: any) => {
       let paper = productRule.map((p: any) => {
         return {
@@ -113,32 +71,62 @@ export class AddProductRuleComponent implements OnInit {
         this.buttonName = 'Add';
       } else {
         this.productRuleService.getProductRuleById(this.idFromQueryParam).subscribe((res: any) => {
+          for (let index = 0; index < res.productRulePaperStockList.length - 1; index++) {
+            this.addContainer()
+          }
+          this.productName = res.title;
           this.buttonName = 'Update';
-          for (let i = 0; i < this.containers.length; i++) {
-            const observables = [];
-            observables.push(this.getVendors(i, { name: res.paperStock }));
-            observables.push(this.getBrands(i, res.vendor));
-            observables.push(this.getMadeIn(i, { name: res.brand }));
-            observables.push(this.getDimensions(i, { name: res.madeIn }));
-            observables.push(this.getGsm(i, { name: res.dimension }));
-            forkJoin(observables).subscribe(
-              (responses: any[]) => {
-                let vendor = responses[i].find((el: any) => el.id === res.vendor.id);
-                const gsmArray = JSON.parse(res.gsm);
-                const gsmMatches = this.containers[i].allGsm.filter((gsm: any) => gsmArray.includes(gsm.name));
-                this.containers[i].vendor = vendor;
-                this.containers[i].gsm = gsmMatches;
-                this.press = this.pressMachineArray.find((el: any) => el.id === res.pressMachine.id);
-                this.ctpArray = [this.pressMachineArray.find((el: any) => el.id === res.pressMachine.id)]
-                this.pressVendor = this.ctpArray.find((el: any) => el.vendor.id === res.pressMachine.vendor.id);
-                this.plates = this.ctpArray.find((el: any) => el.id === res.pressMachine.id);
-                this.ctpVendors = [this.ctpVendors.find((el: any) => el.id === res.ctp.id)]
-                this.plateVendor = this.ctpVendors.find((el: any) => el.vendor.id === res.ctp.vendor.id);
-              },
-              (err) => {
-                console.log(err);
-              }
-            );
+          for (let i = 0; i < res.productRulePaperStockList.length; i++) {
+            this.containers[i].paper = { name: res.productRulePaperStockList[i].paperStock };
+            this.containers[i].allVendor = [res.productRulePaperStockList[i].vendor];
+            this.containers[i].vendor = res.productRulePaperStockList[i].vendor;
+            this.containers[i].allBrand = [{ name: res.productRulePaperStockList[i].brand }];
+            this.containers[i].brand = { name: res.productRulePaperStockList[i].brand };
+            this.containers[i].allMadeIn = [{ name: res.productRulePaperStockList[i].madeIn }];
+            this.containers[i].madeIn = { name: res.productRulePaperStockList[i].madeIn };
+            this.containers[i].allDimension = [{ name: res.productRulePaperStockList[i].dimension }];
+            this.containers[i].dimension = { name: res.productRulePaperStockList[i].dimension };
+            let gsmArray = JSON.parse(res.productRulePaperStockList[i].gsm);
+            let gsmObjects = gsmArray.map((value: any) => ({ name: value }));
+            this.containers[i].allGsm = gsmObjects;
+            this.containers[i].gsm = gsmObjects;
+            debugger
+            this.pressMachineArray = [res.pressMachine]
+            this.press = res.pressMachine
+            this.ctpArray = [res.ctp.vendor]
+            this.pressVendor = res.ctp.vendor
+            this.dimensionArray = [{ name: res.ctp.plateDimension }]
+            this.plates = { name: res.ctp.plateDimension }
+            this.ctpVendors = [res.ctp]
+            this.plateVendor = res.ctp
+            debugger
+            //   const observables = [];
+            //   debugger
+            //   observables.push(this.getVendors(i, { name: res.productRulePaperStockList[i].paperStock }));
+            //   observables.push(this.getBrands(i, res.productRulePaperStockList[i].vendor));
+            //   observables.push(this.getMadeIn(i, { name: res.productRulePaperStockList[i].brand }));
+            //   observables.push(this.getDimensions(i, { name: res.productRulePaperStockList[i].madeIn }));
+            //   observables.push(this.getGsm(i, { name: res.productRulePaperStockList[i].dimension }));
+            //   forkJoin(observables).subscribe(
+            //     (responses: any[]) => {
+            //       debugger
+            //       console.log(responses);
+            //       let vendor = responses[i].find((el: any) => el.id === res.productRulePaperStockList[i].vendor.id);
+            //       const gsmArray = JSON.parse(res.productRulePaperStockList[i].gsm);
+            //       const gsmMatches = this.containers[i].allGsm.filter((gsm: any) => gsmArray.includes(gsm.name));
+            //       this.containers[i].vendor = vendor;
+            //       this.containers[i].gsm = gsmMatches;
+            // // // //       // this.press = this.pressMachineArray.find((el: any) => el.id === res.pressMachine.id);
+            // // // //       // this.ctpArray = [this.pressMachineArray.find((el: any) => el.id === res.pressMachine.id)]
+            // // // //       // this.pressVendor = this.ctpArray.find((el: any) => el.vendor.id === res.pressMachine.vendor.id);
+            // // // //       // this.plates = this.ctpArray.find((el: any) => el.id === res.pressMachine.id);
+            // // // //       // this.ctpVendors = [this.ctpVendors.find((el: any) => el.id === res.ctp.id)]
+            // // // //       // this.plateVendor = this.ctpVendors.find((el: any) => el.vendor.id === res.ctp.vendor.id);
+            //     },
+            //     (err) => {
+            //       console.log(err);
+            //     }
+            //   );
           }
         });
       }
@@ -291,6 +279,7 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   getVendors(i: any, value: any): Observable<any> {
+    debugger
     return new Observable((observer) => {
 
       this.containers[i].paper = value;
@@ -308,6 +297,7 @@ export class AddProductRuleComponent implements OnInit {
         (v: any) => {
 
           let vendors = v.map((vend: any) => {
+            debugger
             return {
               name: vend.name,
               id: vend.id
@@ -440,6 +430,7 @@ export class AddProductRuleComponent implements OnInit {
     this.containers.splice(index, 1);
   }
   go(i: any) {
+    debugger
     if (i >= 0 && i < this.containers.length) {
       let obj = {
         paperStock: this.containers[i].paper.name,
@@ -512,7 +503,7 @@ export class AddProductRuleComponent implements OnInit {
     });
   }
 
-  getMachineAndVendorId(value:any){
+  getMachineAndVendorId(value: any) {
     this.selectedVendor = value;
   }
 
