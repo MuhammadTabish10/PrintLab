@@ -37,6 +37,7 @@ import { AddProductRuleComponent } from './pages/add-product-rule/add-product-ru
 import { ProductRuleComponent } from './pages/product-rule/product-rule.component';
 import { PaperStockComponent } from './pages/paper-stock/paper-stock.component';
 import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.component';
+import { ViewProductRuleComponent } from './pages/view-product-rule/view-product-rule.component';
 
 export const routes: Routes = [
   {
@@ -70,6 +71,11 @@ export const routes: Routes = [
   {
     path: 'ProductRule',
     component: ProductRuleComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'viewProductRule',
+    component: ViewProductRuleComponent,
     canActivate: [AuthguardService]
   },
   {

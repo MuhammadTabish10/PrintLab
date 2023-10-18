@@ -6,6 +6,8 @@ import { CtpService } from 'src/app/services/ctp.service';
 import { PressMachineService } from 'src/app/services/press-machine.service';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
 import { NgZone } from '@angular/core';
+import { ProductDefinitionService } from 'src/app/services/product-definition.service';
+import { UpingService } from 'src/app/services/uping.service';
 
 @Component({
   selector: 'app-add-product-rule',
@@ -41,6 +43,20 @@ export class AddProductRuleComponent implements OnInit {
   buttonName: any;
   dimensionArray: any[] | undefined;
   selectedVendor: any;
+  uppingArray: any
+  upping: any
+  qtyArray: any
+  qty: any
+  categoryArray: any;
+  category: any;
+  sideOptions: any;
+  sideValue: any;
+  frontColors: any;
+  jobFront: any;
+  backColors: any;
+  jobBack: any;
+  impositionValue: any;
+  backNotApplied: boolean = false;
 
   constructor(
     private productRuleService: ProductRuleService,
@@ -49,11 +65,13 @@ export class AddProductRuleComponent implements OnInit {
     private datePipe: DatePipe,
     private pressMachine: PressMachineService,
     private ctpService: CtpService,
-    private ngZone: NgZone) { }
+    private productField: ProductDefinitionService,
+    private getUpping: UpingService) { }
 
   ngOnInit(): void {
-    // this.getPressMachine(null);
-    // this.getCtp(null);
+    this.getPressMachine(null);
+    this.getCtp(null);
+    this.getProductField();
     this.productRuleService.getProductRule('paper', null).subscribe((productRule: any) => {
       let paper = productRule.map((p: any) => {
         return {
@@ -460,7 +478,6 @@ export class AddProductRuleComponent implements OnInit {
     this.pressMachine.getPressMachine().subscribe(res => {
       this.pressMachineArray = res;
       const pressNameToMachines: { [key: string]: any[] } = {};
-
       for (const pressMachine of this.pressMachineArray) {
         const pressName = pressMachine.name;
 
@@ -469,33 +486,18 @@ export class AddProductRuleComponent implements OnInit {
         }
         pressNameToMachines[pressName].push(pressMachine);
       }
-
       const pressNameToMachinesArray = Object.keys(pressNameToMachines).map(key => ({ name: key, machines: pressNameToMachines[key] }));
-
-      debugger;
-
-      console.log(pressNameToMachinesArray);
       this.pressMachineArray = pressNameToMachinesArray
-
-
       const machinesForSelectedPress = pressNameToMachinesArray.find(item =>
         item.machines.some(machine => value?.machines.some((selectedMachine: any) => selectedMachine.id === machine.id))
       );
-
       const selectedMachines = machinesForSelectedPress?.machines;
-
       const vendors = selectedMachines?.map(machine => machine.vendor);
       this.ctpArray = vendors;
-
       const dimension = (selectedMachines?.map(machine => ({ name: machine.plateDimension })) || []);
-
       const uniqueDimensionSet = new Set(dimension.map(item => item.name));
-
       const uniqueDimension = Array.from(uniqueDimensionSet);
-
       const uniqueDimensionObjects = Array.from(uniqueDimensionSet).map(name => ({ name }));
-
-      console.log(uniqueDimensionObjects);
       this.dimensionArray = uniqueDimensionObjects;
 
     }, error => {
@@ -523,8 +525,15 @@ export class AddProductRuleComponent implements OnInit {
     debugger
     const PressId = this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
+    const isImposition = Boolean(this.impositionValue);
     const payload = {
       title: this.productName,
+      size: JSON.stringify(this.upping.map((uping: any) => (uping.name))),
+      quantity: JSON.stringify(this.qty.map((qtys: any) => (qtys.name))),
+      printSide: this.sideValue.name,
+      jobColorFront: JSON.stringify(this.jobFront.map((color: any) => (color.name))),
+      jobColorBack: JSON.stringify(this.jobBack.map((color: any) => (color.name))),
+      impositionValue: isImposition,
       productRulePaperStockList: this.containers.map((container: any) => ({
         paperStock: container.paper.name,
         brand: container.brand.name,
@@ -560,6 +569,50 @@ export class AddProductRuleComponent implements OnInit {
         }
       );
     }
+  }
+
+  getProductField() {
+    this.productField.getProductField().subscribe(
+      (response: any) => {
+        this.qtyArray = response.find((el: any) => el.name.toLowerCase() === 'quantity'.toLowerCase());
+        this.sideOptions = response.find((el: any) => el.name.toLowerCase() === 'Print Side'.toLowerCase());
+        // this.categoryArray = response.find((el: any) => el.name.toLowerCase() === 'Category'.toLowerCase());
+        this.categoryArray = {
+          productFieldValuesList: [
+            { id: 18, name: 'Testing', status: 'Active' },
+            { id: 19, name: 'Testing2', status: 'Unactive' },
+          ]
+        };
+        debugger
+        this.frontColors = response.find((el: any) => el.name.toLowerCase() === 'JobColor(Front)'.toLowerCase());
+        this.backColors = response.find((el: any) => el.name.toLowerCase() === 'JobColor(Back)'.toLowerCase());
+        debugger
+      },
+      (error) => {
+        console.error("Error:", error);
+      }
+    );
+  }
+  onChangeSide(value: any) {
+    if (value.name === "DOUBLE_SIDED") {
+      debugger
+      this.backNotApplied = true;
+      this.impositionValue = true;
+    } else {
+      this.backNotApplied = false;
+      this.impositionValue = false;
+    }
+  }
+
+  onCategoryChange(value: any) {
+    this.getUpping.getUping().subscribe(
+      (response: any) => {
+        // this.uppingArray = response.find((el: any) => el.name.toLowerCase() === value.name.toLowerCase());
+        this.uppingArray = [{ name: "A4" }]
+      }, (error: any) => {
+        console.log(error);
+
+      });
   }
 
 }

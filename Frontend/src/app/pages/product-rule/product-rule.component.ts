@@ -43,5 +43,8 @@ export class ProductRuleComponent implements OnInit {
       this.tableData = res
     })
   }
+  viewProduct(id: any) {
+    this.router.navigate(['/viewProductRule'], { queryParams: { id: id } });
+  }
   searchProductRule(value: any) { }
 }

@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { environment } from 'src/Environments/environment';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
+import { ProductRuleService } from 'src/app/services/product-rule.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -54,7 +55,7 @@ export class AddOrderComponent implements OnInit {
   isJobColorBackHidden: boolean = false;
 
   constructor(private orderService: OrdersService, private router: Router,
-    private productService: ProductService, private route: ActivatedRoute,
+    private productService: ProductRuleService, private route: ActivatedRoute,
     private customerService: CustomerService, private messageService: MessageService,
     private cdr: ChangeDetectorRef) { }
 
@@ -166,17 +167,21 @@ export class AddOrderComponent implements OnInit {
 
   toggleFields(title: any) {
     this.cdr.detectChanges();
-
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
-    this.impositionValue = title.newProduct.imposition;
-    this.paperStock = title.newProduct.isPaperStockPublic ? JSON.parse(title.newProduct.paperStock) : null
-    this.size = title.newProduct.isSizePublic ? JSON.parse(title.newProduct.size) : null
-    this.quantity = title.newProduct.isQuantityPublic ? JSON.parse(title.newProduct.quantity) : null
-    this.printSide = title.newProduct.isPrintSidePublic ? JSON.parse(title.newProduct.printSide) : null
-    this.jobFront = title.newProduct.isJobColorFrontPublic ? JSON.parse(title.newProduct.jobColorFront) : null
-    this.jobColorBack = title.newProduct.isJobColorBackPublic ? JSON.parse(title.newProduct.jobColorBack) : null;
-    this.gsms = title.newProduct.productGsm
+    debugger
+    title.productRulePaperStockList.forEach((element:any) => {
+      debugger
+      this.paperStock = element.paperStock;
+    });
+    // this.impositionValue = title.newProduct.imposition;
+    // this.paperStock = title.newProduct.isPaperStockPublic ? JSON.parse(title.newProduct.paperStock) : null
+    // this.size = title.newProduct.isSizePublic ? JSON.parse(title.newProduct.size) : null
+    // this.quantity = title.newProduct.isQuantityPublic ? JSON.parse(title.newProduct.quantity) : null
+    // this.printSide = title.newProduct.isPrintSidePublic ? JSON.parse(title.newProduct.printSide) : null
+    // this.jobFront = title.newProduct.isJobColorFrontPublic ? JSON.parse(title.newProduct.jobColorFront) : null
+    // this.jobColorBack = title.newProduct.isJobColorBackPublic ? JSON.parse(title.newProduct.jobColorBack) : null;
+    // this.gsms = title.newProduct.productGsm
   }
 
   jobColorOptions(value: any) {
@@ -192,7 +197,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   getProducts() {
-    this.productService.getProducts().subscribe(res => {
+    this.productService.getProductRuleTable().subscribe(res => {
       this.productArray = res
       !Number.isNaN(this.idFromQueryParam) ? this.putValuesOnUpdate() : null
     }, error => {

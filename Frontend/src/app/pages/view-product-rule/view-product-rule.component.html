@@ -1,0 +1,27 @@
+<div class="order-table bg-dark bg-opacity-50 vh-100">
+  <div class="row">
+    <div class="col-md-6" *ngFor="let item of tableData" [@cardAnimation]>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h3 class="card-title">ID: {{ item.id }}</h3>
+          <h5 class="card-text">Brand: {{ item.brand }}</h5>
+          <h6 class="card-text">Dimension: {{ item.dimension }}</h6>
+          <h6 class="card-text">GSM: {{ gsm.join(", ") }}</h6>
+          <h6 class="card-text">Made In: {{ item.madeIn }}</h6>
+          <h6 class="card-text">Paper Stock: {{ item.paperStock }}</h6>
+          <h5
+            class="card-text"
+            [ngClass]="item?.status === true ? 'text-success' : 'text-danger'"
+          >
+            Status: {{ item.status ? "Active" : "Inactive" }}
+          </h5>
+          <h6 class="card-text">Vendor Name: {{ item.vendor.name }}</h6>
+          <h6 class="card-text">Contact Name: {{ item.vendor.contactName }}</h6>
+          <h6 class="card-text">
+            Contact Number: {{ item.vendor.contactNumber }}
+          </h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
