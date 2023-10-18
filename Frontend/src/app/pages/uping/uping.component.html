@@ -20,8 +20,11 @@
                 <table class="table">
                     <thead class="position-sticky top-0 z-1">
                         <tr>
-                            <th scope="col" class="w-25 text-lg-center">ID</th>
-                            <th scope="col" class="w-50 text-lg-center">Product Size</th>
+                            <th scope="col" class="w-20 text-lg-center">ID</th>
+                            <th scope="col" class="w-25 text-lg-center">Category</th>
+                            <th scope="col" class="w-25 text-lg-center">Product Size Name</th>
+                            <th scope="col" class="w-20 text-lg-center">MM</th>
+                            <th scope="col" class="w-20 text-lg-center">Inch</th>
                             <th scope="col" class="w-25 text-lg-center">Action</th>
                         </tr>
                     </thead>
@@ -32,7 +35,11 @@
                         </tr>
                         <tr *ngFor="let uping of upingArray">
                             <td scope="col" class="text-lg-center">{{uping.id}}</td>
+                            <td scope="col" class="text-lg-center">{{uping.category}}</td>
                             <td scope="col" class="text-lg-center">{{uping.productSize}}</td>
+                            <td scope="col" class="text-lg-center">{{uping.mm}}</td>
+                            <td scope="col" class="text-lg-center">{{uping.inch}}</td>
+
                             <td scope="col" class="text-lg-center">
                                 <div class="btn-group mr-2" role="group" aria-label="Second group">
                                     <button type="button" class="btn order-table-btn" (click)="edituping(uping.id)">

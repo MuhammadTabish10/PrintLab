@@ -140,6 +140,12 @@ public class UpingServiceImpl implements UpingService {
         if (optionalUping.isPresent()) {
             Uping existingUping = optionalUping.get();
             existingUping.setProductSize(uping.getProductSize());
+            existingUping.setCategory(uping.getCategory());
+            existingUping.setL1(uping.getL1());
+            existingUping.setL2(uping.getL2());
+            existingUping.setUnit(uping.getUnit());
+            existingUping.setMm(uping.getMm());
+            existingUping.setInch(uping.getInch());
 
             List<UpingPaperSize> existingUpsValues = existingUping.getUpingPaperSize();
             List<UpingPaperSize> newUpsValues = uping.getUpingPaperSize();
@@ -211,6 +217,12 @@ public class UpingServiceImpl implements UpingService {
         return UpingDto.builder()
                 .id(uping.getId())
                 .productSize(uping.getProductSize())
+                .category(uping.getCategory())
+                .l1(uping.getL1())
+                .l2(uping.getL2())
+                .unit(uping.getUnit())
+                .mm(uping.getMm())
+                .inch(uping.getInch())
                 .upingPaperSize(upingPaperSizeDto)
                 .build();
     }
@@ -220,6 +232,12 @@ public class UpingServiceImpl implements UpingService {
         Uping uping = Uping.builder()
                 .id(upingDto.getId())
                 .productSize(upingDto.getProductSize())
+                .category(upingDto.getCategory())
+                .l1(upingDto.getL1())
+                .l2(upingDto.getL2())
+                .unit(upingDto.getUnit())
+                .mm(upingDto.getMm())
+                .inch(upingDto.getInch())
                 .build();
 
         List<UpingPaperSize> upingPaperSizes = new ArrayList<>();

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { PaperSizeService } from 'src/app/services/paper-size.service';
 import { PressMachineService } from 'src/app/services/press-machine.service';
+import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { UpingService } from 'src/app/services/uping.service';
 
 @Component({
@@ -26,29 +27,55 @@ export class AddUpingComponent implements OnInit {
   placeHolder: any = []
   upingSizeId: any = []
   elementsGenerated: boolean = false;
+  category: any;
+  categoryArray: any;
+  unit: any;
+  unitArray: any;
+  productFieldArray: any;
+  l1: any;
+  l2: any;
+
+  // selectedUnit: any;
+  unitLabelInch: any;
+  selectedUnit: string = 'inches';
+  unitLabelInch2: any;
+  unitLabelMm: any;
+  unitLabelMm2: any;
+
   constructor(private upingService: UpingService,
-     private paperSizeService: PaperSizeService,
-      private route: ActivatedRoute,
-       private router: Router,private messageService: MessageService) { }
+    private paperSizeService: PaperSizeService,
+    private route: ActivatedRoute,
+    private router: Router, private messageService: MessageService,
+    private productField: ProductDefinitionService) { }
 
   ngOnInit(): void {
+    debugger
     this.getPaperSizes()
+    this.getProductFields()
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add'
       } else {
+        this.getProductFields()
         this.upingService.getUpingById(this.idFromQueryParam).subscribe(res => {
           this.buttonName = 'Update'
           this.upingToUpdate = res
           this.productSizeValue = this.upingToUpdate.productSize
+          
+          this.l1 = this.upingToUpdate.l1;
+          this.l2 = this.upingToUpdate.l2;
+          debugger
+          this.unit = this.unitArray.productFieldValuesList?.find((u:any) => u.name === this.upingToUpdate.unit);
+          this.category = this.categoryArray.productFieldValuesList?.find((c:any) => c.name === this.upingToUpdate.category)
+          this.onUnitChange(this.category);
           this.upingToUpdate.upingPaperSize.filter((item: any) => {
-            this.upingSizeId.push(item.id)
-            this.value.push(item.value)
-            this.selectedSizes.push(item.paperSize)
-            this.paperSize.push({})
-            this.placeHolder.push(item.paperSize.label)
-            this.paperSizesArray.forEach((el: any) => {
+          this.upingSizeId.push(item.id)
+          this.value.push(item.value)
+          this.selectedSizes.push(item.paperSize)
+          this.paperSize.push({})
+          this.placeHolder.push(item.paperSize.label)
+          this.paperSizesArray.forEach((el: any) => {
               if (el.id == item.paperSize.id) {
                 let index = this.paperSizesArray.indexOf(el)
                 this.paperSizesArray.splice(index, 1)
@@ -64,7 +91,6 @@ export class AddUpingComponent implements OnInit {
   }
 
   addUping() {
-
     if (Number.isNaN(this.idFromQueryParam)) {
       for (let i = 0; i < this.selectedSizes.length; i++) {
         this.selectedSizes[i] = {
@@ -74,6 +100,12 @@ export class AddUpingComponent implements OnInit {
       }
       let obj = {
         productSize: this.productSizeValue,
+        category: this.category.name,
+        l1: this.l1,
+        l2: this.l2,
+        unit: this.unit.name,
+        mm: this.l1 + " x " + this.l2 +" mm",
+        inch: this.l1 +" x "+ this.l2 +" in",
         upingPaperSize: this.selectedSizes
       }
       this.upingService.postUping(obj).subscribe(() => {
@@ -90,8 +122,16 @@ export class AddUpingComponent implements OnInit {
           value: this.value[i]
         }
       }
+      debugger
       let obj = {
+        
         productSize: this.productSizeValue,
+        category: this.category.name,
+        l1: this.l1,
+        l2: this.l2,
+        unit: this.unit.name,
+        mm: this.l1 + " x " + this.l2 +" mm",
+        inch: this.l1 +" x "+ this.l2 +" in",
         upingPaperSize: this.selectedSizes
       }
       this.upingService.updateUping(this.idFromQueryParam, obj).subscribe(() => {
@@ -144,7 +184,34 @@ export class AddUpingComponent implements OnInit {
     })
   }
 
-  showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+  showError(error: any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+  getProductFields() {
+    this.productField.getProductField().subscribe(res => {
+      this.productFieldArray = res
+      this.categoryArray = this.productFieldArray.find((item: any) => item.name.toLowerCase() === 'Paper Size Category'.toLowerCase());
+      this.unitArray = this.productFieldArray.find((item: any) => item.name.toLowerCase() === 'unit'.toLowerCase());
+
+    }, error => {
+      this.showError(error);
+      this.visible = true
+    })
+  }
+
+  onUnitChange(value: any) {
+    debugger
+    if (value.name === 'INCHES') {
+      this.unitLabelInch = Number(this.l1) * 25.4;
+      this.unitLabelInch2 = Number(this.l2) * 25.4;
+      this.unitLabelMm = this.l1
+      this.unitLabelMm2 = this.l2
+    } else {
+      
+      this.unitLabelMm = (Number(this.l1) / 25.4).toFixed(1);
+      this.unitLabelMm2 = (Number(this.l2) / 25.4).toFixed(1);
+      this.unitLabelInch = this.l1
+      this.unitLabelInch2 = this.l2
+    }
   }
 }
