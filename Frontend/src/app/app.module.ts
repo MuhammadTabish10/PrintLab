@@ -60,6 +60,9 @@ import { ProductRuleComponent } from './pages/product-rule/product-rule.componen
 import { AddProductRuleComponent } from './pages/add-product-rule/add-product-rule.component';
 import { PaperStockComponent } from './pages/paper-stock/paper-stock.component';
 import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.component';
+import { ViewProductRuleComponent } from './pages/view-product-rule/view-product-rule.component';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+
 
 
 
@@ -110,6 +113,7 @@ import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.
     AddProductRuleComponent,
     PaperStockComponent,
     AddPaperStockComponent,
+    ViewProductRuleComponent,
   ],
   imports: [
     BrowserModule,

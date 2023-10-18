@@ -22,59 +22,58 @@ export class SidebarComponent {
 
 
 
-  customer() {
-    this.router.navigateByUrl('/customers');
-  }
+  // customer() {
+  //   this.router.navigateByUrl('/customers');
+  // }
 
-  order() {
-    this.router.navigateByUrl('/orders');
-  }
-  addProduct() {
-    this.router.navigateByUrl('/addProduct');
-  }
-  addProductRule() {
-
-    this.router.navigateByUrl('/ProductRule');
-  }
-  calculator() {
-    this.router.navigateByUrl('/calculator');
-  }
-  permission() {
-    this.router.navigateByUrl('/permission');
-  }
-  configurationProductField() {
-    this.router.navigateByUrl('/productField');
-  }
-  configurationPaperMarket() {
-    this.router.navigateByUrl('/paperMarket');
-  }
-  configurationPaperSize() {
-    this.router.navigateByUrl('/paperSize');
-  }
-  configurationPressMachine() {
-    this.router.navigateByUrl('/pressMachine');
-  }
-  configurationUping() {
-    this.router.navigateByUrl('/uping');
-  }
-  configurationVendor() {
-    this.router.navigateByUrl('/vendor');
-  }
-  configurationProductProcess() {
-    this.router.navigateByUrl('/productProcess');
-  }
-  configurationSettings() {
-    this.router.navigateByUrl('/settings');
-  }
-  configurationCtp() {
-    this.router.navigateByUrl('/ctp');
-  }
-  configurationInventory() {
-    this.router.navigateByUrl('/inventory');
-  }
-  paperStock(){
-    this.router.navigateByUrl('/paperStock');
-  }
+  // order() {
+  //   this.router.navigateByUrl('/orders');
+  // }
+  // addProduct() {
+  //   this.router.navigateByUrl('/addProduct');
+  // }
+  // addProductRule() {
+  //   this.router.navigateByUrl('/ProductRule');
+  // }
+  // calculator() {
+  //   this.router.navigateByUrl('/calculator');
+  // }
+  // permission() {
+  //   this.router.navigateByUrl('/permission');
+  // }
+  // configurationProductField() {
+  //   this.router.navigateByUrl('/productField');
+  // }
+  // configurationPaperMarket() {
+  //   this.router.navigateByUrl('/paperMarket');
+  // }
+  // configurationPaperSize() {
+  //   this.router.navigateByUrl('/paperSize');
+  // }
+  // configurationPressMachine() {
+  //   this.router.navigateByUrl('/pressMachine');
+  // }
+  // configurationUping() {
+  //   this.router.navigateByUrl('/uping');
+  // }
+  // configurationVendor() {
+  //   this.router.navigateByUrl('/vendor');
+  // }
+  // configurationProductProcess() {
+  //   this.router.navigateByUrl('/productProcess');
+  // }
+  // configurationSettings() {
+  //   this.router.navigateByUrl('/settings');
+  // }
+  // configurationCtp() {
+  //   this.router.navigateByUrl('/ctp');
+  // }
+  // configurationInventory() {
+  //   this.router.navigateByUrl('/inventory');
+  // }
+  // paperStock(){
+  //   this.router.navigateByUrl('/paperStock');
+  // }
 
   // options: any = [
   //     {

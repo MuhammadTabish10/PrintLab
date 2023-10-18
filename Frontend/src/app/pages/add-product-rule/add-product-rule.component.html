@@ -1,6 +1,6 @@
 <app-sidebar></app-sidebar>
 <div class="bg-light pb-3 pt-3">
-  <div class="container px-0" *ngIf="!idFromQueryParam">
+  <div class="container bg-white py-2 my-3">
     <form class="was-validated row py-2 mx-auto" #myForm="ngForm" novalidate>
       <div class="col-md-9">
         <div class="form-group mb-3">
@@ -32,6 +32,47 @@
       </div>
     </form>
   </div>
+
+  <div class="container bg-white my-3 py-2">
+    <h4 class="text-decoration-underline">Size</h4>
+    <div class="row justify-content-evenly">
+      <div class="col">
+        <label class="add-order-label m-0">Category</label>
+        <p-dropdown
+          styleClass="w-100"
+          [options]="categoryArray?.productFieldValuesList"
+          optionLabel="name"
+          (onChange)="onCategoryChange($event.value)"
+          [(ngModel)]="category"
+          placeholder="Select category"
+        ></p-dropdown>
+      </div>
+      <div class="col" *ngIf="category">
+        <label class="add-order-label m-0">Upping Size</label>
+        <p-multiSelect
+          styleClass="w-100"
+          [options]="uppingArray"
+          optionLabel="name"
+          display="chip"
+          [(ngModel)]="upping"
+          placeholder="Select Upping"
+        ></p-multiSelect>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col">
+        <label class="add-order-label m-0">Qty</label>
+        <p-multiSelect
+          styleClass="w-100"
+          [options]="qtyArray?.productFieldValuesList"
+          optionLabel="name"
+          [(ngModel)]="qty"
+          placeholder="Select MadeIn"
+        ></p-multiSelect>
+      </div>
+    </div>
+  </div>
+
   <div
     class="container bg-white py-2 my-3"
     *ngFor="let container of containers; let i = index"
@@ -301,6 +342,48 @@
           [(ngModel)]="plateVendor"
           placeholder="Select Vendor"
         ></p-dropdown>
+      </div>
+    </div>
+    <div class="row justify-content-evenly mt-3">
+      <div class="col-5">
+        <label class="add-order-label m-0">PrintSide</label>
+        <p-dropdown
+          styleClass="w-100"
+          [options]="sideOptions?.productFieldValuesList"
+          optionLabel="name"
+          (onChange)="onChangeSide($event.value)"
+          [(ngModel)]="sideValue"
+          placeholder="Select Print Side"
+        ></p-dropdown>
+      </div>
+      <div class="col-5" *ngIf="sideValue">
+        <label class="add-order-label m-0">Job Color Front</label>
+        <p-multiSelect
+          styleClass="w-100"
+          [options]="frontColors?.productFieldValuesList"
+          optionLabel="name"
+          [(ngModel)]="jobFront"
+          display="chip"
+          placeholder="Select Front Colors"
+        ></p-multiSelect>
+      </div>
+    </div>
+    <div class="row justify-content-evenly mt-3">
+      <div class="col-5" *ngIf="backNotApplied">
+        <label class="add-order-label m-0">Job Color Back</label>
+        <p-multiSelect
+          styleClass="w-100"
+          [options]="backColors?.productFieldValuesList"
+          optionLabel="name"
+          [(ngModel)]="jobBack"
+          display="chip"
+          placeholder="Select Back Colors"
+        ></p-multiSelect>
+      </div>
+      <div class="col-5 position-relative" *ngIf="impositionValue">
+        <div class="form-check form-switch form-switch-lg position-absolute bottom-0 end-0">
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+        </div>
       </div>
     </div>
   </div>

@@ -97,7 +97,10 @@
             id="selectProduct"
             [(ngModel)]="productName"
           >
-            <option *ngFor="let product of productDefinitionArray" [value]="product.title">
+            <option
+              *ngFor="let product of productDefinitionArray"
+              [value]="product.title"
+            >
               {{ product.title }}
             </option>
           </select>
@@ -139,16 +142,15 @@
         </td>
         <td>
           <select
-          class="form-select form-select-sm"
-          id="paperStock"
-          [(ngModel)]="paperValue"
-          (ngModelChange)="onPaperSelection()"
-        >
-          <option *ngFor="let paper of extractedPaperStock" [value]="paper.name">
-            {{ paper.name }}
-          </option>
-        </select>
-
+            class="form-select form-select-sm"
+            id="paperStock"
+            [(ngModel)]="paperValue"
+            (ngModelChange)="onPaperSelection()"
+          >
+            <option *ngFor="let paper of papersStock" [value]="paper.name">
+              {{ paper.name }}
+            </option>
+          </select>
         </td>
       </tr>
     </tbody>
@@ -215,7 +217,7 @@
             [(ngModel)]="sideOptionValue"
             (ngModelChange)="onImpositionValueChange()"
           >
-            <option *ngFor="let product of fields[6].values" [value]="product">
+            <option *ngFor="let product of fields[5].values" [value]="product">
               {{ product }}
             </option>
           </select>
@@ -235,7 +237,8 @@
           id="headerAnimation"
           [ngClass]="{
             'fade-out':
-              impositionValue === 'Applied' || sideOptionValue === 'SINGLE_SIDED'
+              impositionValue === 'Applied' ||
+              sideOptionValue === 'SINGLE_SIDED'
           }"
         >
           Job Colors [Black]
@@ -257,7 +260,7 @@
               (ngModelChange)="onImpositionValueChange()"
             >
               <option
-                *ngFor="let product of fields[7].values"
+                *ngFor="let product of fields[6].values"
                 [value]="product"
               >
                 {{ product }}
@@ -269,7 +272,8 @@
           id="tdColors"
           [ngClass]="{
             'fade-out':
-              impositionValue === 'Applied' || sideOptionValue === 'SINGLE_SIDED'
+              impositionValue === 'Applied' ||
+              sideOptionValue === 'SINGLE_SIDED'
           }"
         >
           <select
@@ -277,7 +281,10 @@
             id="jobColors"
             [(ngModel)]="jobBackValue"
           >
-            <option *ngFor="let backColor of backJobColors" [value]="backColor.name">
+            <option
+              *ngFor="let backColor of backJobColors"
+              [value]="backColor.name"
+            >
               {{ backColor.name }}
             </option>
           </select>
