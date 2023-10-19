@@ -80,12 +80,19 @@
           </div>
           <div class="row" *ngIf="unit">
             <div class="col">
-              <h4>MM</h4>
-              <h5>{{unitLabelMm+ " x " +unitLabelMm2 }}</h5>
+              <label class="add-order-label d-inline-block m-0 mb-1">MM</label>
+              <br>
+                <label class="d-inline-block m-0 mb-1 ">{{unitLabelMm+ " x " +unitLabelMm2 +" mm"}}</label>
+                  
+              <!-- <h5>{{unitLabelMm+ " x " +unitLabelMm2 }}</h5> -->
             </div>
             <div class="col">
-              <h4>Inch</h4>
-              <h5>{{unitLabelInch+ " x " +unitLabelInch2 }}</h5>
+              <label class="add-order-label d-inline-block m-0 mb-1">Inch</label>
+              <br>
+                <label class="d-inline-block m-0 mb-1">{{unitLabelInch+ " x " +unitLabelInch2 +" in"}}</label
+                  >
+              <!-- <h4>Inch</h4>
+              <h5>{{unitLabelInch+ " x " +unitLabelInch2 }}</h5> -->
             </div>
           </div>
         </div>
