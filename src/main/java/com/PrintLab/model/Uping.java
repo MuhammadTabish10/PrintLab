@@ -19,8 +19,6 @@ public class Uping{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String productSize;
-    //productSize change name to paperSizeName
-    //private String paperSizeCategory;
     private String category;
     private Integer l1;
     private Integer l2;
