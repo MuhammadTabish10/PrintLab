@@ -14,12 +14,19 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "uping")
-public class Uping
-{
+public class Uping{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String productSize;
+    //productSize change name to paperSizeName
+    //private String paperSizeCategory;
+    private String category;
+    private Integer l1;
+    private Integer l2;
+    private String unit;
+    private String mm;
+    private String inch;
 
     @OneToMany(mappedBy = "uping", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UpingPaperSize> upingPaperSize;

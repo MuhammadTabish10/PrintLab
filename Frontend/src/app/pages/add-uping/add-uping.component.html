@@ -10,7 +10,7 @@
         <div class="container">
           <div class="row">
             <div class="col-12 my-3">
-              <label class="add-order-label m-0">Product Size</label>
+              <label class="add-order-label m-0">Product Size Name</label>
               <input
                 type="text"
                 class="order-search form-control order-form-input m-0"
@@ -22,9 +22,83 @@
               />
             </div>
           </div>
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label d-inline-block m-0 mb-1">Paper Size Category</label>
+              <br/>
+              <p-dropdown
+                [options]="categoryArray?.productFieldValuesList"
+                styleClass="w-100"
+                optionLabel="name"
+                [placeholder]="'Category'"
+                [(ngModel)]="category"
+                name="category"
+              >
+              </p-dropdown>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">L1</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="l1"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter L1"
+                name="l1"
+                required
+              />
+            </div>
+          </div>
+          <div class="row">  
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">L2</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="l2"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter L2"
+                name="l2"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label d-inline-block m-0 mb-1">Unit</label>
+              <br/>
+              <p-dropdown
+                [options]="unitArray?.productFieldValuesList"
+                styleClass="w-100"
+                optionLabel="name"
+                [(ngModel)]="unit"
+                (onChange)="onUnitChange($event.value)"
+                [placeholder]="'Unit'"
+                name="unit"
+              >
+              </p-dropdown>
+               
+            </div>
+          </div>
+          <div class="row" *ngIf="unit">
+            <div class="col">
+              <label class="add-order-label d-inline-block m-0 mb-1">MM</label>
+              <br>
+                <label class="d-inline-block m-0 mb-1 ">{{unitLabelMm+ " x " +unitLabelMm2 +" mm"}}</label>
+                  
+              <!-- <h5>{{unitLabelMm+ " x " +unitLabelMm2 }}</h5> -->
+            </div>
+            <div class="col">
+              <label class="add-order-label d-inline-block m-0 mb-1">Inch</label>
+              <br>
+                <label class="d-inline-block m-0 mb-1">{{unitLabelInch+ " x " +unitLabelInch2 +" in"}}</label
+                  >
+              <!-- <h4>Inch</h4>
+              <h5>{{unitLabelInch+ " x " +unitLabelInch2 }}</h5> -->
+            </div>
+          </div>
         </div>
       </div>
   </div>
+
 
   <div class="main-container">
     <div class="d-flex justify-content-between">
@@ -45,7 +119,7 @@
       <div class="container">
         <div class="row">
           <div class="col-5">
-            <label class="add-order-label d-inline-block m-0">Label</label
+            <label class="add-order-label d-inline-block m-0 mb-1">Label</label
             ><br />
             <p-dropdown
               [options]="paperSizesArray"
