@@ -85,6 +85,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   calculate() {
+    debugger
     if (this.sideOptionValue.name != undefined) {
       if (this.sideOptionValue.name == "SINGLE_SIDED") {
         this.jobBackValue = null
@@ -94,10 +95,10 @@ export class AddOrderComponent implements OnInit {
     let obj = {
       pressMachineId: this.machineId,
       productValue: this.productName,
-      paper: this.paperStockItem.name,
+      paper: this.paperStockItem.paperStock,
       sizeValue: this.sizeValue.name,
       gsm: Number(this.selectedGsm.name),
-      quantity: this.qtyValue.name,
+      quantity: Number(this.qtyValue.name),
       jobColorsFront: Number(this.jobFrontValue.name),
       sideOptionValue: this.sideOptionValue.name,
       impositionValue: this.impositionValue,
@@ -114,13 +115,12 @@ export class AddOrderComponent implements OnInit {
   }
 
   addOrder() {
-
+debugger
     if (Number.isNaN(this.idFromQueryParam)) {
       let obj = {
         product: this.productName,
-        paper: this.paperStockItem.name,
+        paper: this.paperStockItem.paperStock,
         size: this.sizeValue.name,
-        sheetSizeValue: "18\"x23\"",
         gsm: Number(this.selectedGsm.name),
         quantity: Number(this.qtyValue.name),
         price: this.totalAmount,
@@ -142,9 +142,8 @@ export class AddOrderComponent implements OnInit {
       let obj = {
         id: this.idFromQueryParam,
         product: this.productName,
-        paper: this.paperStockItem.name,
+        paper: this.paperStockItem.paperStock,
         size: this.sizeValue.name,
-        sheetSizeValue: "18\"x23\"",
         gsm: Number(this.selectedGsm.name),
         quantity: Number(this.qtyValue.name),
         price: this.totalAmount,
@@ -170,22 +169,45 @@ export class AddOrderComponent implements OnInit {
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
     debugger
-    title.productRulePaperStockList.forEach((element:any) => {
-      debugger
-      this.paperStock = element.paperStock;
-    });
-    // this.impositionValue = title.newProduct.imposition;
-    // this.paperStock = title.newProduct.isPaperStockPublic ? JSON.parse(title.newProduct.paperStock) : null
-    // this.size = title.newProduct.isSizePublic ? JSON.parse(title.newProduct.size) : null
-    // this.quantity = title.newProduct.isQuantityPublic ? JSON.parse(title.newProduct.quantity) : null
-    // this.printSide = title.newProduct.isPrintSidePublic ? JSON.parse(title.newProduct.printSide) : null
-    // this.jobFront = title.newProduct.isJobColorFrontPublic ? JSON.parse(title.newProduct.jobColorFront) : null
-    // this.jobColorBack = title.newProduct.isJobColorBackPublic ? JSON.parse(title.newProduct.jobColorBack) : null;
-    // this.gsms = title.newProduct.productGsm
+    this.paperStock = title.productRulePaperStockList ? title.productRulePaperStockList : null;
+
+    const parsedSize = title.size ? JSON.parse(title.size) : null;
+    if (parsedSize) {
+      this.size = parsedSize.map((item: any) => ({ name: item }));
+    } else {
+      this.size = null;
+    }
+
+    const parsedQty = title.quantity ? JSON.parse(title.quantity) : null;
+    if (parsedQty) {
+      this.quantity = parsedQty.map((item: any) => ({ name: item }));
+    } else {
+      this.quantity = null;
+    }
+
+    this.impositionValue = title.impositionValue;
+
+    this.printSide = title.printSide ? [{ name: title.printSide }] : null;
+
+    const parsedFrontColors = title.jobColorFront ? JSON.parse(title.jobColorFront) : null;
+    if (parsedFrontColors) {
+      this.jobFront = parsedFrontColors.map((item: any) => ({ name: item }));
+    } else {
+      this.jobFront = null;
+    }
+
+    const parsedBackColors = title.jobColorBack ? JSON.parse(title.jobColorBack) : null;
+    if (parsedBackColors) {
+      this.jobColorBack = parsedBackColors.map((item: any) => ({ name: item }));
+    } else {
+      this.jobColorBack = null;
+    }
+
+    this.gsms = title.productRulePaperStockList ? title.productRulePaperStockList : null;
   }
 
   jobColorOptions(value: any) {
-    ;
+    debugger
     const singleSide = "SINGLE_SIDED";
     this.isJobColorBackHidden = value.name.toLowerCase() === singleSide.toLowerCase();
   }
@@ -229,6 +251,7 @@ export class AddOrderComponent implements OnInit {
             const fileType = this.determineFileType(file.name);
 
             if (fileType === 'image') {
+              debugger
               this.imgUrl = environment.baseUrl + response;
             } else if (fileType === 'pdf') {
               this.pdfUrl = environment.baseUrl + response;
@@ -263,12 +286,13 @@ export class AddOrderComponent implements OnInit {
   }
 
   gsmFields(value: any) {
-    this.dynamicFields = value.name;
-    let fgsm = this.gsms!.find((item: any) => item.name == this.dynamicFields)
+    debugger
+    this.dynamicFields = value.paperStock;
+    let fgsm = this.gsms!.find((item: any) => item.paperStock == this.dynamicFields)
     if (fgsm) {
       this.foundGsm = true
       let i = 1
-      let sGsm = fgsm.value.replace(/,/g, ' ').split(' ');
+      let sGsm = JSON.parse(fgsm.gsm);
       this.optionsGsm = sGsm.map((g: any) => {
         return {
           id: i++,
@@ -284,8 +308,9 @@ export class AddOrderComponent implements OnInit {
       el.title == this.orderToUpdate.product ? this.productToUpdate = el : null
     })
     this.toggleFields(this.productToUpdate)
+    debugger
     const conditionBackColor = this.orderToUpdate.jobColorsBack ? this.orderToUpdate.jobColorsBack.toString() : ''
-    const foundPaperStockItem = this.paperStock != null ? this.paperStock.find((item: { name: any; }) => item.name === this.orderToUpdate.paper) : null;
+    const foundPaperStockItem = this.paperStock != null ? this.paperStock.find((item: { paperStock: any; }) => item.paperStock === this.orderToUpdate.paper) : null;
     this.gsmFields(foundPaperStockItem)
     const foundsizeItem = this.size != null ? this.size.find((item: { name: any; }) => item.name === this.orderToUpdate.size) : null;
     const foundQtyItem = this.quantity != null ? this.quantity.find((item: { name: any; }) => item.name === this.orderToUpdate.quantity.toString()) : null;

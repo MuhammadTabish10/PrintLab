@@ -48,7 +48,7 @@
         ></p-dropdown>
       </div>
       <div class="col" *ngIf="category">
-        <label class="add-order-label m-0">Upping Size</label>
+        <label class="add-order-label m-0">Paper Size</label>
         <p-multiSelect
           styleClass="w-100"
           [options]="uppingArray"
@@ -59,13 +59,14 @@
         ></p-multiSelect>
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row mt-3" *ngIf="category">
       <div class="col">
-        <label class="add-order-label m-0">Qty</label>
+        <label class="add-order-label m-0">Quantities</label>
         <p-multiSelect
           styleClass="w-100"
           [options]="qtyArray?.productFieldValuesList"
           optionLabel="name"
+          display="chip"
           [(ngModel)]="qty"
           placeholder="Select MadeIn"
         ></p-multiSelect>
@@ -381,8 +382,15 @@
         ></p-multiSelect>
       </div>
       <div class="col-5 position-relative" *ngIf="impositionValue">
-        <div class="form-check form-switch form-switch-lg position-absolute bottom-0 end-0">
-          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+        <div
+          class="form-check form-switch form-switch-lg position-absolute bottom-0 end-0"
+        >
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="flexSwitchCheckChecked"
+            checked
+          />
         </div>
       </div>
     </div>

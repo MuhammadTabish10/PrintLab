@@ -44,4 +44,9 @@ export class ProductRuleService {
     let url = `${this._url}/product-rule/${id}`
     return this.http.put(url, obj)
   }
+
+  searchProduct(name: any) {
+    let url = `${this._url}/product-rule/names/${name}`
+    return this.http.get(url)
+  }
 }

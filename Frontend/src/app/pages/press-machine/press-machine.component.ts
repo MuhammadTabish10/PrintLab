@@ -44,6 +44,7 @@ export class PressMachineComponent implements OnInit {
   }
 
   searchPaperSize(name: any) {
+    debugger
     if (this.search == '') {
       this.getPressMachine()
     } else {

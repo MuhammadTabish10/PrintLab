@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class ProductRuleComponent implements OnInit {
   constructor(
     private productRuleService: ProductRuleService,
     private router: Router,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -34,8 +36,8 @@ export class ProductRuleComponent implements OnInit {
   deleteProduct(id: any) {
     this.productRuleService.deleteProduct(id).subscribe((res: any) => {
       this.getProductRule()
-    }, err => {
-      console.log(err);
+    }, (err) => {
+      this.showError(err);
     })
   }
   getProductRule() {
@@ -46,5 +48,21 @@ export class ProductRuleComponent implements OnInit {
   viewProduct(id: any) {
     this.router.navigate(['/viewProductRule'], { queryParams: { id: id } });
   }
-  searchProductRule(value: any) { }
+
+  searchProductRule(name: any) {
+    if (this.search === '') {
+      this.getProductRule();
+    } else {
+      debugger
+      this.productRuleService.searchProduct(name.value).subscribe(res => {
+        this.tableData = res
+      }, error => {
+        this.showError(error);
+      })
+    }
+  }
+
+  showError(error: any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
 }

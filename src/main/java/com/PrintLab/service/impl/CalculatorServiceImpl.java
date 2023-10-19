@@ -32,15 +32,15 @@ public class CalculatorServiceImpl implements CalculatorService {
     private final SettingRepository settingRepository;
     private final ProductFieldRepository productFieldRepository;
     private final ProductFieldValuesRepository productFieldValuesRepository;
-    private final ProductDefinitionRepository productDefinitionRepository;
     private final CtpRepository ctpRepository;
+    private final ProductRuleRepository productRuleRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(CalculatorServiceImpl.class);
 
     public CalculatorServiceImpl(PressMachineRepository pressMachineRepository, UpingRepository upingRepository,
                                  PaperSizeRepository paperSizeRepository, PaperMarketRatesRepository paperMarketRatesRepository,
                                  SettingRepository settingRepository, ProductFieldRepository productFieldRepository,
-                                 ProductFieldValuesRepository productFieldValuesRepository, ProductDefinitionRepository productDefinitionRepository, CtpRepository ctpRepository) {
+                                 ProductFieldValuesRepository productFieldValuesRepository, CtpRepository ctpRepository, ProductRuleRepository productRuleRepository) {
 
         this.pressMachineRepository = pressMachineRepository;
         this.upingRepository = upingRepository;
@@ -49,8 +49,8 @@ public class CalculatorServiceImpl implements CalculatorService {
         this.settingRepository = settingRepository;
         this.productFieldRepository = productFieldRepository;
         this.productFieldValuesRepository = productFieldValuesRepository;
-        this.productDefinitionRepository = productDefinitionRepository;
         this.ctpRepository = ctpRepository;
+        this.productRuleRepository = productRuleRepository;
     }
 
     @Override
@@ -64,10 +64,10 @@ public class CalculatorServiceImpl implements CalculatorService {
             calculator.setQuantity(1000.0);
         }
 
-        ProductDefinition productDefinition = null;
+        ProductRule productRule = null;
         if(calculator.getProductValue() != null){
-            productDefinition = productDefinitionRepository.findByTitle(calculator.getProductValue());
-            if(productDefinition == null){
+            productRule = productRuleRepository.findByTitle(calculator.getProductValue());
+            if(productRule == null){
                 throw new RecordNotFoundException("Product " + calculator.getProductValue() + " not Found");
             }
         }
@@ -133,7 +133,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         // Now checking if the provided PressMachine is present in database
         PressMachine pressMachine = null;
         if(calculator.getPressMachineId() == null){
-            pressMachine = pressMachineRepository.findById(productDefinition.getPressMachine().getId())
+            pressMachine = pressMachineRepository.findById(productRule.getPressMachine().getId())
                     .orElseThrow(() -> new RecordNotFoundException("PressMachine not found in product"));
         }
         else{

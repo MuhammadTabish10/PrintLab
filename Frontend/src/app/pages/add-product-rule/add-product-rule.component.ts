@@ -532,7 +532,7 @@ export class AddProductRuleComponent implements OnInit {
       quantity: JSON.stringify(this.qty.map((qtys: any) => (qtys.name))),
       printSide: this.sideValue.name,
       jobColorFront: JSON.stringify(this.jobFront.map((color: any) => (color.name))),
-      jobColorBack: JSON.stringify(this.jobBack.map((color: any) => (color.name))),
+      jobColorBack: this.jobBack != null ? JSON.stringify(this.jobBack.map((color: any) => (color.name))) : null,
       impositionValue: isImposition,
       productRulePaperStockList: this.containers.map((container: any) => ({
         paperStock: container.paper.name,

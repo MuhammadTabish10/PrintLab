@@ -2,6 +2,7 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductRuleDto;
 import com.PrintLab.dto.ProductRulePaperStockDto;
+import com.PrintLab.dto.SettingDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.ProductRule;
 import com.PrintLab.model.ProductRulePaperStock;
@@ -65,6 +66,18 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     @Override
     public List<ProductRuleDto> getAllProductRule() {
         List<ProductRule> productRuleList = productRuleRepository.findAll();
+        List<ProductRuleDto> productRuleDtoList = new ArrayList<>();
+
+        for (ProductRule productRule : productRuleList) {
+            ProductRuleDto productRuleDto = toDto(productRule);
+            productRuleDtoList.add(productRuleDto);
+        }
+        return productRuleDtoList;
+    }
+
+    @Override
+    public List<ProductRuleDto> searchByTitle(String title) {
+        List<ProductRule> productRuleList = productRuleRepository.findProductRuleByTitle(title);
         List<ProductRuleDto> productRuleDtoList = new ArrayList<>();
 
         for (ProductRule productRule : productRuleList) {
