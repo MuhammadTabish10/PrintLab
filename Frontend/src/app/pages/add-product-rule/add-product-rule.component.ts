@@ -576,14 +576,7 @@ export class AddProductRuleComponent implements OnInit {
       (response: any) => {
         this.qtyArray = response.find((el: any) => el.name.toLowerCase() === 'quantity'.toLowerCase());
         this.sideOptions = response.find((el: any) => el.name.toLowerCase() === 'Print Side'.toLowerCase());
-        // this.categoryArray = response.find((el: any) => el.name.toLowerCase() === 'Category'.toLowerCase());
-        this.categoryArray = {
-          productFieldValuesList: [
-            { id: 18, name: 'Testing', status: 'Active' },
-            { id: 19, name: 'Testing2', status: 'Unactive' },
-          ]
-        };
-        debugger
+        this.categoryArray = response.find((el: any) => el.name.toLowerCase() === 'Category'.toLowerCase());
         this.frontColors = response.find((el: any) => el.name.toLowerCase() === 'JobColor(Front)'.toLowerCase());
         this.backColors = response.find((el: any) => el.name.toLowerCase() === 'JobColor(Back)'.toLowerCase());
         debugger
@@ -607,8 +600,8 @@ export class AddProductRuleComponent implements OnInit {
   onCategoryChange(value: any) {
     this.getUpping.getUping().subscribe(
       (response: any) => {
-        // this.uppingArray = response.find((el: any) => el.name.toLowerCase() === value.name.toLowerCase());
-        this.uppingArray = [{ name: "A4" }]
+        debugger
+        this.uppingArray = response.filter((el: any) => el.category.toLowerCase() === value.name.toLowerCase());
       }, (error: any) => {
         console.log(error);
 

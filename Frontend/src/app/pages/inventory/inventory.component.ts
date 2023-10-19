@@ -24,7 +24,19 @@ export class InventoryComponent implements OnInit {
     this.getInventory()
   }
 
-  searchInventory(inventory: any) { }
+  searchInventory(inventory: any) {
+    if (this.search == '') {
+      this.getInventory()
+    } else {
+      debugger
+      this.inventoryService.searchInventory(inventory.value).subscribe(res => {
+        this.inventoryArray = res
+      }, error => {
+        this.showError(error);
+        this.visible = true
+      })
+    }
+  }
 
   getInventory() {
     this.inventoryService.getInventory().subscribe((res) => {

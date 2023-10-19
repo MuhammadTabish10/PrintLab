@@ -13,6 +13,7 @@ export class PaperStockComponent {
   allPaperStock: any = []
   search: string = ''
   visible!: boolean
+  brands: any = ''
 
 
   constructor(private paperStockService: PaperStockService, private router: Router, private route: ActivatedRoute,
@@ -25,6 +26,7 @@ export class PaperStockComponent {
   getPaperStock() {
     this.paperStockService.getAllPaperStock().subscribe((res: any) => {
       this.allPaperStock = res
+      
     })
   }
 

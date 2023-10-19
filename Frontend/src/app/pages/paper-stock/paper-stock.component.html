@@ -8,10 +8,19 @@
     </div>
     <div class="container-fluid px-0 mt-5">
       <div class="order-search-panel">
-        <input type="text" placeholder="Search by PaperStock" [(ngModel)]="search" (keyup)="searchPaperStock($event.target)" class="order-search form-control"
-          >
+        <input
+          type="text"
+          placeholder="Search by PaperStock"
+          [(ngModel)]="search"
+          (keyup)="searchPaperStock($event.target)"
+          class="order-search form-control"
+        />
         <div>
-          <button type="button" class="btn order-table-btn btn-search-panel" routerLink="/addPaperStock">
+          <button
+            type="button"
+            class="btn order-table-btn btn-search-panel"
+            routerLink="/addPaperStock"
+          >
             <i class="fa-solid fa-plus"></i>&nbsp;Add
           </button>
         </div>
@@ -20,30 +29,45 @@
         <table class="table table-responsive text-center">
           <thead>
             <tr>
-              <th scope="col" class="col-1">ID</th>
-              <th scope="col" class="col-8">Title</th>
-              <th scope="col" class="col-3">Action</th>
+              <th scope="col" class="col">ID</th>
+              <th scope="col" class="col">Title</th>
+              <th scope="col" class="col">Brand</th>
+              <th scope="col" class="col">Action</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngIf="!allPaperStock">
-              <td colspan="3" class="text-center">
-                No record found
-              </td>
+              <td colspan="3" class="text-center">No record found</td>
             </tr>
-            <tr *ngFor="let paperStock of allPaperStock">
+            <tr *ngFor="let paperStock of allPaperStock; let i = index">
               <td>{{ paperStock.id }}</td>
               <td>{{ paperStock.name }}</td>
+              <td>
+                <span *ngFor="let brand of paperStock.brands; let j = index">
+                  {{ brand.name }}
+                  <!-- Add a comma separator if it's not the last brand -->
+                  <ng-container *ngIf="j < paperStock.brands.length - 1">, </ng-container>
+                </span>
+              </td>
               <td>
                 <div class="btn-group" role="group">
                   <!-- <button type="button" class="btn order-table-btn" (click)="viewProduct(paperStock.id)">
                     <i class="fa-solid fa-hand-pointer pe-lg-2"></i>&nbsp;<small>View</small>
                   </button> -->
-                  <button type="button" class="btn order-table-btn" (click)="editProduct(paperStock.id)">
+                  <button
+                    type="button"
+                    class="btn order-table-btn"
+                    (click)="editProduct(paperStock.id)"
+                  >
                     <i class="fa-solid fa-pen pe-lg-2"></i><small>Edit</small>
                   </button>
-                  <button type="button" class="btn order-table-btn" (click)="deleteProduct(paperStock.id)">
-                    <i class="fa-solid fa-trash pe-lg-2"></i><small class="">Delete</small>
+                  <button
+                    type="button"
+                    class="btn order-table-btn"
+                    (click)="deleteProduct(paperStock.id)"
+                  >
+                    <i class="fa-solid fa-trash pe-lg-2"></i
+                    ><small class="">Delete</small>
                   </button>
                 </div>
               </td>

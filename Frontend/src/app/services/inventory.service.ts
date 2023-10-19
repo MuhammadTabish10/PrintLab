@@ -36,7 +36,7 @@ export class InventoryService {
   }
 
   searchInventory(name: any) {
-    let url = `${this._url}/inventorys/${name}`
+    let url = `${this._url}/inventory/paper-stock/${name}`
     return this.http.get(url)
   }
 

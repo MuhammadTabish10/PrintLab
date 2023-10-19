@@ -118,7 +118,7 @@ export class AddUpingComponent implements OnInit {
 
   handleProductFieldsResponse(productFields: any) {
     this.productFieldArray = productFields;
-    this.categoryArray = this.productFieldArray.find((item: any) => item.name.toLowerCase() === 'Paper Size Category'.toLowerCase());
+    this.categoryArray = this.productFieldArray.find((item: any) => item.name.toLowerCase() === 'Category'.toLowerCase());
     this.unitArray = this.productFieldArray.find((item: any) => item.name.toLowerCase() === 'unit'.toLowerCase());
   }
 
@@ -274,8 +274,8 @@ export class AddUpingComponent implements OnInit {
   onUnitChange(value: any) {
     debugger
     if (value.name === 'INCHES') {
-      this.unitLabelInch = Number(this.l1) * 25.4;
-      this.unitLabelInch2 = Number(this.l2) * 25.4;
+      this.unitLabelInch = (Number(this.l1) * 25.4).toFixed(1);
+      this.unitLabelInch2 = (Number(this.l2) * 25.4).toFixed(1);
       this.unitLabelMm = this.l1
       this.unitLabelMm2 = this.l2
     } else {
