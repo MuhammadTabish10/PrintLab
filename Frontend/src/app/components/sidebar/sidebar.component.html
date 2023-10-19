@@ -27,16 +27,16 @@
       </span>
     </li>
 
-    <li *ngIf="sessionStorageService.hasPermission('Products')" class="mt-2">
+    <!-- <li *ngIf="sessionStorageService.hasPermission('Products')" class="mt-2">
       <span class="sidebar-list-hover">
         <i class="fa fa-shopping-bag fa-2x"></i>
         <a class="nav-text nav-link" [routerLink]="['/products']"> Products </a>
       </span>
-    </li>
+    </li> -->
 
     <li *ngIf="sessionStorageService.hasPermission('ProductRule')" class="mt-2">
       <span class="sidebar-list-hover">
-        <i class="fa fa-plus"></i>
+        <i class="fa fa-shopping-bag fa-2x"></i>
         <a class="nav-text nav-link" [routerLink]="['/ProductRule']">
           Product Rule
         </a>

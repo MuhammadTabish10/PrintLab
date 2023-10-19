@@ -63,11 +63,11 @@ export const routes: Routes = [
     component: AddOrderComponent,
     canActivate: [AuthguardService]
   },
-  {
-    path: 'products',
-    component: ProductsComponent,
-    canActivate: [AuthguardService]
-  },
+  // {
+  //   path: 'products',
+  //   component: ProductsComponent,
+  //   canActivate: [AuthguardService]
+  // },
   {
     path: 'ProductRule',
     component: ProductRuleComponent,

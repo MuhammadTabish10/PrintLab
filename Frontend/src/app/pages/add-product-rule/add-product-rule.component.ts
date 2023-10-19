@@ -522,13 +522,12 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   addProductRule() {
-    debugger
     const PressId = this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
     const isImposition = Boolean(this.impositionValue);
     const payload = {
       title: this.productName,
-      size: JSON.stringify(this.upping.map((uping: any) => (uping.name))),
+      size: JSON.stringify(this.upping.map((uping: any) => (uping.productSize))),
       quantity: JSON.stringify(this.qty.map((qtys: any) => (qtys.name))),
       printSide: this.sideValue.name,
       jobColorFront: JSON.stringify(this.jobFront.map((color: any) => (color.name))),
