@@ -33,7 +33,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/webjars/**",
-            "https://api.printlab.stepwaysoftwares.com/design/**"
+            "https://api.printlab.stepwaysoftwares.com/public_html/design/**"
     };
 
     @Autowired
