@@ -25,7 +25,7 @@
           <button
             class="btn btn-dark btn-block"
             type="button"
-            [disabled]="!myForm.valid"
+            [disabled]="!productName"
             (click)="addContainer()"
           >
             Add paperStock Rule
@@ -43,13 +43,17 @@
             styleClass="w-100"
             [options]="categoryArray?.productFieldValuesList"
             optionLabel="name"
-            [required]="true"
             name="category"
             (onChange)="onCategoryChange($event.value)"
             [(ngModel)]="category"
+            [required]="true"
             placeholder="Select category"
           ></p-dropdown>
+          <div *ngIf="!category" class="invalid-feedback">
+            Please fill out this field.
+          </div>
         </div>
+
         <div class="col" *ngIf="category">
           <label class="add-order-label m-0">Paper Size</label>
           <p-multiSelect
@@ -105,7 +109,7 @@
             styleClass="w-100"
             [options]="container.allPaper"
             optionLabel="name"
-            name="paperStock"
+            [name]="'paperStock[' + i + ']'"
             [required]="true"
             [(ngModel)]="containers[i].paper"
             placeholder="Select Paper"
@@ -125,7 +129,7 @@
             [options]="container.allVendor"
             optionLabel="name"
             [required]="true"
-            name="vendor"
+            [name]="'vendor[' + i + ']'"
             [(ngModel)]="containers[i].vendor"
             placeholder="Select Vendor"
             (ngModelChange)="changeVendor(i, $event)"
@@ -144,7 +148,7 @@
           <p-dropdown
             styleClass="w-100"
             [options]="container.allBrand"
-            name="brandContainer"
+            [name]="'brandContainer[' + i + ']'"
             optionLabel="name"
             [required]="true"
             [(ngModel)]="containers[i].brand"
@@ -181,7 +185,7 @@
             [options]="containers[i].allMadeIn"
             optionLabel="name"
             [required]="true"
-            name="madeIn"
+            [name]="'madeIn[' + i + ']'"
             [(ngModel)]="containers[i].madeIn"
             placeholder="Select MadeIn"
             (ngModelChange)="changeMadeIn(i, $event)"
@@ -209,7 +213,7 @@
             styleClass="w-100"
             [options]="containers[i].allDimension"
             optionLabel="name"
-            name="dimensions"
+            [name]="'dimensions[' + i + ']'"
             [(ngModel)]="containers[i].dimension"
             placeholder="Select Dimension"
             [required]="true"
@@ -250,7 +254,7 @@
             optionLabel="name"
             [(ngModel)]="containers[i].gsm"
             [required]="true"
-            name="gsm"
+            [name]="'gsm[' + i + ']'"
             display="chip"
             placeholder="Select Gsm"
           ></p-multiSelect>
@@ -414,7 +418,7 @@
             name="backColors"
           ></p-multiSelect>
         </div>
-        <div class="col-5 position-relative" *ngIf="impositionValue">
+        <div class="col-5 position-relative" *ngIf="imposition">
           <div
             class="form-check form-switch form-switch-lg position-absolute bottom-0 end-0"
           >
@@ -422,7 +426,10 @@
               class="form-check-input"
               type="checkbox"
               id="flexSwitchCheckChecked"
+              name="impositionValueChecked"
               checked
+              [(ngModel)]="impositionValue"
+              (change)="onCheck(impositionValue)"
             />
           </div>
         </div>
@@ -431,7 +438,12 @@
 
     <div class="container">
       <div class="row mx-auto d-flex justify-content-end">
-        <button class="btn btn-dark col-1" type="button" (click)="addProductRule()" [disabled]="!myForm.valid">
+        <button
+          class="btn btn-dark col-1"
+          type="button"
+          (click)="addProductRule()"
+          [disabled]="!myForm.valid"
+        >
           {{ buttonName }}
         </button>
       </div>

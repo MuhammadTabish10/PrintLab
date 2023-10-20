@@ -20,9 +20,17 @@ import { trigger, state, style, animate, transition, keyframes } from '@angular/
   ],
 })
 export class ViewProductRuleComponent implements OnInit {
-  tableData: any;
+  paperStockData: any;
   gsm: any;
   idFromQueryParam!: number
+  pressData: any;
+  productRuleData: any;
+  frontColors: any;
+  backColors: any;
+  qty: any;
+  paperSize: any;
+  ctpData: any;
+
   constructor(private productRuleService: ProductRuleService,
     private route: ActivatedRoute) { }
 
@@ -39,8 +47,15 @@ export class ViewProductRuleComponent implements OnInit {
       (res: any) => {
         if (Array.isArray(res)) {
           debugger
-          this.tableData = res.filter((item: any) => item.id === this.idFromQueryParam).flatMap((item: any) => item.productRulePaperStockList);
-          this.gsm = this.tableData.map((item: any) => JSON.parse(item.gsm));
+          this.productRuleData = res.filter((item: any) => item.id === this.idFromQueryParam).flatMap((item: any) => item);
+          this.paperStockData = res.filter((item: any) => item.id === this.idFromQueryParam).flatMap((item: any) => item.productRulePaperStockList);
+          this.pressData = res.filter((item: any) => item.id === this.idFromQueryParam).flatMap((item: any) => item.pressMachine);
+          this.ctpData = res.filter((item: any) => item.id === this.idFromQueryParam).flatMap((item: any) => item.ctp);
+          this.gsm = this.paperStockData.map((item: any) => JSON.parse(item.gsm));
+          this.frontColors = this.productRuleData.map((item: any) => JSON.parse(item.jobColorFront));
+          this.backColors = this.productRuleData.map((item: any) => JSON.parse(item.jobColorBack));
+          this.qty = this.productRuleData.map((item: any) => JSON.parse(item.quantity));
+          this.paperSize = this.productRuleData.map((item: any) => JSON.parse(item.size));
         }
 
       },

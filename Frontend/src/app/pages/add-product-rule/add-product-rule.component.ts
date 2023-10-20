@@ -55,8 +55,9 @@ export class AddProductRuleComponent implements OnInit {
   jobFront: any;
   backColors: any;
   jobBack: any;
-  impositionValue: any;
+  imposition: any;
   backNotApplied: boolean = false;
+  impositionValue: boolean = true;
 
   constructor(
     private productRuleService: ProductRuleService,
@@ -525,15 +526,14 @@ export class AddProductRuleComponent implements OnInit {
     debugger
     const PressId = this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
-    const isImposition = Boolean(this.impositionValue);
     const payload = {
       title: this.productName,
-      size: JSON.stringify(this.upping.map((uping: any) => (uping.name))),
+      size: JSON.stringify(this.upping.map((uping: any) => (uping.productSize))),
       quantity: JSON.stringify(this.qty.map((qtys: any) => (qtys.name))),
       printSide: this.sideValue.name,
       jobColorFront: JSON.stringify(this.jobFront.map((color: any) => (color.name))),
       jobColorBack: this.jobBack != null ? JSON.stringify(this.jobBack.map((color: any) => (color.name))) : null,
-      impositionValue: isImposition,
+      impositionValue: this.impositionValue,
       productRulePaperStockList: this.containers.map((container: any) => ({
         paperStock: container.paper.name,
         brand: container.brand.name,
@@ -590,13 +590,16 @@ export class AddProductRuleComponent implements OnInit {
     if (value.name === "DOUBLE_SIDED") {
       debugger
       this.backNotApplied = true;
-      this.impositionValue = true;
+      this.imposition = true;
     } else {
       this.backNotApplied = false;
-      this.impositionValue = false;
+      this.imposition = false;
     }
   }
-
+  onCheck(value: any) {
+    debugger
+    this.impositionValue = value;
+  }
   onCategoryChange(value: any) {
     this.getUpping.getUping().subscribe(
       (response: any) => {
