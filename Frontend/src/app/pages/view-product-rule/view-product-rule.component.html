@@ -1,27 +1,68 @@
-<div class="order-table bg-dark bg-opacity-50">
+<div class="order-table bg-dark bg-opacity-50 overflow-hidden">
   <div class="row">
-    <div class="col-md-6" *ngFor="let item of tableData" [@cardAnimation]>
+    <div
+      class="col"
+      *ngFor="let item of paperStockData; let i = index"
+      [@cardAnimation]
+    >
       <div class="card mb-3">
-        <div class="card-body">
-          <h3 class="card-title">ID: {{ item.id }}</h3>
-          <h5 class="card-text">Brand: {{ item.brand }}</h5>
-          <h6 class="card-text">Dimension: {{ item.dimension }}</h6>
-          <h6 class="card-text">GSM: {{ gsm.join(", ") }}</h6>
-          <h6 class="card-text">Made In: {{ item.madeIn }}</h6>
-          <h6 class="card-text">Paper Stock: {{ item.paperStock }}</h6>
+        <div *ngFor="let productRule of productRuleData; let j = index">
+          <div class="card-header">
+            <h3 class="card-title text-primary">
+              Title: {{ productRule.title }}
+            </h3>
+          </div>
+          <div class="card-body">
+            <h5 class="card-text">Paper Stock: {{ item.paperStock }}</h5>
+            <h6 class="card-text">
+              Paper Stock Vendor: {{ item.vendor.name }}
+            </h6>
+            <h6 class="card-text">
+              Contact Name: {{ item.vendor.contactName }}
+            </h6>
+            <h6 class="card-text">
+              Contact Number: {{ item.vendor.contactNumber }}
+            </h6>
+            <h5 class="card-text text-primary">Brand: {{ item.brand }}</h5>
+            <h6 class="card-text">Made In: {{ item.madeIn }}</h6>
+            <h6 class="card-text">Dimension: {{ item.dimension }}</h6>
+            <h6 class="card-text">GSM: {{ gsm[i].join(", ") }}</h6>
+            <h5
+              class="card-text"
+              [ngClass]="
+                productRule?.impositionValue ? 'text-success' : 'text-danger'
+              "
+            >
+              Imposition: {{ productRule.impositionValue }}
+            </h5>
+            <h6 class="card-text">Print Side: {{ productRule.printSide }}</h6>
+            <h6 class="card-text">
+              Front Colors: {{ frontColors[j].join(", ") }}
+            </h6>
+            <h6 class="card-text">
+              Back Colors: {{ backColors[j].join(", ") }}
+            </h6>
+            <h6 class="card-text">Quantities: {{ qty[j].join(", ") }}</h6>
+            <h6 class="card-text">Size: {{ paperSize[j].join(", ") }}</h6>
           <h5
             class="card-text"
-            [ngClass]="item?.status === true ? 'text-success' : 'text-danger'"
+            [ngClass]="item?.status ? 'text-success' : 'text-danger'"
           >
             Status: {{ item.status ? "Active" : "Inactive" }}
           </h5>
-          <h6 class="card-text">Vendor Name: {{ item.vendor.name }}</h6>
-          <h6 class="card-text">Contact Name: {{ item.vendor.contactName }}</h6>
-          <h6 class="card-text">
-            Contact Number: {{ item.vendor.contactNumber }}
-          </h6>
+        </div>
+        <div class="card-footer">
+          <div class="mb-3" *ngFor="let press of pressData; let k = index">
+            <h6 class="card-text">Press Machine: {{ press.name }}</h6>
+            <h6 class="card-text">Press Vendor: {{ press.vendor.name }}</h6>
+          </div>
+          <div *ngFor="let ctp of ctpData; let l = index">
+            <h6 class="card-text">Ctp: {{ ctp.plateDimension }}</h6>
+            <h6 class="card-text">Ctp Vendor: {{ ctp.vendor.name }}</h6>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
