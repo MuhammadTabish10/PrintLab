@@ -7,9 +7,9 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { DatePipe } from '@angular/common';
-import { ProductService } from 'src/app/services/product.service';
 import { MessageService } from 'primeng/api';
 import { PaperStockService } from 'src/app/services/paper-stock.service';
+import { ProductRuleService } from 'src/app/services/product-rule.service';
 @Component({
   selector: 'app-calculator-header',
   templateUrl: './calculator-header.component.html',
@@ -67,7 +67,7 @@ export class CalculatorHeaderComponent implements OnInit {
   frontJobColors: any[] = [];
   uppingSizes: any[] = [];
   backJobColors: any[] = [];
-  extractedPaperStock:any[] = [];
+  extractedPaperStock: any[] = [];
   constructor(private calculatorService: CalculatorService,
     private orderService: OrdersService,
     private renderer: Renderer2,
@@ -76,7 +76,7 @@ export class CalculatorHeaderComponent implements OnInit {
     private paperSizeService: PaperSizeService,
     private papers: PaperMarketService,
     private datePipe: DatePipe,
-    private productService: ProductService,
+    private productRuleService: ProductRuleService,
     private messageService: MessageService,
     private paperStockService: PaperStockService) { }
   ngOnInit(): void {
@@ -294,15 +294,19 @@ export class CalculatorHeaderComponent implements OnInit {
     this.receivedData = obj;
   }
 
-  extractPaperStock(){
-    this.paperStockService.getAllPaperStock().subscribe((res:any) => {
+  extractPaperStock() {
+    this.paperStockService.getAllPaperStock().subscribe((res: any) => {
       this.extractedPaperStock = res
+      debugger
     })
+  }
+
+  private getPaperStock() {
+
   }
 
   private getFields() {
     this.productFieldService.getProductField().subscribe((res: { [key: string]: any }) => {
-      ;
 
       // const paperStockField = this.getFieldByName(res, 'Paper Stock');
       const frontJobColorsField = this.getFieldByName(res, 'JobColor(Front)');
@@ -333,15 +337,14 @@ export class CalculatorHeaderComponent implements OnInit {
     })
   }
   getProducts() {
-    this.productService.getProducts().subscribe(res => {
+    this.productRuleService.getProductRuleTable().subscribe(res => {
       this.productDefinitionArray = res
-      console.log(this.productDefinitionArray);
     }, error => {
       this.showError(error);
       this.visible = true
     })
   }
-  showError(error:any) {
+  showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 
