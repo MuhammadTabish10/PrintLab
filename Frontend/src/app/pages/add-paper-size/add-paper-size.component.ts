@@ -20,7 +20,7 @@ export class AddPaperSizeComponent implements OnInit {
   sizeToUpdate: any = []
 
   constructor(private paperSizeService: PaperSizeService, private route: ActivatedRoute, private router: Router
-    ,private messageService: MessageService) { }
+    , private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(param => {
@@ -35,6 +35,7 @@ export class AddPaperSizeComponent implements OnInit {
           this.labelValue = this.sizeToUpdate.label
           this.statusValue = this.sizeToUpdate.status
           this.statusValue == "Active" ? this.statusFlag = true : this.statusFlag = false
+          this.addSpacesTolabelValue()
         }, error => {
           this.showError(error);
           this.visible = true;
@@ -49,7 +50,7 @@ export class AddPaperSizeComponent implements OnInit {
   }
 
   addPaperSize() {
-
+    this.removeSpacesFromlabelValue()
     let obj = {
       label: this.labelValue,
       status: this.statusValue
@@ -70,7 +71,21 @@ export class AddPaperSizeComponent implements OnInit {
       })
     }
   }
-  showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+
+  removeSpacesFromlabelValue() {
+    this.labelValue = this.labelValue.replace(/\s+/g, '').replace(/inch|in/g, '');
+  }
+
+
+  addSpacesTolabelValue() {
+    const parts = this.labelValue.split('x');
+    this.labelValue = parts.join(' x ');
+    this.labelValue += ' in';
+  }
+
+
+
+  showError(error: any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

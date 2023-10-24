@@ -40,29 +40,30 @@
               Front Colors: {{ frontColors[j].join(", ") }}
             </h6>
             <h6 class="card-text">
-              Back Colors: {{ backColors[j].join(", ") }}
+              Back Colors: {{ backColors[j] ? backColors[j].join(", ") : null }}
             </h6>
+            <h6 class="card-text">Category: {{ productRule.category }}</h6>
             <h6 class="card-text">Quantities: {{ qty[j].join(", ") }}</h6>
             <h6 class="card-text">Size: {{ paperSize[j].join(", ") }}</h6>
-          <h5
-            class="card-text"
-            [ngClass]="item?.status ? 'text-success' : 'text-danger'"
-          >
-            Status: {{ item.status ? "Active" : "Inactive" }}
-          </h5>
-        </div>
-        <div class="card-footer">
-          <div class="mb-3" *ngFor="let press of pressData; let k = index">
-            <h6 class="card-text">Press Machine: {{ press.name }}</h6>
-            <h6 class="card-text">Press Vendor: {{ press.vendor.name }}</h6>
+            <h5
+              class="card-text"
+              [ngClass]="item?.status ? 'text-success' : 'text-danger'"
+            >
+              Status: {{ item.status ? "Active" : "Inactive" }}
+            </h5>
           </div>
-          <div *ngFor="let ctp of ctpData; let l = index">
-            <h6 class="card-text">Ctp: {{ ctp.plateDimension }}</h6>
-            <h6 class="card-text">Ctp Vendor: {{ ctp.vendor.name }}</h6>
+          <div class="card-footer">
+            <div class="mb-3" *ngFor="let press of pressData; let k = index">
+              <h6 class="card-text">Press Machine: {{ press.name }}</h6>
+              <h6 class="card-text">Press Vendor: {{ press.vendor.name }}</h6>
+            </div>
+            <div *ngFor="let ctp of ctpData; let l = index">
+              <h6 class="card-text">Ctp: {{ ctp.plateDimension }}</h6>
+              <h6 class="card-text">Ctp Vendor: {{ ctp.vendor.name }}</h6>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </div>

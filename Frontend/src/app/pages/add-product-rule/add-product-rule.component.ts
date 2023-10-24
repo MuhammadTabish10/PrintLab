@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, forkJoin } from 'rxjs';
 import { CtpService } from 'src/app/services/ctp.service';
@@ -8,6 +8,7 @@ import { ProductRuleService } from 'src/app/services/product-rule.service';
 import { NgZone } from '@angular/core';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { UpingService } from 'src/app/services/uping.service';
+import { Dropdown } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-add-product-rule',
@@ -58,6 +59,9 @@ export class AddProductRuleComponent implements OnInit {
   imposition: any;
   backNotApplied: boolean = false;
   impositionValue: boolean = true;
+  valid: string = 'Valid';
+  invalid: string = 'Please fill out this field.';
+  disabled: boolean = false;
 
   constructor(
     private productRuleService: ProductRuleService,
@@ -67,7 +71,8 @@ export class AddProductRuleComponent implements OnInit {
     private pressMachine: PressMachineService,
     private ctpService: CtpService,
     private productField: ProductDefinitionService,
-    private getUpping: UpingService) { }
+    private getUpping: UpingService,
+    private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.getPressMachine(null);
@@ -90,62 +95,61 @@ export class AddProductRuleComponent implements OnInit {
         this.buttonName = 'Add';
       } else {
         this.productRuleService.getProductRuleById(this.idFromQueryParam).subscribe((res: any) => {
-          for (let index = 0; index < res.productRulePaperStockList.length - 1; index++) {
-            this.addContainer()
-          }
-          this.productName = res.title;
+          this.productName = res?.title;
+          this.category = this.categoryArray?.productFieldValuesList.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
+          this.onCategoryChange(this.category)
+          this.sideValue = this.sideOptions.productFieldValuesList.find((option: any) => option.name === res?.printSide)
+          this.onChangeSide(this.sideValue)
           this.buttonName = 'Update';
-          for (let i = 0; i < res.productRulePaperStockList.length; i++) {
-            this.containers[i].paper = { name: res.productRulePaperStockList[i].paperStock };
-            this.containers[i].allVendor = [res.productRulePaperStockList[i].vendor];
-            this.containers[i].vendor = res.productRulePaperStockList[i].vendor;
-            this.containers[i].allBrand = [{ name: res.productRulePaperStockList[i].brand }];
-            this.containers[i].brand = { name: res.productRulePaperStockList[i].brand };
-            this.containers[i].allMadeIn = [{ name: res.productRulePaperStockList[i].madeIn }];
-            this.containers[i].madeIn = { name: res.productRulePaperStockList[i].madeIn };
-            this.containers[i].allDimension = [{ name: res.productRulePaperStockList[i].dimension }];
-            this.containers[i].dimension = { name: res.productRulePaperStockList[i].dimension };
-            let gsmArray = JSON.parse(res.productRulePaperStockList[i].gsm);
-            let gsmObjects = gsmArray.map((value: any) => ({ name: value }));
-            this.containers[i].allGsm = gsmObjects;
-            this.containers[i].gsm = gsmObjects;
-            debugger
-            this.pressMachineArray = [res.pressMachine]
-            this.press = res.pressMachine
-            this.ctpArray = [res.ctp.vendor]
-            this.pressVendor = res.ctp.vendor
-            this.dimensionArray = [{ name: res.ctp.plateDimension }]
-            this.plates = { name: res.ctp.plateDimension }
-            this.ctpVendors = [res.ctp]
-            this.plateVendor = res.ctp
-            debugger
-            //   const observables = [];
-            //   debugger
-            //   observables.push(this.getVendors(i, { name: res.productRulePaperStockList[i].paperStock }));
-            //   observables.push(this.getBrands(i, res.productRulePaperStockList[i].vendor));
-            //   observables.push(this.getMadeIn(i, { name: res.productRulePaperStockList[i].brand }));
-            //   observables.push(this.getDimensions(i, { name: res.productRulePaperStockList[i].madeIn }));
-            //   observables.push(this.getGsm(i, { name: res.productRulePaperStockList[i].dimension }));
-            //   forkJoin(observables).subscribe(
-            //     (responses: any[]) => {
-            //       debugger
-            //       console.log(responses);
-            //       let vendor = responses[i].find((el: any) => el.id === res.productRulePaperStockList[i].vendor.id);
-            //       const gsmArray = JSON.parse(res.productRulePaperStockList[i].gsm);
-            //       const gsmMatches = this.containers[i].allGsm.filter((gsm: any) => gsmArray.includes(gsm.name));
-            //       this.containers[i].vendor = vendor;
-            //       this.containers[i].gsm = gsmMatches;
-            // // // //       // this.press = this.pressMachineArray.find((el: any) => el.id === res.pressMachine.id);
-            // // // //       // this.ctpArray = [this.pressMachineArray.find((el: any) => el.id === res.pressMachine.id)]
-            // // // //       // this.pressVendor = this.ctpArray.find((el: any) => el.vendor.id === res.pressMachine.vendor.id);
-            // // // //       // this.plates = this.ctpArray.find((el: any) => el.id === res.pressMachine.id);
-            // // // //       // this.ctpVendors = [this.ctpVendors.find((el: any) => el.id === res.ctp.id)]
-            // // // //       // this.plateVendor = this.ctpVendors.find((el: any) => el.vendor.id === res.ctp.vendor.id);
-            //     },
-            //     (err) => {
-            //       console.log(err);
-            //     }
-            //   );
+          const observables = [];
+          const sizeArray = JSON.parse(res?.size);
+          const qtyArray = JSON.parse(res?.quantity);
+          const frontColors = JSON.parse(res?.jobColorFront);
+          const backColors = res?.jobColorBack ? JSON.parse(res?.jobColorBack) : null;
+          for (let i = 0; i < res?.productRulePaperStockList.length; i++) {
+            observables.push(this.getVendors(i, { name: res?.productRulePaperStockList[i].paperStock }));
+            observables.push(this.getBrands(i, res?.productRulePaperStockList[i].vendor));
+            observables.push(this.getMadeIn(i, { name: res?.productRulePaperStockList[i].brand }));
+            observables.push(this.getDimensions(i, { name: res?.productRulePaperStockList[i].madeIn }));
+            observables.push(this.getGsm(i, { name: res?.productRulePaperStockList[i].dimension }));
+            for (let index = 0; index < res?.productRulePaperStockList.length; index++) {
+              this.addContainer()
+              break
+            }
+            forkJoin(observables).subscribe(
+              (responses: any[]) => {
+
+                let vendor = this.containers[i]?.allVendor.find((el: any) => el.id === res?.productRulePaperStockList[i].vendor.id);
+                const gsmArray = JSON.parse(res?.productRulePaperStockList[i].gsm);
+                const gsmMatches = this.containers[i].allGsm.filter((gsm: any) => gsmArray.includes(gsm.name));
+                this.containers[i].vendor = vendor;
+                this.containers[i].gsm = gsmMatches;
+
+                this.upping = this.uppingArray?.filter((el: any) => sizeArray.includes(el.productSize));
+                this.qty = this.qtyArray?.productFieldValuesList.filter((el: any) => qtyArray.includes(el.name));
+
+                this.press = this.pressMachineArray.find((el: any) => {
+                  const machine = el.machines.find((machine: any) => machine.id === res?.pressMachine.id);
+                  return machine;
+                })
+                this.ctpArray = [res?.pressMachine.vendor]
+                this.pressVendor = res?.pressMachine.vendor
+                this.dimensionArray = [{ name: res?.ctp.plateDimension }]
+                this.plates = { name: res?.ctp.plateDimension }
+                this.ctpVendors = [res?.ctp]
+                this.plateVendor = res?.ctp
+
+                this.jobFront = this.frontColors.productFieldValuesList.filter((fColors: any) => frontColors.includes(fColors.name));
+                this.jobBack = this.backColors.productFieldValuesList.filter((bColors: any) => backColors ? backColors.includes(bColors.name) : null);
+                this.impositionValue = res?.impositionValue;
+              },
+              (err) => {
+                console.log(err);
+              }
+            );
+          }
+          if (this.containers.length > 0) {
+            this.containers.pop();
           }
         });
       }
@@ -153,8 +157,8 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   changePaper(i: any, value: any) {
-
     this.containers[i].paper = value;
+    this.cd.detectChanges();
     this.filteredPapers = this.containers[i].allPaper.filter((papers: any) => {
       return papers.name != value.name;
     });
@@ -164,7 +168,6 @@ export class AddProductRuleComponent implements OnInit {
       for (let index = i + 1; index < this.containers.length; index++) {
         this.pop();
       }
-
     }
 
     this.productRuleService.getProductRule('vendor', { paperStock: value.name }).subscribe((v: any) => {
@@ -183,7 +186,6 @@ export class AddProductRuleComponent implements OnInit {
 
 
   changeVendor(i: any, value: any) {
-
     this.containers[i].vendor = value;
     this.productRuleService.getProductRule('brand',
       {
@@ -203,7 +205,7 @@ export class AddProductRuleComponent implements OnInit {
 
   changeBrand(i: any, value: any) {
     console.log('changeBrand function called with index', i, 'and value', value);
-    debugger
+
     this.containers[i].brand = value;
     this.productRuleService.getProductRule('madein',
       {
@@ -245,7 +247,7 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   changeDimension(i: any, value: any) {
-    debugger
+
     this.containers[i].allGsm = null;
     this.containers[i].gsm = null;
     this.containers[i].dimension = value;
@@ -298,25 +300,25 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   getVendors(i: any, value: any): Observable<any> {
-    debugger
+
     return new Observable((observer) => {
 
       this.containers[i].paper = value;
-      this.filteredPapers = this.containers[i].allPaper.filter((papers: any) => {
+      this.filteredPapers = this.containers[i]?.allPaper?.filter((papers: any) => {
         return papers.name != value.name;
       });
 
-      if (i < this.containers.length - 1) {
-        for (let index = i + 1; index <= this.containers.length; index++) {
-          this.pop();
-        }
-      }
+      // if (i < this.containers.length - 1) {
+      //   for (let index = i + 1; index <= this.containers.length; index++) {
+      //     this.pop();
+      //   }
+      // }
 
       this.productRuleService.getProductRule('vendor', { paperStock: value.name }).subscribe(
         (v: any) => {
 
           let vendors = v.map((vend: any) => {
-            debugger
+
             return {
               name: vend.name,
               id: vend.id
@@ -449,7 +451,7 @@ export class AddProductRuleComponent implements OnInit {
     this.containers.splice(index, 1);
   }
   go(i: any) {
-    debugger
+
     if (i >= 0 && i < this.containers.length) {
       let obj = {
         paperStock: this.containers[i].paper.name,
@@ -514,7 +516,7 @@ export class AddProductRuleComponent implements OnInit {
     this.ctpService.getCtp().subscribe(res => {
       this.ctpVendors = res;
       if (!this.idFromQueryParam) {
-        debugger
+
         this.ctpVendors = [this.ctpVendors.find((el: any) => el.plateDimension === value?.name)]
       }
     }, error => {
@@ -524,10 +526,12 @@ export class AddProductRuleComponent implements OnInit {
 
   addProductRule() {
     debugger
-    const PressId = this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name)
+    const PressId = !this.idFromQueryParam ? this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name) : null
+    const updatePressId = this.press.machines.find((el: any) => el.vendor.name === this.pressVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
     const payload = {
       title: this.productName,
+      category: this.category.name,
       size: JSON.stringify(this.upping.map((uping: any) => (uping.productSize))),
       quantity: JSON.stringify(this.qty.map((qtys: any) => (qtys.name))),
       printSide: this.sideValue.name,
@@ -535,6 +539,7 @@ export class AddProductRuleComponent implements OnInit {
       jobColorBack: this.jobBack != null ? JSON.stringify(this.jobBack.map((color: any) => (color.name))) : null,
       impositionValue: this.impositionValue,
       productRulePaperStockList: this.containers.map((container: any) => ({
+        id: container.paper.id,
         paperStock: container.paper.name,
         brand: container.brand.name,
         madeIn: container.madeIn.name,
@@ -543,7 +548,7 @@ export class AddProductRuleComponent implements OnInit {
         vendor: { id: container.vendor.id },
       })),
       pressMachine: {
-        id: PressId.id
+        id: PressId ? PressId.id : updatePressId.id
       },
       ctp: {
         id: ctpId.id
@@ -579,7 +584,7 @@ export class AddProductRuleComponent implements OnInit {
         this.categoryArray = response.find((el: any) => el.name.toLowerCase() === 'Category'.toLowerCase());
         this.frontColors = response.find((el: any) => el.name.toLowerCase() === 'JobColor(Front)'.toLowerCase());
         this.backColors = response.find((el: any) => el.name.toLowerCase() === 'JobColor(Back)'.toLowerCase());
-        debugger
+
       },
       (error) => {
         console.error("Error:", error);
@@ -588,7 +593,7 @@ export class AddProductRuleComponent implements OnInit {
   }
   onChangeSide(value: any) {
     if (value.name === "DOUBLE_SIDED") {
-      debugger
+
       this.backNotApplied = true;
       this.imposition = true;
     } else {
@@ -597,20 +602,68 @@ export class AddProductRuleComponent implements OnInit {
     }
   }
   onCheck(value: any) {
-    debugger
     this.impositionValue = value;
   }
+
   onCategoryChange(value: any) {
     this.getUpping.getUping().subscribe(
       (response: any) => {
-        debugger
         this.uppingArray = response.filter((el: any) => el.category.toLowerCase() === value.name.toLowerCase());
+        this.uppingArray = this.uppingArray.map((el: any) => ({
+          productSize: `${"[" + el.productSize + "]"}, ${" [Inch : " + el.inch + "]"}, ${" [Mm : " + el.mm + "]"}`
+        }));
+        console.log(this.uppingArray);
       }, (error: any) => {
         console.log(error);
 
       });
   }
 
+  toggleEnabledDisabled(i: any, value: any) {
+
+    if (value.length === 0) {
+      this.containers[i].gsm = null;
+    } else {
+      this.containers[i].gsm = value
+      console.log(this.containers[i].gsm);
+    }
+  }
+
+  onUpingChange(value: any) {
+
+    if (value.length === 0) {
+      this.upping = null;
+    } else {
+      this.upping = value
+    }
+  }
+
+  onQtyChange(value: any) {
+
+    if (value.length === 0) {
+      this.qty = null;
+    } else {
+      this.qty = value
+    }
+  }
+
+  onFrontColorChange(value: any) {
+
+    if (value.length === 0) {
+      this.jobFront = null;
+    } else {
+      this.jobFront = value
+    }
+  }
+
+  onBackColorChange(value: any) {
+
+    if (value.length === 0) {
+      this.jobBack = null;
+    } else {
+      this.jobBack = value
+    }
+  }
 }
 export interface Container {
   paper?: any;

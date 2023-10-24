@@ -31,6 +31,22 @@ export class InventoryComponent implements OnInit {
       debugger
       this.inventoryService.searchInventory(inventory.value).subscribe(res => {
         this.inventoryArray = res
+        this.inventoryArray.forEach((element: any) => {
+          this.gsm.push(JSON.parse(element.availableGsm));
+          this.sizes.push(JSON.parse(element.availableSizes));
+          element.created_at = this.datePipe.transform(
+            element.created_at,
+            'EEEE, MMMM d, yyyy'
+          );
+
+          if (element.dateUpdated !== null) {
+            element.dateUpdated = this.datePipe.transform(
+              element.dateUpdated,
+              'EEEE, MMMM d, yyyy'
+            );
+          }
+        });
+        this.inventoryArray.length == 0 ? this.tableData = true : this.tableData = false
       }, error => {
         this.showError(error);
         this.visible = true
@@ -41,7 +57,6 @@ export class InventoryComponent implements OnInit {
   getInventory() {
     this.inventoryService.getInventory().subscribe((res) => {
       this.inventoryArray = res;
-      console.log(this.inventoryArray[0].oldRate);
       this.inventoryArray.forEach((element: any) => {
         this.gsm.push(JSON.parse(element.availableGsm));
         this.sizes.push(JSON.parse(element.availableSizes));

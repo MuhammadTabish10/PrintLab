@@ -1,4 +1,4 @@
-import { Component,Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DashboardService } from 'src/app/services/dashboard.service';
 
 @Component({
@@ -7,21 +7,26 @@ import { DashboardService } from 'src/app/services/dashboard.service';
   styleUrls: ['./dashboard-cards.component.css']
 })
 export class DashboardCardsComponent implements OnInit {
-  
-countCustomers: any;
-countOrders: any;
-countVendors: any;
-countProducts: any;
 
-jsonData: any;
+  countCustomers: any;
+  countOrders: any;
+  countVendors: any;
+  countProducts: any;
+  targetOrderCount: number = 1000;
+  jsonData: any;
 
 
-constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService) { }
 
-ngOnInit() {
-  this.dashboardService.getAnalaytics().subscribe((data: any) => {
-    this.jsonData = data;
-  });
-}
-
+  ngOnInit() {
+    this.dashboardService.getAnalaytics().subscribe((data: any) => {
+      this.jsonData = data;
+    });
+  }
+  calculatePercentage(currentValue: number, referenceValue: number): number {
+    if (referenceValue === 0) {
+      return 0;
+    }
+    return (currentValue / referenceValue) * 100;
+  }
 }

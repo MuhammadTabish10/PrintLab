@@ -92,6 +92,7 @@ export class AddOrderComponent implements OnInit {
         this.impositionValue = false
       }
     }
+    debugger
     let obj = {
       pressMachineId: this.machineId,
       productValue: this.productName,
@@ -165,7 +166,13 @@ debugger
   }
 
   toggleFields(title: any) {
+    debugger
     this.cdr.detectChanges();
+    if (!title) {
+      const notFoundError = "This Product is no longer available check your product rules.";
+      this.notFoundError(notFoundError);
+    }
+    
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
     debugger
@@ -329,5 +336,8 @@ debugger
   }
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+  notFoundError(error: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
   }
 }

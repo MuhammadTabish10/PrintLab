@@ -12,7 +12,7 @@
           type="text"
           placeholder="Search by PaperStock"
           [(ngModel)]="search"
-          (keyup)="searchPaperStock($event.target)"
+          (input)="searchPaperStock($event.target)"
           class="order-search form-control"
         />
         <div>

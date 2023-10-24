@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { PaperStockService } from 'src/app/services/paper-stock.service';
 
 @Component({
@@ -7,104 +8,85 @@ import { PaperStockService } from 'src/app/services/paper-stock.service';
   templateUrl: './add-paper-stock.component.html',
   styleUrls: ['./add-paper-stock.component.css']
 })
-export class AddPaperStockComponent {
+export class AddPaperStockComponent implements OnInit {
+  buttonName: string = 'Add';
+  allBrands: any[] = [];
+  selectedBrands: any[] = [];
+  paperStock: string = '';
+  idFromQueryParam: number | null = null;
+  selectedBrandsForEdit: any[] = [];
+  selectedBrandsForEdit1: any[] = [];
 
-  buttonName: any = 'Add'
-  allBrands: any = []
-  selectedBrands: any = []
-  paperStock: any;
-  idFromQueryParam: any;
-  selectedBrandsForEdit: any = []
-  selectedBrandsForEdit1: any = []
-  selectedTitle: any;
+  constructor(
+    private paperStockService: PaperStockService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
-  constructor(private paperStockService: PaperStockService, private router: Router, private route: ActivatedRoute) { }
-
-  ngOnInit(): any {
-    this.getBrands()
-    this.route.queryParams.subscribe(param => {
-      this.idFromQueryParam = +param['id']
-    })
-
-    if (Number.isNaN(this.idFromQueryParam)) {
-      this.buttonName = 'Add'
-    } else {
-      this.buttonName = 'Update'
-
-      this.getPaperStockById(this.idFromQueryParam)
-    }
-  }
-
-  getBrands() {
-    this.paperStockService.getBrandsByName().subscribe((res: any) => {
-      this.allBrands = res.productFieldValuesList
-
-    })
-  }
-
-  getPaperStockById(id: any) {
-    this.paperStockService.getById(id).subscribe((res: any) => {
-      this.getBrands()
-      this.selectedBrandsForEdit = res.brands
-
-      this.selectedBrandsForEdit.forEach((selectedBrandName: any) => {
-        this.selectedBrandsForEdit1.push(this.allBrands.find((el: any) => el.name.toLowerCase() == selectedBrandName.name.toLowerCase()))
+  ngOnInit(): void {
+    this.getBrands().subscribe((res: any) => {
+      this.allBrands = res.productFieldValuesList;
+      this.route.queryParams.subscribe((param) => {
+        this.idFromQueryParam = +param['id'];
+        this.buttonName = this.idFromQueryParam ? 'Update' : 'Add';
+        if (this.idFromQueryParam) {
+          this.getPaperStockById(this.idFromQueryParam);
+        }
       });
+    });
+  }
 
-      this.selectedBrands = this.selectedBrandsForEdit
+  getBrands(): Observable<any> {
+    return this.paperStockService.getBrandsByName();
+  }
 
-      this.paperStock = res.name
-    })
+  getPaperStockById(id: number) {
+    this.paperStockService.getById(id).subscribe(
+      (res: any) => {
+        this.selectedBrandsForEdit = res.brands;
+        this.selectedBrandsForEdit1 = this.selectedBrandsForEdit.map((selectedBrandName) =>
+          this.allBrands.find((el) => el.name.toLowerCase() === selectedBrandName.name.toLowerCase())
+        );
+        this.selectedBrands = this.selectedBrandsForEdit;
+        this.paperStock = res.name;
+      },
+      (error) => {
+        // Handle error
+      }
+    );
   }
 
   brandsChanged(event: any) {
-
-    this.selectedBrands = []; // Ensure the array is empty before adding objects
-
-    if (this.idFromQueryParam) {
-      event.value.forEach((element: any) => {
-        let obj = {
-          name: element.name,
-          id: element.id
-        };
-
-        this.selectedBrands.push(obj);
-      });
-    } else {
-
-      event.value.forEach((element: any) => {
-        let obj = {
-          name: element.name
-        };
-
-        this.selectedBrands.push(obj);
-      });
-    }
-
-
+    this.selectedBrands = event.value.map((element:any) => {
+      return this.idFromQueryParam ? { name: element.name, id: element.id } : { name: element.name };
+    });
   }
 
-
   addPaperStock() {
-
+    this.paperStock = this.paperStock.replace(/\s+/g, '_');
     const payload = {
-      name: this.paperStock,
+      name: this.paperStock.toUpperCase(),
       brands: this.selectedBrands
     };
 
-
     if (this.idFromQueryParam) {
-      this.paperStockService.updatePaperStock(this.idFromQueryParam, payload).subscribe((res: any) => {
-        this.router.navigateByUrl('/paperStock')
-      })
+      this.paperStockService.updatePaperStock(this.idFromQueryParam, payload).subscribe(
+        (res: any) => {
+          this.router.navigateByUrl('/paperStock');
+        },
+        (error) => {
+          // Handle error
+        }
+      );
     } else {
-
-      this.paperStockService.addPaperStock(payload).subscribe((res: any) => {
-        this.router.navigateByUrl('/paperStock')
-
-      })
+      this.paperStockService.addPaperStock(payload).subscribe(
+        (res: any) => {
+          this.router.navigateByUrl('/paperStock');
+        },
+        (error) => {
+          // Handle error
+        }
+      );
     }
-
   }
-
 }

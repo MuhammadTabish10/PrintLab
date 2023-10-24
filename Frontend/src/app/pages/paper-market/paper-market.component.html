@@ -9,7 +9,7 @@
     <div class="order-body">
       <div class="order-search-panel">
         <input type="text" placeholder="Search by Paper Stock" class="order-search form-control" [(ngModel)]="search"
-          (keyup)="searchPaperMarket($event.target)">
+          (input)="searchPaperMarket($event.target)">
         <div>
           <button type="button" class="btn order-table-btn btn-search-panel" routerLink="/addPaperMarket">
             <i class="fa-solid fa-plus"></i>&nbsp;Add
@@ -40,7 +40,7 @@
               <td class="order-table-404" colspan="11" *ngIf="tableData">No record
                 found</td>
             </tr>
-            <tr *ngFor="let element of paperMarketArray">
+            <tr *ngFor="let element of paperMarketArray; trackBy: trackByElementId">
               <td class="text-lg-center">{{element.timeStamp}}</td>
               <td class="text-lg-center">{{element.paperStock}}</td>
               <td class="text-lg-center">{{element.brand}}</td>

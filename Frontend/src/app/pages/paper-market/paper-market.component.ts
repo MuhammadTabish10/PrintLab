@@ -15,6 +15,7 @@ export class PaperMarketComponent implements OnInit {
   paperMarketArray: any = []
   tableData: Boolean = false
   search: string = ''
+  dimensionValueToShow: any;
 
   constructor(private paperMarketService: PaperMarketService, private router: Router, private datePipe: DatePipe,private messageService: MessageService) { }
 
@@ -26,12 +27,13 @@ export class PaperMarketComponent implements OnInit {
     this.paperMarketService.getPaperMarket().subscribe(res => {
       this.paperMarketArray = res;
       this.paperMarketArray.forEach((el: any) => {
-
         const dateArray = el.timeStamp;
         el.timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
         el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
         el.ratePkr = Math.round(el.ratePkr * 100) / 100;
         el.kg = Math.round(el.kg * 100) / 100;
+        const parts = el.dimension.split('x');
+        el.dimension = parts.join(' x ');
       });
       this.paperMarketArray.length == 0 ? this.tableData = true : this.tableData = false;
     }, error => {
@@ -56,13 +58,15 @@ export class PaperMarketComponent implements OnInit {
   }
 
   searchPaperMarket(paperStockName: any) {
-    if (this.search == '') {
+    const searchTerm = paperStockName.value.trim().toLowerCase();
+    const searchWithUnderscores = searchTerm.replace(/\s+/g, '_');
+    debugger
+    if (!searchTerm) {
       this.getPaperMarketRates()
     } else {
-      this.paperMarketService.searchPaperMarket(paperStockName.value).subscribe(res => {
+      this.paperMarketService.searchPaperMarket(searchWithUnderscores).subscribe(res => {
         this.paperMarketArray = res
         this.paperMarketArray.forEach((el: any) => {
-          debugger
           const dateArray = el.timeStamp;
           el.timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
           el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
@@ -76,6 +80,11 @@ export class PaperMarketComponent implements OnInit {
       })
     }
   }
+  
+  trackByElementId(index: number, element: any): number {
+    return element.id;
+  }
+  
   showError(error:any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }

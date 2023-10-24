@@ -16,6 +16,7 @@ import java.util.List;
 public class ProductRuleDto {
     private Long id;
     private String title;
+    private String category;
     private String printSide;
     private String jobColorFront;
     private String jobColorBack;

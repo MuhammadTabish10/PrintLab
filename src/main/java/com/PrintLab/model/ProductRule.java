@@ -19,6 +19,7 @@ public class ProductRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    private String category;
     private String printSide;
     private String jobColorFront;
     private String jobColorBack;

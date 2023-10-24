@@ -21,14 +21,14 @@ export class DashboardChartPieComponent implements OnInit {
         // console.log(response[Order-Count]);
         
         this.data = {
-            labels: ['Order-Count','Product-Count', 'Vendor-Count', 'Customer-Count'],
+            labels: ['OrderCount','ProductCount', 'VendorCount', 'CustomerCount'],
             
             datasets: [
                 {
-                    data: [(response as any)['Order-Count'],
-                    (response as any)['Product-Count'],
-                    (response as any)['Vendor-Count'],
-                    (response as any)['Customer-Count']],
+                    data: [(response as any)['orderCount'],
+                    (response as any)['productCount'],
+                    (response as any)['vendorCount'],
+                    (response as any)['customerCount']],
                     backgroundColor: [documentStyle.getPropertyValue('--blue-500'), documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500'),  documentStyle.getPropertyValue('--orange-500')],
                     hoverBackgroundColor: [documentStyle.getPropertyValue('--blue-400'), documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400'), documentStyle.getPropertyValue('--orange-400')]
                 }

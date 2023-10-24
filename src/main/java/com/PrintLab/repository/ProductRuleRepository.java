@@ -17,4 +17,7 @@ public interface ProductRuleRepository extends JpaRepository<ProductRule,Long> {
 
     ProductRule findByTitle(String title);
 
+    @Query("Select count(*) FROM ProductRule")
+    Long getAllProductCount();
+
 }

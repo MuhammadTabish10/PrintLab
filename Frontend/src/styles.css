@@ -3278,7 +3278,7 @@ textarea.form-control.is-valid {
 
 .form-check-input.is-valid:checked,
 .was-validated .form-check-input:valid:checked {
-    background-color: var(--bs-form-valid-color)
+    background-color: var(--bs-primary)
 }
 
 .form-check-input.is-valid:focus,

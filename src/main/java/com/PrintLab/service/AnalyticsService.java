@@ -9,4 +9,5 @@ public interface AnalyticsService {
 
     public Map<String, Long> count();
 
+
 }

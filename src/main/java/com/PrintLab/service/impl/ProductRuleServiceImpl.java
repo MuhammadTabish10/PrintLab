@@ -107,6 +107,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         if (optionalProductRule.isPresent()) {
             ProductRule existingProductRule = optionalProductRule.get();
             existingProductRule.setTitle(productRule.getTitle());
+            existingProductRule.setCategory(productRule.getCategory());
             existingProductRule.setPrintSide(productRule.getPrintSide());
             existingProductRule.setJobColorFront(productRule.getJobColorFront());
             existingProductRule.setJobColorBack(productRule.getJobColorBack());
@@ -194,6 +195,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         return ProductRuleDto.builder()
                 .id(productRule.getId())
                 .title(productRule.getTitle())
+                .category(productRule.getCategory())
                 .printSide(productRule.getPrintSide())
                 .jobColorBack(productRule.getJobColorBack())
                 .jobColorFront(productRule.getJobColorFront())
@@ -229,6 +231,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         return ProductRule.builder()
                 .id(productRuleDto.getId())
                 .title(productRuleDto.getTitle())
+                .category(productRuleDto.getCategory())
                 .printSide(productRuleDto.getPrintSide())
                 .jobColorBack(productRuleDto.getJobColorBack())
                 .jobColorFront(productRuleDto.getJobColorFront())
