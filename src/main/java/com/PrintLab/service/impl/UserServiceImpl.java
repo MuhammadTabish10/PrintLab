@@ -4,6 +4,7 @@ import com.PrintLab.dto.UserDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Role;
 import com.PrintLab.model.User;
+import com.PrintLab.model.Vendor;
 import com.PrintLab.repository.RoleRepository;
 import com.PrintLab.repository.UserRepository;
 import com.PrintLab.service.UserService;
@@ -87,6 +88,19 @@ public class UserServiceImpl implements UserService {
             User updatedUser = userRepository.save(existingUser);
             return toDto(updatedUser);
         } else {
+            throw new RecordNotFoundException(String.format("User not found for id => %d", id));
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            userRepository.setStatusInactive(id);
+        }
+        else{
             throw new RecordNotFoundException(String.format("User not found for id => %d", id));
         }
     }
