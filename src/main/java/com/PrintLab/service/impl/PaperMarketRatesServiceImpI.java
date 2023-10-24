@@ -9,10 +9,17 @@ import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -22,10 +29,12 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 {
     private final PaperMarketRatesRepository paperMarketRatesRepository;
     private final VendorRepository vendorRepository;
+    private final EntityManager entityManager;
 
-    public PaperMarketRatesServiceImpI(PaperMarketRatesRepository paperMarketRatesRepository, VendorRepository vendorRepository) {
+    public PaperMarketRatesServiceImpI(PaperMarketRatesRepository paperMarketRatesRepository, VendorRepository vendorRepository, EntityManager entityManager) {
         this.paperMarketRatesRepository = paperMarketRatesRepository;
         this.vendorRepository = vendorRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -71,6 +80,105 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             paperMarketRatesDtoList.add(paperMarketRatesDto);
         }
         return paperMarketRatesDtoList;
+    }
+
+    @Override
+    public PaginationResponse getPaperMarketRatesBySearchCriteria(Integer pageNumber, Integer pageSize, PaperMarketRatesDto searchCriteria) {
+
+        Pageable page = PageRequest.of(pageNumber,pageSize);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<PaperMarketRates> cq = criteriaBuilder.createQuery(PaperMarketRates.class);
+        Root<PaperMarketRates> paperMarketRatesRoot = cq.from(PaperMarketRates.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (searchCriteria.getTimeStamp() != null) {
+            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("timeStamp"), searchCriteria.getTimeStamp()));
+        }
+        if (searchCriteria.getPaperStock() != null) {
+            predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("paperStock"), searchCriteria.getPaperStock()));
+        }
+        if (searchCriteria.getBrand() != null) {
+            predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("brand"), searchCriteria.getBrand()));
+        }
+
+        if (searchCriteria.getMadeIn() != null) {
+            predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("madeIn"), searchCriteria.getMadeIn()));
+        }
+
+        if (searchCriteria.getGSM() != null) {
+            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("GSM"), searchCriteria.getGSM()));
+        }
+
+        if (searchCriteria.getLength() != null) {
+            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("length"), searchCriteria.getLength()));
+        }
+
+        if (searchCriteria.getWidth() != null) {
+            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("width"), searchCriteria.getWidth()));
+        }
+
+        if (searchCriteria.getDimension() != null) {
+            predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("dimension"), searchCriteria.getDimension()));
+        }
+
+        if (searchCriteria.getQty() != null) {
+            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("qty"), searchCriteria.getQty()));
+        }
+
+        if (searchCriteria.getKg() != null) {
+            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("kg"), searchCriteria.getKg()));
+        }
+
+        if (searchCriteria.getRecordType() != null) {
+            predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("recordType"), searchCriteria.getRecordType()));
+        }
+
+        if (searchCriteria.getRatePkr() != null) {
+            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("ratePkr"), searchCriteria.getRatePkr()));
+        }
+
+        if (searchCriteria.getVerified() != null) {
+            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("verified"), searchCriteria.getVerified()));
+        }
+
+        if (searchCriteria.getNotes() != null) {
+            predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("notes"), searchCriteria.getNotes()));
+        }
+
+        if (searchCriteria.getStatus() != null) {
+            predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("status"), searchCriteria.getStatus()));
+        }
+
+        if (searchCriteria.getVendor() != null) {
+            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("vendor"), searchCriteria.getVendor()));
+        }
+
+        cq.where(predicates.toArray(new Predicate[0]));
+        TypedQuery<PaperMarketRates> query = entityManager.createQuery(cq);
+
+        int firstResult = pageNumber * pageSize;
+        query.setFirstResult(firstResult);
+        query.setMaxResults(pageSize);
+
+        List<PaperMarketRates> resultList = query.getResultList();
+
+        // Count total elements for pagination
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        countQuery.select(criteriaBuilder.count(countQuery.from(PaperMarketRates.class)));
+        countQuery.where(predicates.toArray(new Predicate[0]));
+        Long totalElements = entityManager.createQuery(countQuery).getSingleResult();
+
+        // Create a PaginationResponse object and set its properties
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(resultList);
+        paginationResponse.setPageNumber(pageNumber);
+        paginationResponse.setPageSize(pageSize);
+        paginationResponse.setTotalElements(totalElements.intValue());
+        paginationResponse.setTotalPages((int) Math.ceil((double) totalElements / pageSize));
+        paginationResponse.setLastPage(pageNumber >= (Math.ceil((double) totalElements / pageSize) - 1));
+
+        return paginationResponse;
     }
 
 

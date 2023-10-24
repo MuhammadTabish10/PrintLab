@@ -4,7 +4,9 @@ import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.dto.PaperMarketRatesSpecDto;
 import com.PrintLab.dto.PaperMarketRequestBody;
+import com.PrintLab.model.PaperMarketRates;
 import com.PrintLab.service.PaperMarketRatesService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -133,5 +135,15 @@ public class PaperMarketRatesController
                         paperMarketRatesSpecDto.getMadeIn(), paperMarketRatesSpecDto.getDimension(),
                         paperMarketRatesSpecDto.getGsm());
         return ResponseEntity.ok(paperMarketRatesDto);
+    }
+
+    @PostMapping("/paper-market-rates/search")
+    public ResponseEntity<PaginationResponse> search(
+            @RequestParam(value = "page-number", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "page-size", defaultValue = "15", required = false) Integer pageSize,
+            @RequestBody PaperMarketRatesDto paperMarketRatesDto)
+    {
+        PaginationResponse paginationResponse = marketRatesService.getPaperMarketRatesBySearchCriteria(pageNumber, pageSize, paperMarketRatesDto);
+        return ResponseEntity.ok(paginationResponse);
     }
 }

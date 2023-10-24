@@ -2,6 +2,7 @@ package com.PrintLab.service;
 
 import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.PaperMarketRatesDto;
+import com.PrintLab.model.PaperMarketRates;
 import com.PrintLab.model.Vendor;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public interface PaperMarketRatesService
     PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto);
     PaginationResponse getAllPaginatedPaperMarketRates(Integer pageNumber, Integer pageSize);
     List<PaperMarketRatesDto> getAll();
+    PaginationResponse getPaperMarketRatesBySearchCriteria(Integer pageNumber, Integer pageSize, PaperMarketRatesDto searchCriteria);
     Set<String> findDistinctPaperStocks();
     Set<Vendor> findDistinctVendorsByPaperStock(String paperStock);
     Set<String> findDistinctBrandsByPaperStockAndVendor(String paperStock, Vendor vendor);
