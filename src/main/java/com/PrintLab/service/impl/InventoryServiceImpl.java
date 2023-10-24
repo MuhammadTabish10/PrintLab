@@ -74,6 +74,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long id) {
         Optional<Inventory> optionalInventory = inventoryRepository.findById(id);
 
@@ -87,6 +88,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Transactional
     public InventoryDto updateInventory(Long id, InventoryDto inventoryDto) {
         Optional<Inventory> optionalInventory = inventoryRepository.findById(id);
         if (optionalInventory.isPresent()) {

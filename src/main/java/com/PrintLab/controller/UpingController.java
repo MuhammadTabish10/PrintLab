@@ -1,7 +1,7 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.UpingDto;
-import com.PrintLab.dto.VendorDto;
 import com.PrintLab.service.UpingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +29,16 @@ public class UpingController
     public ResponseEntity<List<UpingDto>> getAllUping() {
         List<UpingDto> upingDtoList = upingService.getAll();
         return ResponseEntity.ok(upingDtoList);
+    }
+
+    @GetMapping("/page")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<PaginationResponse> getAllPaginatedUping(
+            @RequestParam(value = "page-number", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "page-size", defaultValue = "15", required = false) Integer pageSize
+    ) {
+        PaginationResponse paginationResponse = upingService.getAllPaginatedUping(pageNumber, pageSize);
+        return ResponseEntity.ok(paginationResponse);
     }
 
     @GetMapping("/{id}")

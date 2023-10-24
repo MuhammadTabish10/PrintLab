@@ -141,6 +141,7 @@ public class PressMachineServiceImpl implements PressMachineService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long id) {
         Optional<PressMachine> optionalPressMachine = pressMachineRepository.findById(id);
 

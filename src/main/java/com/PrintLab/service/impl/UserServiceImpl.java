@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User registerUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setStatus(true);
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        List<User> userList = userRepository.findAll();
+        List<User> userList = userRepository.findAllByStatusIsTrue();
         List<UserDto> userDtoList = new ArrayList<>();
 
         for (User user : userList) {

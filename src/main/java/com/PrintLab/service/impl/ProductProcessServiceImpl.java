@@ -7,6 +7,7 @@ import com.PrintLab.repository.ProductProcessRepository;
 import com.PrintLab.service.ProductProcessService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class ProductProcessServiceImpl implements ProductProcessService
     }
 
     @Override
+    @Transactional
     public ProductProcessDto save(ProductProcessDto productProcessDto) {
         ProductProcess productProcess = productProcessRepository.save(toEntity(productProcessDto));
         return toDto(productProcess);
@@ -77,6 +79,7 @@ public class ProductProcessServiceImpl implements ProductProcessService
     }
 
     @Override
+    @Transactional
     public String deleteById(Long id) {
         Optional<ProductProcess> optionalProductProcess = productProcessRepository.findById(id);
 
@@ -91,6 +94,7 @@ public class ProductProcessServiceImpl implements ProductProcessService
     }
 
     @Override
+    @Transactional
     public ProductProcessDto updateProductProcess(Long id, ProductProcess productProcess) {
         Optional<ProductProcess> optionalProductProcess = productProcessRepository.findById(id);
         if(optionalProductProcess.isPresent()){

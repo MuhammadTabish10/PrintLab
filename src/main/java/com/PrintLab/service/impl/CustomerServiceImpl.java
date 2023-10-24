@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public CustomerDto save(CustomerDto customerDto) {
         customerDto.setStatus("Active");
         Customer saved = customerRepository.save(toEntity(customerDto));
@@ -58,6 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long id) {
         Optional<Customer> deleteCustomer = customerRepository.findById(id);
         if(deleteCustomer.isPresent()) {
@@ -70,6 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public CustomerDto updateCustomer(Long id, Customer customer) {
         Optional<Customer> updateCustomer = customerRepository.findById(id);
         if(updateCustomer.isPresent()){

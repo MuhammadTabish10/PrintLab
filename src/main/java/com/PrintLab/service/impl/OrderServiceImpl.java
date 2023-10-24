@@ -9,6 +9,7 @@ import com.PrintLab.repository.OrderRepository;
 import com.PrintLab.service.OrderService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
+    @Transactional
     public OrderDto save(OrderDto orderDto) {
         if(orderDto.getSideOptionValue() == null){
             orderDto.setSideOptionValue("SINGLE_SIDED");
@@ -92,6 +94,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long id) {
         Optional<Order> optionalOrder = orderRepository.findById(id);
 
@@ -105,6 +108,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto updateOrder(Long id, OrderDto orderDto) {
         Optional<Order> optionalOrder = orderRepository.findById(id);
         if (optionalOrder.isPresent()) {

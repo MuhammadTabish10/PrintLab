@@ -7,6 +7,7 @@ import com.PrintLab.repository.SettingRepository;
 import com.PrintLab.service.SettingService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class SettingServiceImpl implements SettingService
     }
 
     @Override
+    @Transactional
     public SettingDto save(SettingDto settingDto) {
         Setting setting = settingRepository.save(toEntity(settingDto));
         return toDto(setting);
@@ -76,6 +78,7 @@ public class SettingServiceImpl implements SettingService
     }
 
     @Override
+    @Transactional
     public String deleteById(Long id) {
         Optional<Setting> optionalSetting = settingRepository.findById(id);
 
@@ -89,6 +92,7 @@ public class SettingServiceImpl implements SettingService
     }
 
     @Override
+    @Transactional
     public SettingDto updateSetting(Long id, SettingDto settingDto) {
         Optional<Setting> optionalSetting = settingRepository.findById(id);
         if (optionalSetting.isPresent()) {

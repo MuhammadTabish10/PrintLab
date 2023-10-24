@@ -1,5 +1,7 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.PaginationResponse;
+import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.dto.UpingPaperSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
@@ -8,6 +10,9 @@ import com.PrintLab.repository.PaperSizeRepository;
 import com.PrintLab.repository.UpingPaperSizeRepository;
 import com.PrintLab.repository.UpingRepository;
 import com.PrintLab.service.UpingService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -54,7 +59,7 @@ public class UpingServiceImpl implements UpingService {
 
     @Override
     public List<UpingDto> getAll() {
-        List<Uping> upingList = upingRepository.findAll();
+        List<Uping> upingList = upingRepository.findAllByStatusIsTrue();
         List<UpingDto> upingDtoList = new ArrayList<>();
 
         for (Uping uping : upingList) {
@@ -62,6 +67,29 @@ public class UpingServiceImpl implements UpingService {
             upingDtoList.add(upingDto);
         }
         return upingDtoList;
+    }
+
+    @Override
+    public PaginationResponse getAllPaginatedUping(Integer pageNumber, Integer pageSize) {
+        Pageable page = PageRequest.of(pageNumber,pageSize);
+        Page<Uping> pageUping = upingRepository.findAllByStatusIsTrue(page);
+        List<Uping> upingList = pageUping.getContent();
+
+        List<UpingDto> upingDtoList = new ArrayList<>();
+        for (Uping uping : upingList) {
+            UpingDto upingDto = toDto(uping);
+            upingDtoList.add(upingDto);
+        }
+
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(upingDtoList);
+        paginationResponse.setPageNumber(pageUping.getNumber());
+        paginationResponse.setPageSize(pageUping.getSize());
+        paginationResponse.setTotalElements(pageUping.getNumberOfElements());
+        paginationResponse.setTotalPages(pageUping.getTotalPages());
+        paginationResponse.setLastPage(pageUping.isLast());
+
+        return paginationResponse;
     }
 
     @Override

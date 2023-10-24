@@ -48,7 +48,7 @@ public class PaperStockServiceImpl implements PaperStockService {
 
     @Override
     public List<PaperStockDto> getAll() {
-        List<PaperStock> paperStockList = paperStockRepository.findAll();
+        List<PaperStock> paperStockList = paperStockRepository.findAllByStatusIsTrue();
         List<PaperStockDto> paperStockDtoList = new ArrayList<>();
 
         for (PaperStock paperStock : paperStockList) {

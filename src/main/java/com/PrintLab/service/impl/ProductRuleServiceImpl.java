@@ -67,7 +67,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public List<ProductRuleDto> getAllProductRule() {
-        List<ProductRule> productRuleList = productRuleRepository.findAll();
+        List<ProductRule> productRuleList = productRuleRepository.findAllByStatusIsTrue();
         List<ProductRuleDto> productRuleDtoList = new ArrayList<>();
 
         for (ProductRule productRule : productRuleList) {
@@ -167,6 +167,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         Optional<ProductRule> optionalProductRule = productRuleRepository.findById(id);
 

@@ -53,7 +53,7 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public List<VendorDto> getAll() {
-        List<Vendor> vendorList = vendorRepository.findAll();
+        List<Vendor> vendorList = vendorRepository.findAllByStatusIsTrue();
         List<VendorDto> vendorDtoList = new ArrayList<>();
 
         for (Vendor vendor : vendorList) {

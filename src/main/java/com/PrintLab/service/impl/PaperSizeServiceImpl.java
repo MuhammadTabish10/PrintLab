@@ -7,6 +7,7 @@ import com.PrintLab.repository.PaperSizeRepository;
 import com.PrintLab.service.PaperSizeService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class PaperSizeServiceImpl implements PaperSizeService {
     }
 
     @Override
+    @Transactional
     public PaperSizeDto save(PaperSizeDto paperSizeDto) {
         PaperSize paperSize = paperSizeRepository.save(toEntity(paperSizeDto));
         return toDto(paperSize);
@@ -74,6 +76,7 @@ public class PaperSizeServiceImpl implements PaperSizeService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long id) {
         Optional<PaperSize> optionalPaperSize = paperSizeRepository.findById(id);
 
@@ -87,6 +90,7 @@ public class PaperSizeServiceImpl implements PaperSizeService {
     }
 
     @Override
+    @Transactional
     public PaperSizeDto updatePaperSize(Long id, PaperSizeDto paperSizeDto) {
         Optional<PaperSize> optionalPaperSize = paperSizeRepository.findById(id);
         if (optionalPaperSize.isPresent()) {

@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -28,6 +29,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
+    @Transactional
     public PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto) {
         paperMarketRatesDto.setRecordType("manual");
         PaperMarketRates paperMarketRates = toEntity(paperMarketRatesDto);
@@ -188,6 +190,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
+    @Transactional
     public String deleteById(Long id) {
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);
 
@@ -202,6 +205,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
+    @Transactional
     public PaperMarketRatesDto updatePaperMarketRates(Long id, PaperMarketRatesDto paperMarketRatesDto) {
         PaperMarketRates paperMarketRates = toEntity(paperMarketRatesDto);
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);

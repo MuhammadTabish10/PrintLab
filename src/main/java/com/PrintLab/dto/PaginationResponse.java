@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class PaginationResponse {
-    private List<PaperMarketRatesDto> content;
+    private List<?> content;
     private Integer pageNumber;
     private Integer pageSize;
     private Integer totalElements;

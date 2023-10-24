@@ -25,6 +25,7 @@ public class CtpServiceImpl implements CtpService {
     }
 
     @Override
+    @Transactional
     public CtpDto save(CtpDto ctpDto) {
         ctpDto.setStatus(true);
         Ctp ctp = ctpRepository.save(toEntity(ctpDto));
@@ -33,7 +34,7 @@ public class CtpServiceImpl implements CtpService {
 
     @Override
     public List<CtpDto> getAll() {
-        List<Ctp> ctpList = ctpRepository.findAll();
+        List<Ctp> ctpList = ctpRepository.findAllByStatusIsTrue();
         List<CtpDto> ctpDtoList = new ArrayList<>();
 
         for (Ctp ctp : ctpList) {
