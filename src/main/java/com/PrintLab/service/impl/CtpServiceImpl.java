@@ -8,6 +8,7 @@ import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.CtpService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class CtpServiceImpl implements CtpService {
 
     @Override
     public CtpDto save(CtpDto ctpDto) {
+        ctpDto.setStatus(true);
         Ctp ctp = ctpRepository.save(toEntity(ctpDto));
         return toDto(ctp);
     }
@@ -53,19 +55,21 @@ public class CtpServiceImpl implements CtpService {
         }
     }
 
+    @Transactional
     @Override
     public String deleteById(Long id) {
         Optional<Ctp> optionalCtp = ctpRepository.findById(id);
 
         if (optionalCtp.isPresent()) {
             Ctp ctp = optionalCtp.get();
-            ctpRepository.deleteById(id);
+            ctpRepository.setStatusInactive(id);
         } else {
             throw new RecordNotFoundException(String.format("Ctp not found for id => %d", id));
         }
         return null;
     }
 
+    @Transactional
     @Override
     public CtpDto update(Long id, CtpDto ctpDto) {
         Optional<Ctp> optionalCtp = ctpRepository.findById(id);
@@ -95,6 +99,7 @@ public class CtpServiceImpl implements CtpService {
                 .l2(ctp.getL2())
                 .plateDimension(ctp.getPlateDimension())
                 .rate(ctp.getRate())
+                .status(ctp.getStatus())
                 .vendor(vendorRepository.findById(ctp.getVendor().getId())
                         .orElseThrow(()-> new RecordNotFoundException("Vendor not found")))
                 .build();
@@ -108,6 +113,7 @@ public class CtpServiceImpl implements CtpService {
                 .l2(ctpDto.getL2())
                 .plateDimension(ctpDto.getPlateDimension())
                 .rate(ctpDto.getRate())
+                .status(ctpDto.getStatus())
                 .vendor(vendorRepository.findById(ctpDto.getVendor().getId())
                         .orElseThrow(()-> new RecordNotFoundException("Vendor not found")))
                 .build();

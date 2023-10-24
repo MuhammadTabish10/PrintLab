@@ -33,6 +33,7 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public VendorDto save(VendorDto vendorDto) {
         Vendor vendor = toEntity(vendorDto);
+        vendor.setStatus(true);
         Vendor createdVendor = vendorRepository.save(vendor);
 
         List<VendorProcess> vendorProcessList = vendor.getVendorProcessList();
@@ -123,12 +124,13 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long id) {
         Optional<Vendor> optionalVendor = vendorRepository.findById(id);
 
         if(optionalVendor.isPresent()) {
             Vendor vendor = optionalVendor.get();
-            vendorRepository.deleteById(id);
+            vendorRepository.setStatusInactive(id);
         }
         else{
             throw new RecordNotFoundException(String.format("Vendor not found for id => %d", id));
@@ -137,6 +139,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
+    @Transactional
     public VendorDto updateVendor(Long id, VendorDto vendorDto) {
         Vendor vendor = toEntity(vendorDto);
         Optional<Vendor> optionalVendor = vendorRepository.findById(id);
@@ -150,6 +153,7 @@ public class VendorServiceImpl implements VendorService {
             existingVendor.setEmail(vendor.getEmail());
             existingVendor.setAddress(vendor.getAddress());
             existingVendor.setNotes(vendor.getNotes());
+            existingVendor.setStatus(vendor.getStatus());
 
             List<VendorProcess> existingVpValues = existingVendor.getVendorProcessList();
             List<VendorProcess> newVpValues = vendor.getVendorProcessList();
@@ -231,6 +235,7 @@ public class VendorServiceImpl implements VendorService {
                 .contactNumber(vendor.getContactNumber())
                 .address(vendor.getAddress())
                 .notes(vendor.getNotes())
+                .status(vendor.getStatus())
                 .vendorProcessList(vendorProcessDto)
                 .build();
     }
@@ -246,6 +251,7 @@ public class VendorServiceImpl implements VendorService {
                 .contactNumber(vendorDto.getContactNumber())
                 .address(vendorDto.getAddress())
                 .notes(vendorDto.getNotes())
+                .status(vendorDto.getStatus())
                 .build();
 
         List<VendorProcess> vendorProcessList = new ArrayList<>();

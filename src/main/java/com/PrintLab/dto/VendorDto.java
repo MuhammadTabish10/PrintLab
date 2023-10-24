@@ -22,6 +22,7 @@ public class VendorDto
     private String email;
     private String address;
     private String notes;
+    private Boolean status;
 
     private List<VendorProcessDto> vendorProcessList;
 }

@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setStatus(true);
         Set<Role> roleList = new HashSet<>();
         for(Role role: user.getRoles()){
             roleRepository.findById(role.getId())
@@ -94,6 +95,7 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .password(user.getPassword())
+                .status(user.getStatus())
                 .roles(user.getRoles())
                 .build();
     }
@@ -103,6 +105,7 @@ public class UserServiceImpl implements UserService {
                 .id(userDto.getId())
                 .name(userDto.getName())
                 .password(userDto.getPassword())
+                .status(userDto.getStatus())
                 .roles(userDto.getRoles())
                 .build();
     }

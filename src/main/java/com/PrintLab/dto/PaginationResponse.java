@@ -1,0 +1,21 @@
+package com.PrintLab.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class PaginationResponse {
+    private List<PaperMarketRatesDto> content;
+    private Integer pageNumber;
+    private Integer pageSize;
+    private Integer totalElements;
+    private Integer totalPages;
+    private Boolean lastPage;
+}

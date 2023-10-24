@@ -1,21 +1,19 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.dto.PaperMarketRatesSpecDto;
 import com.PrintLab.dto.PaperMarketRequestBody;
-import com.PrintLab.model.PaperMarketRates;
-import com.PrintLab.model.Vendor;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/paper-market-rates")
+@RequestMapping("/api")
 public class PaperMarketRatesController
 {
     private static final String PAPER_STOCK = "paper";
@@ -30,27 +28,38 @@ public class PaperMarketRatesController
         this.marketRatesService = marketRatesService;
     }
 
-    @PostMapping
+    @PostMapping("/paper-market-rates")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaperMarketRatesDto> createPaperMarketRates(@RequestBody PaperMarketRatesDto paperMarketRatesDto) {
         return ResponseEntity.ok(marketRatesService.save(paperMarketRatesDto));
     }
 
-    @GetMapping
+    @GetMapping("/paper-market-rates/page")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<PaginationResponse> getAllPaperMarketRates(
+            @RequestParam(value = "page-number", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "page-size", defaultValue = "15", required = false) Integer pageSize
+    ) {
+        PaginationResponse paginationResponse = marketRatesService.getAllPaginatedPaperMarketRates(pageNumber, pageSize);
+        return ResponseEntity.ok(paginationResponse);
+    }
+
+    @GetMapping("/paper-market-rates")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<PaperMarketRatesDto>> getAllPaperMarketRates() {
         List<PaperMarketRatesDto> paperMarketRatesDtoList = marketRatesService.getAll();
         return ResponseEntity.ok(paperMarketRatesDtoList);
     }
 
-    @GetMapping("/{id}")
+
+    @GetMapping("/paper-market-rates/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaperMarketRatesDto> getPaperMarketRatesById(@PathVariable Long id) {
         PaperMarketRatesDto paperMarketRatesDto = marketRatesService.findById(id);
         return ResponseEntity.ok(paperMarketRatesDto);
     }
 
-    @GetMapping("/paper-stock/{stock}")
+    @GetMapping("/paper-market-rates/paper-stock/{stock}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaperMarketRatesDto> getPaperMarketRatesByPaperStock(@PathVariable String stock) {
         PaperMarketRatesDto paperMarketRatesDto = marketRatesService.findByPaperStock(stock);
@@ -58,42 +67,42 @@ public class PaperMarketRatesController
         return ResponseEntity.ok(paperMarketRatesDto);
     }
 
-    @GetMapping("/paper-stock/gsm")
+    @GetMapping("/paper-market-rates/paper-stock/gsm")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Integer>> getPaperStockAllGsm(@RequestParam(name = "paperStock") String paperStock) {
         List<Integer> gsmList = marketRatesService.getDistinctGSMForPaperStock(paperStock);
         return ResponseEntity.ok(gsmList);
     }
 
-    @GetMapping("/paper-stocks/{stock}")
+    @GetMapping("/paper-market-rates/paper-stocks/{stock}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<PaperMarketRatesDto>> getAllPaperMarketRateByPaperStock(@PathVariable String stock) {
         List<PaperMarketRatesDto> paperMarketRatesDtoList = marketRatesService.searchByPaperStock(stock);
         return ResponseEntity.ok(paperMarketRatesDtoList);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/paper-market-rates/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deletePaperMarketRates(@PathVariable Long id) {
         marketRatesService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/paper-market-rates/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaperMarketRatesDto> updatePaperMarketRates(@PathVariable Long id, @RequestBody PaperMarketRatesDto paperMarketRatesDto) {
         PaperMarketRatesDto updatedPmrDto = marketRatesService.updatePaperMarketRates(id, paperMarketRatesDto);
         return ResponseEntity.ok(updatedPmrDto);
     }
 
-    @GetMapping("/paper-stock")
+    @GetMapping("/paper-market-rates/paper-stock")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<PaperMarketRatesDto>> getPaperRatesByStock(@RequestParam String paperStock) {
         List<PaperMarketRatesDto> paperMarketRatesDtoList = marketRatesService.findAllPaperMarketRatesByPaperStock(paperStock);
         return ResponseEntity.ok(paperMarketRatesDtoList);
     }
 
-    @PostMapping("/product-rule")
+    @PostMapping("/paper-market-rates/product-rule")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getPaperMarketRates(@RequestParam String action, @RequestBody PaperMarketRequestBody requestBody) {
         switch (action) {
@@ -115,7 +124,7 @@ public class PaperMarketRatesController
     }
 //    http://localhost:8080/api/paper-market-rates/product-rule?action=paper
 
-    @PostMapping("/product-rule/result")
+    @PostMapping("/paper-market-rates/product-rule/result")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<PaperMarketRatesDto>> findPaperMarketRatesFromGivenCriteria(@Valid @RequestBody PaperMarketRatesSpecDto paperMarketRatesSpecDto) {
         List<PaperMarketRatesDto> paperMarketRatesDto =

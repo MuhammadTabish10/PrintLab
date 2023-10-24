@@ -2,6 +2,7 @@ package com.PrintLab.repository;
 
 import com.PrintLab.model.Vendor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,5 +18,7 @@ public interface VendorRepository extends JpaRepository<Vendor,Long> {
 
     @Query("Select count(*) FROM Vendor")
     Long getAllVendorCount();
-
+    @Modifying
+    @Query("UPDATE Vendor v SET v.status = false WHERE v.id = :id")
+    void setStatusInactive(@Param("id") Long id);
 }

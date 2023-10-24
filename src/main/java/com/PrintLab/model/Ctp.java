@@ -27,6 +27,7 @@ public class Ctp {
     private Integer l2;
     private String plateDimension;
     private Double rate;
+    private Boolean status;
 
     @ManyToOne()
     @JoinColumn(name = "vendor_id")

@@ -2,6 +2,7 @@ package com.PrintLab.repository;
 
 import com.PrintLab.model.Uping;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,7 @@ public interface UpingRepository extends JpaRepository<Uping,Long> {
     Uping findByProductSize(String productSize);
     @Query("SELECT up FROM Uping up WHERE up.productSize LIKE %:searchName%")
     List<Uping> findUpingByProductSize(@Param("searchName") String searchName);
+    @Modifying
+    @Query("UPDATE Uping u SET u.status = false WHERE u.id = :id")
+    void setStatusInactive(@Param("id") Long id);
 }

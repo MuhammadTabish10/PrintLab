@@ -34,6 +34,7 @@ public class UpingServiceImpl implements UpingService {
     @Override
     public UpingDto save(UpingDto upingDto) {
         Uping uping = toEntity(upingDto);
+        uping.setStatus(true);
         Uping createdUping = upingRepository.save(uping);
 
         List<UpingPaperSize> upingPaperSize = uping.getUpingPaperSize();
@@ -117,13 +118,14 @@ public class UpingServiceImpl implements UpingService {
         }
     }
 
+    @Transactional
     @Override
     public String deleteById(Long id) {
         Optional<Uping> optionalUping = upingRepository.findById(id);
 
         if (optionalUping.isPresent()) {
             Uping uping = optionalUping.get();
-            upingRepository.deleteById(id);
+            upingRepository.setStatusInactive(id);
         } else {
             throw new RecordNotFoundException(String.format("Uping not found for id => %d", id));
         }
@@ -146,6 +148,7 @@ public class UpingServiceImpl implements UpingService {
             existingUping.setUnit(uping.getUnit());
             existingUping.setMm(uping.getMm());
             existingUping.setInch(uping.getInch());
+            existingUping.setStatus(uping.getStatus());
 
             List<UpingPaperSize> existingUpsValues = existingUping.getUpingPaperSize();
             List<UpingPaperSize> newUpsValues = uping.getUpingPaperSize();
@@ -223,6 +226,7 @@ public class UpingServiceImpl implements UpingService {
                 .unit(uping.getUnit())
                 .mm(uping.getMm())
                 .inch(uping.getInch())
+                .status(uping.getStatus())
                 .upingPaperSize(upingPaperSizeDto)
                 .build();
     }
@@ -238,6 +242,7 @@ public class UpingServiceImpl implements UpingService {
                 .unit(upingDto.getUnit())
                 .mm(upingDto.getMm())
                 .inch(upingDto.getInch())
+                .status(upingDto.getStatus())
                 .build();
 
         List<UpingPaperSize> upingPaperSizes = new ArrayList<>();

@@ -21,5 +21,6 @@ public class UpingDto
     private String unit;
     private String mm;
     private String inch;
+    private Boolean status;
     private List<UpingPaperSizeDto> upingPaperSize;
 }

@@ -22,6 +22,7 @@ public class ProductRuleDto {
     private String size;
     private String quantity;
     private Boolean impositionValue;
+    private Boolean status;
     private PressMachine pressMachine;
     private Ctp ctp;
     private List<ProductRulePaperStockDto> productRulePaperStockList;

@@ -31,6 +31,7 @@ public class Vendor
     private String email;
     private String address;
     private String notes;
+    private Boolean status;
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
     private List<VendorProcess> vendorProcessList;

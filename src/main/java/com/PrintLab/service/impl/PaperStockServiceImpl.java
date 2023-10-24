@@ -82,13 +82,14 @@ public class PaperStockServiceImpl implements PaperStockService {
         return paperStockDtoList;
     }
 
+    @Transactional
     @Override
     public String deleteById(Long id) {
         Optional<PaperStock> optionalPaperStock = paperStockRepository.findById(id);
 
         if (optionalPaperStock.isPresent()) {
             PaperStock paperStock = optionalPaperStock.get();
-            paperStockRepository.deleteById(id);
+            paperStockRepository.setStatusInactive(id);
         } else {
             throw new RecordNotFoundException(String.format("Paper Stock not found for id => %d", id));
         }

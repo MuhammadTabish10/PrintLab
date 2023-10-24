@@ -1,20 +1,20 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.PaperMarketRatesDto;
-import com.PrintLab.dto.VendorDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.PaperMarketRates;
-
 import com.PrintLab.model.Vendor;
 import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.PaperMarketRatesService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Paper;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
@@ -36,6 +36,30 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
+    public PaginationResponse getAllPaginatedPaperMarketRates(Integer pageNumber, Integer pageSize) {
+
+        Pageable page = PageRequest.of(pageNumber,pageSize);
+        Page<PaperMarketRates> pagePaperMarketRates = paperMarketRatesRepository.findAll(page);
+        List<PaperMarketRates> paperMarketRatesList = pagePaperMarketRates.getContent();
+
+        List<PaperMarketRatesDto> paperMarketRatesDtoList = new ArrayList<>();
+        for (PaperMarketRates paperMarketRates : paperMarketRatesList) {
+            PaperMarketRatesDto paperMarketRatesDto = toDto(paperMarketRates);
+            paperMarketRatesDtoList.add(paperMarketRatesDto);
+        }
+
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(paperMarketRatesDtoList);
+        paginationResponse.setPageNumber(pagePaperMarketRates.getNumber());
+        paginationResponse.setPageSize(pagePaperMarketRates.getSize());
+        paginationResponse.setTotalElements(pagePaperMarketRates.getNumberOfElements());
+        paginationResponse.setTotalPages(pagePaperMarketRates.getTotalPages());
+        paginationResponse.setLastPage(pagePaperMarketRates.isLast());
+
+        return paginationResponse;
+    }
+
+    @Override
     public List<PaperMarketRatesDto> getAll() {
         List<PaperMarketRates> paperMarketRatesList = paperMarketRatesRepository.findAll();
         List<PaperMarketRatesDto> paperMarketRatesDtoList = new ArrayList<>();
@@ -46,6 +70,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         }
         return paperMarketRatesDtoList;
     }
+
 
     @Override
     public Set<String> findDistinctPaperStocks() {

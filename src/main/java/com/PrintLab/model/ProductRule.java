@@ -25,6 +25,7 @@ public class ProductRule {
     private String size;
     private String quantity;
     private Boolean impositionValue;
+    private Boolean status;
 
     @ManyToOne
     @JoinColumn(name = "press_machine_id")

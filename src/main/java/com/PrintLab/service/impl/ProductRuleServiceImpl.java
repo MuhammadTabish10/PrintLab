@@ -2,7 +2,6 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductRuleDto;
 import com.PrintLab.dto.ProductRulePaperStockDto;
-import com.PrintLab.dto.SettingDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.ProductRule;
 import com.PrintLab.model.ProductRulePaperStock;
@@ -10,6 +9,7 @@ import com.PrintLab.repository.*;
 import com.PrintLab.service.ProductRuleService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,9 +34,11 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         this.ctpRepository = ctpRepository;
     }
 
+    @Transactional
     @Override
     public ProductRuleDto save(ProductRuleDto productRuleDto) {
         ProductRule productRule = toEntity(productRuleDto);
+        productRule.setStatus(true);
         if(productRule.getPrintSide().equals(SINGLE_SIDED)){
             productRule.setImpositionValue(false);
         }
@@ -99,6 +101,8 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         }
     }
 
+
+    @Transactional
     @Override
     public ProductRuleDto update(Long id, ProductRuleDto productRuleDto) {
         ProductRule productRule = toEntity(productRuleDto);
@@ -168,7 +172,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
         if (optionalProductRule.isPresent()) {
             ProductRule productRule = optionalProductRule.get();
-            productRuleRepository.deleteById(id);
+            productRuleRepository.setStatusInactive(id);
         } else {
             throw new RecordNotFoundException(String.format("ProductRule not found for id => %d", id));
         }
@@ -200,6 +204,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                 .size(productRule.getSize())
                 .quantity(productRule.getQuantity())
                 .impositionValue(productRule.getImpositionValue())
+                .status(productRule.getStatus())
                 .pressMachine(pressMachineRepository.findById(productRule.getPressMachine().getId())
                         .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")))
                 .ctp(ctpRepository.findById(productRule.getCtp().getId())
@@ -235,6 +240,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                 .size(productRuleDto.getSize())
                 .quantity(productRuleDto.getQuantity())
                 .impositionValue(productRuleDto.getImpositionValue())
+                .status(productRuleDto.getStatus())
                 .pressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
                         .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")))
                 .ctp(ctpRepository.findById(productRuleDto.getCtp().getId())

@@ -19,5 +19,6 @@ public class CtpDto {
     private Integer l2;
     private String plateDimension;
     private Double rate;
+    private Boolean status;
     private Vendor vendor;
 }

@@ -25,6 +25,7 @@ public class Uping{
     private String unit;
     private String mm;
     private String inch;
+    private Boolean status;
 
     @OneToMany(mappedBy = "uping", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UpingPaperSize> upingPaperSize;

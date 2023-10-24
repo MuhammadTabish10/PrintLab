@@ -1,10 +1,8 @@
 package com.PrintLab.service;
 
+import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.PaperMarketRatesDto;
-import com.PrintLab.dto.VendorDto;
-import com.PrintLab.model.PaperMarketRates;
 import com.PrintLab.model.Vendor;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Set;
@@ -12,6 +10,7 @@ import java.util.Set;
 public interface PaperMarketRatesService
 {
     PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto);
+    PaginationResponse getAllPaginatedPaperMarketRates(Integer pageNumber, Integer pageSize);
     List<PaperMarketRatesDto> getAll();
     Set<String> findDistinctPaperStocks();
     Set<Vendor> findDistinctVendorsByPaperStock(String paperStock);

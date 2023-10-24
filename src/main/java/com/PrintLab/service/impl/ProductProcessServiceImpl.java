@@ -82,7 +82,7 @@ public class ProductProcessServiceImpl implements ProductProcessService
 
         if(optionalProductProcess.isPresent()) {
             ProductProcess productProcess = optionalProductProcess.get();
-            productProcessRepository.deleteById(id);
+            productProcessRepository.setStatusInactive(id);
         }
         else{
             throw new RecordNotFoundException(String.format("Product Process not found for id => %d", id));

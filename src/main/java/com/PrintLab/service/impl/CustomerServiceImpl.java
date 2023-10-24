@@ -1,4 +1,5 @@
 package com.PrintLab.service.impl;
+
 import com.PrintLab.dto.CustomerDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Customer;
@@ -6,7 +7,6 @@ import com.PrintLab.repository.CustomerRepository;
 import com.PrintLab.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,6 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto save(CustomerDto customerDto) {
+        customerDto.setStatus("Active");
         Customer saved = customerRepository.save(toEntity(customerDto));
         return toDto(saved);
     }
@@ -60,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
     public String deleteById(Long id) {
         Optional<Customer> deleteCustomer = customerRepository.findById(id);
         if(deleteCustomer.isPresent()) {
-            customerRepository.deleteById(id);
+            customerRepository.setStatusInactive(id);
         }
         else{
             throw new RecordNotFoundException(String.format("Customer not found on id => %d", id));
