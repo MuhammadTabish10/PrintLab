@@ -6,10 +6,10 @@
       <h4>Paper Market Rates</h4>
     </div>
 
-    <div class="order-body">
+    <!-- <div class="order-body">
       <div class="order-search-panel">
         <input type="text" placeholder="Search by Paper Stock" class="order-search form-control" [(ngModel)]="search"
-          (keyup)="searchPaperMarket($event.target)">
+          (keyup)="getFilteredAndPaginatedData($event.target)">
         <div>
           <button type="button" class="btn order-table-btn btn-search-panel" routerLink="/addPaperMarket">
             <i class="fa-solid fa-plus"></i>&nbsp;Add
@@ -67,11 +67,556 @@
           </tbody>
         </table>
       </div>
+    </div> -->
+
+    <div class="card text-nowrap">
+      <p-table
+        #dt1
+        [value]="paperMarketArray"
+        dataKey="id"
+        [globalFilterFields]="['name']"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex clearfix">
+            <button
+              pButton
+              label="Clear"
+              class="p-button-outlined"
+              icon="pi pi-filter-slash"
+              (click)="clear()"
+            ></button>
+            <span class="p-input-icon-left float-end">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="getFilteredAndPaginatedData(null, $event.target)"
+                placeholder="Search keyword"
+              />
+              <button
+                pButton
+                label="Add"
+                class="p-button-dark bg-dark ms-2"
+                icon="pi pi-plus"
+                routerLink="/addPaperMarket"
+              ></button>
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="col">ID</th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Timestamp
+                <p-columnFilter
+                  type="date"
+                  field="date"
+                  display="menu"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                    <p-calendar
+                      [showTime]="true"
+                      (onSelect)="onDateSelect($event)"
+                    ></p-calendar>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Paper Stock
+                <p-columnFilter
+                  field="representative"
+                  matchMode="in"
+                  display="menu"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Paper Picker</span>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-multiSelect
+                      [ngModel]="value"
+                      [options]="papersToFilter"
+                      placeholder="PaperStock"
+                      optionLabel="paperStock"
+                      (onChange)="
+                        getFilteredAndPaginatedData(null, $event.value)
+                      "
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="inline-block vertical-align-middle">
+                          <span class="ml-1 mt-1">{{ option.paperStock }}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Brand
+                <p-columnFilter
+                  field="representative"
+                  matchMode="in"
+                  display="menu"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Brand Picker</span>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-multiSelect
+                      [ngModel]="value"
+                      [options]="brandsToFilter"
+                      placeholder="Brand"
+                      (onChange)="
+                        getFilteredAndPaginatedData(null, $event.value)
+                      "
+                      optionLabel="brand"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="inline-block vertical-align-middle">
+                          <span class="ml-1 mt-1">{{ option.brand }}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                MadeIn
+                <p-columnFilter
+                  field="representative"
+                  matchMode="in"
+                  display="menu"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Made In Picker</span>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-multiSelect
+                      [ngModel]="value"
+                      [options]="madeInToFilter"
+                      placeholder="Made In"
+                      (onChange)="
+                        getFilteredAndPaginatedData(null, $event.value)
+                      "
+                      optionLabel="madeIn"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="inline-block vertical-align-middle">
+                          <span class="ml-1 mt-1">{{ option.madeIn }}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Gsm
+                <p-columnFilter
+                  field="representative"
+                  matchMode="in"
+                  display="menu"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Gsm Picker</span>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-multiSelect
+                      [ngModel]="value"
+                      [options]="gsmToFilter"
+                      placeholder="Gsm"
+                      (onChange)="
+                        getFilteredAndPaginatedData(null, $event.value)
+                      "
+                      optionLabel="gsm"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="inline-block vertical-align-middle">
+                          <span class="ml-1 mt-1">{{ option.gsm }}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Dimension
+                <p-columnFilter
+                  field="representative"
+                  matchMode="in"
+                  display="menu"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Dimension Picker</span>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-multiSelect
+                      [ngModel]="value"
+                      [options]="dimensionsToFilter"
+                      placeholder="Dimension"
+                      (onChange)="
+                        getFilteredAndPaginatedData(null, $event.value)
+                      "
+                      optionLabel="dimension"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="inline-block vertical-align-middle">
+                          <span class="ml-1 mt-1">{{ option.dimension }}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+
+              <div class="d-flex justify-content-center">
+                Quantity
+                <p-columnFilter
+                  type="numeric"
+                  field="qty"
+                  display="menu"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                    <input
+                      pInputText
+                      type="number"
+                      (input)="applyQuantityFilter($event.target)"
+                      placeholder="Quantity"
+                    />
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Kg
+                <p-columnFilter
+                  field="representative"
+                  matchMode="in"
+                  display="menu"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Kg Picker</span>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-multiSelect
+                      [ngModel]="value"
+                      [options]="kgToFilter"
+                      placeholder="Kg"
+                      (onChange)="
+                        getFilteredAndPaginatedData(null, $event.value)
+                      "
+                      optionLabel="kg"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="inline-block vertical-align-middle">
+                          <span class="ml-1 mt-1">{{ option.kg }}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Vendor
+                <p-columnFilter
+                  field="representative"
+                  matchMode="in"
+                  display="menu"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Vendor Picker</span>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-multiSelect
+                      [ngModel]="value"
+                      [options]="vendorToFilter"
+                      placeholder="Vendor"
+                      (onChange)="
+                        getFilteredAndPaginatedData(null, $event.value)
+                      "
+                      optionLabel="vendor"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="inline-block vertical-align-middle">
+                          <span class="ml-1 mt-1">{{ option.vendor }}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Record Type
+                <p-columnFilter
+                  field="representative"
+                  matchMode="in"
+                  display="menu"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Record Type Picker</span>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-multiSelect
+                      [ngModel]="value"
+                      [options]="recordToFilter"
+                      placeholder="Record Type"
+                      (onChange)="
+                        getFilteredAndPaginatedData(null, $event.value)
+                      "
+                      optionLabel="recordType"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="inline-block vertical-align-middle">
+                          <span class="ml-1 mt-1">{{ option.recordType }}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Rate
+                <p-columnFilter
+                  type="numeric"
+                  field="rate"
+                  display="menu"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                    <input
+                      pInputText
+                      type="number"
+                      (input)="applyRateFilter($event.target)"
+                      placeholder="Pkr"
+                    />
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Status
+                <p-columnFilter
+                  field="representative"
+                  matchMode="in"
+                  display="menu"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Status Picker</span>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-multiSelect
+                      [ngModel]="value"
+                      [options]="statusToFilter"
+                      placeholder="Status"
+                      (onChange)="
+                        getFilteredAndPaginatedData(null, $event.value)
+                      "
+                      optionLabel="status"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="inline-block vertical-align-middle">
+                          <span class="ml-1 mt-1">{{ option.status }}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Action</div>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-element>
+          <tr>
+            <td class="text-center">
+              {{ element?.id }}
+            </td>
+            <td class="text-center">
+              {{ element?.timeStamp }}
+            </td>
+            <td class="text-center">
+              {{ element?.paperStock }}
+            </td>
+            <td class="text-center">
+              {{ element?.brand }}
+            </td>
+            <td class="text-center">
+              {{ element?.madeIn }}
+            </td>
+            <td class="text-center">
+              {{ element?.gsm }}
+            </td>
+            <td class="text-center">
+              {{ element?.dimension }}
+            </td>
+            <td class="text-center">
+              {{ element?.qty }}
+            </td>
+            <td class="text-center">
+              {{ element?.kg }}
+            </td>
+            <td class="text-center">
+              {{ element?.vendor }}
+            </td>
+            <td class="text-center">
+              {{ element?.recordType }}
+            </td>
+            <td class="text-center">
+              {{ element?.ratePkr | currency : "PKR" : "symbol" }}
+            </td>
+            <td class="text-center">
+              {{ element?.status }}
+            </td>
+            <td>
+              <div
+                class="btn-group mr-2"
+                role="group"
+                aria-label="Second group"
+              >
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="editPaperMarketRate(element.id)"
+                >
+                  <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="deletePaperMarketRate(element.id)"
+                >
+                  <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7">No customers found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-paginator
+        [rows]="filterRes?.pageSize"
+        [totalRecords]="filterRes?.totalElements"
+        (onPageChange)="getFilteredAndPaginatedData($event)"
+        currentPageReportTemplate="Showing {{
+          filterRes?.pageNumber * filterRes?.pageSize + 1
+        }} to {{ (filterRes?.pageNumber + 1) * filterRes?.pageSize }} of {{
+          filterRes?.totalElements
+        }} entries"
+        [alwaysShow]="false"
+        [pageLinkSize]="5"
+        [showCurrentPageReport]="true"
+      ></p-paginator>
     </div>
   </div>
 </div>
 <p-toast></p-toast>
-<!-- <p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
-  [draggable]="false" [resizable]="false">
-  <h5 class="error-modal-head">{{error}}</h5>
-</p-dialog> -->

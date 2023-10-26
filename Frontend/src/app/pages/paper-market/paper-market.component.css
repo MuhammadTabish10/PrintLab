@@ -1,0 +1,9 @@
+.hide-match-mode .p-column-filter-matchmode-dropdown {
+  display: none !important;
+}
+.p-column-filter-overlay-menu .p-column-filter-buttonbar {
+  display: none !important;
+}
+.p-column-filter-overlay-menu .p-column-filter-constraint .p-column-filter-matchmode-dropdown {
+  display: none !important;
+}

@@ -139,8 +139,8 @@ public class PaperMarketRatesController
 
     @PostMapping("/paper-market-rates/search")
     public ResponseEntity<PaginationResponse> search(
-            @RequestParam(value = "page-number", defaultValue = "0", required = false) Integer pageNumber,
-            @RequestParam(value = "page-size", defaultValue = "15", required = false) Integer pageSize,
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "15", required = false) Integer pageSize,
             @RequestBody PaperMarketRatesDto paperMarketRatesDto)
     {
         PaginationResponse paginationResponse = marketRatesService.getPaperMarketRatesBySearchCriteria(pageNumber, pageSize, paperMarketRatesDto);

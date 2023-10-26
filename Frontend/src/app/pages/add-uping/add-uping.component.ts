@@ -95,17 +95,13 @@ export class AddUpingComponent implements OnInit {
     this.getPaperSizes()
     forkJoin([
       this.getProductFields(),
-      this.route.queryParams.pipe(take(1)), // take(1) ensures only one value is received
+      this.route.queryParams.pipe(take(1)),
     ]).subscribe(([productFields, queryParams]) => {
-      // this.handlePaperSizesResponse(paperSizes);
       this.handleProductFieldsResponse(productFields);
       this.handleQueryParams(queryParams);
     });
   }
 
-  // getPaperSizes() {
-  //   return this.paperSizeService.getPaperSize();
-  // }
 
   getProductFields() {
     return this.productField.getProductField();
