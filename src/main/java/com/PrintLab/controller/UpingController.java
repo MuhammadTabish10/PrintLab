@@ -93,8 +93,8 @@ public class UpingController
 
     @PostMapping("/upload")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<UpingDto> upload(@RequestParam("file") MultipartFile multipartFile) {
-        UpingDto updatedUpingDto = upingService.uplaodFile(multipartFile);
+    public ResponseEntity<List<UpingDto>> upload(@RequestParam("file") MultipartFile multipartFile) {
+        List<UpingDto> updatedUpingDto = upingService.uploadFile(multipartFile);
         return ResponseEntity.ok(updatedUpingDto);
     }
 }

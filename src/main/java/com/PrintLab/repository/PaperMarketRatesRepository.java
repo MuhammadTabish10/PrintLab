@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Repository
@@ -52,4 +53,17 @@ public interface PaperMarketRatesRepository extends JpaRepository<PaperMarketRat
     List<PaperMarketRates> findByPaperStockAndGSMOrderByTimeStampDesc(String paperStock, Integer gsm);
     @Query("SELECT DISTINCT pmr.GSM FROM PaperMarketRates pmr WHERE pmr.paperStock = :paperStock")
     List<Integer> findDistinctGSMByPaperStock(@Param("paperStock") String paperStock);
+
+    @Query(value = "SELECT " +
+            "GROUP_CONCAT(DISTINCT paper_stock) AS paper_stock, " +
+            "GROUP_CONCAT(DISTINCT brand) AS brand, " +
+            "GROUP_CONCAT(DISTINCT made_in) AS made_in, " +
+            "GROUP_CONCAT(DISTINCT gsm) AS gsm, " +
+            "GROUP_CONCAT(DISTINCT dimension) AS dimension, " +
+            "GROUP_CONCAT(DISTINCT qty) AS qty, " +
+            "GROUP_CONCAT(DISTINCT record_type) AS record_type, " +
+            "GROUP_CONCAT(DISTINCT status) AS status " +
+            "FROM paper_market_rates",
+            nativeQuery = true)
+    Map<String, String> findAllDistinctValues();
 }

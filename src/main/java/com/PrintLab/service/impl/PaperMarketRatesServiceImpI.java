@@ -21,6 +21,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -94,11 +95,16 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         List<Predicate> predicates = new ArrayList<>();
 
         if (searchCriteria.getTimeStamp() != null) {
-            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("timeStamp"), searchCriteria.getTimeStamp()));
+            LocalDateTime userEnteredDateTime = searchCriteria.getTimeStamp();
+            LocalDate userEnteredDate = userEnteredDateTime.toLocalDate();
+            LocalDate currentLocalDate = LocalDate.now();
+            predicates.add(criteriaBuilder.between(paperMarketRatesRoot.get("timeStamp").as(LocalDate.class), userEnteredDate, currentLocalDate));
         }
+
         if (searchCriteria.getPaperStock() != null) {
             predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("paperStock"), searchCriteria.getPaperStock()));
         }
+
         if (searchCriteria.getBrand() != null) {
             predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("brand"), searchCriteria.getBrand()));
         }
@@ -108,15 +114,15 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         }
 
         if (searchCriteria.getGSM() != null) {
-            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("GSM"), searchCriteria.getGSM()));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(paperMarketRatesRoot.get("GSM"), searchCriteria.getGSM()));
         }
 
         if (searchCriteria.getLength() != null) {
-            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("length"), searchCriteria.getLength()));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(paperMarketRatesRoot.get("length"), searchCriteria.getLength()));
         }
 
         if (searchCriteria.getWidth() != null) {
-            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("width"), searchCriteria.getWidth()));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(paperMarketRatesRoot.get("width"), searchCriteria.getWidth()));
         }
 
         if (searchCriteria.getDimension() != null) {
@@ -124,11 +130,11 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         }
 
         if (searchCriteria.getQty() != null) {
-            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("qty"), searchCriteria.getQty()));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(paperMarketRatesRoot.get("qty"), searchCriteria.getQty()));
         }
 
         if (searchCriteria.getKg() != null) {
-            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("kg"), searchCriteria.getKg()));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(paperMarketRatesRoot.get("kg"), searchCriteria.getKg()));
         }
 
         if (searchCriteria.getRecordType() != null) {
@@ -136,7 +142,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         }
 
         if (searchCriteria.getRatePkr() != null) {
-            predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("ratePkr"), searchCriteria.getRatePkr()));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(paperMarketRatesRoot.get("ratePkr"), searchCriteria.getRatePkr()));
         }
 
         if (searchCriteria.getVerified() != null) {
@@ -363,6 +369,11 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         else {
             throw new RecordNotFoundException(String.format("Paper Market Rate not found for id => %d", id));
         }
+    }
+
+    @Override
+    public Map<String,String> findAllDistinctValues() {
+        return paperMarketRatesRepository.findAllDistinctValues();
     }
 
     public PaperMarketRatesDto toDto(PaperMarketRates paperMarketRates) {

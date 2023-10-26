@@ -2,10 +2,10 @@ package com.PrintLab.service;
 
 import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.PaperMarketRatesDto;
-import com.PrintLab.model.PaperMarketRates;
 import com.PrintLab.model.Vendor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface PaperMarketRatesService
@@ -28,4 +28,5 @@ public interface PaperMarketRatesService
     PaperMarketRatesDto findById(Long id);
     String deleteById(Long id);
     PaperMarketRatesDto updatePaperMarketRates(Long id, PaperMarketRatesDto paperMarketRatesDto);
+    Map<String,String>  findAllDistinctValues();
 }
