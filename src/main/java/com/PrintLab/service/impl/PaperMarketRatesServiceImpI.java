@@ -23,6 +23,7 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
@@ -169,9 +170,14 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         countQuery.where(predicates.toArray(new Predicate[0]));
         Long totalElements = entityManager.createQuery(countQuery).getSingleResult();
 
+        // Map filtered PaperMarketRates entities to PaperMarketRatesDto objects
+        List<PaperMarketRatesDto> dtoList = resultList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+
         // Create a PaginationResponse object and set its properties
         PaginationResponse paginationResponse = new PaginationResponse();
-        paginationResponse.setContent(resultList);
+        paginationResponse.setContent(dtoList);
         paginationResponse.setPageNumber(pageNumber);
         paginationResponse.setPageSize(pageSize);
         paginationResponse.setTotalElements(totalElements.intValue());

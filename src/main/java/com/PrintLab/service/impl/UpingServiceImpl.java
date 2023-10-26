@@ -10,10 +10,12 @@ import com.PrintLab.repository.PaperSizeRepository;
 import com.PrintLab.repository.UpingPaperSizeRepository;
 import com.PrintLab.repository.UpingRepository;
 import com.PrintLab.service.UpingService;
+import com.PrintLab.utils.ExcelUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -231,6 +233,30 @@ public class UpingServiceImpl implements UpingService {
         } else {
             throw new RecordNotFoundException(String.format("Uping not found for id => %d", id));
         }
+    }
+
+    @Override
+    public UpingDto uplaodFile(MultipartFile multipartFile) {
+
+        List<Uping> uppingList= new ArrayList<>();
+      if(ExcelUtils.hasExcelFormat(multipartFile)) {
+          List<List<String>> upPingFile = ExcelUtils.parseExcelFile(multipartFile);
+
+          for (List<String> oneRow : upPingFile) {
+              Uping uping = Uping.builder()
+                      .category(oneRow.get(0))
+                      .inch(oneRow.get(1))
+                      .l1(Integer.parseInt(oneRow.get(2)))
+                      .l2(Integer.parseInt(oneRow.get(3))) // Corrected typo here
+                      .mm(oneRow.get(4))
+                      .productSize(oneRow.get(5))
+                      .status(oneRow.get(6).equals("1")? true:false)
+                      .unit(oneRow.get(7))
+                      .build();
+              uppingList.add(uping);
+          }
+      }
+      return null;
     }
 
     public UpingDto toDto(Uping uping) {
