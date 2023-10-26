@@ -6,6 +6,7 @@ import com.PrintLab.service.UpingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -87,6 +88,13 @@ public class UpingController
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UpingDto> updateUping(@PathVariable Long id, @RequestBody UpingDto upingDto) {
         UpingDto updatedUpingDto = upingService.updateUping(id, upingDto);
+        return ResponseEntity.ok(updatedUpingDto);
+    }
+
+    @PostMapping("/upload")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<UpingDto> upload(@RequestParam("file") MultipartFile multipartFile) {
+        UpingDto updatedUpingDto = upingService.uplaodFile(multipartFile);
         return ResponseEntity.ok(updatedUpingDto);
     }
 }

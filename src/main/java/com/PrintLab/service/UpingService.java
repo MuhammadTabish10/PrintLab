@@ -2,6 +2,7 @@ package com.PrintLab.service;
 
 import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.UpingDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface UpingService
     String deleteById(Long id);
     UpingDto updateUping(Long id, UpingDto upingDto);
     void deleteUpingPaperSizeById(Long id, Long upingPaperSizeId);
+
+    UpingDto uplaodFile(MultipartFile multipartFile);
 }
