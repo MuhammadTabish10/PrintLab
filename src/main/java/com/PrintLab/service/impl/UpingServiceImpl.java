@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UpingServiceImpl implements UpingService {
@@ -73,7 +74,7 @@ public class UpingServiceImpl implements UpingService {
 
     @Override
     public PaginationResponse getAllPaginatedUping(Integer pageNumber, Integer pageSize) {
-        Pageable page = PageRequest.of(pageNumber,pageSize);
+        Pageable page = PageRequest.of(pageNumber, pageSize);
         Page<Uping> pageUping = upingRepository.findAllByStatusIsTrue(page);
         List<Uping> upingList = pageUping.getContent();
 
@@ -95,7 +96,7 @@ public class UpingServiceImpl implements UpingService {
     }
 
     @Override
-    public UpingDto findById(Long id){
+    public UpingDto findById(Long id) {
         Optional<Uping> optionalUping = upingRepository.findById(id);
 
         if (optionalUping.isPresent()) {
@@ -110,11 +111,10 @@ public class UpingServiceImpl implements UpingService {
     public UpingDto findByProductSize(String productSize) {
         Optional<Uping> upingOptional = Optional.ofNullable(upingRepository.findByProductSize(productSize));
 
-        if(upingOptional.isPresent()){
+        if (upingOptional.isPresent()) {
             Uping uping = upingOptional.get();
             return toDto(uping);
-        }
-        else {
+        } else {
             throw new RecordNotFoundException(String.format("Uping not found at => %s", productSize));
         }
     }
@@ -134,7 +134,7 @@ public class UpingServiceImpl implements UpingService {
     @Override
     public List<UpingDto> getUpingByPaperSizeId(Long paperSizeId) {
         Optional<List<Uping>> optionalUpingList = Optional.ofNullable(upingRepository.findByUpingPaperSize_PaperSize_Id(paperSizeId));
-        if(optionalUpingList.isPresent()){
+        if (optionalUpingList.isPresent()) {
             List<Uping> upingList = optionalUpingList.get();
             List<UpingDto> upingDtoList = new ArrayList<>();
 
@@ -143,7 +143,7 @@ public class UpingServiceImpl implements UpingService {
                 upingDtoList.add(upingDto);
             }
             return upingDtoList;
-        } else{
+        } else {
             throw new RecordNotFoundException(String.format("Uping not found on Paper Size id => %d", paperSizeId));
         }
     }
@@ -227,8 +227,8 @@ public class UpingServiceImpl implements UpingService {
                 uping.getUpingPaperSize().remove(upingPaperSizeToDelete);
                 upingPaperSizeRepository.delete(upingPaperSizeToDelete);
                 upingRepository.save(uping);
-            } else{
-            throw new RecordNotFoundException("Uping Paper Size not found");
+            } else {
+                throw new RecordNotFoundException("Uping Paper Size not found");
             }
         } else {
             throw new RecordNotFoundException(String.format("Uping not found for id => %d", id));
@@ -236,39 +236,56 @@ public class UpingServiceImpl implements UpingService {
     }
 
     @Override
-    public UpingDto uplaodFile(MultipartFile multipartFile) {
+    @Transactional
+    public List<UpingDto> uploadFile(MultipartFile multipartFile) {
+        List<Uping> uppingList = new ArrayList<>();
+        List<UpingDto> upingDtoList = new ArrayList<>();
 
-        List<Uping> uppingList= new ArrayList<>();
-      if(ExcelUtils.hasExcelFormat(multipartFile)) {
-          List<List<String>> upPingFile = ExcelUtils.parseExcelFile(multipartFile);
+        if (ExcelUtils.hasExcelFormat(multipartFile)) {
+            List<List<String>> upPingFile = ExcelUtils.parseExcelFile(multipartFile);
 
-          for (List<String> oneRow : upPingFile) {
-              Uping uping = Uping.builder()
-                      .category(oneRow.get(0))
-                      .inch(oneRow.get(1))
-                      .l1(Integer.parseInt(oneRow.get(2)))
-                      .l2(Integer.parseInt(oneRow.get(3))) // Corrected typo here
-                      .mm(oneRow.get(4))
-                      .productSize(oneRow.get(5))
-                      .status(oneRow.get(6).equals("1")? true:false)
-                      .unit(oneRow.get(7))
-                      .build();
-              uppingList.add(uping);
-          }
-      }
-      return null;
+            // Start the loop from index 1 to skip the first row
+            for (int i = 1; i < upPingFile.size(); i++) {
+                List<String> oneRow = upPingFile.get(i);
+
+                Uping uping = Uping.builder()
+                        .category(oneRow.get(0))
+                        .inch(oneRow.get(1))
+                        .l1(Double.parseDouble(oneRow.get(2)))
+                        .l2(Double.parseDouble(oneRow.get(3)))
+                        .mm(oneRow.get(4))
+                        .productSize(oneRow.get(5))
+                        .status(oneRow.get(6).equals("1"))
+                        .unit(oneRow.get(7))
+                        .build();
+                uppingList.add(uping);
+            }
+
+            // Save the uppingList to the database
+            List<Uping> savedUping = upingRepository.saveAll(uppingList);
+
+            // Convert savedUping to DTOs and add them to upingDtoList
+            upingDtoList = savedUping.stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }
+
+        return upingDtoList;
     }
 
     public UpingDto toDto(Uping uping) {
         List<UpingPaperSizeDto> upingPaperSizeDto = new ArrayList<>();
-        for (UpingPaperSize upingPaperSize : uping.getUpingPaperSize()) {
-            UpingPaperSizeDto upingDto = UpingPaperSizeDto.builder()
-                    .id(upingPaperSize.getId())
-                    .value(upingPaperSize.getValue())
-                    .paperSize(paperSizeService.toDto(paperSizeRepository.findById(upingPaperSize.getPaperSize().getId())
-                            .orElseThrow(()-> new RecordNotFoundException("Paper Size not found"))))
-                    .build();
-            upingPaperSizeDto.add(upingDto);
+        if (uping.getUpingPaperSize() != null) {
+            for (UpingPaperSize upingPaperSize : uping.getUpingPaperSize()) {
+                UpingPaperSizeDto upingDto = UpingPaperSizeDto.builder()
+                        .id(upingPaperSize.getId())
+                        .value(upingPaperSize.getValue())
+                        .paperSize(paperSizeService.toDto(paperSizeRepository.findById(upingPaperSize.getPaperSize().getId())
+                                .orElseThrow(() -> new RecordNotFoundException("Paper Size not found"))))
+                        .build();
+                upingPaperSizeDto.add(upingDto);
+            }
+
         }
 
         return UpingDto.builder()

@@ -16,8 +16,8 @@ public class UpingDto
     private Long id;
     private String productSize;
     private String category;
-    private Integer l1;
-    private Integer l2;
+    private Double l1;
+    private Double l2;
     private String unit;
     private String mm;
     private String inch;
