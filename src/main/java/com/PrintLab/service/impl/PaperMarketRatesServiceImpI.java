@@ -96,9 +96,11 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         if (searchCriteria.getTimeStamp() != null) {
             predicates.add(criteriaBuilder.equal(paperMarketRatesRoot.get("timeStamp"), searchCriteria.getTimeStamp()));
         }
+
         if (searchCriteria.getPaperStock() != null) {
             predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("paperStock"), searchCriteria.getPaperStock()));
         }
+
         if (searchCriteria.getBrand() != null) {
             predicates.add(criteriaBuilder.like(paperMarketRatesRoot.get("brand"), searchCriteria.getBrand()));
         }
@@ -363,6 +365,11 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         else {
             throw new RecordNotFoundException(String.format("Paper Market Rate not found for id => %d", id));
         }
+    }
+
+    @Override
+    public Map<String,String> findAllDistinctValues() {
+        return paperMarketRatesRepository.findAllDistinctValues();
     }
 
     public PaperMarketRatesDto toDto(PaperMarketRates paperMarketRates) {

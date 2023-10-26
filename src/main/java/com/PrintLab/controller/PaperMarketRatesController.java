@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -145,5 +146,10 @@ public class PaperMarketRatesController
     {
         PaginationResponse paginationResponse = marketRatesService.getPaperMarketRatesBySearchCriteria(pageNumber, pageSize, paperMarketRatesDto);
         return ResponseEntity.ok(paginationResponse);
+    }
+
+    @GetMapping("/paper-market-rates/distinct-values")
+    public ResponseEntity<Map<String,String>> getAllDistinctValues() {
+        return ResponseEntity.ok(marketRatesService.findAllDistinctValues());
     }
 }
