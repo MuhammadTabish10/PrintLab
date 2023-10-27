@@ -242,6 +242,11 @@ public class UpingServiceImpl implements UpingService {
         if (ExcelUtils.hasExcelFormat(multipartFile)) {
             List<List<String>> upingFile = ExcelUtils.parseExcelFile(multipartFile);
             List<String> excelColumns = ExcelUtils.parseFirstRow(multipartFile);
+
+            if(excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("id"))){
+                excelColumns.remove("id");
+            }
+
             List<String> upingTableColumns = upingRepository.getTableColumns();
             upingTableColumns.remove(0);
 
