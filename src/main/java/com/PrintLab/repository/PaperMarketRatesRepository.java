@@ -62,7 +62,8 @@ public interface PaperMarketRatesRepository extends JpaRepository<PaperMarketRat
             "GROUP_CONCAT(DISTINCT dimension) AS dimension, " +
             "GROUP_CONCAT(DISTINCT qty) AS qty, " +
             "GROUP_CONCAT(DISTINCT record_type) AS record_type, " +
-            "GROUP_CONCAT(DISTINCT status) AS status " +
+            "GROUP_CONCAT(DISTINCT status) AS status, " +
+            "GROUP_CONCAT(DISTINCT vendor) AS vendor " +
             "FROM paper_market_rates",
             nativeQuery = true)
     Map<String, String> findAllDistinctValues();
