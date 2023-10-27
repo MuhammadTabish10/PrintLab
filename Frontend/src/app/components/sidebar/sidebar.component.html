@@ -9,14 +9,6 @@
         />
       </span>
     </li>
-    <!-- <li *ngFor="let option of options">
-          <span class="sidebar-list-hover">
-            <a routerLink="/{{option.link}}" class="nav-link">
-              <i class="{{option.icon}}"></i>
-              <h6 class="nav-text">{{option.name}}</h6>
-            </a>
-          </span>
-        </li> -->
 
     <li *ngIf="sessionStorageService.hasPermission('Dashboard')">
       <span class="sidebar-list-hover">
@@ -27,19 +19,19 @@
       </span>
     </li>
 
-    <!-- <li *ngIf="sessionStorageService.hasPermission('Products')" class="mt-2">
-      <span class="sidebar-list-hover">
-        <i class="fa fa-shopping-bag fa-2x"></i>
-        <a class="nav-text nav-link" [routerLink]="['/products']"> Products </a>
-      </span>
-    </li> -->
-
     <li *ngIf="sessionStorageService.hasPermission('ProductRule')" class="mt-2">
       <span class="sidebar-list-hover">
         <i class="fa fa-shopping-bag fa-2x"></i>
         <a class="nav-text nav-link" [routerLink]="['/ProductRule']">
           Product Rule
         </a>
+      </span>
+    </li>
+
+    <li *ngIf="sessionStorageService.hasPermission('Orders')" class="mt-2">
+      <span class="sidebar-list-hover">
+        <i class="fa fa-shopping-cart fa-2x"></i>
+        <a class="nav-text nav-link" [routerLink]="['/orders']"> Orders </a>
       </span>
     </li>
 
@@ -51,22 +43,22 @@
         </a>
       </span>
     </li>
-    <li *ngIf="sessionStorageService.hasPermission('Orders')" class="mt-2">
-      <span class="sidebar-list-hover">
-        <i class="fa fa-shopping-cart fa-2x"></i>
-        <a class="nav-text nav-link" [routerLink]="['/orders']"> Orders </a>
+
+    <li
+      class="settingOptions mt-2"
+      *ngIf="sessionStorageService.hasPermission('Configuration_Vendor')"
+    >
+      <span>
+        <a
+          class="sidebar-list-hover-settings"
+          class="sidebar-list-hover-settings nav-link"
+          [routerLink]="['/vendor']"
+        >
+          <i class="fa fa-gear fa-2x"></i>
+          <span class="nav-text">Vendor</span>
+        </a>
       </span>
     </li>
-
-    <!-- <li *ngIf="sessionStorageService.hasPermission('Products')">
-          <span class="sidebar-list-hover" (click)="addProduct()">
-              <i class="fa fa-add fa-2x"></i>
-              <span class="nav-text">
-                  Add Product
-              </span>
-          </span>
-
-      </li> -->
 
     <li *ngIf="sessionStorageService.hasPermission('Calculator')" class="mt-2">
       <span class="sidebar-list-hover">
@@ -77,51 +69,26 @@
       </span>
     </li>
 
-    <li *ngIf="sessionStorageService.hasPermission('PaperStock')" class="mt-2">
-      <span class="sidebar-list-hover">
-        <i class="fa fa-pied-piper"></i>
-        <a class="nav-text nav-link" [routerLink]="['/paperStock']">
-          Paper Stock
-        </a>
-      </span>
-    </li>
-
-    <li *ngIf="sessionStorageService.hasPermission('Permissions')" class="mt-2">
-      <span class="sidebar-list-hover">
-        <i class="fa fa-plus"></i>
-        <a class="nav-text nav-link" [routerLink]="['/permission']">
-          Permissions
-        </a>
-      </span>
-    </li>
-
     <li
       class="sidebar-list-hover mt-2"
       *ngIf="sessionStorageService.hasPermission('Configuration')"
     >
-      <span (click)="toggleSettings()">
+      <span (click)="toggleDropDown(1)">
         <i class="fa fa-bars fa-2x"></i>
         <span class="nav-text">
-          Configuration
+          Paper Management
           <i
             class="fa-solid fa-chevron-down dd-icon-settings"
-            *ngIf="settingFlag == false"
+            *ngIf="isDropDown1Open == false"
           ></i>
           <i
             class="fa-solid fa-chevron-up dd-icon-settings"
-            *ngIf="settingFlag == true"
+            *ngIf="isDropDown1Open == true"
           ></i>
         </span>
       </span>
     </li>
-    <!-- <li class="settingOptions" *ngIf="sessionStorageService.hasPermission('Configuration_Product_Field')">
-        <span (click)="configurationProductField()">
-          <a class="sidebar-list-hover-settings" *ngIf="settingFlag == true" class="sidebar-list-hover-settings nav-link">
-            <i class="fa fa-gear fa-2x"></i>
-            <span class="nav-text">Product Field</span>
-          </a>
-        </span>
-      </li> -->
+
     <li
       class="settingOptions mt-2"
       *ngIf="sessionStorageService.hasPermission('Configuration_Paper_Size')"
@@ -129,7 +96,7 @@
       <span>
         <a
           class="sidebar-list-hover-settings"
-          *ngIf="settingFlag == true"
+          *ngIf="isDropDown1Open == true"
           class="sidebar-list-hover-settings nav-link"
           [routerLink]="['/paperSize']"
         >
@@ -138,6 +105,16 @@
         </a>
       </span>
     </li>
+
+    <li *ngIf="sessionStorageService.hasPermission('PaperStock')" class="mt-2">
+      <span class="sidebar-list-hover" *ngIf="isDropDown1Open == true">
+        <i class="fa fa-pied-piper"></i>
+        <a class="nav-text nav-link" [routerLink]="['/paperStock']">
+          Paper Stock
+        </a>
+      </span>
+    </li>
+
     <li
       class="settingOptions mt-2"
       *ngIf="sessionStorageService.hasPermission('Configuration_Uping')"
@@ -145,7 +122,7 @@
       <span>
         <a
           class="sidebar-list-hover-settings"
-          *ngIf="settingFlag == true"
+          *ngIf="isDropDown1Open == true"
           class="sidebar-list-hover-settings nav-link"
           [routerLink]="['/uping']"
         >
@@ -154,20 +131,114 @@
         </a>
       </span>
     </li>
+
     <li
       class="settingOptions mt-2"
-      *ngIf="sessionStorageService.hasPermission('Configuration_Vendor')"
+      *ngIf="sessionStorageService.hasPermission('Configuration_Inventory')"
     >
       <span>
         <a
           class="sidebar-list-hover-settings"
-          *ngIf="settingFlag == true"
+          *ngIf="isDropDown1Open == true"
           class="sidebar-list-hover-settings nav-link"
-          [routerLink]="['/vendor']"
+          [routerLink]="['/inventory']"
         >
           <i class="fa fa-gear fa-2x"></i>
-          <span class="nav-text">Vendor</span>
+          <span class="nav-text">Inventory</span>
         </a>
+      </span>
+    </li>
+
+    <li
+      class="sidebar-list-hover mt-2"
+      *ngIf="sessionStorageService.hasPermission('Configuration')"
+    >
+      <span (click)="toggleDropDown(2)">
+        <i class="fa fa-bars fa-2x"></i>
+        <span class="nav-text">
+          Vendor Rates
+          <i
+            class="fa-solid fa-chevron-down dd-icon-settings"
+            *ngIf="isDropDown2Open == false"
+          ></i>
+          <i
+            class="fa-solid fa-chevron-up dd-icon-settings"
+            *ngIf="isDropDown2Open == true"
+          ></i>
+        </span>
+      </span>
+    </li>
+
+    <li
+      class="settingOptions mt-2"
+      *ngIf="sessionStorageService.hasPermission('Configuration_CTP')"
+    >
+      <span>
+        <a
+          class="sidebar-list-hover-settings"
+          *ngIf="isDropDown2Open"
+          class="sidebar-list-hover-settings nav-link"
+          [routerLink]="['/ctp']"
+        >
+          <i class="fa fa-gear fa-2x"></i>
+          <span class="nav-text">CTP</span>
+        </a>
+      </span>
+    </li>
+
+    <li
+      class="settingOptions mt-2"
+      *ngIf="sessionStorageService.hasPermission('Configuration_Press_Machine')"
+    >
+      <span>
+        <a
+          class="sidebar-list-hover-settings"
+          *ngIf="isDropDown2Open"
+          class="sidebar-list-hover-settings nav-link"
+          [routerLink]="['/pressMachine']"
+        >
+          <i class="fa fa-gear fa-2x"></i>
+          <span class="nav-text">Press Machine</span>
+        </a>
+      </span>
+    </li>
+
+    <li
+      class="settingOptions mt-2"
+      *ngIf="
+        sessionStorageService.hasPermission('Configuration_Paper_Market_Rate')
+      "
+    >
+      <span>
+        <a
+          class="sidebar-list-hover-settings"
+          *ngIf="isDropDown2Open"
+          class="sidebar-list-hover-settings nav-link"
+          [routerLink]="['/paperMarket']"
+        >
+          <i class="fa fa-gear fa-2x"></i>
+          <span class="nav-text">Paper Market</span>
+        </a>
+      </span>
+    </li>
+
+    <li
+      class="sidebar-list-hover mt-2"
+      *ngIf="sessionStorageService.hasPermission('Configuration')"
+    >
+      <span (click)="toggleDropDown(3)">
+        <i class="fa fa-bars fa-2x"></i>
+        <span class="nav-text">
+          System
+          <i
+            class="fa-solid fa-chevron-down dd-icon-settings"
+            *ngIf="isDropDown3Open == false"
+          ></i>
+          <i
+            class="fa-solid fa-chevron-up dd-icon-settings"
+            *ngIf="isDropDown3Open == true"
+          ></i>
+        </span>
       </span>
     </li>
 
@@ -180,7 +251,7 @@
       <span>
         <a
           class="sidebar-list-hover-settings"
-          *ngIf="settingFlag == true"
+          *ngIf="isDropDown3Open"
           class="sidebar-list-hover-settings nav-link"
           [routerLink]="['/productProcess']"
         >
@@ -197,7 +268,7 @@
       <span>
         <a
           class="sidebar-list-hover-settings"
-          *ngIf="settingFlag == true"
+          *ngIf="isDropDown3Open"
           class="sidebar-list-hover-settings nav-link"
           [routerLink]="['/settings']"
         >
@@ -207,100 +278,11 @@
       </span>
     </li>
 
-    <li
-      class="settingOptions mt-2"
-      *ngIf="sessionStorageService.hasPermission('Configuration_Inventory')"
-    >
-      <span>
-        <a
-          class="sidebar-list-hover-settings"
-          *ngIf="settingFlag == true"
-          class="sidebar-list-hover-settings nav-link"
-          [routerLink]="['/inventory']"
-        >
-          <i class="fa fa-gear fa-2x"></i>
-          <span class="nav-text">Inventory</span>
-        </a>
-      </span>
-    </li>
-
-    <li
-      class="sidebar-list-hover mt-2"
-      *ngIf="sessionStorageService.hasPermission('Configuration')"
-    >
-      <span (click)="toggleProcess()">
-        <i class="fa fa-bars fa-2x"></i>
-        <span class="nav-text">
-          Process
-          <i
-            class="fa-solid fa-chevron-down dd-icon-settings"
-            *ngIf="processFlag == false"
-          ></i>
-          <i
-            class="fa-solid fa-chevron-up dd-icon-settings"
-            *ngIf="processFlag == true"
-          ></i>
-        </span>
-      </span>
-    </li>
-    <!-- <li class="settingOptions" *ngFor="let el of configurationOptions">
-        <span>
-          <a routerLink="/{{el.link}}" class="sidebar-list-hover-settings" *ngIf="settingFlag == true" class="sidebar-list-hover-settings nav-link">
-            <i class="fa fa-gear fa-2x"></i>
-            <span class="nav-text">{{el.name}}</span>
-          </a>
-        </span>
-      </li> -->
-
-    <li
-      class="settingOptions mt-2"
-      *ngIf="
-        sessionStorageService.hasPermission('Configuration_Paper_Market_Rate')
-      "
-    >
-      <span>
-        <a
-          class="sidebar-list-hover-settings"
-          *ngIf="processFlag == true"
-          class="sidebar-list-hover-settings nav-link"
-          [routerLink]="['/paperMarket']"
-        >
-          <i class="fa fa-gear fa-2x"></i>
-          <span class="nav-text">Paper Market</span>
-        </a>
-      </span>
-    </li>
-
-    <li
-      class="settingOptions mt-2"
-      *ngIf="sessionStorageService.hasPermission('Configuration_Press_Machine')"
-    >
-      <span>
-        <a
-          class="sidebar-list-hover-settings"
-          *ngIf="processFlag == true"
-          class="sidebar-list-hover-settings nav-link"
-          [routerLink]="['/pressMachine']"
-        >
-          <i class="fa fa-gear fa-2x"></i>
-          <span class="nav-text">Press Machine</span>
-        </a>
-      </span>
-    </li>
-
-    <li
-      class="settingOptions mt-2"
-      *ngIf="sessionStorageService.hasPermission('Configuration_CTP')"
-    >
-      <span>
-        <a
-          class="sidebar-list-hover-settings"
-          *ngIf="processFlag == true"
-          class="sidebar-list-hover-settings nav-link"
-          [routerLink]="['/ctp']"
-        >
-          <i class="fa fa-gear fa-2x"></i>
-          <span class="nav-text">CTP</span>
+    <li *ngIf="sessionStorageService.hasPermission('Permissions')" class="mt-2">
+      <span class="sidebar-list-hover" *ngIf="isDropDown3Open">
+        <i class="fa fa-plus"></i>
+        <a class="nav-text nav-link" [routerLink]="['/permission']">
+          Permissions
         </a>
       </span>
     </li>

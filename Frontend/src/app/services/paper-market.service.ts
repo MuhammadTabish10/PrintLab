@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/Environments/environment';
 
@@ -40,7 +40,24 @@ export class PaperMarketService {
   }
 
   searchPaperMarket(paperStock: any) {
+    debugger
     let url = `${this._url}/paper-market-rates/paper-stocks/${paperStock}`
+    return this.http.get(url)
+  }
+
+  getFilteredAndPaginatedData(pageInfo?: any, search?: any) {
+    let params = new HttpParams();
+
+    if (pageInfo?.hasOwnProperty('page')) {
+      params = params.set('pageNumber', pageInfo.page);
+    }
+
+    let url = `${this._url}/paper-market-rates/search`;
+
+    return this.http.post(url, search ? search : {}, { params });
+  }
+  getDistinctData() {
+    let url = `${this._url}/paper-market-rates/distinct-values`
     return this.http.get(url)
   }
 }

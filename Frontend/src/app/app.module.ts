@@ -62,9 +62,15 @@ import { PaperStockComponent } from './pages/paper-stock/paper-stock.component';
 import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.component';
 import { ViewProductRuleComponent } from './pages/view-product-rule/view-product-rule.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-
-
-
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { TagModule } from 'primeng/tag';
+import {ProgressBarModule} from 'primeng/progressbar';
+import { SliderModule } from 'primeng/slider';
+import { PaginatorModule } from 'primeng/paginator';
+import { CalendarModule } from 'primeng/calendar';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [
@@ -128,6 +134,15 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
     ToastModule,
     CardModule,
     ChartModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    TagModule,
+    ProgressBarModule,
+    SliderModule,
+    PaginatorModule,
+    CalendarModule,
+    FileUploadModule
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,
     provideRouter(routes, withHashLocation()), DatePipe],
