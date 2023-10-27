@@ -341,6 +341,4 @@ public class UpingServiceImpl implements UpingService {
         uping.setUpingPaperSize(upingPaperSizes);
         return uping;
     }
-
-
 }

@@ -372,9 +372,47 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
-    public Map<String,String> findAllDistinctValues() {
-        return paperMarketRatesRepository.findAllDistinctValues();
+    public Map<String, String> findAllDistinctValues() {
+        Map<String, String> values = paperMarketRatesRepository.findAllDistinctValues();
+
+        if (values.containsKey("vendor")) {
+            // Extract the comma-separated vendor IDs
+            String vendorIds = values.get("vendor");
+            String[] vendorIdArray = vendorIds.split(",");
+
+            // Create a StringBuilder to store comma-separated vendor IDs and names
+            StringBuilder vendorInfo = new StringBuilder();
+
+            // Find Vendor objects by their IDs and append their IDs and names to the StringBuilder
+            for (String vendorId : vendorIdArray) {
+                Optional<Vendor> optionalVendor = vendorRepository.findById(Long.valueOf(vendorId.trim()));
+                optionalVendor.ifPresent(vendor -> {
+                    String trimmedName = vendor.getName().trim();
+                    if (!trimmedName.isEmpty()) {
+                        if (vendorInfo.length() > 0) {
+                            vendorInfo.append(",");
+                        }
+                        vendorInfo.append(vendor.getId()).append(":").append(trimmedName);
+                    }
+                });
+            }
+
+            // Create a new map to store modified values
+            Map<String, String> modifiedValues = new HashMap<>(values);
+
+            // Replace vendor IDs with comma-separated vendor IDs and names in the new map
+            modifiedValues.put("vendor", vendorInfo.toString());
+
+            return modifiedValues;
+        }
+
+        return values;
     }
+
+
+
+
+
 
     public PaperMarketRatesDto toDto(PaperMarketRates paperMarketRates) {
         return PaperMarketRatesDto.builder()
