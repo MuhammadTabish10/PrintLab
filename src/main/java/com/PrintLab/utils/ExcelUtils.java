@@ -30,6 +30,29 @@ public class ExcelUtils {
         return lowercaseFilename.endsWith(".xlsx");
     }
 
+    public static List<String> parseFirstRow(MultipartFile file) {
+        List<String> columns = new ArrayList<>();
+
+        try (InputStream is = file.getInputStream()) {
+            Workbook workbook = WorkbookFactory.create(is);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            Row firstRow = sheet.getRow(0);
+            if (firstRow != null) {
+                for (Cell cell : firstRow) {
+                    String columnName = getCellValueAsString(cell, workbook);
+                    columns.add(columnName);
+                }
+            }
+
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return columns;
+    }
+
 
     public static List<List<String>> parseExcelFile(MultipartFile file) {
         List<List<String>> rows = new ArrayList<>();

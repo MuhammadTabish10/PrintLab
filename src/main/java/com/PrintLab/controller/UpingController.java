@@ -35,8 +35,8 @@ public class UpingController
     @GetMapping("/page")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaginationResponse> getAllPaginatedUping(
-            @RequestParam(value = "page-number", defaultValue = "0", required = false) Integer pageNumber,
-            @RequestParam(value = "page-size", defaultValue = "15", required = false) Integer pageSize
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "15", required = false) Integer pageSize
     ) {
         PaginationResponse paginationResponse = upingService.getAllPaginatedUping(pageNumber, pageSize);
         return ResponseEntity.ok(paginationResponse);

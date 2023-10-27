@@ -1,7 +1,6 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.PaginationResponse;
-import com.PrintLab.dto.PaperMarketRatesDto;
 import com.PrintLab.dto.UpingDto;
 import com.PrintLab.dto.UpingPaperSizeDto;
 import com.PrintLab.exception.RecordNotFoundException;
@@ -238,16 +237,20 @@ public class UpingServiceImpl implements UpingService {
     @Override
     @Transactional
     public List<UpingDto> uploadFile(MultipartFile multipartFile) {
-        List<Uping> uppingList = new ArrayList<>();
+        List<Uping> upingList = new ArrayList<>();
         List<UpingDto> upingDtoList = new ArrayList<>();
-
         if (ExcelUtils.hasExcelFormat(multipartFile)) {
-            List<List<String>> upPingFile = ExcelUtils.parseExcelFile(multipartFile);
+            List<List<String>> upingFile = ExcelUtils.parseExcelFile(multipartFile);
+            List<String> excelColumns = ExcelUtils.parseFirstRow(multipartFile);
+            List<String> upingTableColumns = upingRepository.getTableColumns();
+            upingTableColumns.remove(0);
 
-            // Start the loop from index 1 to skip the first row
-            for (int i = 1; i < upPingFile.size(); i++) {
-                List<String> oneRow = upPingFile.get(i);
+            if (!upingTableColumns.containsAll(excelColumns)) {
+                throw new RecordNotFoundException("Excel columns do not match Uping table columns.");
+            }
 
+            for(int i = 1; i < upingFile.size(); i++){
+                List<String> oneRow = upingFile.get(i);
                 Uping uping = Uping.builder()
                         .category(oneRow.get(0))
                         .inch(oneRow.get(1))
@@ -258,18 +261,15 @@ public class UpingServiceImpl implements UpingService {
                         .status(oneRow.get(6).equals("1"))
                         .unit(oneRow.get(7))
                         .build();
-                uppingList.add(uping);
+                upingList.add(uping);
             }
 
-            // Save the uppingList to the database
-            List<Uping> savedUping = upingRepository.saveAll(uppingList);
+            List<Uping> savedUping = upingRepository.saveAll(upingList);
 
-            // Convert savedUping to DTOs and add them to upingDtoList
             upingDtoList = savedUping.stream()
                     .map(this::toDto)
                     .collect(Collectors.toList());
         }
-
         return upingDtoList;
     }
 

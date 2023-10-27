@@ -1,6 +1,5 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.model.Uping;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +23,7 @@ public interface UpingRepository extends JpaRepository<Uping,Long> {
     @Modifying
     @Query("UPDATE Uping u SET u.status = false WHERE u.id = :id")
     void setStatusInactive(@Param("id") Long id);
+
+    @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_name = 'uping'", nativeQuery = true)
+    List<String> getTableColumns();
 }
