@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/Environments/environment';
 
@@ -19,6 +19,16 @@ export class UpingService {
   getUping() {
     let url = `${this._url}/uping`
     return this.http.get(url)
+  }
+
+  getUpingWithPagination(pagination?: any) {
+    
+    const params = new HttpParams()
+      .set('pageNumber', pagination?.page ? pagination?.page : 0)
+
+      
+    let url = `${this._url}/uping/page`
+    return this.http.get(url,{params})
   }
 
   deleteUping(id: any) {

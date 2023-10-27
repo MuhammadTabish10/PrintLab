@@ -39,10 +39,11 @@ export class PaperMarketService {
     return this.http.put(url, obj)
   }
 
-  // searchPaperMarket(paperStock: any) {
-  //   let url = `${this._url}/paper-market-rates/paper-stocks/${paperStock}`
-  //   return this.http.get(url)
-  // }
+  searchPaperMarket(paperStock: any) {
+    debugger
+    let url = `${this._url}/paper-market-rates/paper-stocks/${paperStock}`
+    return this.http.get(url)
+  }
 
   getFilteredAndPaginatedData(pageInfo?: any, search?: any) {
     let params = new HttpParams();
@@ -54,5 +55,9 @@ export class PaperMarketService {
     let url = `${this._url}/paper-market-rates/search`;
 
     return this.http.post(url, search ? search : {}, { params });
+  }
+  getDistinctData() {
+    let url = `${this._url}/paper-market-rates/distinct-values`
+    return this.http.get(url)
   }
 }

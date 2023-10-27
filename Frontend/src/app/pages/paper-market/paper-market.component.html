@@ -85,27 +85,17 @@
               icon="pi pi-filter-slash"
               (click)="clear()"
             ></button>
-            <span class="p-input-icon-left float-end">
-              <i class="pi pi-search"></i>
-              <input
-                pInputText
-                type="text"
-                (input)="getFilteredAndPaginatedData(null, $event.target)"
-                placeholder="Search keyword"
-              />
-              <button
-                pButton
-                label="Add"
-                class="p-button-dark bg-dark ms-2"
-                icon="pi pi-plus"
-                routerLink="/addPaperMarket"
-              ></button>
-            </span>
+            <button
+              pButton
+              label="Add"
+              class="p-button-dark bg-dark float-end"
+              icon="pi pi-plus"
+              routerLink="/addPaperMarket"
+            ></button>
           </div>
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th class="col">ID</th>
             <th class="col">
               <div class="d-flex justify-content-center">
                 Timestamp
@@ -115,15 +105,17 @@
                   display="menu"
                   [showAddButton]="false"
                 >
-                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
                     <p-calendar
-                      [showTime]="true"
                       (onSelect)="onDateSelect($event)"
                     ></p-calendar>
                   </ng-template>
                 </p-columnFilter>
               </div>
-
             </th>
             <th class="col">
               <div class="d-flex justify-content-center">
@@ -146,7 +138,7 @@
                     let-value
                     let-filter="filterCallback"
                   >
-                    <p-multiSelect
+                    <p-dropdown
                       [ngModel]="value"
                       [options]="papersToFilter"
                       placeholder="PaperStock"
@@ -160,7 +152,7 @@
                           <span class="ml-1 mt-1">{{ option.paperStock }}</span>
                         </div>
                       </ng-template>
-                    </p-multiSelect>
+                    </p-dropdown>
                   </ng-template>
                 </p-columnFilter>
               </div>
@@ -186,7 +178,7 @@
                     let-value
                     let-filter="filterCallback"
                   >
-                    <p-multiSelect
+                    <p-dropdown
                       [ngModel]="value"
                       [options]="brandsToFilter"
                       placeholder="Brand"
@@ -200,7 +192,7 @@
                           <span class="ml-1 mt-1">{{ option.brand }}</span>
                         </div>
                       </ng-template>
-                    </p-multiSelect>
+                    </p-dropdown>
                   </ng-template>
                 </p-columnFilter>
               </div>
@@ -226,7 +218,7 @@
                     let-value
                     let-filter="filterCallback"
                   >
-                    <p-multiSelect
+                    <p-dropdown
                       [ngModel]="value"
                       [options]="madeInToFilter"
                       placeholder="Made In"
@@ -240,7 +232,7 @@
                           <span class="ml-1 mt-1">{{ option.madeIn }}</span>
                         </div>
                       </ng-template>
-                    </p-multiSelect>
+                    </p-dropdown>
                   </ng-template>
                 </p-columnFilter>
               </div>
@@ -266,7 +258,7 @@
                     let-value
                     let-filter="filterCallback"
                   >
-                    <p-multiSelect
+                    <p-dropdown
                       [ngModel]="value"
                       [options]="gsmToFilter"
                       placeholder="Gsm"
@@ -280,7 +272,7 @@
                           <span class="ml-1 mt-1">{{ option.gsm }}</span>
                         </div>
                       </ng-template>
-                    </p-multiSelect>
+                    </p-dropdown>
                   </ng-template>
                 </p-columnFilter>
               </div>
@@ -306,7 +298,7 @@
                     let-value
                     let-filter="filterCallback"
                   >
-                    <p-multiSelect
+                    <p-dropdown
                       [ngModel]="value"
                       [options]="dimensionsToFilter"
                       placeholder="Dimension"
@@ -320,13 +312,12 @@
                           <span class="ml-1 mt-1">{{ option.dimension }}</span>
                         </div>
                       </ng-template>
-                    </p-multiSelect>
+                    </p-dropdown>
                   </ng-template>
                 </p-columnFilter>
               </div>
             </th>
             <th class="col">
-
               <div class="d-flex justify-content-center">
                 Quantity
                 <p-columnFilter
@@ -335,54 +326,41 @@
                   display="menu"
                   [showAddButton]="false"
                 >
-                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                    <input
-                      pInputText
-                      type="number"
-                      (input)="applyQuantityFilter($event.target)"
-                      placeholder="Quantity"
-                    />
-                  </ng-template>
-                </p-columnFilter>
-              </div>
-
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">
-                Kg
-                <p-columnFilter
-                  field="representative"
-                  matchMode="in"
-                  display="menu"
-                  [showMatchModes]="false"
-                  [showOperator]="false"
-                  [showAddButton]="false"
-                >
-                  <ng-template pTemplate="header">
-                    <div class="px-3 pt-3 pb-0">
-                      <span class="font-bold">Kg Picker</span>
-                    </div>
-                  </ng-template>
                   <ng-template
                     pTemplate="filter"
                     let-value
                     let-filter="filterCallback"
                   >
-                    <p-multiSelect
-                      [ngModel]="value"
-                      [options]="kgToFilter"
-                      placeholder="Kg"
-                      (onChange)="
-                        getFilteredAndPaginatedData(null, $event.value)
-                      "
-                      optionLabel="kg"
-                    >
-                      <ng-template let-option pTemplate="item">
-                        <div class="inline-block vertical-align-middle">
-                          <span class="ml-1 mt-1">{{ option.kg }}</span>
-                        </div>
-                      </ng-template>
-                    </p-multiSelect>
+                    <input
+                      pInputText
+                      type="number"
+                      (input)="applyFilter('qty', $event.target)"
+                      placeholder="Quantity"
+                    />
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">
+                Kg
+                <p-columnFilter
+                  type="numeric"
+                  field="Kg"
+                  display="menu"
+                  [showAddButton]="false"
+                >
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <input
+                      pInputText
+                      type="number"
+                      (input)="applyFilter('kg', $event.target)"
+                      placeholder="KG"
+                    />
                   </ng-template>
                 </p-columnFilter>
               </div>
@@ -390,7 +368,7 @@
             <th class="col">
               <div class="d-flex justify-content-center">
                 Vendor
-                <p-columnFilter
+                <!-- <p-columnFilter
                   field="representative"
                   matchMode="in"
                   display="menu"
@@ -408,7 +386,7 @@
                     let-value
                     let-filter="filterCallback"
                   >
-                    <p-multiSelect
+                    <p-dropdown
                       [ngModel]="value"
                       [options]="vendorToFilter"
                       placeholder="Vendor"
@@ -422,9 +400,9 @@
                           <span class="ml-1 mt-1">{{ option.vendor }}</span>
                         </div>
                       </ng-template>
-                    </p-multiSelect>
+                    </p-dropdown>
                   </ng-template>
-                </p-columnFilter>
+                </p-columnFilter> -->
               </div>
             </th>
             <th class="col">
@@ -448,7 +426,7 @@
                     let-value
                     let-filter="filterCallback"
                   >
-                    <p-multiSelect
+                    <p-dropdown
                       [ngModel]="value"
                       [options]="recordToFilter"
                       placeholder="Record Type"
@@ -462,7 +440,7 @@
                           <span class="ml-1 mt-1">{{ option.recordType }}</span>
                         </div>
                       </ng-template>
-                    </p-multiSelect>
+                    </p-dropdown>
                   </ng-template>
                 </p-columnFilter>
               </div>
@@ -476,11 +454,15 @@
                   display="menu"
                   [showAddButton]="false"
                 >
-                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
                     <input
                       pInputText
                       type="number"
-                      (input)="applyRateFilter($event.target)"
+                      (input)="applyFilter('ratePkr', $event.target)"
                       placeholder="Pkr"
                     />
                   </ng-template>
@@ -508,7 +490,7 @@
                     let-value
                     let-filter="filterCallback"
                   >
-                    <p-multiSelect
+                    <p-dropdown
                       [ngModel]="value"
                       [options]="statusToFilter"
                       placeholder="Status"
@@ -522,7 +504,7 @@
                           <span class="ml-1 mt-1">{{ option.status }}</span>
                         </div>
                       </ng-template>
-                    </p-multiSelect>
+                    </p-dropdown>
                   </ng-template>
                 </p-columnFilter>
               </div>
@@ -534,9 +516,6 @@
         </ng-template>
         <ng-template pTemplate="body" let-element>
           <tr>
-            <td class="text-center">
-              {{ element?.id }}
-            </td>
             <td class="text-center">
               {{ element?.timeStamp }}
             </td>
@@ -559,16 +538,16 @@
               {{ element?.qty }}
             </td>
             <td class="text-center">
-              {{ element?.kg }}
+              {{ element?.kg.toFixed(2) }}
             </td>
             <td class="text-center">
-              {{ element?.vendor }}
+              {{ element?.vendor.name }}
             </td>
             <td class="text-center">
               {{ element?.recordType }}
             </td>
             <td class="text-center">
-              {{ element?.ratePkr | currency : "PKR" : "symbol" }}
+              {{ element?.ratePkr.toFixed(2) }}
             </td>
             <td class="text-center">
               {{ element?.status }}
@@ -599,7 +578,7 @@
         </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="7">No customers found.</td>
+            <td colspan="13" class="text-center">No Paper Found.</td>
           </tr>
         </ng-template>
       </p-table>
@@ -608,7 +587,7 @@
         [totalRecords]="filterRes?.totalElements"
         (onPageChange)="getFilteredAndPaginatedData($event)"
         currentPageReportTemplate="Showing {{
-          filterRes?.pageNumber * filterRes?.pageSize + 1
+          filterRes?.pageNumber * filterRes?.pageSize
         }} to {{ (filterRes?.pageNumber + 1) * filterRes?.pageSize }} of {{
           filterRes?.totalElements
         }} entries"
@@ -617,6 +596,8 @@
         [showCurrentPageReport]="true"
       ></p-paginator>
     </div>
+
+    
   </div>
 </div>
 <p-toast></p-toast>

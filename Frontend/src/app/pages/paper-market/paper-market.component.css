@@ -7,3 +7,6 @@
 .p-column-filter-overlay-menu .p-column-filter-constraint .p-column-filter-matchmode-dropdown {
   display: none !important;
 }
+.p-column-filter-overlay {
+  min-width: 25.5rem !important;
+}

@@ -67,10 +67,10 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import {ProgressBarModule} from 'primeng/progressbar';
-import { FilterTestService } from 'src/app/services/filter-test-service.service';
 import { SliderModule } from 'primeng/slider';
 import { PaginatorModule } from 'primeng/paginator';
 import { CalendarModule } from 'primeng/calendar';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [
@@ -141,9 +141,10 @@ import { CalendarModule } from 'primeng/calendar';
     ProgressBarModule,
     SliderModule,
     PaginatorModule,
-    CalendarModule
+    CalendarModule,
+    FileUploadModule
   ],
-  providers: [AuthInterceptorProvider, InterceptorService,MessageService,FilterTestService,
+  providers: [AuthInterceptorProvider, InterceptorService,MessageService,
     provideRouter(routes, withHashLocation()), DatePipe],
   bootstrap: [AppComponent]
 })
