@@ -322,13 +322,13 @@ export class PaperMarketComponent implements OnInit {
   }
 
   getFilteredAndPaginatedData(page?: any, search?: any): void {
-    
+    debugger
     if (this.searchFromQueryParam) {
       page = null;
     }
 
     const transformSearch = (search: any, field: any) => {
-      
+
       return search?.hasOwnProperty(field) ? { [field]: search[field] } : null;
     };
 
@@ -344,14 +344,14 @@ export class PaperMarketComponent implements OnInit {
       ...transformSearch(search, 'recordType'),
       ...transformSearch(search, 'ratePkr'),
       ...transformSearch(search, 'status'),
-      ...transformSearch(search, 'vendor')
+      ...transformSearch(search, 'vId')
     };
 
     if (search) {
       this.fullObj = { ...this.fullObj, ...obj };
       console.log(this.fullObj);
     }
-    
+
 
     this.paperMarketService.getFilteredAndPaginatedData(page, this.fullObj).subscribe(
       (res: any) => {
@@ -408,7 +408,7 @@ export class PaperMarketComponent implements OnInit {
   }
 
   applyFilter(field: string, target: any): void {
-    
+
     const filterValue = Number(target.value);
     const filter = field === 'qty' || field === 'ratePkr' || field === 'kg'
       ? { [field]: filterValue }
@@ -494,10 +494,14 @@ export class PaperMarketComponent implements OnInit {
           dimension: dimension.trim()
         }));
         debugger
-        const vendorArray = data.vendor.split(',');
-        this.vendorToFilter = vendorArray.map((vendor: string) => ({
-          vendor: vendor.trim()
-        }));
+        const vendorEntries = data.vendor.split(',');
+        this.vendorToFilter = vendorEntries.map((entry: any) => {
+          const [Id, name] = entry.split(':');
+          return {
+            vId: +Id,
+            vendor: name
+          };
+        });
         const recordArray = data.record_type.split(',');
         this.recordToFilter = recordArray.map((record: string) => ({
           recordType: record.trim()
@@ -506,7 +510,7 @@ export class PaperMarketComponent implements OnInit {
         this.statusToFilter = statusArray.map((status: string) => ({
           status: status.trim()
         }));
-        
+
       }
     }, error => {
 
