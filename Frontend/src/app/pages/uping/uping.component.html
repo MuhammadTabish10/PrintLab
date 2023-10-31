@@ -5,6 +5,7 @@
     <div>
       <h4>Uping</h4>
     </div>
+
     <div class="card flex justify-content-center">
       <p-toast></p-toast>
       <p-fileUpload
@@ -12,6 +13,7 @@
         [url]="_url"
         (onUpload)="onUpload($event)"
         [multiple]="false"
+        uploadStyleClass="#22222"
         [maxFileSize]="1000000"
       >
       </p-fileUpload>

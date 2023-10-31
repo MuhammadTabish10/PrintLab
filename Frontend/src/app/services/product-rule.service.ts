@@ -49,4 +49,9 @@ export class ProductRuleService {
     let url = `${this._url}/product-rule/names/${name}`
     return this.http.get(url)
   }
+
+  checkUniqueProduct(title: any) {
+    let url = `${this._url}/product-rule/check-title/${title}`
+    return this.http.get(url)
+  }
 }

@@ -26,7 +26,7 @@ export class AddPaperMarketComponent implements OnInit {
   gsmValue: string = '';
   lengthValue!: number;
   widthValue!: number;
-  brandValue: string = '';
+  brandValue: any;
   madeInValue: string = '';
   kgValue: string = '';
   dimensionValue: string = '';
@@ -174,7 +174,7 @@ export class AddPaperMarketComponent implements OnInit {
     this.removeSpacesFromDimensionValue();
     let obj = {
       paperStock: this.paperStockValue.name,
-      brand: this.brandValue,
+      brand: this.brandValue.name,
       madeIn: this.madeInValue,
       gsm: this.gsmValue,
       length: this.lengthValue,
@@ -210,7 +210,7 @@ export class AddPaperMarketComponent implements OnInit {
     this.settingservice.getGsmByPaperStock(papervalue).subscribe(res => {
       this.gsmArray = res
       this.gsmValue = this.rateToUpdate.gsm
-      
+
     }, error => {
       this.showError(error);
       this.visible = true;

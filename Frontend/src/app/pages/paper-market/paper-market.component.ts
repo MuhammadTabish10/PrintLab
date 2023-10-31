@@ -42,7 +42,7 @@ export class PaperMarketComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private messageService: MessageService,
-  ) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.getFilteredAndPaginatedData();
@@ -55,7 +55,7 @@ export class PaperMarketComponent implements OnInit {
   }
 
   getFilteredAndPaginatedData(page?: any, search?: any): void {
-
+    debugger
     if (this.searchFromQueryParam) {
       page = null;
     }
@@ -77,7 +77,7 @@ export class PaperMarketComponent implements OnInit {
       ...transformSearch(search, 'recordType'),
       ...transformSearch(search, 'ratePkr'),
       ...transformSearch(search, 'status'),
-      ...transformSearch(search, 'vendor')
+      ...transformSearch(search, 'id')
     };
 
     if (search) {
@@ -191,10 +191,14 @@ export class PaperMarketComponent implements OnInit {
           dimension: dimension.trim()
         }));
         debugger
-        const vendorArray = data.vendor.split(',');
-        this.vendorToFilter = vendorArray.map((vendor: string) => ({
-          vendor: vendor.trim()
-        }));
+        const vendorEntries = data.vendor.split(',');
+        this.vendorToFilter = vendorEntries.map((entry: any) => {
+          const [Id, name] = entry.split(':');
+          return {
+            id: +Id,
+            vendor: name
+          };
+        });
         const recordArray = data.record_type.split(',');
         this.recordToFilter = recordArray.map((record: string) => ({
           recordType: record.trim()
@@ -206,12 +210,10 @@ export class PaperMarketComponent implements OnInit {
 
       }
     }, error => {
-      this.showError(error);
-      this.visible = true
+
     })
   }
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }
-

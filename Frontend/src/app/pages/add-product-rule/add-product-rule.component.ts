@@ -60,7 +60,8 @@ export class AddProductRuleComponent implements OnInit {
   valid: string = 'Valid';
   invalid: string = 'Please fill out this field.';
   disabled: boolean = false;
-  userFriendlyName: string = '';
+  userFriendlyName: any = [];
+  result: boolean = false;
 
   constructor(
     private productRuleService: ProductRuleService,
@@ -662,6 +663,14 @@ export class AddProductRuleComponent implements OnInit {
     } else {
       this.jobBack = value
     }
+  }
+  onFocusOutEvent(title: any) {
+    this.productRuleService.checkUniqueProduct(title.value).subscribe((result: any) => {
+      this.result = result;
+      debugger
+    }, err => {
+
+    });
   }
 }
 export interface Container {
