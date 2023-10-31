@@ -18,6 +18,7 @@ public class ProductRulePaperStock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String paperStock;
+    private String customerFriendlyName;
     private String brand;
     private String madeIn;
     private String dimension;

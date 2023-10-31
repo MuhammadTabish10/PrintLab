@@ -100,8 +100,6 @@ public class ProductProcessServiceImpl implements ProductProcessService
         if(optionalProductProcess.isPresent()){
             ProductProcess existingProductProcess = optionalProductProcess.get();
             existingProductProcess.setName(productProcess.getName());
-            existingProductProcess.setStatus(productProcess.getStatus());
-
 
             ProductProcess updatedProductProcess = productProcessRepository.save(existingProductProcess);
             return toDto(updatedProductProcess);

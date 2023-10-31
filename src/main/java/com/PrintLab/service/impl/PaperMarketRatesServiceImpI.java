@@ -9,7 +9,6 @@ import com.PrintLab.repository.PaperMarketRatesRepository;
 import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.PaperMarketRatesService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -193,15 +192,41 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         return paginationResponse;
     }
 
-
     @Override
     public Set<String> findDistinctPaperStocks() {
         return paperMarketRatesRepository.findDistinctPaperStocks();
     }
 
+//    @Override
+//    public Set<Vendor> findDistinctVendorsByPaperStock(String paperStock) {
+//        Set<Long> vendorIdList = paperMarketRatesRepository.findDistinctVendorsByPaperStock(paperStock);
+//        Set<Vendor> vendorSet = new HashSet<>();
+//        for (Long vendorId : vendorIdList) {
+//            Vendor vendor = vendorRepository.findById(vendorId)
+//                    .orElseThrow(() -> new RecordNotFoundException("Vendor not found for id: " + vendorId));
+//            vendorSet.add(vendor);
+//        }
+//        return vendorSet;
+//    }
+
     @Override
-    public Set<Vendor> findDistinctVendorsByPaperStock(String paperStock) {
-        Set<Long> vendorIdList = paperMarketRatesRepository.findDistinctVendorsByPaperStock(paperStock);
+    public Set<String> findDistinctBrandsByPaperStock(String paperStock) {
+        return paperMarketRatesRepository.findDistinctBrandsByPaperStock(paperStock);
+    }
+
+    @Override
+    public Set<String> findDistinctMadeInByPaperStockAndBrand(String paperStock, String brand) {
+        return paperMarketRatesRepository.findDistinctMadeInByPaperStockAndBrand(paperStock,brand);
+    }
+
+    @Override
+    public Set<String> findDimensionByPaperStockAndBrandAndMadeIn(String paperStock, String brand, String madeIn) {
+        return paperMarketRatesRepository.findDistinctDimensionByPaperStockAndBrandAndMadeIn(paperStock, brand, madeIn);
+    }
+
+    @Override
+    public Set<Vendor> findVendorByPaperStockAndBrandAndMadeInAndDimension(String paperStock, String brand, String madeIn, String dimension) {
+        Set<Long> vendorIdList = paperMarketRatesRepository.findDistinctVendorByPaperStockAndBrandAndMadeInAndDimension(paperStock, brand, madeIn, dimension);
         Set<Vendor> vendorSet = new HashSet<>();
         for (Long vendorId : vendorIdList) {
             Vendor vendor = vendorRepository.findById(vendorId)
@@ -212,23 +237,8 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     }
 
     @Override
-    public Set<String> findDistinctBrandsByPaperStockAndVendor(String paperStock, Vendor vendor) {
-        return paperMarketRatesRepository.findDistinctBrandsByPaperStockAndVendor(paperStock,vendor.getId());
-    }
-
-    @Override
-    public Set<String> findMadeInByPaperStockAndVendorAndBrand(String paperStock,Vendor vendor, String brand) {
-        return paperMarketRatesRepository.findDistinctMadeInByPaperStockAndVendorAndBrand(paperStock,vendor.getId(),brand);
-    }
-
-    @Override
-    public Set<String> findDimensionByPaperStockAndVendorAndBrandAndMadeIn(String paperStock, Vendor vendor, String brand, String madeIn) {
-        return paperMarketRatesRepository.findDistinctDimensionByPaperStockAndVendorAndBrandAndMadeIn(paperStock, vendor.getId(), brand, madeIn);
-    }
-
-    @Override
-    public Set<String> findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(String paperStock, Vendor vendor, String brand, String madeIn, String dimension) {
-        return paperMarketRatesRepository.findDistinctGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(paperStock, vendor.getId(), brand, madeIn, dimension);
+    public Set<String> findGsmByPaperStockAndBrandAndMadeInAndDimensionAndVendor(String paperStock, String brand, String madeIn, String dimension, Vendor vendor) {
+        return paperMarketRatesRepository.findDistinctGsmByPaperStockAndBrandAndMadeInAndDimensionAndVendor(paperStock, brand, madeIn, dimension,vendor.getId());
     }
 
     @Override

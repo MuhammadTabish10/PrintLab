@@ -18,26 +18,26 @@ public interface PaperMarketRatesRepository extends JpaRepository<PaperMarketRat
     List<PaperMarketRates> findAllPaperMarketRatesByPaperStockOrderByTimestampDesc(@Param("paperStock") String paperStock);
     @Query("SELECT DISTINCT p.paperStock FROM PaperMarketRates p")
     Set<String> findDistinctPaperStocks();
-    @Query("SELECT DISTINCT p.vendor FROM PaperMarketRates p WHERE p.paperStock = :paperStock")
-    Set<Long> findDistinctVendorsByPaperStock(@Param("paperStock") String paperStock);
-    @Query("SELECT DISTINCT p.brand FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND p.vendor = :vendorId")
-    Set<String> findDistinctBrandsByPaperStockAndVendor(@Param("paperStock") String paperStock, @Param("vendorId") Long vendorId);
-    @Query("SELECT DISTINCT p.madeIn FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND vendor = :vendorId AND brand = :brand")
-    Set<String> findDistinctMadeInByPaperStockAndVendorAndBrand(@Param("paperStock") String paperStock,
-                                                                @Param("vendorId") Long vendorId,
-                                                                @Param("brand") String brand);
+    @Query("SELECT DISTINCT p.brand FROM PaperMarketRates p WHERE p.paperStock = :paperStock")
+    Set<String> findDistinctBrandsByPaperStock(@Param("paperStock") String paperStock);
+    @Query("SELECT DISTINCT p.madeIn FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND p.brand = :brand")
+    Set<String> findDistinctMadeInByPaperStockAndBrand(@Param("paperStock") String paperStock, @Param("brand") String brand);
+    @Query("SELECT DISTINCT p.dimension FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND brand = :brand AND madeIn = :madeIn")
+    Set<String> findDistinctDimensionByPaperStockAndBrandAndMadeIn(@Param("paperStock") String paperStock,
+                                                                @Param("brand") String brand,
+                                                                @Param("madeIn") String madeIn);
 
-    @Query("SELECT DISTINCT p.dimension FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND vendor = :vendorId AND brand = :brand AND madeIn = :madeIn")
-    Set<String> findDistinctDimensionByPaperStockAndVendorAndBrandAndMadeIn(@Param("paperStock") String paperStock,
-                                                                            @Param("vendorId") Long vendorId,
+    @Query("SELECT DISTINCT p.vendor FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND brand = :brand AND madeIn = :madeIn AND dimension = :dimension")
+    Set<Long> findDistinctVendorByPaperStockAndBrandAndMadeInAndDimension(@Param("paperStock") String paperStock,
                                                                             @Param("brand") String brand,
-                                                                            @Param("madeIn") String madeIn);
-    @Query("SELECT DISTINCT p.GSM FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND vendor = :vendorId AND brand = :brand AND madeIn = :madeIn And dimension = :dimension")
-    Set<String> findDistinctGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(@Param("paperStock") String paperStock,
-                                                                                  @Param("vendorId") Long vendorId,
+                                                                            @Param("madeIn") String madeIn,
+                                                                            @Param("dimension") String dimension);
+    @Query("SELECT DISTINCT p.GSM FROM PaperMarketRates p WHERE p.paperStock = :paperStock AND brand = :brand AND madeIn = :madeIn And dimension = :dimension AND vendor = :vendorId")
+    Set<String> findDistinctGsmByPaperStockAndBrandAndMadeInAndDimensionAndVendor(@Param("paperStock") String paperStock,
                                                                                   @Param("brand") String brand,
                                                                                   @Param("madeIn") String madeIn,
-                                                                                  @Param("dimension") String dimension);
+                                                                                  @Param("dimension") String dimension,
+                                                                                  @Param("vendorId") Long vendorId);
 
     @Query("SELECT pmr FROM PaperMarketRates pmr WHERE pmr.paperStock = :paperStock AND pmr.vendor = :vendorId AND pmr.brand = :brand AND pmr.madeIn = :madeIn AND pmr.dimension = :dimension AND pmr.GSM IN :gsm AND pmr.status = 'In Stock'")
     List<PaperMarketRates> findPaperMarketRateByEveryColumn(@Param("paperStock") String paperStock,

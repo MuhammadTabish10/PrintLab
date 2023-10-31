@@ -145,11 +145,11 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                     ProductRulePaperStock existingPrpsValue = existingValue.get();
 
                     existingPrpsValue.setPaperStock(newValue.getPaperStock());
+                    existingPrpsValue.setCustomerFriendlyName(newValue.getCustomerFriendlyName());
                     existingPrpsValue.setBrand(newValue.getBrand());
                     existingPrpsValue.setMadeIn(newValue.getMadeIn());
                     existingPrpsValue.setDimension(newValue.getDimension());
                     existingPrpsValue.setGsm(newValue.getGsm());
-                    existingPrpsValue.setStatus(newValue.getStatus());
 
                     existingPrpsValue.setVendor(vendorRepository.findById(newValue.getVendor().getId())
                             .orElseThrow(() -> new RecordNotFoundException(String.format("Vendor not found for id => %d", newValue.getProductRule().getId()))));
@@ -191,6 +191,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                     ProductRulePaperStockDto productRulePaperStockDto = new ProductRulePaperStockDto();
                     productRulePaperStockDto.setId(prps.getId());
                     productRulePaperStockDto.setPaperStock(prps.getPaperStock());
+                    productRulePaperStockDto.setCustomerFriendlyName(prps.getCustomerFriendlyName());
                     productRulePaperStockDto.setBrand(prps.getBrand());
                     productRulePaperStockDto.setMadeIn(prps.getMadeIn());
                     productRulePaperStockDto.setDimension(prps.getDimension());
@@ -225,6 +226,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                     ProductRulePaperStock productRulePaperStock = new ProductRulePaperStock();
                     productRulePaperStock.setId(prps.getId());
                     productRulePaperStock.setPaperStock(prps.getPaperStock());
+                    productRulePaperStock.setCustomerFriendlyName(prps.getCustomerFriendlyName());
                     productRulePaperStock.setBrand(prps.getBrand());
                     productRulePaperStock.setMadeIn(prps.getMadeIn());
                     productRulePaperStock.setDimension(prps.getDimension());

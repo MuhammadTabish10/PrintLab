@@ -80,7 +80,6 @@ public class CustomerServiceImpl implements CustomerService {
             Customer existedCustomer = updateCustomer.get();
             existedCustomer.setName(customer.getName());
             existedCustomer.setBusinessName(customer.getBusinessName());
-            existedCustomer.setStatus(customer.getStatus());
             Customer updatedCustomer = customerRepository.save(existedCustomer);
             return toDto(updatedCustomer);
         }

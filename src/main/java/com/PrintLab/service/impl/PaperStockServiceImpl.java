@@ -105,7 +105,6 @@ public class PaperStockServiceImpl implements PaperStockService {
         if (optionalPaperStock.isPresent()) {
             PaperStock existingPaperStock = optionalPaperStock.get();
             existingPaperStock.setName(paperStockDto.getName());
-            existingPaperStock.setStatus(paperStockDto.getStatus());
 
             List<Brand> existingBrandValues = existingPaperStock.getBrands();
             List<Brand> newBrandValues = paperStock.getBrands();

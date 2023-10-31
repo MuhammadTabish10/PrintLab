@@ -15,11 +15,12 @@ public interface PaperMarketRatesService
     List<PaperMarketRatesDto> getAll();
     PaginationResponse getPaperMarketRatesBySearchCriteria(Integer pageNumber, Integer pageSize, PaperMarketRatesDto searchCriteria);
     Set<String> findDistinctPaperStocks();
-    Set<Vendor> findDistinctVendorsByPaperStock(String paperStock);
-    Set<String> findDistinctBrandsByPaperStockAndVendor(String paperStock, Vendor vendor);
-    Set<String> findMadeInByPaperStockAndVendorAndBrand(String paperStock, Vendor vendor, String brand);
-    Set<String> findDimensionByPaperStockAndVendorAndBrandAndMadeIn(String paperStock, Vendor vendor, String brand, String madeIn);
-    Set<String> findGsmByPaperStockAndVendorAndBrandAndMadeInAndDimension(String paperStock, Vendor vendor, String brand, String madeIn, String dimension);
+//    Set<String> findDistinctVendorsByPaperStock(String paperStock);
+    Set<String> findDistinctBrandsByPaperStock(String paperStock);
+    Set<String> findDistinctMadeInByPaperStockAndBrand(String paperStock, String brand);
+    Set<String> findDimensionByPaperStockAndBrandAndMadeIn(String paperStock, String brand, String madeIn);
+    Set<Vendor> findVendorByPaperStockAndBrandAndMadeInAndDimension(String paperStock, String brand, String madeIn, String dimension);
+    Set<String> findGsmByPaperStockAndBrandAndMadeInAndDimensionAndVendor(String paperStock, String brand, String madeIn, String dimension, Vendor vendor);
     List<PaperMarketRatesDto> findPaperMarketRateByEveryColumn(String paperStock, Long vendorId, String brand, String madeIn, String dimension, List<Integer> gsm);
     List<PaperMarketRatesDto> findAllPaperMarketRatesByPaperStock(String paperStock);
     List<Integer> getDistinctGSMForPaperStock(String paperStock);

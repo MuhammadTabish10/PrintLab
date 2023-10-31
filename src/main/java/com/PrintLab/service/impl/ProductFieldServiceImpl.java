@@ -139,7 +139,6 @@ public class ProductFieldServiceImpl implements ProductFieldService {
         if (optionalProductField.isPresent()) {
             ProductField existingPf = optionalProductField.get();
             existingPf.setName(productField.getName());
-            existingPf.setStatus(productField.getStatus());
             existingPf.setType(productField.getType());
             existingPf.setSequence(productField.getSequence());
 

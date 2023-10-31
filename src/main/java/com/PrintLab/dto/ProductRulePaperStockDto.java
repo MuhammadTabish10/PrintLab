@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class ProductRulePaperStockDto {
     private Long id;
     private String paperStock;
+    private String customerFriendlyName;
     private String brand;
     private String madeIn;
     private String dimension;
