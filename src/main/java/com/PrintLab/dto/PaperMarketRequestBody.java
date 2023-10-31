@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class PaperMarketRequestBody {
     private String paperStock;
-    private Vendor vendor;
     private String brand;
     private String madeIn;
     private String dimension;
     private String gsm;
+    private Vendor vendor;
 }

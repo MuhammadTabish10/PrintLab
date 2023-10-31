@@ -66,6 +66,11 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     }
 
     @Override
+    public Boolean checkTitle(String title) {
+        return(productRuleRepository.existsByTitle(title));
+    }
+
+    @Override
     public List<ProductRuleDto> getAllProductRule() {
         List<ProductRule> productRuleList = productRuleRepository.findAllByStatusIsTrue();
         List<ProductRuleDto> productRuleDtoList = new ArrayList<>();

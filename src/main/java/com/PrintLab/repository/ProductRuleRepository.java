@@ -20,4 +20,6 @@ public interface ProductRuleRepository extends JpaRepository<ProductRule,Long> {
     @Modifying
     @Query("UPDATE ProductRule pr SET pr.status = false WHERE pr.id = :id")
     void setStatusInactive(@Param("id") Long id);
+
+    Boolean existsByTitle(String title);
 }
