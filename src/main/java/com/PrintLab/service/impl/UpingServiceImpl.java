@@ -177,7 +177,6 @@ public class UpingServiceImpl implements UpingService {
             existingUping.setUnit(uping.getUnit());
             existingUping.setMm(uping.getMm());
             existingUping.setInch(uping.getInch());
-            existingUping.setStatus(uping.getStatus());
 
             List<UpingPaperSize> existingUpsValues = existingUping.getUpingPaperSize();
             List<UpingPaperSize> newUpsValues = uping.getUpingPaperSize();

@@ -96,7 +96,6 @@ public class PaperSizeServiceImpl implements PaperSizeService {
         if (optionalPaperSize.isPresent()) {
             PaperSize existingPaperSize = optionalPaperSize.get();
             existingPaperSize.setLabel(paperSizeDto.getLabel());
-            existingPaperSize.setStatus(paperSizeDto.getStatus());
 
             PaperSize updatedPaperSize = paperSizeRepository.save(existingPaperSize);
             return toDto(updatedPaperSize);

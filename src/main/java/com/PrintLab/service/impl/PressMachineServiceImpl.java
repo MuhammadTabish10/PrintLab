@@ -170,7 +170,6 @@ public class PressMachineServiceImpl implements PressMachineService {
             existingPressMachine.setMaxSheetSize(pressMachine.getMaxSheetSize());
             existingPressMachine.setMinSheetSize(pressMachine.getMinSheetSize());
             existingPressMachine.setMaxSPH(pressMachine.getMaxSPH());
-            existingPressMachine.setStatus(pressMachine.getStatus());
             existingPressMachine.setImpression_1000_rate(pressMachine.getImpression_1000_rate());
 
             existingPressMachine.setVendor(vendorRepository.findById(pressMachineDto.getVendor().getId())

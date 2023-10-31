@@ -153,7 +153,6 @@ public class VendorServiceImpl implements VendorService {
             existingVendor.setEmail(vendor.getEmail());
             existingVendor.setAddress(vendor.getAddress());
             existingVendor.setNotes(vendor.getNotes());
-            existingVendor.setStatus(vendor.getStatus());
 
             List<VendorProcess> existingVpValues = existingVendor.getVendorProcessList();
             List<VendorProcess> newVpValues = vendor.getVendorProcessList();

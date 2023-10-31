@@ -149,7 +149,6 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                     existingPrpsValue.setMadeIn(newValue.getMadeIn());
                     existingPrpsValue.setDimension(newValue.getDimension());
                     existingPrpsValue.setGsm(newValue.getGsm());
-                    existingPrpsValue.setStatus(newValue.getStatus());
 
                     existingPrpsValue.setVendor(vendorRepository.findById(newValue.getVendor().getId())
                             .orElseThrow(() -> new RecordNotFoundException(String.format("Vendor not found for id => %d", newValue.getProductRule().getId()))));
