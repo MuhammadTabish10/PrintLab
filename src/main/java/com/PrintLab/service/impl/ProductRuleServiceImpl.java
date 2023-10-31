@@ -67,7 +67,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public Boolean checkTitle(String title) {
-        return(productRuleRepository.existsByTitle(title));
+        return(productRuleRepository.existsByTitleAndStatusIsTrue(title));
     }
 
     @Override

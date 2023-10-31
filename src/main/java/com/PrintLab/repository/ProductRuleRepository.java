@@ -1,6 +1,5 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.model.Ctp;
 import com.PrintLab.model.ProductRule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,5 +20,5 @@ public interface ProductRuleRepository extends JpaRepository<ProductRule,Long> {
     @Query("UPDATE ProductRule pr SET pr.status = false WHERE pr.id = :id")
     void setStatusInactive(@Param("id") Long id);
 
-    Boolean existsByTitle(String title);
+    Boolean existsByTitleAndStatusIsTrue(String title);
 }
