@@ -14658,3 +14658,7 @@ input:checked+.slider:before {
 .error-modal-head {
     color: red;
 }
+
+.card.flex.justify-content-center p-fileUpload .p-button {
+  background-color: black;
+}

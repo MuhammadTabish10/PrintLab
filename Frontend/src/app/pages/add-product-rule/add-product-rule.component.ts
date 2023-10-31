@@ -60,7 +60,7 @@ export class AddProductRuleComponent implements OnInit {
   valid: string = 'Valid';
   invalid: string = 'Please fill out this field.';
   disabled: boolean = false;
-  userFriendlyName: any = [];
+  userFriendlyName: any;
   result: boolean = false;
 
   constructor(
@@ -170,38 +170,20 @@ export class AddProductRuleComponent implements OnInit {
       }
     }
 
-    this.productRuleService.getProductRule('vendor', { paperStock: value.name }).subscribe((v: any) => {
-      let vendors = v.map((vend: any) => {
+    this.productRuleService.getProductRule('brand', { paperStock: value.name }).subscribe((v: any) => {
+      let brands = v.map((brand: any) => {
+        debugger
         return {
-          name: vend.name,
-          id: vend.id
+          name: brand
         }
       });
-      this.containers[i].allVendor = vendors;
+      this.containers[i].allBrand = brands;
 
     }, err => {
 
     });
   }
 
-
-  changeVendor(i: any, value: any) {
-    this.containers[i].vendor = value;
-    this.productRuleService.getProductRule('brand',
-      {
-        paperStock: this.containers[i].paper.name,
-        vendor: { id: this.containers[i].vendor.id }
-      }).subscribe((b: any) => {
-        const brands = b.map((brand: any) => {
-          return {
-            name: brand
-          }
-        });
-        this.containers[i].allBrand = brands;
-      }, err => {
-        console.log(err);
-      });
-  }
 
   changeBrand(i: any, value: any) {
     console.log('changeBrand function called with index', i, 'and value', value);
@@ -210,7 +192,6 @@ export class AddProductRuleComponent implements OnInit {
     this.productRuleService.getProductRule('madein',
       {
         paperStock: this.containers[i].paper.name,
-        vendor: { id: this.containers[i].vendor.id },
         brand: this.containers[i].brand.name
       }).subscribe((m: any) => {
         const madeIn = m.map((made: any) => {
@@ -230,7 +211,6 @@ export class AddProductRuleComponent implements OnInit {
     this.productRuleService.getProductRule('dimension',
       {
         paperStock: this.containers[i].paper.name,
-        vendor: { id: this.containers[i].vendor.id },
         brand: this.containers[i].brand.name,
         madeIn: this.containers[i].madeIn.name
       }).subscribe((d: any) => {
@@ -251,21 +231,42 @@ export class AddProductRuleComponent implements OnInit {
     this.containers[i].allGsm = null;
     this.containers[i].gsm = null;
     this.containers[i].dimension = value;
-    this.productRuleService.getProductRule('gsm',
+    this.productRuleService.getProductRule('vendor',
       {
         paperStock: this.containers[i].paper.name,
-        vendor: { id: this.containers[i].vendor.id },
         brand: this.containers[i].brand.name,
         madeIn: this.containers[i].madeIn.name,
         dimension: this.containers[i].dimension.name
       }).subscribe((g: any) => {
-        const gsm = g.map((gs: any) => {
-
+        const vendor = g.map((vend: any) => {
+          debugger
           return {
-            name: gs
+            name: vend.name,
+            id: vend.id
           }
         });
-        this.containers[i].allGsm = gsm;
+        this.containers[i].allVendor = vendor;
+      }, err => {
+        console.log(err);
+      });
+  }
+
+  changeVendor(i: any, value: any) {
+    this.containers[i].vendor = value;
+    this.productRuleService.getProductRule('gsm',
+      {
+        paperStock: this.containers[i].paper.name,
+        brand: this.containers[i].brand.name,
+        madeIn: this.containers[i].madeIn.name,
+        dimension: this.containers[i].dimension.name,
+        vendor: { id: this.containers[i].vendor.id }
+      }).subscribe((g: any) => {
+        const gsms = g.map((gsm: any) => {
+          return {
+            name: gsm
+          }
+        });
+        this.containers[i].allGsm = gsms;
       }, err => {
         console.log(err);
       });
@@ -529,7 +530,7 @@ export class AddProductRuleComponent implements OnInit {
     const PressId = !this.idFromQueryParam ? this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name) : null
     const updatePressId = this.press.machines.find((el: any) => el.vendor.name === this.pressVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
-    const payload = {
+    let payload = {
       title: this.productName,
       category: this.category.name,
       size: JSON.stringify(this.upping.map((uping: any) => (uping.productSize))),
@@ -539,7 +540,7 @@ export class AddProductRuleComponent implements OnInit {
       jobColorBack: this.jobBack != null ? JSON.stringify(this.jobBack.map((color: any) => (color.name))) : null,
       impositionValue: this.impositionValue,
       productRulePaperStockList: this.containers.map((container: any) => ({
-        id: container.paper.id,
+        customerFriendlyName: container.userFriendlyName,
         paperStock: container.paper.name,
         brand: container.brand.name,
         madeIn: container.madeIn.name,
@@ -565,6 +566,32 @@ export class AddProductRuleComponent implements OnInit {
         }
       );
     } else {
+      payload = {
+        title: this.productName,
+        category: this.category.name,
+        size: JSON.stringify(this.upping.map((uping: any) => (uping.productSize))),
+        quantity: JSON.stringify(this.qty.map((qtys: any) => (qtys.name))),
+        printSide: this.sideValue.name,
+        jobColorFront: JSON.stringify(this.jobFront.map((color: any) => (color.name))),
+        jobColorBack: this.jobBack != null ? JSON.stringify(this.jobBack.map((color: any) => (color.name))) : null,
+        impositionValue: this.impositionValue,
+        productRulePaperStockList: this.containers.map((container: any) => ({
+          id: container.paper.id,
+          customerFriendlyName: this.userFriendlyName,
+          paperStock: container.paper.name,
+          brand: container.brand.name,
+          madeIn: container.madeIn.name,
+          dimension: container.dimension.name,
+          gsm: JSON.stringify(container.gsm.map((gsm: any) => (gsm.name))),
+          vendor: { id: container.vendor.id },
+        })),
+        pressMachine: {
+          id: PressId ? PressId.id : updatePressId.id
+        },
+        ctp: {
+          id: ctpId.id
+        },
+      };
       this.productRuleService.updateProductRule(this.idFromQueryParam, payload).subscribe(
         (res) => {
           this.router.navigate(['/ProductRule']);
@@ -686,4 +713,5 @@ export interface Container {
   allDimension?: any
   gsm?: any
   allGsm?: any
+  userFriendlyName?: any
 }

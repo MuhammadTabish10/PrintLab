@@ -16,6 +16,9 @@
         uploadStyleClass="#22222"
         [maxFileSize]="1000000"
       >
+        <ng-template pTemplate="toolbar">
+          <div class="py-3 fs-4">Upload Files Here</div>
+        </ng-template>
       </p-fileUpload>
     </div>
 
@@ -115,7 +118,6 @@
         (onPageChange)="getUping($event)"
       ></p-paginator>
     </div>
-    
   </div>
 </div>
 <p-toast></p-toast>

@@ -98,7 +98,7 @@
           type="text"
           [name]="'userFriendlyName[' + i + ']'"
           required
-          [(ngModel)]="userFriendlyName[i]"
+          [(ngModel)]="containers[i].userFriendlyName"
           placeholder="Enter a User Friendly Name"
         />
       </div>
