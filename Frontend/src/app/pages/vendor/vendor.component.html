@@ -2,11 +2,9 @@
 <div class="body-position">
   <app-dashboard-head></app-dashboard-head>
   <div class="main-container">
-    <div>
-      <h4>Vendor</h4>
-    </div>
+    <div></div>
 
-    <div class="order-body">
+    <!-- <div class="order-body">
       <div class="order-search-panel">
         <input type="text" placeholder="Search by name" class="order-search form-control" [(ngModel)]="search"
           (keyup)="searchVendor($event.target)">
@@ -22,12 +20,12 @@
             <tr>
               <th scope="col" class="text-lg-center">Date Added</th>
               <th scope="col" class="text-lg-center">Business Name</th>
-              <th scope="col" class="text-lg-center">Point of contact</th>
-              <th scope="col" class="text-lg-center">Phone</th>
-              <th scope="col" class="text-lg-center">Email</th>
-              <th scope="col" class="text-lg-center">Address</th>
-              <th scope="col" class="text-lg-center">Process</th>
-              <th scope="col" class="text-lg-center">Notes</th>
+              <th scope="col" class="text-lg-center"></th>
+              <th scope="col" class="text-lg-center"></th>
+              <th scope="col" class="text-lg-center"></th>
+              <th scope="col" class="text-lg-center"></th>
+              <th scope="col" class="text-lg-center"></th>
+              <th scope="col" class="text-lg-center"></th>
               <th scope="col" class="text-lg-center">Action</th>
             </tr>
           </thead>
@@ -58,12 +56,124 @@
           </tbody>
         </table>
       </div>
+    </div> -->
+
+    <div class="card text-nowrap">
+      <p-table
+        #dt1
+        [value]="vendorArray"
+        dataKey="id"
+        [globalFilterFields]="['name']"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex clearfix">
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="searchVendor($event.target)"
+                placeholder="Search Vendor"
+              />
+            </span>
+            <h4 class="text-center">Vendor</h4>
+            <button
+              pButton
+              label="Add"
+              class="p-button-dark bg-dark jus"
+              icon="pi pi-plus"
+              routerLink="/addVendor"
+            ></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="col">
+              <div class="d-flex justify-content-center">Date Added</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Business Name</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Point of contact</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Phone</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Email</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Address</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Process</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Notes</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Action</div>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-vendor let-i="rowIndex">
+          <tr>
+            <td class="text-center">
+              {{ vendor?.date }}
+            </td>
+            <td class="text-center">
+              {{ vendor?.name }}
+            </td>
+            <td class="text-center">
+              {{ vendor?.contactName }}
+            </td>
+            <td class="text-center">
+              {{ vendor?.contactNumber }}
+            </td>
+            <td class="text-center">
+              {{ vendor?.email }}
+            </td>
+            <td class="text-center">
+              {{ vendor?.address }}
+            </td>
+            <td class="text-center">
+              {{ process[i] }}
+            </td>
+            <td class="text-center">
+              {{ vendor?.notes }}
+            </td>
+            <td class="text-center">
+              <div
+                class="btn-group mr-2"
+                role="group"
+                aria-label="Second group"
+              >
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="editVendor(vendor?.id)"
+                >
+                  <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="deleteVendor(vendor?.id)"
+                >
+                  <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="text-center">No Vendor Found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
   </div>
 </div>
 <p-toast></p-toast>
-
-<!-- <p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
-  [draggable]="false" [resizable]="false">
-  <h5 class="error-modal-head">{{error}}</h5>
-</p-dialog> -->

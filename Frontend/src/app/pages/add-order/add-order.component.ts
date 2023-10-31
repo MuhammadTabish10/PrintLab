@@ -97,12 +97,12 @@ export class AddOrderComponent implements OnInit {
       productValue: this.productName,
       paper: this.paperStockItem.paperStock,
       sizeValue: this.sizeValue.name,
-      gsm: Number(this.selectedGsm.name),
-      quantity: Number(this.qtyValue.name),
-      jobColorsFront: Number(this.jobFrontValue.name),
+      gsm: +this.selectedGsm.name,
+      quantity: +this.qtyValue.name,
+      jobColorsFront: +this.jobFrontValue.name,
       sideOptionValue: this.sideOptionValue.name,
       impositionValue: this.impositionValue,
-      jobColorsBack: this.jobBackValue ? Number(this.jobBackValue.name) : null
+      jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null
     }
     this.orderService.calculations(obj).subscribe(res => {
       let obj: any
@@ -121,15 +121,15 @@ debugger
         product: this.productName,
         paper: this.paperStockItem.paperStock,
         size: this.sizeValue.name,
-        gsm: Number(this.selectedGsm.name),
-        quantity: Number(this.qtyValue.name),
+        gsm: +this.selectedGsm.name,
+        quantity: +this.qtyValue.name,
         price: this.totalAmount,
         providedDesign: this.designValue,
         url: this.imgUrl,
         sideOptionValue: this.sideOptionValue.name,
         impositionValue: this.impositionValue,
-        jobColorsFront: Number(this.jobFrontValue.name),
-        jobColorsBack: this.jobBackValue ? Number(this.jobBackValue.name) : null,
+        jobColorsFront: +this.jobFrontValue.name,
+        jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null,
         customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
       }
       this.orderService.addOrder(obj).subscribe(res => {
@@ -144,15 +144,15 @@ debugger
         product: this.productName,
         paper: this.paperStockItem.paperStock,
         size: this.sizeValue.name,
-        gsm: Number(this.selectedGsm.name),
-        quantity: Number(this.qtyValue.name),
+        gsm: +this.selectedGsm.name,
+        quantity: +this.qtyValue.name,
         price: this.totalAmount,
         providedDesign: this.designValue,
         url: this.imgUrl,
         sideOptionValue: this.sideOptionValue.name,
         impositionValue: this.impositionValue,
-        jobColorsFront: Number(this.jobFrontValue.name),
-        jobColorsBack: this.jobBackValue ? Number(this.jobBackValue.name) : null,
+        jobColorsFront: +this.jobFrontValue.name,
+        jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null,
         customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
       }
       this.orderService.updateOrder(this.idFromQueryParam, obj).subscribe(res => {

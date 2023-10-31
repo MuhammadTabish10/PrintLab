@@ -5,61 +5,17 @@
     <div>
       <h4>Uping</h4>
     </div>
-
-    <!-- <div class="order-body">
-            <div class="order-search-panel">
-                <input type="text" placeholder="Search by Product Size" [(ngModel)]="search"
-                    class="order-search form-control" (keyup)="searchUping($event.target)">
-                <div>
-                    <button type="button" class="btn order-table-btn btn-search-panel" routerLink="/addUping">
-                        <i class="fa-solid fa-plus"></i>&nbsp;Add
-                    </button>
-                </div>
-            </div>
-            <div class="order-table">
-                <table class="table">
-                    <thead class="position-sticky top-0 z-1">
-                        <tr>
-                            <th scope="col" class="w-20 text-lg-center">ID</th>
-                            <th scope="col" class="w-25 text-lg-center">Category</th>
-                            <th scope="col" class="w-25 text-lg-center">Product Size Name</th>
-                            <th scope="col" class="w-20 text-lg-center">MM</th>
-                            <th scope="col" class="w-20 text-lg-center">Inch</th>
-                            <th scope="col" class="w-25 text-lg-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="order-table-404" colspan="3" *ngIf="tableData">No record
-                                found</td>
-                        </tr>
-                        <tr *ngFor="let uping of upingArray">
-                            <td scope="col" class="text-lg-center">{{uping.id}}</td>
-                            <td scope="col" class="text-lg-center">{{uping.category}}</td>
-                            <td scope="col" class="text-lg-center">{{uping.productSize}}</td>
-                            <td scope="col" class="text-lg-center">{{uping.mm}}</td>
-                            <td scope="col" class="text-lg-center">{{uping.inch}}</td>
-
-                            <td scope="col" class="text-lg-center">
-                                <div class="btn-group mr-2" role="group" aria-label="Second group">
-                                    <button type="button" class="btn order-table-btn" (click)="edituping(uping.id)">
-                                        <i class="fa-solid fa-pen"></i>&nbsp;Edit</button>
-                                    <button type="button" class="btn order-table-btn" (click)="deleteuping(uping.id)">
-                                        <i class="fa-solid fa-trash"></i>&nbsp;Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div> -->
-        <div class="card flex justify-content-center">
-          <p-toast></p-toast>
-          <p-fileUpload name="file" [url]="_url"  (onUpload)="onUpload($event)" [multiple]="false"  [maxFileSize]="1000000">
-              
-          </p-fileUpload>
-      </div>
+    <div class="card flex justify-content-center">
+      <p-toast></p-toast>
+      <p-fileUpload
+        name="file"
+        [url]="_url"
+        (onUpload)="onUpload($event)"
+        [multiple]="false"
+        [maxFileSize]="1000000"
+      >
+      </p-fileUpload>
+    </div>
 
     <div class="card text-nowrap">
       <p-table
@@ -70,15 +26,6 @@
       >
         <ng-template pTemplate="caption">
           <div class="flex clearfix">
-            <!-- <span class="p-input-icon-left ml-auto">
-              <i class="pi pi-search"></i>
-              <input
-                pInputText
-                type="text"
-                (input)="searchUping($event.target)"
-                placeholder="Search keyword"
-              />
-            </span> -->
             <button
               pButton
               label="Add"
@@ -151,12 +98,6 @@
           </tr>
         </ng-template>
       </p-table>
-      <!-- 
-      <p-paginator
-        (onPageChange)="getUping($event)"
-        [rows]="upingPagination?.pageSize"
-        [totalRecords]="upingPagination?.totalPages"
-      ></p-paginator> -->
       <p-paginator
         [rows]="upingPagination?.pageSize"
         [totalRecords]="upingPagination?.pageSize * upingPagination?.totalPages"
@@ -172,6 +113,7 @@
         (onPageChange)="getUping($event)"
       ></p-paginator>
     </div>
+    
   </div>
 </div>
 <p-toast></p-toast>
