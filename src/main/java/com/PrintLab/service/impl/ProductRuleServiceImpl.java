@@ -119,6 +119,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
             existingProductRule.setPrintSide(productRule.getPrintSide());
             existingProductRule.setJobColorFront(productRule.getJobColorFront());
             existingProductRule.setJobColorBack(productRule.getJobColorBack());
+            existingProductRule.setCategory(productRule.getCategory());
             existingProductRule.setSize(productRule.getSize());
             existingProductRule.setQuantity(productRule.getQuantity());
             if(existingProductRule.getPrintSide().equals(DOUBLE_SIDED)){
@@ -208,6 +209,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                 .printSide(productRule.getPrintSide())
                 .jobColorBack(productRule.getJobColorBack())
                 .jobColorFront(productRule.getJobColorFront())
+                .category(productRule.getCategory())
                 .size(productRule.getSize())
                 .quantity(productRule.getQuantity())
                 .impositionValue(productRule.getImpositionValue())
@@ -245,6 +247,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                 .printSide(productRuleDto.getPrintSide())
                 .jobColorBack(productRuleDto.getJobColorBack())
                 .jobColorFront(productRuleDto.getJobColorFront())
+                .category(productRuleDto.getCategory())
                 .size(productRuleDto.getSize())
                 .quantity(productRuleDto.getQuantity())
                 .impositionValue(productRuleDto.getImpositionValue())

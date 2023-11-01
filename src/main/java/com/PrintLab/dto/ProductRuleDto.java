@@ -19,6 +19,7 @@ public class ProductRuleDto {
     private String printSide;
     private String jobColorFront;
     private String jobColorBack;
+    private String category;
     private String size;
     private String quantity;
     private Boolean impositionValue;
