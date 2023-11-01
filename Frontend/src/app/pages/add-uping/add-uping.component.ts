@@ -171,8 +171,8 @@ export class AddUpingComponent implements OnInit {
         l1: this.l1,
         l2: this.l2,
         unit: this.unit.name,
-        mm: this.unitLabelInch + '"x' + this.unitLabelInch2 + '"',
-        inch: this.unitLabelMm + '"x' + this.unitLabelMm2 + '"',
+        mm: this.unitLabelInch + 'x' + this.unitLabelInch2,
+        inch: this.unitLabelMm + 'x' + this.unitLabelMm2,
         upingPaperSize: this.selectedSizes
       }
       this.upingService.postUping(obj).subscribe(() => {
@@ -197,8 +197,8 @@ export class AddUpingComponent implements OnInit {
         l1: this.l1,
         l2: this.l2,
         unit: this.unit.name,
-        mm: this.unitLabelInch + '"x' + this.unitLabelInch2 +'"',
-        inch: this.unitLabelMm + '"x' + this.unitLabelMm2 +'"',
+        mm: this.unitLabelInch + 'x' + this.unitLabelInch2,
+        inch: this.unitLabelMm + 'x' + this.unitLabelMm2,
         upingPaperSize: this.selectedSizes
       }
       this.upingService.updateUping(this.idFromQueryParam, obj).subscribe(() => {
