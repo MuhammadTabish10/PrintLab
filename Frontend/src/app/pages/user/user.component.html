@@ -14,16 +14,7 @@
       [globalFilterFields]="['name']"
     >
       <ng-template pTemplate="caption">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="p-input-icon-left">
-            <i class="pi pi-search"></i>
-            <input
-              pInputText
-              type="text"
-              (input)="searchUser($event.target)"
-              placeholder="Search User"
-            />
-          </div>
+        <div class="d-flex justify-content-end">
           <button
             pButton
             label="Add"

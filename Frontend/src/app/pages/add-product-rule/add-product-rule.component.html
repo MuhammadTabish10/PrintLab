@@ -20,7 +20,9 @@
               required
             />
             <div class="invalid-feedback">Please fill out this field.</div>
-            <div *ngIf="result" class="text-danger">This product already exist.</div>
+            <div *ngIf="result" class="text-danger">
+              This product already exist.
+            </div>
           </div>
         </div>
         <div class="col-md-3" style="margin-top: 43px">
@@ -179,17 +181,6 @@
             {{ invalid }}
           </div>
         </div>
-        <!-- <div class="col" *ngIf="containers[i].vendor">
-        <label class="add-order-label m-0">Brand</label>
-        <p-multiSelect
-          styleClass="w-100"
-          [options]="containers[i].allBrand"
-          (onChange)="changeBrand(i, $event.value)"
-          optionLabel="name"
-          [(ngModel)]="containers[i].brand"
-          placeholder="Select MadeIn"
-        ></p-multiSelect>
-      </div> -->
         <div
           class="col"
           *ngIf="
@@ -255,17 +246,6 @@
             {{ invalid }}
           </div>
         </div>
-        <!-- <div class="col" *ngIf="containers[i].dimension">
-        <label class="add-order-label m-0">GSM</label>
-        <p-dropdown
-          styleClass="w-100"
-          [options]="containers[i].allGsm"
-          optionLabel="name"
-          [(ngModel)]="containers[i].gsm"
-          placeholder="Select GSM"
-        ></p-dropdown>
-      </div> -->
-
         <div
           class="col"
           *ngIf="
