@@ -4,7 +4,6 @@ import com.PrintLab.dto.UserDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Role;
 import com.PrintLab.model.User;
-import com.PrintLab.model.Vendor;
 import com.PrintLab.repository.RoleRepository;
 import com.PrintLab.repository.UserRepository;
 import com.PrintLab.service.UserService;
@@ -74,6 +73,8 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
             existingUser.setName(user.getName());
+            existingUser.setPhone(user.getPhone());
+            existingUser.setCnic(user.getCnic());
 
             Set<Role> existingRoleValues = existingUser.getRoles();
             Set<Role> newRoleValues = userDto.getRoles();
@@ -108,8 +109,11 @@ public class UserServiceImpl implements UserService {
     public UserDto toDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
+                .createdAt(user.getCreatedAt())
                 .name(user.getName())
                 .password(user.getPassword())
+                .phone(user.getPhone())
+                .cnic(user.getCnic())
                 .status(user.getStatus())
                 .roles(user.getRoles())
                 .build();
@@ -118,8 +122,11 @@ public class UserServiceImpl implements UserService {
     public User toEntity(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())
+                .createdAt(userDto.getCreatedAt())
                 .name(userDto.getName())
                 .password(userDto.getPassword())
+                .phone(userDto.getPhone())
+                .cnic(userDto.getCnic())
                 .status(userDto.getStatus())
                 .roles(userDto.getRoles())
                 .build();
