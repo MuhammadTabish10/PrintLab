@@ -94,6 +94,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
 
