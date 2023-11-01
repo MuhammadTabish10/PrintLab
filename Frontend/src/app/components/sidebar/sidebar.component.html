@@ -19,6 +19,15 @@
       </span>
     </li>
 
+    <li *ngIf="sessionStorageService.hasPermission('User')">
+      <span class="sidebar-list-hover">
+        <i class="fa fa-user fa-2x"></i>
+        <a class="nav-text nav-link" [routerLink]="['/user']">
+          User
+        </a>
+      </span>
+    </li>
+
     <li *ngIf="sessionStorageService.hasPermission('ProductRule')" class="mt-2">
       <span class="sidebar-list-hover">
         <i class="fa fa-shopping-bag fa-2x"></i>

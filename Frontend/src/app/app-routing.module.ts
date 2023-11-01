@@ -38,6 +38,8 @@ import { ProductRuleComponent } from './pages/product-rule/product-rule.componen
 import { PaperStockComponent } from './pages/paper-stock/paper-stock.component';
 import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.component';
 import { ViewProductRuleComponent } from './pages/view-product-rule/view-product-rule.component';
+import { UserComponent } from './pages/user/user.component';
+import { AddUsersComponent } from './pages/add-users/add-users.component';
 
 export const routes: Routes = [
   {
@@ -47,6 +49,16 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'user',
+    component: UserComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'addUser',
+    component: AddUsersComponent,
     canActivate: [AuthguardService]
   },
   {

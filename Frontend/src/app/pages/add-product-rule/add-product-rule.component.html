@@ -19,7 +19,6 @@
               [(ngModel)]="productName"
               required
             />
-            <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback">Please fill out this field.</div>
             <div *ngIf="result" class="text-danger">This product already exist.</div>
           </div>
@@ -554,7 +553,7 @@
           class="btn btn-dark col-1"
           type="button"
           (click)="addProductRule()"
-          [disabled]="!myForm.valid"
+          [disabled]="!myForm.valid || result === true"
         >
           {{ buttonName }}
         </button>

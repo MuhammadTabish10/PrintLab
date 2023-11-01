@@ -1,71 +1,152 @@
-<div class="order-table bg-dark bg-opacity-50 overflow-hidden">
-  <div class="row">
-    <div
-      class="col"
-      *ngFor="let item of paperStockData; let i = index"
-      [@cardAnimation]
-    >
-      <div class="card mb-3">
-        <div *ngFor="let productRule of productRuleData; let j = index">
-          <div class="card-header">
-            <h3 class="card-title text-primary">
-              Title: {{ productRule.title }}
-            </h3>
-          </div>
-          <div class="card-body">
-            <h5 class="card-text">
-              Customer Friendly Name: {{ item.customerFriendlyName }}
-            </h5>
-            <h5 class="card-text">Paper Stock: {{ item.paperStock }}</h5>
-            <h6 class="card-text">
-              Paper Stock Vendor: {{ item.vendor.name }}
-            </h6>
-            <h6 class="card-text">
-              Contact Name: {{ item.vendor.contactName }}
-            </h6>
-            <h6 class="card-text">
-              Contact Number: {{ item.vendor.contactNumber }}
-            </h6>
-            <h5 class="card-text text-primary">Brand: {{ item.brand }}</h5>
-            <h6 class="card-text">Made In: {{ item.madeIn }}</h6>
-            <h6 class="card-text">Dimension: {{ item.dimension }}</h6>
-            <h6 class="card-text">GSM: {{ gsm[i].join(", ") }}</h6>
-            <h5
-              class="card-text"
-              [ngClass]="
-                productRule?.impositionValue ? 'text-success' : 'text-danger'
-              "
+<app-sidebar></app-sidebar>
+<form
+  class="was-validated ms-5"
+  #myForm="ngForm"
+  novalidate
+  *ngFor="let product of productRuleData"
+>
+  <div class="bg-light pb-3 pt-3">
+    <div class="container bg-white py-2 my-3">
+      <div class="row py-2 mx-auto">
+        <div class="col-md-12">
+          <div class="form-group mb-3">
+            <label for="formGroupExampleInput" class="form-label fs-4"
+              >Product :</label
             >
-              Imposition: {{ productRule.impositionValue }}
-            </h5>
-            <h6 class="card-text">Print Side: {{ productRule.printSide }}</h6>
-            <h6 class="card-text">
-              Front Colors: {{ frontColors[j].join(", ") }}
-            </h6>
-            <h6 class="card-text">
-              Back Colors: {{ backColors[j].join(", ") }}
-            </h6>
-            <h6 class="card-text">Quantities: {{ qty[j].join(", ") }}</h6>
-            <h6 class="card-text">Size: {{ paperSize[j].join(", ") }}</h6>
-            <h5
-              class="card-text"
-              [ngClass]="item?.status ? 'text-success' : 'text-danger'"
-            >
-              Status: {{ item.status ? "Active" : "Inactive" }}
-            </h5>
-          </div>
-          <div class="card-footer">
-            <div class="mb-3" *ngFor="let press of pressData; let k = index">
-              <h6 class="card-text">Press Machine: {{ press.name }}</h6>
-              <h6 class="card-text">Press Vendor: {{ press.vendor.name }}</h6>
-            </div>
-            <div *ngFor="let ctp of ctpData; let l = index">
-              <h6 class="card-text">Ctp: {{ ctp.plateDimension }}</h6>
-              <h6 class="card-text">Ctp Vendor: {{ ctp.vendor.name }}</h6>
+            <div class="">
+              {{ product.title }}
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="container bg-white my-3 py-2">
+      <h4 class="text-decoration-underline">Size</h4>
+      <div class="row justify-content-evenly mx-auto">
+        <div class="col">
+          <label class="add-order-label m-0">Category :</label>
+          {{ product.category }}
+        </div>
+
+        <div class="col">
+          <label class="add-order-label m-0">Paper Size :</label>
+          {{ product.upping }}
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="container bg-white py-2 my-3"
+      *ngFor="let container of paperStockData; let i = index"
+    >
+      <h3 class="text-center text-decoration-underline">
+        PaperStock Rule {{ i + 1 }}
+      </h3>
+      <div class="row py-1 mx-1">
+        <label class="add-order-label m-0">Customer Friendly Name :</label>
+        <label>{{ container.customerFriendlyName }}</label>
+      </div>
+      <div class="row py-1 mx-auto">
+        <div class="col">
+          <label class="add-order-label m-0">PaperStock :</label>
+          <div>{{ container.paperStock }}</div>
+        </div>
+        <div class="col">
+          <label class="add-order-label m-0">Brand :</label>
+          <div>{{ container.brand }}</div>
+        </div>
+      </div>
+      <div class="row py-1 mx-auto">
+        <div class="col">
+          <label class="add-order-label m-0">MadeIn :</label>
+          <div>{{ container.madeIn }}</div>
+        </div>
+        <div class="col">
+          <label class="add-order-label m-0">Dimensions :</label>
+          <div>{{ container.dimension }}</div>
+        </div>
+      </div>
+      <div class="row py-1 mx-auto">
+        <div class="col">
+          <label class="add-order-label m-0">Vendor :</label>
+          <div>{{ container.vendor.name }}</div>
+        </div>
+        <div class="col">
+          <label class="add-order-label m-0">Gsm :</label>
+          <div>{{ gsm[i].join(", ") }}</div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="container bg-white my-2 py-2"
+      *ngFor="let press of pressData; let j = index"
+    >
+      <h4 class="text-decoration-underline">Press</h4>
+      <div class="row mx-auto">
+        <div class="col">
+          <label class="add-order-label m-0">Press :</label>
+          <div>{{ press.name }}</div>
+        </div>
+        <div class="col">
+          <label class="add-order-label m-0">Vendor :</label>
+          <div>{{ press.vendor.name }}</div>
+        </div>
+      </div>
+      <div class="row mx-auto mt-3">
+        <div class="col">
+          <label class="add-order-label m-0">Quantities</label>
+          <div>{{ qty[j].join(", ") }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="container bg-white my-3 py-2"
+      *ngFor="let ctp of ctpData; let l = index"
+    >
+      <h4 class="text-decoration-underline">CTP</h4>
+      <div class="row mx-auto">
+        <div class="col">
+          <label class="add-order-label m-0">Plate Dimensions :</label>
+          <div>{{ ctp.plateDimension }}</div>
+        </div>
+        <div class="col">
+          <label class="add-order-label m-0">Vendor :</label>
+          <div>{{ ctp.vendor.name }}</div>
+        </div>
+      </div>
+      <div class="row mx-auto mt-3">
+        <div class="col">
+          <label class="add-order-label m-0">PrintSide :</label>
+          <div>{{ product.printSide }}</div>
+        </div>
+        <div class="col">
+          <label class="add-order-label m-0">Job Color Front :</label>
+          <div>{{ frontColors.join(", ") }}</div>
+        </div>
+      </div>
+      <div class="row mx-auto mt-3">
+        <div class="col" *ngIf="product.jobColorBack">
+          <label class="add-order-label m-0"> Job Color Back</label>
+          <div>{{ backColors.join(", ") }}</div>
+        </div>        
+        <div class="col">
+          <label class="add-order-label m-0">Imposition</label>
+          <div>{{ product.impositionValue }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row mx-auto d-flex justify-content-end">
+        <button
+          class="btn btn-dark col-1"
+          type="button"
+          routerLink="/ProductRule"
+        >
+          Back
+        </button>
+      </div>
+    </div>
   </div>
-</div>
+</form>

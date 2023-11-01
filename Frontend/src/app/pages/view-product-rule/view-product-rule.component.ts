@@ -53,7 +53,7 @@ export class ViewProductRuleComponent implements OnInit {
           this.ctpData = res.filter((item: any) => item.id === this.idFromQueryParam).flatMap((item: any) => item.ctp);
           this.gsm = this.paperStockData.map((item: any) => JSON.parse(item.gsm));
           this.frontColors = this.productRuleData.map((item: any) => JSON.parse(item.jobColorFront));
-          this.backColors = this.productRuleData.map((item: any) => JSON.parse(item.jobColorBack));
+          this.backColors = this.productRuleData.map((item: any) => item.jobColorBack ? JSON.parse(item.jobColorBack) : null);
           this.qty = this.productRuleData.map((item: any) => JSON.parse(item.quantity));
           this.paperSize = this.productRuleData.map((item: any) => JSON.parse(item.size));
         }

@@ -71,6 +71,8 @@ import { SliderModule } from 'primeng/slider';
 import { PaginatorModule } from 'primeng/paginator';
 import { CalendarModule } from 'primeng/calendar';
 import { FileUploadModule } from 'primeng/fileupload';
+import { UserComponent } from './pages/user/user.component';
+import { AddUsersComponent } from './pages/add-users/add-users.component';
 
 @NgModule({
   declarations: [
@@ -120,6 +122,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     PaperStockComponent,
     AddPaperStockComponent,
     ViewProductRuleComponent,
+    UserComponent,
+    AddUsersComponent,
   ],
   imports: [
     BrowserModule,

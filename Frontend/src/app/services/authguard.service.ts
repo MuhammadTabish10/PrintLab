@@ -54,12 +54,16 @@ export class AuthguardService implements CanActivate {
       url: ['/dashboard'],
       permissions: 'Dashboard'
     }
+    const userObj = {
+      url: ['/user', '/addUser'],
+      permissions: 'User'
+    }
     const customerObj = {
       url: ['/customers', '/addCustomer'],
       permissions: 'Customers'
     }
 
-    const userObj = {
+    const orderObj = {
       url: ['/orders', '/addOrder', '/viewOrder'],
       permissions: 'Orders'
     }
@@ -133,7 +137,7 @@ export class AuthguardService implements CanActivate {
     }
 
 
-    return [customerObj, userObj, ProductRule, dashboardObj, addproductObj, calculatorObj, permissionObj,paperStock, permissionConfiguration_Product_Field,
+    return [customerObj, userObj, ProductRule, orderObj, dashboardObj, addproductObj, calculatorObj, permissionObj,paperStock, permissionConfiguration_Product_Field,
             permissionConfiguration_Settings,permissionConfiguration_Inventory,permissionConfiguration_Vendor,permissionConfiguration_CTP,permissionConfiguration_Paper_Size,
             permissionConfiguration_Press_Machine,permissionConfiguration_Paper_Market_Rate,permissionConfiguration_Uping,permissionConfiguration_Product_Process]
 
