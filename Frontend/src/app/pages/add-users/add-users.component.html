@@ -1,48 +1,111 @@
 <app-sidebar></app-sidebar>
 <div class="body-position">
-    <app-dashboard-head></app-dashboard-head>
+  <app-dashboard-head></app-dashboard-head>
 
-    <div class="main-container">
-        <div>
-            <h4>{{buttonName}} Customer</h4>
-        </div>
+  <div class="main-container">
+    <div>
+      <h4>{{ buttonName }} User</h4>
+    </div>
 
-        <div class="order-body py-2">
-          <form
+    <div class="order-body py-2">
+      <form
         class="was-validated"
         novalidate
         #customerForm="ngForm"
-        (ngSubmit)="addCustomer()"
+        (ngSubmit)="addUser()"
       >
-            <div class="container">
-                <div class="row">
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Name</label>
-                        <input type="text" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="nameValue" style="border:1px solid #ced4da;" placeholder="Enter Name" name="name" required>
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Business Name</label>
-                        <input type="text" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="businessValue" style="border:1px solid #ced4da;" placeholder="Enter Business Name" name="Business name" required>
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Status</label><br>
-                        <label class="switch mt-2">
-                            <input type="checkbox" [checked]="statusFlag" (click)="getStatusValue()">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                    <div class="col-12 my-3 d-flex justify-content-center mx-0">
-                        <button type="submit" class="btn order-table-btn btn-search-panel w-25"
-                        [disabled]="!customerForm.valid"
-                            >{{buttonName}}
-                        </button>
-                    </div>
-                </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Name</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="nameValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Name"
+                name="name"
+                required
+              />
             </div>
-          </form>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0 d-block pb-1 mb-1">Password</label>
+              <p-password
+                [(ngModel)]="password"
+                [style]="{ width: '100%' }"
+                [inputStyle]="{ width: '100%' }"
+                [toggleMask]="true"
+              >
+                <ng-template pTemplate="header">
+                  <h6>Pick a password</h6>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                  <p-divider></p-divider>
+                  <p class="mt-2">Suggestions</p>
+                  <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                    <li>At least one lowercase</li>
+                    <li>At least one uppercase</li>
+                    <li>At least one numeric</li>
+                    <li>Minimum 8 characters</li>
+                  </ul>
+                </ng-template>
+              </p-password>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Phone Number</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="phoneNumber"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Phone Number"
+                name="Phone Number"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Cnic Number</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="cnicNumber"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter cnic Number"
+                name="cnic Number"
+                required
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Roles</label>
+              <p-dropdown
+                styleClass="w-100"
+                [options]="rolesObj"
+                [required]="true"
+                optionLabel="name"
+                name="roles"
+                [(ngModel)]="roles"
+                placeholder="Select Roles"
+              ></p-dropdown>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 my-3 d-flex justify-content-center mx-0">
+              <button
+                type="submit"
+                class="btn order-table-btn btn-search-panel w-25"
+                [disabled]="!customerForm.valid"
+              >
+                {{ buttonName }}
+              </button>
+            </div>
+          </div>
         </div>
+      </form>
     </div>
+  </div>
 </div>
 <p-toast></p-toast>

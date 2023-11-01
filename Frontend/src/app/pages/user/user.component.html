@@ -1,6 +1,11 @@
 <app-sidebar></app-sidebar>
 <div class="container-fluid ps-6">
   <app-dashboard-head></app-dashboard-head>
+  <div class="container-fluid px-0">
+    <div>
+      <h4>User</h4>
+    </div>
+  </div>
   <div class="card text-nowrap">
     <p-table
       #dt1
@@ -19,7 +24,6 @@
               placeholder="Search User"
             />
           </div>
-          <h4>User</h4>
           <button
             pButton
             label="Add"
@@ -40,10 +44,10 @@
       </ng-template>
       <ng-template pTemplate="body" let-user let-i="rowIndex">
         <tr>
-          <td class="text-center">{{ user?.date }}</td>
+          <td class="text-center">{{ user?.createdAt }}</td>
           <td class="text-center">{{ user?.name }}</td>
-          <td class="text-center">{{ user?.phoneNumber }}</td>
-          <td class="text-center">{{ user?.cnicNumber }}</td>
+          <td class="text-center">{{ user?.phone }}</td>
+          <td class="text-center">{{ user?.cnic }}</td>
           <td class="text-center">
             <div class="btn-group" role="group" aria-label="Second group">
               <button

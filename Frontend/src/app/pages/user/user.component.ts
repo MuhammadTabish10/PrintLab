@@ -1,8 +1,8 @@
+import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
-import { CustomerService } from 'src/app/services/customer.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -22,7 +22,8 @@ export class UserComponent {
   constructor(
     private userService: UserService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -37,6 +38,11 @@ export class UserComponent {
           debugger
           this.userArray = res as Users[];
           this.tableData = this.userArray.length === 0;
+          this.userArray.forEach((el: any) => {
+            const dateArray = el.createdAt;
+            el.createdAt = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+            el.createdAt = this.datePipe.transform(el.createdAt, 'EEEE, MMMM d, yyyy, h:mm a');
+          });
         },
         (error: any) => this.showError(error)
       );

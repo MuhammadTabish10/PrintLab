@@ -11,7 +11,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   addUser(obj: any) {
-    let url = `${this._url}/user`
+    let url = `${this._url}/signup`
     return this.http.post(url, obj)
   }
 
@@ -22,6 +22,7 @@ export class UserService {
 
   deleteUser(id: any) {
     let url = `${this._url}/user/${id}`
+    debugger
     return this.http.delete(url)
   }
 

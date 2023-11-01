@@ -14662,3 +14662,6 @@ input:checked+.slider:before {
 .card.flex.justify-content-center p-fileUpload .p-button {
   background-color: black;
 }
+.p-inputtext{
+    padding: 0.60rem 0.75rem !important;
+  }

@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
 import { CustomerService } from 'src/app/services/customer.service';
+import { RolesService } from 'src/app/services/roles.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-add-users',
@@ -12,37 +14,39 @@ import { CustomerService } from 'src/app/services/customer.service';
 export class AddUsersComponent {
   buttonName: string = 'Add';
   nameValue: string = '';
-  businessValue: string = '';
-  statusFlag: boolean = true;
-  status: string = 'Active';
+  phoneNumber: string = '';
+  cnicNumber: string = '';
   idFromQueryParam!: number;
-  customerToUpdate: any = [];
+  userToUpdate: any = [];
   error: string = '';
   visible: boolean = false;
-
+  password: string = '';
+  roles: any = [];
+  rolesObj: any = [];
   private destroy$ = new Subject<void>();
-  
+
   constructor(
-    private customerService: CustomerService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private roleService: RolesService
   ) { }
 
 
   ngOnInit(): void {
+    this.getRoles();
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(param => {
       this.idFromQueryParam = +param['id'] || 0;
       this.buttonName = this.idFromQueryParam ? 'Update' : 'Add';
-      
+
       if (this.idFromQueryParam) {
-        this.customerService.getCustomerById(this.idFromQueryParam).subscribe(
+        this.userService.getUserById(this.idFromQueryParam).subscribe(
           (res: any) => {
-            this.customerToUpdate = res;
-            this.nameValue = this.customerToUpdate.name;
-            this.businessValue = this.customerToUpdate.businessName;
-            this.status = this.customerToUpdate.status;
-            this.statusFlag = this.status === 'Active';
+            this.userToUpdate = res;
+            this.nameValue = this.userToUpdate.name;
+            this.phoneNumber = this.userToUpdate.phone;
+            this.cnicNumber = this.userToUpdate.cnic;
           },
           (error: any) => {
             this.showError(error);
@@ -60,34 +64,36 @@ export class AddUsersComponent {
 
 
 
-  addCustomer() {
+  addUser() {
     const obj = {
       name: this.nameValue,
-      businessName: this.businessValue,
-      status: this.status
+      password: this.password,
+      phone: this.phoneNumber,
+      cnic: this.cnicNumber,
+      roles: { id: this.roles.id }
     };
-    
+debugger
     const request = this.idFromQueryParam ?
-    this.customerService.updateCustomer(this.idFromQueryParam, obj) :
-    this.customerService.postCustomer(obj);
+      this.userService.updateUser(this.idFromQueryParam, obj) :
+      this.userService.addUser(obj);
 
     request.pipe(takeUntil(this.destroy$)).subscribe(
-      () => this.router.navigateByUrl('/customers'),
+      () => this.router.navigateByUrl('/user'),
       (error: any) => {
         this.showError(error);
         this.visible = true;
       }
     );
   }
+  getRoles() {
+    this.roleService.getRoles().subscribe(role => {
+      this.rolesObj = role;
+    }, error => {
 
-
-  getStatusValue() {
-    this.statusFlag = !this.statusFlag;
-    this.status = this.statusFlag ? 'Active' : 'Inactive';
+    });
   }
-
-  showError(error:any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error }); 
+  showError(error: any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 
 }

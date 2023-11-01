@@ -73,6 +73,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { FileUploadModule } from 'primeng/fileupload';
 import { UserComponent } from './pages/user/user.component';
 import { AddUsersComponent } from './pages/add-users/add-users.component';
+import { DividerModule } from 'primeng/divider';
+import { PasswordModule } from 'primeng/password';
 
 @NgModule({
   declarations: [
@@ -146,7 +148,9 @@ import { AddUsersComponent } from './pages/add-users/add-users.component';
     SliderModule,
     PaginatorModule,
     CalendarModule,
-    FileUploadModule
+    FileUploadModule,
+    DividerModule,
+    PasswordModule
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,
     provideRouter(routes, withHashLocation()), DatePipe],
