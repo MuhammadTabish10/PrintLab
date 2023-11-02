@@ -28,7 +28,7 @@ export class ViewProductRuleComponent implements OnInit {
   frontColors: any;
   backColors: any;
   qty: any;
-  paperSize: any;
+  paperSize: any = [];
   ctpData: any;
 
   constructor(private productRuleService: ProductRuleService,
@@ -55,7 +55,11 @@ export class ViewProductRuleComponent implements OnInit {
           this.frontColors = this.productRuleData.map((item: any) => JSON.parse(item.jobColorFront));
           this.backColors = this.productRuleData.map((item: any) => item.jobColorBack ? JSON.parse(item.jobColorBack) : null);
           this.qty = this.productRuleData.map((item: any) => JSON.parse(item.quantity));
-          this.paperSize = JSON.parse(this.productRuleData[0].size);
+          const sizeArray = JSON.parse(this.productRuleData[0].size);
+          for (const size of sizeArray) {
+            this.paperSize.push(size.label);
+          }
+          console.log(this.paperSize);
         }
 
       },
