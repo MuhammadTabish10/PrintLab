@@ -58,13 +58,15 @@ export class UpingComponent implements OnInit {
     })
   }
 
-  searchUping(size: any) {
+  searchUping(size?: any, pagination?: any) {
+    debugger
     if (!size) {
       this.getUping()
     } else {
       debugger
-      this.upingService.searchUping(size.value).subscribe(res => {
-        this.upingArray = res
+      this.upingService.searchUpingWithPagination(size?.value, pagination).subscribe((res: any) => {
+        this.upingArray = res.content
+        this.upingPagination = res;
         this.tableData = this.upingArray.length == 0 ? true : false
       }, error => {
         this.showError(error);

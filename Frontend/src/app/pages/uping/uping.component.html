@@ -31,6 +31,16 @@
       >
         <ng-template pTemplate="caption">
           <div class="flex clearfix">
+            <span class="p-input-icon-right ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (keyup.enter)="searchUping($event.target, paginator.getPage())"
+                placeholder="Search keyword"
+              />
+            </span>
+
             <button
               pButton
               label="Add"
@@ -104,6 +114,7 @@
         </ng-template>
       </p-table>
       <p-paginator
+        #paginator
         [rows]="upingPagination?.pageSize"
         [totalRecords]="upingPagination?.pageSize * upingPagination?.totalPages"
         currentPageReportTemplate="Showing {{

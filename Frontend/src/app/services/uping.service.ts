@@ -22,13 +22,13 @@ export class UpingService {
   }
 
   getUpingWithPagination(pagination?: any) {
-    
+
     const params = new HttpParams()
       .set('pageNumber', pagination?.page ? pagination?.page : 0)
 
-      
+
     let url = `${this._url}/uping/page`
-    return this.http.get(url,{params})
+    return this.http.get(url, { params })
   }
 
   deleteUping(id: any) {
@@ -54,5 +54,12 @@ export class UpingService {
   searchUping(size: any) {
     let url = `${this._url}/uping/product-sizes/${size}`
     return this.http.get(url)
+  }
+  searchUpingWithPagination(size?: any, pagination?: any) {
+    debugger
+    const params = new HttpParams()
+      .set('pageNumber', pagination ? pagination : 0)
+    let url = `${this._url}/uping/product-sizes/${size}`
+    return this.http.get(url, { params })
   }
 }

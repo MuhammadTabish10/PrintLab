@@ -118,16 +118,39 @@ public class UpingServiceImpl implements UpingService {
         }
     }
 
-    @Override
-    public List<UpingDto> searchByProductSize(String productSize) {
-        List<Uping> upingList = upingRepository.findUpingByProductSize(productSize);
-        List<UpingDto> upingDtoList = new ArrayList<>();
+//    @Override
+//    public List<UpingDto> searchByProductSize(String productSize) {
+//        List<Uping> upingList = upingRepository.findUpingByProductSize(productSize);
+//        List<UpingDto> upingDtoList = new ArrayList<>();
+//
+//        for (Uping uping : upingList) {
+//            UpingDto upingDto = toDto(uping);
+//            upingDtoList.add(upingDto);
+//        }
+//        return upingDtoList;
+//    }
 
+    @Override
+    public PaginationResponse searchByProductSize(String productSize, Integer pageNumber, Integer pageSize) {
+        Pageable page = PageRequest.of(pageNumber, pageSize);
+        Page<Uping> pageUping = upingRepository.findUpingByProductSize(productSize, page);
+        List<Uping> upingList = pageUping.getContent();
+
+        List<UpingDto> upingDtoList = new ArrayList<>();
         for (Uping uping : upingList) {
             UpingDto upingDto = toDto(uping);
             upingDtoList.add(upingDto);
         }
-        return upingDtoList;
+
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(upingDtoList);
+        paginationResponse.setPageNumber(pageUping.getNumber());
+        paginationResponse.setPageSize(pageUping.getSize());
+        paginationResponse.setTotalElements(pageUping.getNumberOfElements());
+        paginationResponse.setTotalPages(pageUping.getTotalPages());
+        paginationResponse.setLastPage(pageUping.isLast());
+
+        return paginationResponse;
     }
 
     @Override

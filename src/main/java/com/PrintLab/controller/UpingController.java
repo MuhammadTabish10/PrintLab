@@ -58,9 +58,13 @@ public class UpingController
 
     @GetMapping("/product-sizes/{size}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<UpingDto>> getUpingsByProductSize(@PathVariable String size) {
-        List<UpingDto> upingDtoList = upingService.searchByProductSize(size);
-        return ResponseEntity.ok(upingDtoList);
+    public ResponseEntity<PaginationResponse> getUpingByProductSize(
+            @PathVariable String size,
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "15", required = false) Integer pageSize
+    ) {
+        PaginationResponse paginationResponse = upingService.searchByProductSize(size, pageNumber, pageSize);
+        return ResponseEntity.ok(paginationResponse);
     }
 
     @DeleteMapping("/{id}")

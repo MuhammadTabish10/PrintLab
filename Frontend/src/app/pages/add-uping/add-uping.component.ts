@@ -49,47 +49,6 @@ export class AddUpingComponent implements OnInit {
     private router: Router, private messageService: MessageService,
     private productField: ProductDefinitionService) { }
 
-  // ngOnInit(): void {
-  //   debugger
-  //   this.getPaperSizes()
-  //   this.getProductFields()
-  //   this.route.queryParams.subscribe(param => {
-  //     this.idFromQueryParam = +param['id']
-  //     if (Number.isNaN(this.idFromQueryParam)) {
-  //       this.buttonName = 'Add'
-  //     } else {
-  //       this.getProductFields()
-  //       this.upingService.getUpingById(this.idFromQueryParam).subscribe(res => {
-  //         this.buttonName = 'Update'
-  //         this.upingToUpdate = res
-  //         this.productSizeValue = this.upingToUpdate.productSize
-
-  //         this.l1 = this.upingToUpdate.l1;
-  //         this.l2 = this.upingToUpdate.l2;
-  //         debugger
-  //         this.unit = this.unitArray.productFieldValuesList?.find((u:any) => u.name === this.upingToUpdate.unit);
-  //         this.category = this.categoryArray.productFieldValuesList?.find((c:any) => c.name === this.upingToUpdate.category)
-  //         this.onUnitChange(this.category);
-  //         this.upingToUpdate.upingPaperSize.filter((item: any) => {
-  //         this.upingSizeId.push(item.id)
-  //         this.value.push(item.value)
-  //         this.selectedSizes.push(item.paperSize)
-  //         this.paperSize.push({})
-  //         this.placeHolder.push(item.paperSize.label)
-  //         this.paperSizesArray.forEach((el: any) => {
-  //             if (el.id == item.paperSize.id) {
-  //               let index = this.paperSizesArray.indexOf(el)
-  //               this.paperSizesArray.splice(index, 1)
-  //             }
-  //           })
-  //         })
-  //       }, error => {
-  //         this.showError(error);
-  //         this.visible = true;
-  //       })
-  //     }
-  //   })
-  // }
 
   ngOnInit(): void {
     this.getPaperSizes()
@@ -107,10 +66,6 @@ export class AddUpingComponent implements OnInit {
     return this.productField.getProductField();
   }
 
-  // handlePaperSizesResponse(paperSizes: any) {
-  //   this.paperSizesArray = paperSizes;
-  //   this.maxLength = this.paperSizesArray.length;
-  // }
 
   handleProductFieldsResponse(productFields: any) {
     this.productFieldArray = productFields;
@@ -171,8 +126,8 @@ export class AddUpingComponent implements OnInit {
         l1: this.l1,
         l2: this.l2,
         unit: this.unit.name,
-        mm: this.unitLabelInch + '"x' + this.unitLabelInch2 + '"',
-        inch: this.unitLabelMm + '"x' + this.unitLabelMm2 + '"',
+        mm: this.unitLabelInch + 'x' + this.unitLabelInch2,
+        inch: this.unitLabelMm + 'x' + this.unitLabelMm2,
         upingPaperSize: this.selectedSizes
       }
       this.upingService.postUping(obj).subscribe(() => {
@@ -197,8 +152,8 @@ export class AddUpingComponent implements OnInit {
         l1: this.l1,
         l2: this.l2,
         unit: this.unit.name,
-        mm: this.unitLabelInch + '"x' + this.unitLabelInch2 +'"',
-        inch: this.unitLabelMm + '"x' + this.unitLabelMm2 +'"',
+        mm: this.unitLabelInch + 'x' + this.unitLabelInch2,
+        inch: this.unitLabelMm + 'x' + this.unitLabelMm2,
         upingPaperSize: this.selectedSizes
       }
       this.upingService.updateUping(this.idFromQueryParam, obj).subscribe(() => {
@@ -255,17 +210,6 @@ export class AddUpingComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 
-  // getProductFields() {
-  //   this.productField.getProductField().subscribe(res => {
-  //     this.productFieldArray = res
-  //     this.categoryArray = this.productFieldArray.find((item: any) => item.name.toLowerCase() === 'Paper Size Category'.toLowerCase());
-  //     this.unitArray = this.productFieldArray.find((item: any) => item.name.toLowerCase() === 'unit'.toLowerCase());
-
-  //   }, error => {
-  //     this.showError(error);
-  //     this.visible = true
-  //   })
-  // }
 
   onUnitChange(value: any) {
     debugger

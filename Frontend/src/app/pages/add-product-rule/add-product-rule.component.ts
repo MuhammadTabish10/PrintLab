@@ -106,8 +106,8 @@ export class AddProductRuleComponent implements OnInit {
           this.buttonName = 'Update';
           const observables = [];
           let sizeArray = JSON.parse(res?.size);
-          sizeArray = sizeArray.map((item: any) => ({ productSize: item }));
           debugger
+          sizeArray = sizeArray.map((item: any) => (item));
           const qtyArray = JSON.parse(res?.quantity);
           const frontColors = JSON.parse(res?.jobColorFront);
           const backColors = res?.jobColorBack ? JSON.parse(res?.jobColorBack) : null;
@@ -557,7 +557,7 @@ export class AddProductRuleComponent implements OnInit {
     const commonPayload = {
       title: this.productName,
       category: this.category.name,
-      size: JSON.stringify(this.upping.map((uping: any) => uping.productSize)),
+      size: JSON.stringify(this.upping),
       quantity: JSON.stringify(this.qty.map((qtys: any) => qtys.name)),
       printSide: this.sideValue.name,
       jobColorFront: JSON.stringify(this.jobFront.map((color: any) => color.name)),
@@ -657,10 +657,11 @@ export class AddProductRuleComponent implements OnInit {
     this.upping = null;
     this.getUpping.getUping().subscribe(
       (response: any) => {
-        debugger
         this.uppingArray = response.filter((el: any) => el.category.toLowerCase() === value.name.toLowerCase());
+        debugger
         this.uppingArray = this.uppingArray.map((el: any) => ({
-          productSize: `${"[" + el.productSize + "]"}, ${" [Inch : " + el.inch + "]"}, ${" [Mm : " + el.mm + "]"}`
+          ...el,
+          label: `${"[" + el.productSize + "]"}, ${" [Inch : " + el.inch + "]"}, ${" [Mm : " + el.mm + "]"}`
         }));
         console.log(this.uppingArray);
       }, (error: any) => {
@@ -680,14 +681,13 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   onUpingChange(value: any) {
-    debugger;
+
     if (value.length === 0) {
       this.upping = null;
     } else {
-      this.upping = value;
+      this.upping = value
     }
   }
-
 
   onQtyChange(value: any) {
     this.plates = null;
@@ -723,6 +723,7 @@ export class AddProductRuleComponent implements OnInit {
 
     });
   }
+
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }

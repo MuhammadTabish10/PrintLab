@@ -98,7 +98,6 @@ export class AddOrderComponent implements OnInit {
 
   calculate() {
     debugger
-    this.sizeValue = this.transformUpingSizes(this.sizeValue.name);
     if (this.sideOptionValue.name != undefined) {
       if (this.sideOptionValue.name == "SINGLE_SIDED") {
         this.jobBackValue = null
@@ -110,7 +109,7 @@ export class AddOrderComponent implements OnInit {
       productValue: this.productName,
       paper: this.paperStockItem.paperStock,
       category: this.category.name,
-      sizeValue: this.sizeValue.size,
+      sizeValue: this.sizeValue.productSize,
       inch: this.sizeValue.inch,
       mm: this.sizeValue.mm,
       gsm: +this.selectedGsm.name,
@@ -197,7 +196,7 @@ export class AddOrderComponent implements OnInit {
     }
     const parsedSize = title.size ? JSON.parse(title.size) : null;
     if (parsedSize) {
-      this.size = parsedSize.map((item: any) => ({ name: item }));
+      this.size = parsedSize;
     } else {
       this.size = null;
     }
@@ -357,8 +356,8 @@ export class AddOrderComponent implements OnInit {
     this.selectedGsm = foundGsmItem
   }
 
-  transformUpingSizes(parsedSize: any): { size: string, inch: string | null, mm: string | null } {
-    const inputString = parsedSize;
+  transformUpingSizes(fullSize: any): { size: string, inch: string | null, mm: string | null } {
+    const inputString = fullSize;
     const sizeMatch = inputString.match(/\[(.*?)\]/);
     const inchMatch = inputString.match(/Inch\s*:\s*([0-9.]+)"x([0-9.]+)"/);
     const mmMatch = inputString.match(/Mm\s*:\s*([0-9.]+)\"x([0-9.]+)"/);

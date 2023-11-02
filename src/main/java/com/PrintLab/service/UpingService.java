@@ -14,7 +14,7 @@ public interface UpingService
 
     UpingDto findById(Long id);
     UpingDto findByProductSize(String productSize);
-    List<UpingDto> searchByProductSize(String productSize);
+    PaginationResponse searchByProductSize(String productSize, Integer pageNumber, Integer pageSize);
     List<UpingDto> getUpingByPaperSizeId(Long paperSizeId);
     String deleteById(Long id);
     UpingDto updateUping(Long id, UpingDto upingDto);
