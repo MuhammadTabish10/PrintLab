@@ -12,6 +12,7 @@ export class ViewOrderComponent implements OnInit {
   idFromQueryParam!: number
   visible!: boolean
   error: string = ''
+  size: any;
 
   constructor(private route: ActivatedRoute, private orderService: OrdersService,private messageService: MessageService) { }
 
@@ -25,6 +26,7 @@ export class ViewOrderComponent implements OnInit {
   getOrderById() {
     this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
       this.order = res
+      this.size = JSON.parse(this.order.size)
     }, error => {
       this.showError(error);
       this.visible = true
@@ -32,6 +34,6 @@ export class ViewOrderComponent implements OnInit {
   }
   showError(error:any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
-    
+
   }
 }

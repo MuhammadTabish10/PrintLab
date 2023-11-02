@@ -18,7 +18,7 @@
                 optionLabel="title"
                 [(ngModel)]="productToUpdate"
                 (onChange)="toggleFields($event.value)"
-                [placeholder]="productArray.title ? placeholderText : ''"
+                [placeholder]="productArray.length !== 1 ? placeholderText.product : ''"
               ></p-dropdown>
               </div>
             </div>

@@ -136,7 +136,7 @@ export class AddOrderComponent implements OnInit {
         product: this.productName,
         paper: this.paperStockItem.paperStock,
         category: this.category.name,
-        size: this.sizeValue.name,
+        size: JSON.stringify(this.sizeValue),
         gsm: +this.selectedGsm.name,
         quantity: +this.qtyValue.name,
         price: this.totalAmount,
@@ -160,7 +160,7 @@ export class AddOrderComponent implements OnInit {
         product: this.productName,
         paper: this.paperStockItem.paperStock,
         category: this.category.name,
-        size: this.sizeValue.name,
+        size: JSON.stringify(this.sizeValue),
         gsm: +this.selectedGsm.name,
         quantity: +this.qtyValue.name,
         price: this.totalAmount,
@@ -245,8 +245,7 @@ export class AddOrderComponent implements OnInit {
     this.productService.getProductRuleTable().subscribe(res => {
       this.productArray = res;
       debugger
-      if (this.productArray.length > 0 && this.productArray[0].title) {
-        this.placeholderText.product = this.productArray[0].title;
+      if (this.productArray.length > 0) {
         this.toggleFields(this.productArray[0]);
       }
       !Number.isNaN(this.idFromQueryParam) ? this.putValuesOnUpdate() : null
@@ -340,7 +339,9 @@ export class AddOrderComponent implements OnInit {
     const conditionBackColor = this.orderToUpdate.jobColorsBack ? this.orderToUpdate.jobColorsBack.toString() : ''
     const foundPaperStockItem = this.paperStock != null ? this.paperStock.find((item: { paperStock: any; }) => item.paperStock === this.orderToUpdate.paper) : null;
     this.gsmFields(foundPaperStockItem)
-    const foundsizeItem = this.size != null ? this.size.find((item: { name: any; }) => item.name === this.orderToUpdate.size) : null;
+    debugger
+    const parseSize = JSON.parse(this.orderToUpdate.size);
+    const foundsizeItem = this.size != null ? this.size.find((item: { label: any; }) => item.label === parseSize.label) : null;
     const foundQtyItem = this.quantity != null ? this.quantity.find((item: { name: any; }) => item.name === this.orderToUpdate.quantity.toString()) : null;
     const foundSideOptItem = this.printSide != null ? this.printSide.find((item: { name: any; }) => item.name === this.orderToUpdate.sideOptionValue) : null;
     const foundFrontColorItem = this.jobFront != null ? this.jobFront.find((item: { name: any; }) => item.name === this.orderToUpdate.jobColorsFront.toString()) : null;
