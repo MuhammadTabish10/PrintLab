@@ -55,7 +55,7 @@ export class ViewProductRuleComponent implements OnInit {
           this.frontColors = this.productRuleData.map((item: any) => JSON.parse(item.jobColorFront));
           this.backColors = this.productRuleData.map((item: any) => item.jobColorBack ? JSON.parse(item.jobColorBack) : null);
           this.qty = this.productRuleData.map((item: any) => JSON.parse(item.quantity));
-          this.paperSize = this.productRuleData.map((item: any) => JSON.parse(item.size));
+          this.paperSize = JSON.parse(this.productRuleData[0].size);
         }
 
       },

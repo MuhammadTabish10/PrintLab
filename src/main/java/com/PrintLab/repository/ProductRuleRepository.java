@@ -11,8 +11,7 @@ import java.util.List;
 
 @Repository
 public interface ProductRuleRepository extends JpaRepository<ProductRule,Long> {
-
-    ProductRule findByTitle(String productValue);
+    ProductRule findByTitleAndStatusIsTrue (String productValue);
     List<ProductRule> findProductRuleByTitle(String title);
     List<ProductRule> findAllByStatusIsTrue();
 

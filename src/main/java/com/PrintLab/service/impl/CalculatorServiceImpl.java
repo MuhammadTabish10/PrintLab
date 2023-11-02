@@ -66,7 +66,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 
         ProductRule productRule = null;
         if(calculator.getProductValue() != null){
-            productRule = productRuleRepository.findByTitle(calculator.getProductValue());
+            productRule = productRuleRepository.findByTitleAndStatusIsTrue(calculator.getProductValue());
             if(productRule == null){
                 throw new RecordNotFoundException("Product " + calculator.getProductValue() + " not Found");
             }
