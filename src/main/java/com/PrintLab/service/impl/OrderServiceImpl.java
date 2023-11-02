@@ -116,7 +116,8 @@ public class OrderServiceImpl implements OrderService {
             existingOrder.setProduct(orderDto.getProduct());
             existingOrder.setPaper(orderDto.getPaper());
             existingOrder.setSize(orderDto.getSize());
-            existingOrder.setSheetSizeValue(orderDto.getSheetSizeValue());
+            existingOrder.setCategory(orderDto.getCategory());
+//            existingOrder.setSheetSizeValue(orderDto.getSheetSizeValue());
             existingOrder.setGsm(orderDto.getGsm());
             existingOrder.setQuantity(orderDto.getQuantity());
             existingOrder.setPrice(orderDto.getPrice());
@@ -142,7 +143,8 @@ public class OrderServiceImpl implements OrderService {
                 .product(order.getProduct())
                 .paper(order.getPaper())
                 .size(order.getSize())
-                .sheetSizeValue(order.getSheetSizeValue())
+                .category(order.getCategory())
+//                .sheetSizeValue(order.getSheetSizeValue())
                 .gsm(order.getGsm())
                 .quantity(order.getQuantity())
                 .price(order.getPrice())
@@ -163,7 +165,8 @@ public class OrderServiceImpl implements OrderService {
                 .product(orderDto.getProduct())
                 .paper(orderDto.getPaper())
                 .size(orderDto.getSize())
-                .sheetSizeValue(orderDto.getSheetSizeValue())
+                .category(orderDto.getCategory())
+//                .sheetSizeValue(orderDto.getSheetSizeValue())
                 .gsm(orderDto.getGsm())
                 .quantity(orderDto.getQuantity())
                 .price(orderDto.getPrice())

@@ -22,7 +22,8 @@ public class Order
     private String product;
     private String paper;
     private String size;
-    private String sheetSizeValue;
+    private String category;
+//    private String sheetSizeValue;
     private Double gsm;
     private Double quantity;
     private Double price;

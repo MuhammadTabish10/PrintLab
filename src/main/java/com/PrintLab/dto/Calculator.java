@@ -15,6 +15,9 @@ public class Calculator
     private String productValue;
     private Long jobColorsFront;
     private String sizeValue;
+    private String category;
+    private String inch;
+    private String mm;
     private String paper;
     private Integer gsm;
     private Double quantity;

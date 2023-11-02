@@ -15,6 +15,7 @@ import java.util.List;
 public interface UpingRepository extends JpaRepository<Uping,Long> {
     List<Uping> findByUpingPaperSize_PaperSize_Id(Long paperSizeId);
     Uping findByProductSize(String productSize);
+    Uping findByProductSizeAndCategoryAndInchAndMm(String productSize, String category, String inch, String mm);
     List<Uping> findAllByStatusIsTrue();
     Page<Uping> findAllByStatusIsTrue(Pageable page);
 
