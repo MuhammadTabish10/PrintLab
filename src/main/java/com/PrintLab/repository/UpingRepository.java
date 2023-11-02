@@ -18,8 +18,8 @@ public interface UpingRepository extends JpaRepository<Uping,Long> {
     List<Uping> findAllByStatusIsTrue();
     Page<Uping> findAllByStatusIsTrue(Pageable page);
 
-    @Query("SELECT up FROM Uping up WHERE up.productSize LIKE %:searchName%")
-    List<Uping> findUpingByProductSize(@Param("searchName") String searchName);
+    @Query("SELECT up FROM Uping up WHERE up.productSize LIKE %:searchName% AND up.status = true")
+    Page<Uping> findUpingByProductSize(@Param("searchName") String searchName, Pageable page);
     @Modifying
     @Query("UPDATE Uping u SET u.status = false WHERE u.id = :id")
     void setStatusInactive(@Param("id") Long id);

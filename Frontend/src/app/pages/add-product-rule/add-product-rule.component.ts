@@ -550,14 +550,18 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   addProductRule() {
-
+debugger
+const extractedSizes = this.upping.map((uping: any) => {
+  const match = uping.productSize.match(/\[([^\]]+)\]/);
+  return match ? match[1] : null;
+});
     const PressId = !this.idFromQueryParam ? this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name) : null
     const updatePressId = this.press.machines.find((el: any) => el.vendor.name === this.pressVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
     const commonPayload = {
       title: this.productName,
       category: this.category.name,
-      size: JSON.stringify(this.upping.map((uping: any) => uping.productSize)),
+      size: JSON.stringify(extractedSizes.map((sizes: any) => sizes)),
       quantity: JSON.stringify(this.qty.map((qtys: any) => qtys.name)),
       printSide: this.sideValue.name,
       jobColorFront: JSON.stringify(this.jobFront.map((color: any) => color.name)),
@@ -571,7 +575,6 @@ export class AddProductRuleComponent implements OnInit {
         id: ctpId.id
       },
     };
-
     const payload = this.idFromQueryParam
       ? commonPayload
       : {
@@ -722,6 +725,7 @@ export class AddProductRuleComponent implements OnInit {
 
     });
   }
+  
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
