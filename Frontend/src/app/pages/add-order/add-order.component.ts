@@ -53,6 +53,18 @@ export class AddOrderComponent implements OnInit {
   optionsGsm: any;
   selectedGsm: any;
   isJobColorBackHidden: boolean = false;
+  categoryArray: any;
+  category: any = [];
+  placeholderText: any = {
+    product: 'Select Product',
+    paper: 'Select Paper',
+    category: 'Select Category',
+    size: 'Select Size',
+    quantity: 'Select Quantity',
+    printSide: 'Select Print Side',
+    frontColor: 'Select Front Color',
+    backColor: 'Select Back Color',
+  };
 
   constructor(private orderService: OrdersService, private router: Router,
     private productService: ProductRuleService, private route: ActivatedRoute,
@@ -86,6 +98,7 @@ export class AddOrderComponent implements OnInit {
 
   calculate() {
     debugger
+    this.sizeValue = this.transformUpingSizes(this.sizeValue.name);
     if (this.sideOptionValue.name != undefined) {
       if (this.sideOptionValue.name == "SINGLE_SIDED") {
         this.jobBackValue = null
@@ -96,7 +109,10 @@ export class AddOrderComponent implements OnInit {
       pressMachineId: this.machineId,
       productValue: this.productName,
       paper: this.paperStockItem.paperStock,
-      sizeValue: this.sizeValue.name,
+      category: this.category.name,
+      sizeValue: this.sizeValue.size,
+      inch: this.sizeValue.inch,
+      mm: this.sizeValue.mm,
       gsm: +this.selectedGsm.name,
       quantity: +this.qtyValue.name,
       jobColorsFront: +this.jobFrontValue.name,
@@ -109,17 +125,18 @@ export class AddOrderComponent implements OnInit {
       obj = res
       this.totalAmount = Math.round(obj.TotalProfit * 100) / 100
     }, error => {
-      this.showError(error);
+      error.error ? this.showError(error) : console.log("Failed to calculate and no exception found error in exception contains null error = ", error);
       this.visible = true;
     })
   }
 
   addOrder() {
-debugger
+    debugger
     if (Number.isNaN(this.idFromQueryParam)) {
       let obj = {
         product: this.productName,
         paper: this.paperStockItem.paperStock,
+        category: this.category.name,
         size: this.sizeValue.name,
         gsm: +this.selectedGsm.name,
         quantity: +this.qtyValue.name,
@@ -143,6 +160,7 @@ debugger
         id: this.idFromQueryParam,
         product: this.productName,
         paper: this.paperStockItem.paperStock,
+        category: this.category.name,
         size: this.sizeValue.name,
         gsm: +this.selectedGsm.name,
         quantity: +this.qtyValue.name,
@@ -171,6 +189,12 @@ debugger
     debugger
     this.paperStock = title.productRulePaperStockList ? title.productRulePaperStockList : null;
 
+    if (typeof title.category === 'string') {
+      const categories = title.category.split(',').map((category: string) => ({ name: category.trim() }));
+      this.categoryArray = categories;
+    } else {
+      this.categoryArray = null;
+    }
     const parsedSize = title.size ? JSON.parse(title.size) : null;
     if (parsedSize) {
       this.size = parsedSize.map((item: any) => ({ name: item }));
@@ -220,7 +244,12 @@ debugger
 
   getProducts() {
     this.productService.getProductRuleTable().subscribe(res => {
-      this.productArray = res
+      this.productArray = res;
+      debugger
+      if (this.productArray.length > 0 && this.productArray[0].title) {
+        this.placeholderText.product = this.productArray[0].title;
+        this.toggleFields(this.productArray[0]);
+      }
       !Number.isNaN(this.idFromQueryParam) ? this.putValuesOnUpdate() : null
     }, error => {
       this.showError(error);
@@ -327,6 +356,25 @@ debugger
     this.jobBackValue = foundBackColorItem
     this.selectedGsm = foundGsmItem
   }
+
+  transformUpingSizes(parsedSize: any): { size: string, inch: string | null, mm: string | null } {
+    const inputString = parsedSize;
+    const sizeMatch = inputString.match(/\[(.*?)\]/);
+    const inchMatch = inputString.match(/Inch\s*:\s*([0-9.]+)"x([0-9.]+)"/);
+    const mmMatch = inputString.match(/Mm\s*:\s*([0-9.]+)\"x([0-9.]+)"/);
+    debugger
+    const size = sizeMatch ? sizeMatch[1] : null;
+    const inch = inchMatch ? inchMatch[1] + "x" + inchMatch[2] : null;
+    const mm = mmMatch ? mmMatch[1] + "x" + mmMatch[2] : null;
+
+    return {
+      size: size,
+      inch: inch,
+      mm: mm
+    };
+  }
+
+
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }

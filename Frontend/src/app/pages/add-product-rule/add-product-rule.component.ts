@@ -550,7 +550,7 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   addProductRule() {
-
+    debugger
     const PressId = !this.idFromQueryParam ? this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name) : null
     const updatePressId = this.press.machines.find((el: any) => el.vendor.name === this.pressVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
@@ -680,13 +680,14 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   onUpingChange(value: any) {
-
+    debugger;
     if (value.length === 0) {
       this.upping = null;
     } else {
-      this.upping = value
+      this.upping = value;
     }
   }
+
 
   onQtyChange(value: any) {
     this.plates = null;
