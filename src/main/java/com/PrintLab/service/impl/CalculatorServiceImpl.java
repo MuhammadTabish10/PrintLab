@@ -99,9 +99,9 @@ public class CalculatorServiceImpl implements CalculatorService {
 
         // CALCULATION OF ProductQty
         //Checking provided Uping/ProductSize in database
-        Uping uping = upingRepository.findByProductSize(calculator.getSizeValue());
+        Uping uping = upingRepository.findByProductSizeAndCategoryAndInchAndMm(calculator.getSizeValue(), calculator.getCategory(),calculator.getInch(), calculator.getMm());
         if (uping == null) {
-            throw new RecordNotFoundException("Uping not found for size: " + uping.getProductSize());
+            throw new RecordNotFoundException("Uping not found for size: " + uping.getProductSize() + " " + uping.getCategory() + " " + uping.getInch() + " " + uping.getMm());
         }
         logger.info("Uping found for size: " + uping.getProductSize());
 
