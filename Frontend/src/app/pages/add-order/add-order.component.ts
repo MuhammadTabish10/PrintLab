@@ -245,7 +245,7 @@ export class AddOrderComponent implements OnInit {
     this.productService.getProductRuleTable().subscribe(res => {
       this.productArray = res;
       debugger
-      if (this.productArray.length > 0) {
+      if (this.productArray.length === 1) {
         this.toggleFields(this.productArray[0]);
       }
       !Number.isNaN(this.idFromQueryParam) ? this.putValuesOnUpdate() : null
