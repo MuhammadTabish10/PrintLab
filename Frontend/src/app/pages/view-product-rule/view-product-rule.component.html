@@ -3,7 +3,7 @@
   class="was-validated ms-5"
   #myForm="ngForm"
   novalidate
-  *ngFor="let product of productRuleData"
+  *ngFor="let product of productRuleData; let s = index"
 >
   <div class="bg-light pb-3 pt-3">
     <div class="container bg-white py-2 my-3">
@@ -32,7 +32,7 @@
         <div class="col">
           <label class="add-order-label m-0">Paper Size :</label>
           <div>
-            {{ paperSize.join(", ") }}
+            {{ paperSize[s].label }}
           </div>
         </div>
       </div>
