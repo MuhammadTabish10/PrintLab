@@ -716,16 +716,28 @@ export class AddProductRuleComponent implements OnInit {
     }
   }
   onFocusOutEvent(title: any) {
+    debugger
     this.productRuleService.checkUniqueProduct(title.value).subscribe((result: any) => {
       this.result = result;
-
+      if (result === true) {
+        const error = { error: { error: "This product already exist." } }
+        this.showError(error);
+      } else {
+        const success = 'This is a new product';
+        this.showSuccess(success);
+      }
     }, err => {
-
     });
   }
 
   showError(error: any) {
+    debugger
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+
+  showSuccess(success: string) {
+    debugger
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: success });
   }
 }
 export interface Container {

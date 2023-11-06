@@ -43,10 +43,10 @@
 
     <div
       class="container bg-white py-2 my-3"
-      *ngFor="let container of paperStockData; let i = index"
+      *ngFor="let container of paperStockData; let j = index"
     >
       <h3 class="text-center text-decoration-underline">
-        PaperStock Rule {{ i + 1 }}
+        PaperStock Rule {{ j + 1 }}
       </h3>
       <div class="row py-1 mx-1">
         <label class="add-order-label m-0">Customer Friendly Name :</label>
@@ -79,13 +79,13 @@
         </div>
         <div class="col">
           <label class="add-order-label m-0">Gsm :</label>
-          <div>{{ gsm[i].join(", ") }}</div>
+          <div>{{ gsm[j].join(", ") }}</div>
         </div>
       </div>
     </div>
     <div
       class="container bg-white my-2 py-2"
-      *ngFor="let press of pressData; let j = index"
+      *ngFor="let press of pressData; let k = index"
     >
       <h4 class="text-decoration-underline">Press</h4>
       <div class="row mx-auto">
@@ -101,7 +101,7 @@
       <div class="row mx-auto mt-3">
         <div class="col">
           <label class="add-order-label m-0">Quantities</label>
-          <div>{{ qty[j].join(", ") }}</div>
+          <div>{{ qty[k].join(", ") }}</div>
         </div>
       </div>
     </div>
