@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
             existingUser.setName(user.getName());
+            existingUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             existingUser.setPhone(user.getPhone());
             existingUser.setCnic(user.getCnic());
 
