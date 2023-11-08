@@ -46,7 +46,7 @@ export class ViewProductRuleComponent implements OnInit {
     this.productRuleService.getProductRuleTable().subscribe(
       (res: any) => {
         if (Array.isArray(res)) {
-          debugger
+
           this.productRuleData = res.filter((item: any) => item.id === this.idFromQueryParam).flatMap((item: any) => item);
           this.paperStockData = res.filter((item: any) => item.id === this.idFromQueryParam).flatMap((item: any) => item.productRulePaperStockList);
           this.pressData = res.filter((item: any) => item.id === this.idFromQueryParam).flatMap((item: any) => item.pressMachine);

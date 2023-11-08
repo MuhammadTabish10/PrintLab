@@ -31,7 +31,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
   }
 
   getCustomers() {
-    debugger
+
     this.customerService.getCustomer()
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -64,7 +64,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe(
           (res: any) => {
-            debugger
+
             this.customersArray = res as Customer[];
             this.tableData = this.customersArray.length === 0;
           },

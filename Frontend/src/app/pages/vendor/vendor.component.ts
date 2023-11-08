@@ -71,12 +71,12 @@ export class VendorComponent implements OnInit, OnDestroy {
     if (!name.value) {
       this.getVendors();
     } else {
-      debugger
+
       this.vendorService.searchVendor(name.value)
         .pipe(takeUntil(this.destroy$))
         .subscribe(
           (res) => {
-            debugger
+
             this.vendorArray = res as Vendor[];
             this.process = this.processVendorData(this.vendorArray);
             this.tableData = this.vendorArray.length === 0;

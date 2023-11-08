@@ -40,7 +40,7 @@ export class PaperMarketService {
   }
 
   searchPaperMarket(paperStock: any) {
-    debugger
+
     let url = `${this._url}/paper-market-rates/paper-stocks/${paperStock}`
     return this.http.get(url)
   }

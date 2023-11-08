@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, Subject, forkJoin, of, switchMap } from 'rxjs';
 import { CtpService } from 'src/app/services/ctp.service';
 import { PressMachineService } from 'src/app/services/press-machine.service';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
@@ -77,9 +77,12 @@ export class AddProductRuleComponent implements OnInit {
     private messageService: MessageService,
   ) { }
 
+  private uppingArraySubject = new Subject<any[]>();
+  uppingArray$: Observable<any[]> = this.uppingArraySubject.asObservable();
+
+
   ngOnInit(): void {
     this.getPressMachine(null);
-    this.getCtp(null);
     this.getProductField();
     this.productRuleService.getProductRule('paper', null).subscribe((productRule: any) => {
       let paper = productRule.map((p: any) => {
@@ -101,13 +104,11 @@ export class AddProductRuleComponent implements OnInit {
           this.productName = res?.title;
           this.category = this.categoryArray?.productFieldValuesList.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
           this.onCategoryChange(this.category)
-          this.sideValue = this.sideOptions.productFieldValuesList.find((option: any) => option.name === res?.printSide)
+          this.sideValue = this.sideOptions?.productFieldValuesList.find((option: any) => option.name === res?.printSide)
           this.onChangeSide(this.sideValue)
           this.buttonName = 'Update';
           const observables = [];
           let sizeArray = JSON.parse(res?.size);
-          debugger
-          sizeArray = sizeArray.map((item: any) => (item));
           const qtyArray = JSON.parse(res?.quantity);
           const frontColors = JSON.parse(res?.jobColorFront);
           const backColors = res?.jobColorBack ? JSON.parse(res?.jobColorBack) : null;
@@ -125,8 +126,8 @@ export class AddProductRuleComponent implements OnInit {
               this.addContainer()
               break
             }
-            forkJoin(observables).subscribe(
-              (responses: any[]) => {
+            forkJoin(observables).pipe(
+              switchMap((responses: any[]) => {
                 this.containers[i].userFriendlyName = res?.productRulePaperStockList[i].customerFriendlyName
                 this.containers[i].id = res?.productRulePaperStockList[i].id
                 let vendor = this.containers[i]?.allVendor.find((el: any) => el.id === res?.productRulePaperStockList[i].vendor.id);
@@ -134,11 +135,7 @@ export class AddProductRuleComponent implements OnInit {
                 const gsmMatches = this.containers[i].allGsm.filter((gsm: any) => gsmArray.includes(gsm.name));
                 this.containers[i].vendor = vendor;
                 this.containers[i].gsm = gsmMatches;
-
-                this.upping = sizeArray
-                debugger
                 this.qty = this.qtyArray?.productFieldValuesList.filter((el: any) => qtyArray.includes(el.name));
-
                 this.press = this.pressMachineArray.find((el: any) => {
                   const machine = el.machines.find((machine: any) => machine.id === res?.pressMachine.id);
                   return machine;
@@ -147,13 +144,21 @@ export class AddProductRuleComponent implements OnInit {
                 this.pressVendor = res?.pressMachine.vendor
                 this.dimensionArray = [{ name: res?.ctp.plateDimension }]
                 this.plates = { name: res?.ctp.plateDimension }
-                this.ctpVendors = [res?.ctp]
+                this.getCtp(this.plates);
                 this.plateVendor = res?.ctp
-
                 this.jobFront = this.frontColors.productFieldValuesList.filter((fColors: any) => frontColors.includes(fColors.name));
-
                 this.jobBack = this.backColors.productFieldValuesList.filter((bColors: any) => backColors ? backColors.includes(bColors.name) : null);
                 this.impositionValue = res?.impositionValue;
+                this.uppingArray$.subscribe((uppingArray: any[]) => {
+                  const matchingUppingArray = uppingArray?.filter((uppingItem: { id: number }) => {
+                    return sizeArray.some((sizeItem: { id: number }) => sizeItem.id === uppingItem.id);
+                  });
+                  this.upping = matchingUppingArray;
+                });
+                return of(null);
+              })
+            ).subscribe(
+              () => {
               },
               (err) => {
                 console.log(err);
@@ -485,7 +490,6 @@ export class AddProductRuleComponent implements OnInit {
       }
 
       this.productRuleService.queryProductRule(obj).subscribe(res => {
-        console.log(res);
         this.tableData[i] = res
         this.tableData[i].forEach((el: any) => {
 
@@ -538,19 +542,15 @@ export class AddProductRuleComponent implements OnInit {
 
   getCtp(value: any) {
     this.plateVendor = null;
-    this.ctpService.getCtp().subscribe(res => {
-      this.ctpVendors = res;
-      if (!this.idFromQueryParam) {
-
-        this.ctpVendors = [this.ctpVendors.find((el: any) => el.plateDimension === value?.name)]
-      }
+    this.ctpService.getCtp().subscribe((res: any) => {
+      this.ctpVendors = res.filter((el: any) => el.plateDimension === value?.name);
     }, error => {
       console.log(error);
     });
   }
 
   addProductRule() {
-    debugger
+
     const PressId = !this.idFromQueryParam ? this.press.machines.find((el: any) => el.vendor.name === this.selectedVendor.name) : null
     const updatePressId = this.press.machines.find((el: any) => el.vendor.name === this.pressVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
@@ -658,30 +658,27 @@ export class AddProductRuleComponent implements OnInit {
     this.getUpping.getUping().subscribe(
       (response: any) => {
         this.uppingArray = response.filter((el: any) => el.category.toLowerCase() === value.name.toLowerCase());
-        debugger
         this.uppingArray = this.uppingArray.map((el: any) => ({
           ...el,
-          label: `${"[" + el.productSize + "]"}, ${" [Inch : " + el.inch + "]"}, ${" [Mm : " + el.mm + "]"}`
+          label: `[${el.productSize}], [Inch: ${el.inch}], [Mm: ${el.mm}]`
         }));
-        console.log(this.uppingArray);
-      }, (error: any) => {
+        this.uppingArraySubject.next(this.uppingArray);
+      },
+      (error: any) => {
         console.log(error);
-
-      });
+      }
+    );
   }
 
   toggleEnabledDisabled(i: any, value: any) {
-
     if (value.length === 0) {
       this.containers[i].gsm = null;
     } else {
       this.containers[i].gsm = value
-      console.log(this.containers[i].gsm);
     }
   }
 
   onUpingChange(value: any) {
-
     if (value.length === 0) {
       this.upping = null;
     } else {
@@ -699,7 +696,6 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   onFrontColorChange(value: any) {
-
     if (value.length === 0) {
       this.jobFront = null;
     } else {
@@ -716,7 +712,6 @@ export class AddProductRuleComponent implements OnInit {
     }
   }
   onFocusOutEvent(title: any) {
-    debugger
     this.productRuleService.checkUniqueProduct(title.value).subscribe((result: any) => {
       this.result = result;
       if (result === true) {
@@ -731,14 +726,13 @@ export class AddProductRuleComponent implements OnInit {
   }
 
   showError(error: any) {
-    debugger
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 
   showSuccess(success: string) {
-    debugger
     this.messageService.add({ severity: 'success', summary: 'Success', detail: success });
   }
+
 }
 export interface Container {
   id?: number,

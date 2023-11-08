@@ -55,7 +55,7 @@ export class PaperMarketComponent implements OnInit {
   }
 
   getFilteredAndPaginatedData(page?: any, search?: any): void {
-    debugger
+
     if (this.searchFromQueryParam) {
       page = null;
     }
@@ -190,7 +190,7 @@ export class PaperMarketComponent implements OnInit {
         this.dimensionsToFilter = dimensionArray.map((dimension: string) => ({
           dimension: dimension.trim()
         }));
-        debugger
+
         const vendorEntries = data.vendor.split(',');
         this.vendorToFilter = vendorEntries.map((entry: any) => {
           const [Id, name] = entry.split(':');

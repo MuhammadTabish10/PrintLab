@@ -97,13 +97,14 @@ export class AddOrderComponent implements OnInit {
   }
 
   calculate() {
-    debugger
+
     if (this.sideOptionValue.name != undefined) {
       if (this.sideOptionValue.name == "SINGLE_SIDED") {
         this.jobBackValue = null
         this.impositionValue = false
       }
     }
+
     let obj = {
       pressMachineId: this.machineId,
       productValue: this.productName,
@@ -130,7 +131,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   addOrder() {
-    debugger
+
     if (Number.isNaN(this.idFromQueryParam)) {
       let obj = {
         product: this.productName,
@@ -181,42 +182,57 @@ export class AddOrderComponent implements OnInit {
     }
   }
 
+
   toggleFields(title: any) {
+    this.emptyAllFields()
     this.cdr.detectChanges();
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
-    debugger
     this.paperStock = title.productRulePaperStockList ? title.productRulePaperStockList : null;
-
     if (typeof title.category === 'string') {
       const categories = title.category.split(',').map((category: string) => ({ name: category.trim() }));
       this.categoryArray = categories;
     } else {
       this.categoryArray = null;
     }
+    if (this.categoryArray.length === 1) {
+
+      this.category = this.categoryArray[0];
+    }
+
     const parsedSize = title.size ? JSON.parse(title.size) : null;
     if (parsedSize) {
       this.size = parsedSize;
     } else {
       this.size = null;
     }
-
+    if (this.size.length === 1) {
+      this.sizeValue = this.size[0];
+    }
     const parsedQty = title.quantity ? JSON.parse(title.quantity) : null;
     if (parsedQty) {
       this.quantity = parsedQty.map((item: any) => ({ name: item }));
     } else {
       this.quantity = null;
     }
-
+    if (this.quantity.length === 1) {
+      this.qtyValue = this.quantity[0];
+    }
     this.impositionValue = title.impositionValue;
 
     this.printSide = title.printSide ? [{ name: title.printSide }] : null;
-
+    if (this.printSide.length === 1) {
+      this.sideOptionValue = this.printSide[0];
+    }
     const parsedFrontColors = title.jobColorFront ? JSON.parse(title.jobColorFront) : null;
     if (parsedFrontColors) {
       this.jobFront = parsedFrontColors.map((item: any) => ({ name: item }));
     } else {
       this.jobFront = null;
+    }
+
+    if (this.jobFront.length === 1) {
+      this.jobFrontValue = this.jobFront[0];
     }
 
     const parsedBackColors = title.jobColorBack ? JSON.parse(title.jobColorBack) : null;
@@ -226,11 +242,22 @@ export class AddOrderComponent implements OnInit {
       this.jobColorBack = null;
     }
 
+    if (this.jobColorBack.length === 1) {
+      this.jobBackValue = this.jobColorBack[0];
+    }
+
     this.gsms = title.productRulePaperStockList ? title.productRulePaperStockList : null;
+
+    if (this.paperStock.length === 1) {
+      this.paperStockItem = this.paperStock[0];
+      this.gsmFields(this.paperStockItem);
+    } else {
+      this.gsmFields(null);
+    }
   }
 
   jobColorOptions(value: any) {
-    debugger
+
     const singleSide = "SINGLE_SIDED";
     this.isJobColorBackHidden = value.name.toLowerCase() === singleSide.toLowerCase();
   }
@@ -244,7 +271,7 @@ export class AddOrderComponent implements OnInit {
   getProducts() {
     this.productService.getProductRuleTable().subscribe(res => {
       this.productArray = res;
-      debugger
+
       if (this.productArray.length === 1) {
         this.toggleFields(this.productArray[0]);
       }
@@ -278,7 +305,7 @@ export class AddOrderComponent implements OnInit {
             const fileType = this.determineFileType(file.name);
 
             if (fileType === 'image') {
-              debugger
+
               this.imgUrl = environment.baseUrl + response;
             } else if (fileType === 'pdf') {
               this.pdfUrl = environment.baseUrl + response;
@@ -313,8 +340,8 @@ export class AddOrderComponent implements OnInit {
   }
 
   gsmFields(value: any) {
-    debugger
-    this.dynamicFields = value.paperStock;
+
+    this.dynamicFields = value?.paperStock;
     let fgsm = this.gsms!.find((item: any) => item.paperStock == this.dynamicFields)
     if (fgsm) {
       this.foundGsm = true
@@ -327,6 +354,11 @@ export class AddOrderComponent implements OnInit {
           status: 'Active'
         }
       })
+      if (this.optionsGsm.length === 1) {
+        this.selectedGsm = this.optionsGsm[0];
+      }
+    } else {
+      this.foundGsm = false;
     }
   }
 
@@ -335,11 +367,11 @@ export class AddOrderComponent implements OnInit {
       el.title == this.orderToUpdate.product ? this.productToUpdate = el : null
     })
     this.toggleFields(this.productToUpdate)
-    debugger
+
     const conditionBackColor = this.orderToUpdate.jobColorsBack ? this.orderToUpdate.jobColorsBack.toString() : ''
     const foundPaperStockItem = this.paperStock != null ? this.paperStock.find((item: { paperStock: any; }) => item.paperStock === this.orderToUpdate.paper) : null;
     this.gsmFields(foundPaperStockItem)
-    debugger
+
     const parseSize = JSON.parse(this.orderToUpdate.size);
     const foundsizeItem = this.size != null ? this.size.find((item: { label: any; }) => item.label === parseSize.label) : null;
     const foundQtyItem = this.quantity != null ? this.quantity.find((item: { name: any; }) => item.name === this.orderToUpdate.quantity.toString()) : null;
@@ -362,7 +394,7 @@ export class AddOrderComponent implements OnInit {
     const sizeMatch = inputString.match(/\[(.*?)\]/);
     const inchMatch = inputString.match(/Inch\s*:\s*([0-9.]+)"x([0-9.]+)"/);
     const mmMatch = inputString.match(/Mm\s*:\s*([0-9.]+)\"x([0-9.]+)"/);
-    debugger
+
     const size = sizeMatch ? sizeMatch[1] : null;
     const inch = inchMatch ? inchMatch[1] + "x" + inchMatch[2] : null;
     const mm = mmMatch ? mmMatch[1] + "x" + mmMatch[2] : null;
@@ -372,6 +404,17 @@ export class AddOrderComponent implements OnInit {
       inch: inch,
       mm: mm
     };
+  }
+
+  emptyAllFields(){
+    this.paperStockItem = null;
+    this.category = null;
+    this.sizeValue = null;
+    this.qtyValue = null;
+    this.sideOptionValue = null;
+    this.jobFrontValue = null;
+    this.jobBackValue = null;
+    this.selectedGsm = null;
   }
 
 

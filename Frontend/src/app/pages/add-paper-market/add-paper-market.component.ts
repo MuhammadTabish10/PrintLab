@@ -145,7 +145,7 @@ export class AddPaperMarketComponent implements OnInit {
         this.brandValue = brand
       }
     });
-    debugger
+
     this.timeStampValue = this.formatDate(this.rateToUpdate.timeStamp);
     this.madeInValue = this.rateToUpdate.madeIn;
     this.lengthValue = this.rateToUpdate.length;
@@ -218,7 +218,7 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   getBrands(paperValue: string) {
-    debugger
+
     if(this.extractedPaperStock.length > 0 ){
      let paper = this.extractedPaperStock.find(p=> p.name === paperValue)
      this.extractedBrands = paper.brands
@@ -230,7 +230,7 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   dimension() {
-    debugger
+
     this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
   }
 

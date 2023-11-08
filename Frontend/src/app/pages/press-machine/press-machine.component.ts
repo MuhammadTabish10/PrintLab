@@ -23,7 +23,7 @@ export class PressMachineComponent implements OnInit {
     this.pressMachineService.getPressMachine().subscribe(res => {
       this.pressMachineArray = res
       this.pressMachineArray.length == 0 ? this.tableData = true : this.tableData = false
-      
+
     }, error => {
       this.showError(error);
       this.visible = true
@@ -44,7 +44,7 @@ export class PressMachineComponent implements OnInit {
   }
 
   searchPaperSize(name: any) {
-    debugger
+
     if (this.search == '') {
       this.getPressMachine()
     } else {

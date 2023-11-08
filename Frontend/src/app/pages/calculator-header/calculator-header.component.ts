@@ -297,7 +297,7 @@ export class CalculatorHeaderComponent implements OnInit {
   extractPaperStock() {
     this.paperStockService.getAllPaperStock().subscribe((res: any) => {
       this.extractedPaperStock = res
-      debugger
+
     })
   }
 

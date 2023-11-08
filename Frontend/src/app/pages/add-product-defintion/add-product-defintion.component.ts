@@ -106,7 +106,7 @@ export class AddProductDefintionComponent implements OnInit {
     }
   }
   isTypeValueEmpty(): boolean {
-    return !this.typeValue; // Returns true if typeValue is empty, otherwise false
+    return !this.typeValue;
   }
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });

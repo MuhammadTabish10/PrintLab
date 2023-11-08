@@ -79,7 +79,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
       cnic: this.cnicNumber,
       roles: [{ id: this.roles.id }]
     };
-
+    
     const request = this.idFromQueryParam
       ? this.userService.updateUser(this.idFromQueryParam, obj)
       : this.userService.addUser(obj);
@@ -107,11 +107,11 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   showError(error: any) {
-    debugger
+
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
   showSuccess(error: any) {
-    debugger
+
     this.messageService.add({ severity: 'success', summary: 'Success', detail: error.error.text });
     this.navigateToUserList();
   }

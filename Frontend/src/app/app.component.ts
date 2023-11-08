@@ -9,11 +9,11 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   title = 'print-lab';
 
-  constructor(public loaderService: LoaderService,private cdr: ChangeDetectorRef) {
+  constructor(public loaderService: LoaderService, private cdr: ChangeDetectorRef) {}
 
-  }
   ngOnInit(): void {
-    
+    this.loaderService.isLoading$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
   }
-
 }

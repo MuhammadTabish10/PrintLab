@@ -53,7 +53,7 @@ export class ProductRuleComponent implements OnInit {
     if (this.search === '') {
       this.getProductRule();
     } else {
-      debugger
+
       this.productRuleService.searchProduct(name.value).subscribe(res => {
         this.tableData = res
       }, error => {

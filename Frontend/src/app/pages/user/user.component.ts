@@ -35,7 +35,7 @@ export class UserComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (res: any) => {
-          debugger
+
           this.userArray = res as Users[];
           this.tableData = this.userArray.length === 0;
           this.userArray.forEach((el: any) => {
@@ -69,7 +69,7 @@ export class UserComponent {
         .pipe(takeUntil(this.destroy$))
         .subscribe(
           (res: any) => {
-            debugger
+
             this.userArray = res as Users[];
             this.tableData = this.userArray.length === 0;
           },

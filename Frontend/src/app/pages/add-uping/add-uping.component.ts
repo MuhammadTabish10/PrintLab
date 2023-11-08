@@ -87,7 +87,7 @@ export class AddUpingComponent implements OnInit {
 
           this.l1 = this.upingToUpdate.l1;
           this.l2 = this.upingToUpdate.l2;
-          debugger
+
           this.unit = this.unitArray.productFieldValuesList?.find((u: any) => u.name === this.upingToUpdate.unit);
           this.category = this.categoryArray.productFieldValuesList?.find((c: any) => c.name === this.upingToUpdate.category)
           this.onUnitChange(this.category);
@@ -144,7 +144,7 @@ export class AddUpingComponent implements OnInit {
           value: this.value[i]
         }
       }
-      debugger
+
       let obj = {
 
         productSize: this.productSizeValue,
@@ -212,7 +212,7 @@ export class AddUpingComponent implements OnInit {
 
 
   onUnitChange(value: any) {
-    debugger
+
     if (value.name === 'INCHES') {
       this.unitLabelInch = (Number(this.l1) * 25.4).toFixed(1);
       this.unitLabelInch2 = (Number(this.l2) * 25.4).toFixed(1);

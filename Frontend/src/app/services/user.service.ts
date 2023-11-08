@@ -22,7 +22,7 @@ export class UserService {
 
   deleteUser(id: any) {
     let url = `${this._url}/user/${id}`
-    debugger
+
     return this.http.delete(url)
   }
 

@@ -1,5 +1,3 @@
 <router-outlet></router-outlet>
 
-<div *ngIf="loaderService.isLoading$ | async">
-  <app-loader></app-loader>
-</div>
+<app-loader *ngIf="loaderService.isLoading$ | async"></app-loader>

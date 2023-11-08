@@ -56,7 +56,7 @@ export class UpingService {
     return this.http.get(url)
   }
   searchUpingWithPagination(size?: any, pagination?: any) {
-    debugger
+
     const params = new HttpParams()
       .set('pageNumber', pagination ? pagination : 0)
     let url = `${this._url}/uping/product-sizes/${size}`
