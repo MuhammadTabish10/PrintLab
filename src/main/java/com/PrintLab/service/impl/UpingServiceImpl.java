@@ -265,12 +265,39 @@ public class UpingServiceImpl implements UpingService {
             List<List<String>> upingFile = ExcelUtils.parseExcelFile(multipartFile);
             List<String> excelColumns = ExcelUtils.parseFirstRow(multipartFile);
 
+            List<String> upingTableColumns = upingRepository.getTableColumns();
+            upingTableColumns.remove("id");
+
             if(excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("id"))){
                 excelColumns.remove("id");
             }
 
-            List<String> upingTableColumns = upingRepository.getTableColumns();
-            upingTableColumns.remove(0);
+            if(excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("unit"))){
+                for(int i = 1; i < upingFile.size(); i++){
+                    List<String> oneRow = upingFile.get(i);
+
+                    if (oneRow.get(7).equalsIgnoreCase("MM")) {
+                        Double convertedValue1 = Double.parseDouble(oneRow.get(2)) / 25.4;
+                        Double convertedValue2 = Double.parseDouble(oneRow.get(3)) / 25.4;
+
+                        String l1 = String.format("%.1f", convertedValue1);
+                        String l2 = String.format("%.1f", convertedValue2);
+
+                        String concatenatedString = l1 + "x" + l2;
+                        oneRow.set(4, concatenatedString);
+                    }
+                    else if(oneRow.get(7).equalsIgnoreCase("INCH")) {
+                        Double convertedValue1 = Double.parseDouble(oneRow.get(2)) * 25.4;
+                        Double convertedValue2 = Double.parseDouble(oneRow.get(3)) * 25.4;
+
+                        String l1 = String.format("%.1f", convertedValue1);
+                        String l2 = String.format("%.1f", convertedValue2);
+
+                        String concatenatedString = l1 + "x" + l2;
+                        oneRow.set(4, concatenatedString);
+                    }
+                }
+            }
 
             if (!upingTableColumns.containsAll(excelColumns)) {
                 throw new RecordNotFoundException("Excel columns do not match Uping table columns.");
@@ -298,6 +325,11 @@ public class UpingServiceImpl implements UpingService {
                     .collect(Collectors.toList());
         }
         return upingDtoList;
+    }
+
+    private void calculateMmAndInch(List<String> excelColumns){
+        if(excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("unit"))){
+        }
     }
 
     public UpingDto toDto(Uping uping) {

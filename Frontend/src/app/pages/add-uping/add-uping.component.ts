@@ -219,7 +219,6 @@ debugger
       this.unitLabelMm = this.l1
       this.unitLabelMm2 = this.l2
     } else {
-
       this.unitLabelMm = (Number(this.l1) / 25.4).toFixed(1);
       this.unitLabelMm2 = (Number(this.l2) / 25.4).toFixed(1);
       this.unitLabelInch = this.l1
