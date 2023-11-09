@@ -18,6 +18,7 @@ public class UserDto {
     private Long id;
     private LocalDateTime createdAt;
     private String name;
+    private String email;
     private String password;
     private String phone;
     private String cnic;

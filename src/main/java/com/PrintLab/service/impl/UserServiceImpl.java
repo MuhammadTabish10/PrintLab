@@ -7,6 +7,7 @@ import com.PrintLab.model.User;
 import com.PrintLab.repository.RoleRepository;
 import com.PrintLab.repository.UserRepository;
 import com.PrintLab.service.UserService;
+import com.PrintLab.utils.EmailUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
+    private final EmailUtils emailUtils;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, EmailUtils emailUtils) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
+        this.emailUtils = emailUtils;
     }
 
     @Override
@@ -38,12 +41,25 @@ public class UserServiceImpl implements UserService {
         }
         user.setRoles(roleList);
         userRepository.save(user);
+//        emailUtils.sendRegistrationEmail(user.getEmail(),user.getPassword());
         return user;
     }
 
     @Override
     public List<UserDto> getAll() {
         List<User> userList = userRepository.findAllByStatusIsTrue();
+        List<UserDto> userDtoList = new ArrayList<>();
+
+        for (User user : userList) {
+            UserDto userDto = toDto(user);
+            userDtoList.add(userDto);
+        }
+        return userDtoList;
+    }
+
+    @Override
+    public List<UserDto> getUsersByRole(String role) {
+        List<User> userList = userRepository.findByRole(role);
         List<UserDto> userDtoList = new ArrayList<>();
 
         for (User user : userList) {
