@@ -4,8 +4,10 @@ import com.PrintLab.dto.OrderDto;
 
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Order;
+import com.PrintLab.model.User;
 import com.PrintLab.repository.CustomerRepository;
 import com.PrintLab.repository.OrderRepository;
+import com.PrintLab.repository.UserRepository;
 import com.PrintLab.service.OrderService;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +119,6 @@ public class OrderServiceImpl implements OrderService {
             existingOrder.setPaper(orderDto.getPaper());
             existingOrder.setSize(orderDto.getSize());
             existingOrder.setCategory(orderDto.getCategory());
-//            existingOrder.setSheetSizeValue(orderDto.getSheetSizeValue());
             existingOrder.setGsm(orderDto.getGsm());
             existingOrder.setQuantity(orderDto.getQuantity());
             existingOrder.setPrice(orderDto.getPrice());
@@ -137,6 +138,26 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    @Transactional
+    public OrderDto assignOrderToUser(Long orderId, Long userId, String role) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
+
+        if(role.equalsIgnoreCase("ROLE_PRODUCTION")){
+            order.setProduction(userId);
+        }
+        else if(role.equalsIgnoreCase("ROLE_DESIGNER")){
+            order.setDesigner(userId);
+        }
+        else if (role.equalsIgnoreCase("ROLE_PLATE_SETTER")) {
+            order.setPlateSetter(userId);
+        }
+        orderRepository.save(order);
+        return toDto(order);
+    }
+
+
     public OrderDto toDto(Order order) {
         return OrderDto.builder()
                 .id(order.getId())
@@ -144,7 +165,6 @@ public class OrderServiceImpl implements OrderService {
                 .paper(order.getPaper())
                 .size(order.getSize())
                 .category(order.getCategory())
-//                .sheetSizeValue(order.getSheetSizeValue())
                 .gsm(order.getGsm())
                 .quantity(order.getQuantity())
                 .price(order.getPrice())
@@ -154,6 +174,9 @@ public class OrderServiceImpl implements OrderService {
                 .jobColorsBack(order.getJobColorsBack())
                 .providedDesign(order.getProvidedDesign())
                 .url(order.getUrl())
+                .production(order.getProduction())
+                .designer(order.getDesigner())
+                .plateSetter(order.getPlateSetter())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
                 .build();
@@ -166,7 +189,6 @@ public class OrderServiceImpl implements OrderService {
                 .paper(orderDto.getPaper())
                 .size(orderDto.getSize())
                 .category(orderDto.getCategory())
-//                .sheetSizeValue(orderDto.getSheetSizeValue())
                 .gsm(orderDto.getGsm())
                 .quantity(orderDto.getQuantity())
                 .price(orderDto.getPrice())
@@ -176,6 +198,9 @@ public class OrderServiceImpl implements OrderService {
                 .jobColorsBack(orderDto.getJobColorsBack())
                 .providedDesign(orderDto.getProvidedDesign())
                 .url(orderDto.getUrl())
+                .production(orderDto.getProduction())
+                .designer(orderDto.getDesigner())
+                .plateSetter(orderDto.getPlateSetter())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
                 .build();

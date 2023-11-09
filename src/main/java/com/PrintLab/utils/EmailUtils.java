@@ -15,6 +15,7 @@ public class EmailUtils {
     public void sendRegistrationEmail(String userEmail, String password) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(userEmail);
+        message.setFrom("info@stepwaysoftwares.com");
         message.setSubject("Welcome to Your PrintLab!");
         message.setText("Thank you for registering with PrintLab!\n\n"
                 + "Your login credentials:\n"

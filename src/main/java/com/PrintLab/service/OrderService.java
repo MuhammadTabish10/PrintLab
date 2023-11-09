@@ -13,4 +13,5 @@ public interface OrderService
     OrderDto findById(Long id);
     String deleteById(Long id);
     OrderDto updateOrder(Long id, OrderDto orderDto);
+    OrderDto assignOrderToUser(Long orderId, Long userId, String role);
 }

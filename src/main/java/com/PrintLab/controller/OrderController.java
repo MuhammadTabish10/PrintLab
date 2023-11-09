@@ -59,5 +59,14 @@ public class OrderController
         return ResponseEntity.ok(updatedOrderDto);
     }
 
+    @PostMapping("/order/assignUser")
+    public ResponseEntity<OrderDto> assignUserToOrder(
+            @RequestParam Long orderId,
+            @RequestParam Long userId,
+            @RequestParam String role) {
+
+        OrderDto assignedOrder = orderService.assignOrderToUser(orderId, userId, role);
+        return ResponseEntity.ok(assignedOrder);
+    }
 
 }

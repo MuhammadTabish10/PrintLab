@@ -17,7 +17,6 @@ public class OrderDto
     private String paper;
     private String category;
     private String size;
-//    private String sheetSizeValue;
     private Double gsm;
     private Double quantity;
     private Double price;
@@ -27,5 +26,8 @@ public class OrderDto
     private Long jobColorsBack;
     private Boolean providedDesign;
     private String url;
+    private Long designer;
+    private Long production;
+    private Long plateSetter;
     private Customer customer;
 }

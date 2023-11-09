@@ -23,7 +23,6 @@ public class Order
     private String paper;
     private String size;
     private String category;
-//    private String sheetSizeValue;
     private Double gsm;
     private Double quantity;
     private Double price;
@@ -33,6 +32,9 @@ public class Order
     private Long jobColorsBack;
     private Boolean providedDesign;
     private String url;
+    private Long designer;
+    private Long production;
+    private Long plateSetter;
 
     @ManyToOne()
     @JoinColumn(name = "customer_id")
