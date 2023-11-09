@@ -75,6 +75,7 @@ import { UserComponent } from './pages/user/user.component';
 import { AddUsersComponent } from './pages/add-users/add-users.component';
 import { DividerModule } from 'primeng/divider';
 import { PasswordModule } from 'primeng/password';
+import { TreeSelectModule } from 'primeng/treeselect';
 
 @NgModule({
   declarations: [
@@ -150,7 +151,8 @@ import { PasswordModule } from 'primeng/password';
     CalendarModule,
     FileUploadModule,
     DividerModule,
-    PasswordModule
+    PasswordModule,
+    TreeSelectModule
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,
     provideRouter(routes, withHashLocation()), DatePipe],

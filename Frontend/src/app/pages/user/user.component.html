@@ -27,6 +27,7 @@
       <ng-template pTemplate="header">
         <tr>
           <th class="text-center">Created At</th>
+          <th class="text-center">Email</th>
           <th class="text-center">Name</th>
           <th class="text-center">Phone Number</th>
           <th class="text-center">Cnic Number</th>
@@ -36,6 +37,7 @@
       <ng-template pTemplate="body" let-user let-i="rowIndex">
         <tr>
           <td class="text-center">{{ user?.createdAt }}</td>
+          <td class="text-center">{{ user?.email }}</td>
           <td class="text-center">{{ user?.name }}</td>
           <td class="text-center">{{ user?.phone }}</td>
           <td class="text-center">{{ user?.cnic }}</td>

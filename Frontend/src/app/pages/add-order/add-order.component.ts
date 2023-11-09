@@ -223,6 +223,7 @@ export class AddOrderComponent implements OnInit {
     this.printSide = title.printSide ? [{ name: title.printSide }] : null;
     if (this.printSide.length === 1) {
       this.sideOptionValue = this.printSide[0];
+      this.jobColorOptions(this.sideOptionValue);
     }
     const parsedFrontColors = title.jobColorFront ? JSON.parse(title.jobColorFront) : null;
     if (parsedFrontColors) {
@@ -257,7 +258,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   jobColorOptions(value: any) {
-
     const singleSide = "SINGLE_SIDED";
     this.isJobColorBackHidden = value.name.toLowerCase() === singleSide.toLowerCase();
   }
@@ -406,7 +406,7 @@ export class AddOrderComponent implements OnInit {
     };
   }
 
-  emptyAllFields(){
+  emptyAllFields() {
     this.paperStockItem = null;
     this.category = null;
     this.sizeValue = null;

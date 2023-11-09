@@ -24,8 +24,12 @@ export class OrdersService {
   }
 
   getOrders() {
-
     let url = `${this._url}/order`;
+    return this.http.get(url);
+  }
+
+  getUserByRole(role: any) {
+    let url = `${this._url}/user/role/${role}`;
     return this.http.get(url);
   }
 
