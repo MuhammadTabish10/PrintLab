@@ -13,7 +13,7 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByName(String username);
 
-    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName")
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName And u.status = true")
     List<User> findByRole(@Param("roleName") String roleName);
     @Modifying
     @Query("UPDATE User u SET u.status = false WHERE u.id = :id")
