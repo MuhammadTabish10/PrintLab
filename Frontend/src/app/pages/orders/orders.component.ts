@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 import { OrdersService } from 'src/app/services/orders.service';
 import { MessageService } from 'primeng/api';
+import { NodeService } from 'src/app/services/node.service';
+import { RolesService } from 'src/app/services/roles.service';
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -10,23 +12,25 @@ import { MessageService } from 'primeng/api';
 })
 export class OrdersComponent implements OnInit {
 
-  error:string=''
-  visible!:boolean
+  error: string = ''
+  visible!: boolean
   ordersArray: any = []
-  pending: String = 'Pending'
-  recieved: String = 'Recieved'
-  canceled: String = 'Canceled'
-  sortedOrders: any;
-  editOrderArray: any
   tableData: Boolean = false
-  currentUser: any
   search: string = ''
-
-  constructor(private orderService: OrdersService, private router: Router,private messageService: MessageService,
-    private cdr: ChangeDetectorRef) { }
+  roleArray: any;
+  userArray: any;
+  selectedRole: any;
+  selectedUser: any;
+  constructor(private orderService: OrdersService,
+    private router: Router,
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef,
+    private roleService: RolesService
+  ) { }
 
   ngOnInit(): void {
     this.getOrders()
+    this.getRoles()
     this.cdr.detectChanges();
   }
 
@@ -37,6 +41,23 @@ export class OrdersComponent implements OnInit {
     }, error => {
       this.showError(error);
       this.visible = true
+    })
+  }
+
+  getRoles() {
+    this.roleService.getRoles().subscribe(role => {
+      this.roleArray = role
+      debugger
+    }, error => {
+      this.showError(error);
+    });
+  }
+  getUsersByRole(role: any) {
+    debugger
+    this.orderService.getUserByRole(role.name).subscribe(res => {
+      this.userArray = res
+    }, error => {
+      this.showError(error);
     })
   }
 
@@ -78,7 +99,13 @@ export class OrdersComponent implements OnInit {
       })
     }
   }
-  showError(error:any) {
+  assignOrder(getById: number) {
+    this.showDialog();
+  }
+  showDialog() {
+    this.visible = true;
+  }
+  showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 }

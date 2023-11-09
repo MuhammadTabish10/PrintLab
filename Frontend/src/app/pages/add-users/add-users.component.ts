@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Subject, of, takeUntil } from 'rxjs';
+import { EMPTY, Subject, of, takeUntil } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { RolesService } from 'src/app/services/roles.service';
 import { UserService } from 'src/app/services/user.service';
@@ -23,6 +23,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   password: string = '';
   roles: any = [];
   rolesObj: any = [];
+  email: string = '';
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -37,27 +38,29 @@ export class AddUsersComponent implements OnInit, OnDestroy {
     this.getRoles();
 
     this.route.queryParams
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap((param) => {
-          this.idFromQueryParam = +param['id'] || 0;
-          this.buttonName = this.idFromQueryParam ? 'Update' : 'Add';
+    .pipe(
+      takeUntil(this.destroy$),
+      switchMap((param) => {
+        this.idFromQueryParam = +param['id'] || 0;
+        this.buttonName = this.idFromQueryParam ? 'Update' : 'Add';
 
-          if (this.idFromQueryParam) {
-            return this.userService.getUserById(this.idFromQueryParam);
-          } else {
-            return of(null);
-          }
-        })
-      )
+        if (this.idFromQueryParam) {
+          return this.userService.getUserById(this.idFromQueryParam);
+        } else {
+          return EMPTY;
+        }
+      })
+    )
       .subscribe(
-        (res: any) => {
+        (res?: any) => {
           this.userToUpdate = res;
+          this.email = this.userToUpdate.email;
           this.nameValue = this.userToUpdate.name;
           this.password = this.userToUpdate.password;
           this.phoneNumber = this.userToUpdate.phone;
           this.cnicNumber = this.userToUpdate.cnic;
           this.roles = this.userToUpdate.roles[0];
+          debugger
         },
         (error: any) => {
           this.showError(error);
@@ -73,13 +76,14 @@ export class AddUsersComponent implements OnInit, OnDestroy {
 
   addUser() {
     const obj = {
+      email: this.email,
       name: this.nameValue,
       password: this.password,
       phone: this.phoneNumber,
       cnic: this.cnicNumber,
       roles: [{ id: this.roles.id }]
     };
-    
+debugger
     const request = this.idFromQueryParam
       ? this.userService.updateUser(this.idFromQueryParam, obj)
       : this.userService.addUser(obj);

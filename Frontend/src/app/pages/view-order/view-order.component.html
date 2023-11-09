@@ -24,6 +24,14 @@
               <div>{{order?.customer?.businessName}}</div>
             </div>
             <div class="col-6 my-2">
+              <h4>Paper</h4>
+              <div>{{order?.paper}}</div>
+            </div>
+            <div class="col-6 my-2">
+              <h4>Category</h4>
+              <div>{{order?.category}}</div>
+            </div>
+            <div class="col-6 my-2">
               <h4>GSM</h4>
               <div>{{order?.gsm}}</div>
             </div>
@@ -33,7 +41,19 @@
             </div>
             <div class="col-6 my-2">
               <h4>Size</h4>
-              <div>{{size.label}}</div>
+              <div>{{size?.label}}</div>
+            </div>
+            <div class="col-6 my-2">
+              <h4>Print Side</h4>
+              <div>{{order?.sideOptionValue}}</div>
+            </div>
+            <div class="col-6 my-2">
+              <h4>Front Colors</h4>
+              <div>{{order?.jobColorsFront}}</div>
+            </div>
+            <div class="col-6 my-2" *ngIf="order?.sideOptionValue !== 'SINGLE_SIDED'">
+              <h4>Back Colors</h4>
+              <div>{{order?.jobColorsBack}}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Quantity</h4>

@@ -17,6 +17,18 @@
         <div class="container">
           <div class="row">
             <div class="col-6 my-3">
+              <label class="add-order-label m-0">Email</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="email"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter email"
+                name="email"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
               <label class="add-order-label m-0">Name</label>
               <input
                 type="text"
@@ -28,14 +40,20 @@
                 required
               />
             </div>
+          </div>
+          <div class="row">
             <div class="col-6 my-3">
-              <label class="add-order-label m-0 d-block pb-1 mb-1">Password</label>
+              <label class="add-order-label m-0 d-block pb-1 mb-1"
+                >Password</label
+              >
               <p-password
                 [(ngModel)]="password"
                 [style]="{ width: '100%' }"
                 [inputStyle]="{ width: '100%' }"
                 [toggleMask]="true"
                 name="password"
+                autocomplete="off"
+                placeholder="Enter your password"
               >
                 <ng-template pTemplate="header">
                   <h6>Pick a password</h6>
@@ -52,8 +70,6 @@
                 </ng-template>
               </p-password>
             </div>
-          </div>
-          <div class="row">
             <div class="col-6 my-3">
               <label class="add-order-label m-0">Phone Number</label>
               <input
@@ -66,7 +82,9 @@
                 required
               />
             </div>
-            <div class="col-6 my-3">
+          </div>
+          <div class="row">
+            <div class="col-6 my-2">
               <label class="add-order-label m-0">Cnic Number</label>
               <input
                 type="text"
@@ -78,8 +96,6 @@
                 required
               />
             </div>
-          </div>
-          <div class="row">
             <div class="col-6 my-3">
               <label class="add-order-label m-0">Roles</label>
               <p-dropdown
