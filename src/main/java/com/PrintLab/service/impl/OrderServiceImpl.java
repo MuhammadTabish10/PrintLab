@@ -1,7 +1,6 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.OrderDto;
-
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Order;
 import com.PrintLab.model.User;
@@ -21,10 +20,12 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -140,7 +141,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto assignOrderToUser(Long orderId, Long userId, String role) {
+    public User assignOrderToUser(Long orderId, Long userId, String role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + userId));
+
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
 
@@ -154,7 +158,7 @@ public class OrderServiceImpl implements OrderService {
             order.setPlateSetter(userId);
         }
         orderRepository.save(order);
-        return toDto(order);
+        return user;
     }
 
 
