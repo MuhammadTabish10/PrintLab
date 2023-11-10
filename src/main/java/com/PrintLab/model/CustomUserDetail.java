@@ -43,6 +43,10 @@ public class CustomUserDetail implements UserDetails {
         return user.getPassword();
     }
 
+    public String getEmail(){
+        return this.user.getEmail();
+    }
+
     @Override
     public String getUsername() {return user.getName();}
 

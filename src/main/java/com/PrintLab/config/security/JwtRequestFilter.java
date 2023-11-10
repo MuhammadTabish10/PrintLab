@@ -1,5 +1,6 @@
 package com.PrintLab.config.security;
 
+import com.PrintLab.model.CustomUserDetail;
 import com.PrintLab.service.impl.MyUserDetailServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,9 +42,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = myUserDetailServiceImplementation.loadUserByUsername(username);
-                    if (jwtUtil.validateToken(jwt, userDetails)) {
-                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    CustomUserDetail customUserDetail = myUserDetailServiceImplementation.loadUserByUsername(username);
+                    if (jwtUtil.validateToken(jwt, customUserDetail)) {
+                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(customUserDetail, null, customUserDetail.getAuthorities());
                         //error here
                         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
@@ -55,7 +56,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } catch (Exception e) {
 //        ExceptionResponseDto exception= new ExceptionResponseDto(HttpStatus.UNAUTHORIZED, LocalDateTime.now().toString(),"Jwt Token is Expired");
             e.printStackTrace();
-            response.setStatus(401);
+            response.setStatus(500);
             response.setHeader("Access-Control-Allow-Origin", "*");
 //        response.getWriter().write(new Gson().toJson(exception));
             return;
