@@ -43,7 +43,7 @@
       </thead>
       <tbody>
         <tr>
-          <td class="order-table-404" colspan="5" *ngIf="tableData">
+          <td class="order-table-404" colspan="8" *ngIf="tableData">
             No record found
           </td>
         </tr>
@@ -53,13 +53,13 @@
           <td>{{ order?.product }}</td>
           <td>Rs. {{ order?.price }}</td>
           <td>
-            {{ order?.designer }}
+            {{ order?.designer?.email }}
           </td>
           <td>
-            {{ order?.production }}
+            {{ order?.production?.email }}
           </td>
           <td>
-            {{ order?.plateSetter }}
+            {{ order?.plateSetter?.email }}
           </td>
           <td class="order-table-btns-container">
             <div class="btn-group mr-2" role="group" aria-label="Second group">

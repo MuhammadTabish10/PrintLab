@@ -124,7 +124,6 @@ export class OrdersComponent implements OnInit {
 
     this.orderService.saveAssignedUser(user.id, role.name, orderId).subscribe(
       (res: any) => {
-        debugger
         this.getOrders();
       }, err => { });
   }

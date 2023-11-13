@@ -77,6 +77,7 @@ export class UpingComponent implements OnInit {
 
   onUpload(event: any) {
     this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
+    this.getUping();
   }
 
   showError(error: any) {
