@@ -32,11 +32,20 @@ public class Order
     private Long jobColorsBack;
     private Boolean providedDesign;
     private String url;
-    private Long designer;
-    private Long production;
-    private Long plateSetter;
 
     @ManyToOne()
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_designer_id")
+    private User designer;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_production_id")
+    private User production;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_plate_setter_id")
+    private User plateSetter;
 }

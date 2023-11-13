@@ -1,5 +1,6 @@
 package com.PrintLab.utils;
 
+import com.PrintLab.model.Order;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -41,4 +42,32 @@ public class EmailUtils {
             }
             return null;
         }
+
+    @Async
+    public Boolean sendOrderAssignedEmail(String userEmail, Order order) {
+
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(sender);
+            helper.setTo(userEmail);
+            helper.setSubject("Order Assigned Notification");
+
+            String emailContent = "Your order has been assigned!\n\n"
+                    + "Order details:\n"
+                    + "Order ID: " + order.getId() + "\n"
+                    + "We appreciate your business. If you have any questions, feel free to contact us.";
+
+            helper.setText(emailContent);
+
+            javaMailSender.send(message);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

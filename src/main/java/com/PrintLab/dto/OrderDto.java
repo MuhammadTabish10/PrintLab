@@ -1,6 +1,7 @@
 package com.PrintLab.dto;
 
 import com.PrintLab.model.Customer;
+import com.PrintLab.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +27,8 @@ public class OrderDto
     private Long jobColorsBack;
     private Boolean providedDesign;
     private String url;
-    private Long designer;
-    private Long production;
-    private Long plateSetter;
+    private User designer;
+    private User production;
+    private User plateSetter;
     private Customer customer;
 }

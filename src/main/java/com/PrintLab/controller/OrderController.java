@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.OrderDto;
+import com.PrintLab.model.Order;
 import com.PrintLab.model.User;
 import com.PrintLab.service.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -61,13 +62,20 @@ public class OrderController
     }
 
     @PostMapping("/order/assignUser")
-    public ResponseEntity<User> assignUserToOrder(
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<OrderDto> assignUserToOrder(
             @RequestParam Long orderId,
             @RequestParam Long userId,
             @RequestParam String role) {
 
-        User assignedUser = orderService.assignOrderToUser(orderId, userId, role);
+        OrderDto assignedUser = orderService.assignOrderToUser(orderId, userId, role);
         return ResponseEntity.ok(assignedUser);
     }
 
+    @GetMapping("/assigned-orders")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
+    public ResponseEntity<List<Order>> getAllAssignedOrders() {
+        List<Order> orderList = orderService.getAssignedOrdersForLoggedInUser();
+        return ResponseEntity.ok(orderList);
+    }
 }

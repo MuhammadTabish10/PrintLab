@@ -2,18 +2,24 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.OrderDto;
 import com.PrintLab.exception.RecordNotFoundException;
+import com.PrintLab.model.CustomUserDetail;
 import com.PrintLab.model.Order;
+import com.PrintLab.model.Role;
 import com.PrintLab.model.User;
 import com.PrintLab.repository.CustomerRepository;
 import com.PrintLab.repository.OrderRepository;
 import com.PrintLab.repository.UserRepository;
 import com.PrintLab.service.OrderService;
+import com.PrintLab.utils.EmailUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -21,11 +27,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
+    private final EmailUtils emailUtils;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, UserRepository userRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, UserRepository userRepository, EmailUtils emailUtils) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.userRepository = userRepository;
+        this.emailUtils = emailUtils;
     }
 
 
@@ -141,7 +149,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public User assignOrderToUser(Long orderId, Long userId, String role) {
+    public OrderDto assignOrderToUser(Long orderId, Long userId, String role) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + userId));
 
@@ -149,17 +157,46 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
 
         if(role.equalsIgnoreCase("ROLE_PRODUCTION")){
-            order.setProduction(userId);
+            order.setProduction(user);
+            emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
         }
         else if(role.equalsIgnoreCase("ROLE_DESIGNER")){
-            order.setDesigner(userId);
+            order.setDesigner(user);
+            emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
         }
         else if (role.equalsIgnoreCase("ROLE_PLATE_SETTER")) {
-            order.setPlateSetter(userId);
+            order.setPlateSetter(user);
+            emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
         }
         orderRepository.save(order);
-        return user;
+        return toDto(order);
     }
+
+    @Override
+    public List<Order> getAssignedOrdersForLoggedInUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Order> assignedOrders = new ArrayList<>();
+
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            User user = userRepository.findByEmail(email);
+
+            if (user != null) {
+                for (Role role : user.getRoles()) {
+                    if ("ROLE_PRODUCTION".equals(role.getName())) {
+                        assignedOrders.addAll(orderRepository.findByProduction(user));
+                    } else if ("ROLE_DESIGNER".equals(role.getName())) {
+                        assignedOrders.addAll(orderRepository.findByDesigner(user));
+                    } else if ("ROLE_PLATE_SETTER".equals(role.getName())) {
+                        assignedOrders.addAll(orderRepository.findByPlateSetter(user));
+                    }
+                }
+            }
+        }
+
+        return assignedOrders;
+    }
+
 
 
     public OrderDto toDto(Order order) {
