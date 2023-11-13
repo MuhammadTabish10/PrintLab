@@ -179,7 +179,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (principal instanceof CustomUserDetail) {
             String email = ((CustomUserDetail) principal).getEmail();
-            User user = userRepository.findByEmail(email);
+            User user = userRepository.findByEmailAndStatusIsTrue(email);
 
             if (user != null) {
                 for (Role role : user.getRoles()) {
