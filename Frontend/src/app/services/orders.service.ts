@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/Environments/environment';
@@ -27,6 +27,20 @@ export class OrdersService {
     let url = `${this._url}/order`;
     return this.http.get(url);
   }
+
+  saveAssignedUser(userId: number, role: string, orderId: number) {
+    const url = `${this._url}/order/assignUser`;
+    
+    const params = {
+      userId: userId,
+      role: role,
+      orderId: orderId
+    };
+
+    return this.http.post(url, null, { params });
+  }
+
+
 
   getUserByRole(role: any) {
     let url = `${this._url}/user/role/${role}`;

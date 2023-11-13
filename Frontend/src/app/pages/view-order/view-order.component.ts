@@ -26,7 +26,7 @@ export class ViewOrderComponent implements OnInit {
   getOrderById() {
     this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
       this.order = res
-      debugger
+
       this.size = JSON.parse(this.order.size)
     }, error => {
       this.showError(error);

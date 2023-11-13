@@ -52,9 +52,15 @@
           <td>{{ order?.customer?.name }}</td>
           <td>{{ order?.product }}</td>
           <td>Rs. {{ order?.price }}</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>
+            {{ order?.designer }}
+          </td>
+          <td>
+            {{ order?.production }}
+          </td>
+          <td>
+            {{ order?.plateSetter }}
+          </td>
           <td class="order-table-btns-container">
             <div class="btn-group mr-2" role="group" aria-label="Second group">
               <button
@@ -114,13 +120,20 @@
         *ngIf="selectedRole"
         appendTo="body"
         [options]="userArray"
+        [filter]="true"
+        filterBy="name"
         [(ngModel)]="selectedUser"
-        placeholder="Select a Production"
+        placeholder="Select a User"
         optionLabel="name"
       ></p-dropdown>
     </div>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-sm btn-dark">Save</button>
+      <button
+        class="btn btn-sm btn-dark"
+        (click)="saveOrder(selectedUser, selectedRole, selectedOrderId)"
+      >
+        Save
+      </button>
     </div>
   </p-dialog>
   <p-toast></p-toast>

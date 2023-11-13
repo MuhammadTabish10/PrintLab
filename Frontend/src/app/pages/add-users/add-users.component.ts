@@ -60,7 +60,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
           this.phoneNumber = this.userToUpdate.phone;
           this.cnicNumber = this.userToUpdate.cnic;
           this.roles = this.userToUpdate.roles[0];
-          debugger
+
         },
         (error: any) => {
           this.showError(error);
@@ -83,7 +83,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
       cnic: this.cnicNumber,
       roles: [{ id: this.roles.id }]
     };
-debugger
+
     const request = this.idFromQueryParam
       ? this.userService.updateUser(this.idFromQueryParam, obj)
       : this.userService.addUser(obj);

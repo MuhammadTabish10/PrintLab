@@ -84,7 +84,7 @@ export class AddUpingComponent implements OnInit {
           this.buttonName = 'Update'
           this.upingToUpdate = res
           this.productSizeValue = this.upingToUpdate.productSize
-debugger
+
           this.l1 = this.upingToUpdate.l1;
           this.l2 = this.upingToUpdate.l2;
 

@@ -1,10 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService } from 'src/app/services/login.service';
 import { OrdersService } from 'src/app/services/orders.service';
 import { MessageService } from 'primeng/api';
-import { NodeService } from 'src/app/services/node.service';
-import { RolesService } from 'src/app/services/roles.service';
+
+export interface Roles {
+  name?: string;
+
+}
+export interface AssignedUser {
+  designer?: string;
+  production?: string;
+  plateSetter?: string;
+};
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -17,21 +24,31 @@ export class OrdersComponent implements OnInit {
   ordersArray: any = []
   tableData: Boolean = false
   search: string = ''
-  roleArray: any;
+  roleArray: Roles[] | undefined;
   userArray: any;
   selectedRole: any;
   selectedUser: any;
+  selectedOrderId: any;
+  assignedUsers: any;
+
+
   constructor(private orderService: OrdersService,
     private router: Router,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private roleService: RolesService
   ) { }
+
 
   ngOnInit(): void {
     this.getOrders()
-    this.getRoles()
     this.cdr.detectChanges();
+
+    this.roleArray = [
+      { name: "ROLE_DESIGNER" },
+      { name: "ROLE_PRODUCTION" },
+      { name: "ROLE_PLATE_SETTER" }
+    ]
+
   }
 
   getOrders() {
@@ -44,16 +61,11 @@ export class OrdersComponent implements OnInit {
     })
   }
 
-  getRoles() {
-    this.roleService.getRoles().subscribe(role => {
-      this.roleArray = role
-      debugger
-    }, error => {
-      this.showError(error);
-    });
-  }
   getUsersByRole(role: any) {
-    debugger
+
+    // this.userArray = [
+    //   { name: "Usama", id: 5 }
+    // ]
     this.orderService.getUserByRole(role.name).subscribe(res => {
       this.userArray = res
     }, error => {
@@ -100,10 +112,21 @@ export class OrdersComponent implements OnInit {
     }
   }
   assignOrder(getById: number) {
-    this.showDialog();
+    this.showDialog(getById);
   }
-  showDialog() {
+  showDialog(getById: number) {
+    this.selectedRole = null;
+    this.selectedUser = null;
     this.visible = true;
+    this.selectedOrderId = getById;
+  }
+  saveOrder(user: any, role: any, orderId: number) {
+
+    this.orderService.saveAssignedUser(user.id, role.name, orderId).subscribe(
+      (res: any) => {
+        debugger
+        this.getOrders();
+      }, err => { });
   }
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });

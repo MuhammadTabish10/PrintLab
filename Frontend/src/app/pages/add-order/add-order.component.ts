@@ -257,9 +257,9 @@ export class AddOrderComponent implements OnInit {
     }
   }
 
-  jobColorOptions(value: any) {
+  jobColorOptions(value?: any) {
     const singleSide = "SINGLE_SIDED";
-    this.isJobColorBackHidden = value.name.toLowerCase() === singleSide.toLowerCase();
+    this.isJobColorBackHidden = value?.name.toLowerCase() === singleSide.toLowerCase();
   }
 
 
