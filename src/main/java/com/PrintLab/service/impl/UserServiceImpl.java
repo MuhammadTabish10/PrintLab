@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User registerUser(User user) {
+        String password = user.getPassword();
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setStatus(true);
         Set<Role> roleList = new HashSet<>();
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setRoles(roleList);
         userRepository.save(user);
-//        emailUtils.sendRegistrationEmail(user.getEmail(),user.getPassword());
+        emailUtils.sendRegistrationEmail(user.getEmail(),password);
         return user;
     }
 

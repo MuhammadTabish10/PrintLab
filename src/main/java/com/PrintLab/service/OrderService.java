@@ -2,6 +2,7 @@ package com.PrintLab.service;
 
 import com.PrintLab.dto.OrderDto;
 import com.PrintLab.dto.PressMachineDto;
+import com.PrintLab.model.Order;
 import com.PrintLab.model.User;
 
 import java.util.List;
@@ -14,5 +15,8 @@ public interface OrderService
     OrderDto findById(Long id);
     String deleteById(Long id);
     OrderDto updateOrder(Long id, OrderDto orderDto);
-    User assignOrderToUser(Long orderId, Long userId, String role);
+    OrderDto assignOrderToUser(Long orderId, Long userId, String role);
+    List<Order> getAssignedOrdersForLoggedInUser();
 }
+
+
