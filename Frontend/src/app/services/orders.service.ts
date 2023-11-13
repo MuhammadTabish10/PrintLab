@@ -28,9 +28,14 @@ export class OrdersService {
     return this.http.get(url);
   }
 
+  getAssignedOrders() {
+    let url = `${this._url}/assigned-orders`;
+    return this.http.get(url);
+  }
+
   saveAssignedUser(userId: number, role: string, orderId: number) {
     const url = `${this._url}/order/assignUser`;
-    
+
     const params = {
       userId: userId,
       role: role,

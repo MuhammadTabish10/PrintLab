@@ -76,6 +76,9 @@ import { AddUsersComponent } from './pages/add-users/add-users.component';
 import { DividerModule } from 'primeng/divider';
 import { PasswordModule } from 'primeng/password';
 import { TreeSelectModule } from 'primeng/treeselect';
+import { JobDesignerOrdersComponent } from './pages/job-designer-orders/job-designer-orders.component';
+import { JobProductionOrdersComponent } from './pages/job-production-orders/job-production-orders.component';
+import { JobPlateSetterOrdersComponent } from './pages/job-plate-setter-orders/job-plate-setter-orders.component';
 
 @NgModule({
   declarations: [
@@ -127,6 +130,9 @@ import { TreeSelectModule } from 'primeng/treeselect';
     ViewProductRuleComponent,
     UserComponent,
     AddUsersComponent,
+    JobDesignerOrdersComponent,
+    JobProductionOrdersComponent,
+    JobPlateSetterOrdersComponent,
   ],
   imports: [
     BrowserModule,

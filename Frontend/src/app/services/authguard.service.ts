@@ -54,6 +54,18 @@ export class AuthguardService implements CanActivate {
       url: ['/dashboard'],
       permissions: 'Dashboard'
     }
+    const designerOrderObj = {
+      url: ['/jobDesignerOrders'],
+      permissions: 'JobDesigner'
+    }
+    const productionObj = {
+      url: ['/jobProductionOrders'],
+      permissions: 'JobProduction'
+    }
+    const plateSetterObj = {
+      url: ['/jobPlateSetterOrders'],
+      permissions: 'JobPlateSetter'
+    }
     const userObj = {
       url: ['/user', '/addUser'],
       permissions: 'User'
@@ -68,7 +80,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'Orders'
     }
     const ProductRule = {
-      url: ['/ProductRule','/addProductRule','/viewProductRule'],
+      url: ['/ProductRule', '/addProductRule', '/viewProductRule'],
       permissions: 'ProductRule'
     }
     // const productObj = {
@@ -88,7 +100,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'Permissions'
     }
     const paperStock = {
-      url: ['/paperStock','/addPaperStock'],
+      url: ['/paperStock', '/addPaperStock'],
       permissions: 'PaperStock'
     }
     // const addPaperStock = {
@@ -137,12 +149,12 @@ export class AuthguardService implements CanActivate {
     }
 
 
-    return [customerObj, userObj, ProductRule, orderObj, dashboardObj, addproductObj, calculatorObj, permissionObj,paperStock, permissionConfiguration_Product_Field,
-            permissionConfiguration_Settings,permissionConfiguration_Inventory,permissionConfiguration_Vendor,permissionConfiguration_CTP,permissionConfiguration_Paper_Size,
-            permissionConfiguration_Press_Machine,permissionConfiguration_Paper_Market_Rate,permissionConfiguration_Uping,permissionConfiguration_Product_Process]
+    return [customerObj, userObj, ProductRule, orderObj, designerOrderObj, productionObj, plateSetterObj, dashboardObj, addproductObj, calculatorObj, permissionObj, paperStock, permissionConfiguration_Product_Field,
+      permissionConfiguration_Settings, permissionConfiguration_Inventory, permissionConfiguration_Vendor, permissionConfiguration_CTP, permissionConfiguration_Paper_Size,
+      permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate, permissionConfiguration_Uping, permissionConfiguration_Product_Process]
 
 
-                // const configurationObj = {
+    // const configurationObj = {
     //   url: ['/productField','/paperMarket','/addPaperMarket','/paperSize','/addPaperSize','/pressMachine','/addPressMachine','/uping',
     //         '/addUping','/vendor','/addVendor','/productProcess','/addProductProcess','/settings','/addSettings','/ctp','/addCtp',
     //         '/inventory','/addInventory'],

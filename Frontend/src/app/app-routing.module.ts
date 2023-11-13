@@ -40,6 +40,9 @@ import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.
 import { ViewProductRuleComponent } from './pages/view-product-rule/view-product-rule.component';
 import { UserComponent } from './pages/user/user.component';
 import { AddUsersComponent } from './pages/add-users/add-users.component';
+import { JobDesignerOrdersComponent } from './pages/job-designer-orders/job-designer-orders.component';
+import { JobProductionOrdersComponent } from './pages/job-production-orders/job-production-orders.component';
+import { JobPlateSetterOrdersComponent } from './pages/job-plate-setter-orders/job-plate-setter-orders.component';
 
 export const routes: Routes = [
   {
@@ -64,6 +67,21 @@ export const routes: Routes = [
   {
     path: 'orders',
     component: OrdersComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'jobDesignerOrders',
+    component: JobDesignerOrdersComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'jobProductionOrders',
+    component: JobProductionOrdersComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'jobPlateSetterOrders',
+    component: JobPlateSetterOrdersComponent,
     canActivate: [AuthguardService]
   },
   {

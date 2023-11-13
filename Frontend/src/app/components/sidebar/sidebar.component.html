@@ -22,9 +22,7 @@
     <li *ngIf="sessionStorageService.hasPermission('User')">
       <span class="sidebar-list-hover">
         <i class="fa fa-user fa-2x"></i>
-        <a class="nav-text nav-link" [routerLink]="['/user']">
-          User
-        </a>
+        <a class="nav-text nav-link" [routerLink]="['/user']"> User </a>
       </span>
     </li>
 
@@ -41,6 +39,25 @@
       <span class="sidebar-list-hover">
         <i class="fa fa-shopping-cart fa-2x"></i>
         <a class="nav-text nav-link" [routerLink]="['/orders']"> Orders </a>
+      </span>
+    </li>
+
+    <li *ngIf="sessionStorageService.hasPermission('JobDesigner')" class="mt-2">
+      <span class="sidebar-list-hover">
+        <i class="fa fa-shopping-cart fa-2x"></i>
+        <a class="nav-text nav-link" [routerLink]="['/jobDesignerOrders']"> Orders </a>
+      </span>
+    </li>
+    <li *ngIf="sessionStorageService.hasPermission('JobProduction')" class="mt-2">
+      <span class="sidebar-list-hover">
+        <i class="fa fa-shopping-cart fa-2x"></i>
+        <a class="nav-text nav-link" [routerLink]="['/jobProductionOrders']"> Orders </a>
+      </span>
+    </li>
+    <li *ngIf="sessionStorageService.hasPermission('JobPlateSetter')" class="mt-2">
+      <span class="sidebar-list-hover">
+        <i class="fa fa-shopping-cart fa-2x"></i>
+        <a class="nav-text nav-link" [routerLink]="['/jobPlateSetterOrders']"> Orders </a>
       </span>
     </li>
 
