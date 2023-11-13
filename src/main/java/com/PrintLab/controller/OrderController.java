@@ -27,21 +27,21 @@ public class OrderController
     }
 
     @GetMapping("/order")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<List<OrderDto>> getAllOrders() {
         List<OrderDto> orderList = orderService.getAll();
         return ResponseEntity.ok(orderList);
     }
 
     @GetMapping("/order/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<OrderDto> getOrderById(@PathVariable Long id) {
         OrderDto orderDto = orderService.findById(id);
         return ResponseEntity.ok(orderDto);
     }
 
     @GetMapping("order/products/{product}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<List<OrderDto>> getAllOrdersByProduct(@PathVariable String product) {
         List<OrderDto> orderDtoList = orderService.searchByProduct(product);
         return ResponseEntity.ok(orderDtoList);

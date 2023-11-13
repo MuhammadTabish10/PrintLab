@@ -93,6 +93,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             existingUser.setPhone(user.getPhone());
             existingUser.setCnic(user.getCnic());
+            existingUser.setEmail(user.getEmail());
 
             Set<Role> existingRoleValues = existingUser.getRoles();
             Set<Role> newRoleValues = userDto.getRoles();
@@ -130,6 +131,7 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .createdAt(user.getCreatedAt())
                 .name(user.getName())
+                .email(user.getEmail())
                 .password(user.getPassword())
                 .phone(user.getPhone())
                 .cnic(user.getCnic())
@@ -143,6 +145,7 @@ public class UserServiceImpl implements UserService {
                 .id(userDto.getId())
                 .createdAt(userDto.getCreatedAt())
                 .name(userDto.getName())
+                .email(userDto.getEmail())
                 .password(userDto.getPassword())
                 .phone(userDto.getPhone())
                 .cnic(userDto.getCnic())
