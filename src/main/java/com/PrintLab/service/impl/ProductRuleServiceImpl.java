@@ -138,6 +138,17 @@ public class ProductRuleServiceImpl implements ProductRuleService {
             List<ProductRulePaperStock> existingPrpsValues = existingProductRule.getProductRulePaperStockList();
             List<ProductRulePaperStock> newPrpsValues = productRule.getProductRulePaperStockList();
             List<ProductRulePaperStock> newValuesToAdd = new ArrayList<>();
+            List<ProductRulePaperStock> valuesToRemove = new ArrayList<>();
+
+            // Iterate through existingPrpsValues to find and remove items not present in newPrpsValues
+            for (ProductRulePaperStock existingPrpsValue : existingPrpsValues) {
+                if (!newPrpsValues.contains(existingPrpsValue)) {
+                    valuesToRemove.add(existingPrpsValue);
+                }
+            }
+
+            // Remove items found in valuesToRemove from existingPrpsValues
+            existingPrpsValues.removeAll(valuesToRemove);
 
             for (ProductRulePaperStock newValue : newPrpsValues) {
                 Optional<ProductRulePaperStock> existingValue = existingPrpsValues.stream()
@@ -198,8 +209,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                     productRulePaperStockDto.setDimension(prps.getDimension());
                     productRulePaperStockDto.setGsm(prps.getGsm());
                     productRulePaperStockDto.setStatus(prps.getStatus());
-                    productRulePaperStockDto.setVendor(vendorRepository.findById(prps.getVendor().getId())
-                            .orElseThrow(() -> new RecordNotFoundException("Vendor not found")));
+                    productRulePaperStockDto.setVendor(prps.getVendor());
                     return productRulePaperStockDto;
                 }).collect(Collectors.toList());
 
@@ -234,8 +244,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                     productRulePaperStock.setDimension(prps.getDimension());
                     productRulePaperStock.setGsm(prps.getGsm());
                     productRulePaperStock.setStatus(prps.getStatus());
-                    productRulePaperStock.setVendor(vendorRepository.findById(prps.getVendor().getId())
-                            .orElseThrow(() -> new RecordNotFoundException("Vendor not found")));
+                    productRulePaperStock.setVendor(prps.getVendor());
                     return productRulePaperStock;
                 }).collect(Collectors.toList());
 
