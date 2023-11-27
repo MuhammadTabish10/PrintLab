@@ -1,6 +1,5 @@
 package com.PrintLab.dto;
 
-import com.PrintLab.model.ProductRule;
 import com.PrintLab.model.Vendor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
