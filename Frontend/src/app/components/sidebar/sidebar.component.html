@@ -125,7 +125,7 @@
 
     <li
       class="sidebar-list-hover mt-2"
-      *ngIf="sessionStorageService.hasPermission('Configuration_User')"
+      *ngIf="sessionStorageService.hasPermission('Configuration_Vendor')"
     >
       <span (click)="toggleDropDown(2)">
         <i class="fa fa-bars fa-2x"></i>
@@ -155,6 +155,22 @@
         >
           <i class="fa fa-gear fa-2x"></i>
           <span class="nav-text">Vendor</span>
+        </a>
+      </span>
+    </li>
+
+    <li
+      class="settingOptions mt-2"
+      *ngIf="sessionStorageService.hasPermission('Configuration_Vendor')"
+    >
+      <span>
+        <a
+          class="sidebar-list-hover-settings nav-link"
+          [routerLink]="['/vendorSettlement']"
+          *ngIf="isDropDown2Open == true"
+        >
+          <i class="fa fa-gear fa-2x"></i>
+          <span class="nav-text">Vendor Settlement</span>
         </a>
       </span>
     </li>
@@ -323,19 +339,19 @@
 
     <li
       class="sidebar-list-hover mt-2"
-      *ngIf="sessionStorageService.hasPermission('Configuration')"
+      *ngIf="sessionStorageService.hasPermission('Configuration_Settings')"
     >
-      <span (click)="toggleDropDown(3)">
+      <span (click)="toggleDropDown(5)">
         <i class="fa fa-bars fa-2x"></i>
         <span class="nav-text fw-bolder">
           System
           <i
             class="fa-solid fa-chevron-down dd-icon-settings"
-            *ngIf="isDropDown4Open == false"
+            *ngIf="isDropDown5Open == false"
           ></i>
           <i
             class="fa-solid fa-chevron-up dd-icon-settings"
-            *ngIf="isDropDown4Open == true"
+            *ngIf="isDropDown5Open == true"
           ></i>
         </span>
       </span>
@@ -350,7 +366,7 @@
       <span>
         <a
           class="sidebar-list-hover-settings"
-          *ngIf="isDropDown4Open"
+          *ngIf="isDropDown5Open"
           class="sidebar-list-hover-settings nav-link"
           [routerLink]="['/productProcess']"
         >
@@ -367,7 +383,7 @@
       <span>
         <a
           class="sidebar-list-hover-settings"
-          *ngIf="isDropDown4Open"
+          *ngIf="isDropDown5Open"
           class="sidebar-list-hover-settings nav-link"
           [routerLink]="['/settings']"
         >
@@ -378,7 +394,7 @@
     </li>
 
     <li *ngIf="sessionStorageService.hasPermission('Permissions')" class="mt-2">
-      <span class="sidebar-list-hover" *ngIf="isDropDown4Open">
+      <span class="sidebar-list-hover" *ngIf="isDropDown5Open">
         <i class="fa fa-plus"></i>
         <a class="nav-text nav-link" [routerLink]="['/permission']">
           Permissions
