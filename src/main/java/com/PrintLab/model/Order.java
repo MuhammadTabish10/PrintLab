@@ -32,6 +32,8 @@ public class Order
     private Long jobColorsBack;
     private Boolean providedDesign;
     private String url;
+    private Long productRule;
+    private Boolean status;
 
     @ManyToOne()
     @JoinColumn(name = "customer_id")

@@ -1,38 +1,28 @@
-package com.PrintLab.model;
+package com.PrintLab.dto;
 
+import com.PrintLab.model.Order;
+import com.PrintLab.model.Vendor;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-@Table(name = "vendor_settlement")
-public class VendorSettlement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class VendorSettlementDto {
     private Long id;
 
-    @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateAndTime;
 
     private Double debit;
     private Double credit;
-
-    @ManyToOne
-    @JoinColumn(name = "vendor_id")
     private Vendor vendor;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id")
     private Order order;
-
     private Boolean status;
 }

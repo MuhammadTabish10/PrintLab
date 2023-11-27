@@ -3,6 +3,7 @@ package com.PrintLab.service.impl;
 import com.PrintLab.dto.OrderTransactionDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Ctp;
+import com.PrintLab.model.Order;
 import com.PrintLab.model.OrderTransaction;
 import com.PrintLab.repository.CtpRepository;
 import com.PrintLab.repository.OrderRepository;
@@ -34,8 +35,6 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         OrderTransaction orderTransaction = toEntity(orderTransactionDto);
         orderTransaction.setStatus(true);
 
-//        Ctp ctp = ctpRepository.fin
-
         orderTransaction.setAmount(orderTransaction.getQuantity() * orderTransaction.getUnitPrice());
 
         OrderTransaction savedOrderTransaction = orderTransactionRepository.save(orderTransaction);
@@ -44,7 +43,7 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
 
     @Override
     public List<OrderTransactionDto> getAll() {
-        List<OrderTransaction> orderTransactionList = orderTransactionRepository.findAll();
+        List<OrderTransaction> orderTransactionList = orderTransactionRepository.findAllInDesOrderByIdAndStatus();
         List<OrderTransactionDto> orderTransactionDtoList = new ArrayList<>();
 
         for (OrderTransaction orderTransaction : orderTransactionList) {
@@ -98,7 +97,6 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         OrderTransaction updatedOrderTransaction = orderTransactionRepository.save(existingOrderTransaction);
         return toDto(updatedOrderTransaction);
     }
-
 
     public OrderTransactionDto toDto(OrderTransaction orderTransaction) {
         return OrderTransactionDto.builder()
