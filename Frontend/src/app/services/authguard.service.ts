@@ -124,7 +124,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'Configuration_Inventory'
     }
     const permissionConfiguration_Vendor = {
-      url: ['/vendor', '/addVendor'],
+      url: ['/vendor', '/addVendor', '/vendorSettlement'],
       permissions: 'Configuration_Vendor'
     }
     const permissionConfiguration_CTP = {

@@ -47,6 +47,7 @@ import { OrderProcessComponent } from './pages/order-process/order-process.compo
 import { TransactionsComponent } from './pages/transactions/transactions.component';
 import { TransactionRecordComponent } from './pages/transaction-record/transaction-record.component';
 import { PetyCashComponent } from './pages/pety-cash/pety-cash.component';
+import { VendorSettlementComponent } from './pages/vendor-settlement/vendor-settlement.component';
 
 export const routes: Routes = [
   {
@@ -280,6 +281,11 @@ export const routes: Routes = [
   {
     path: 'userPetyCash',
     component: PetyCashComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'vendorSettlement',
+    component: VendorSettlementComponent,
     canActivate: [AuthguardService]
   }
 ];
