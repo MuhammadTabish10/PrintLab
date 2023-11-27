@@ -84,6 +84,7 @@ import { TransactionsComponent } from './pages/transactions/transactions.compone
 import { TransactionRecordComponent } from './pages/transaction-record/transaction-record.component';
 import { PetyCashComponent } from './pages/pety-cash/pety-cash.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { VendorSettlementComponent } from './pages/vendor-settlement/vendor-settlement.component';
 
 @NgModule({
   declarations: [
@@ -142,6 +143,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     TransactionsComponent,
     TransactionRecordComponent,
     PetyCashComponent,
+    VendorSettlementComponent,
   ],
   imports: [
     BrowserModule,

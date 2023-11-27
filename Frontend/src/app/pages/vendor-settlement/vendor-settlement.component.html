@@ -3,13 +3,13 @@
   <app-dashboard-head></app-dashboard-head>
   <div class="main-container">
     <div>
-      <h3>{{ "" }} Pety Cash</h3>
+      <h3>{{ "" }} Vendor Settlement</h3>
     </div>
 
     <div class="card text-nowrap">
       <p-table
         #dt1
-        [value]="petyCashRecords"
+        [value]="vendorSettlementRecords"
         dataKey="id"
         [globalFilterFields]="['name']"
       >
@@ -38,7 +38,7 @@
         <ng-template pTemplate="header">
           <tr>
             <th class="col">
-              <div class="d-flex justify-content-center">User Id</div>
+              <div class="d-flex justify-content-center">Vendor Id</div>
             </th>
             <th class="col">
               <div class="d-flex justify-content-center">Debit</div>
@@ -83,34 +83,13 @@
             <td class="text-center">
               {{ element?.paymentMode }}
             </td>
-            <!-- <td class="text-center">
-              <div
-                class="btn-group mr-2"
-                role="group"
-                aria-label="Second group"
-              >
-                <button
-                  type="button"
-                  class="btn order-table-btn"
-                  (click)="edituping(element?.id)"
-                >
-                  <i class="fa-solid fa-pen"></i>&nbsp;Edit
-                </button>
-                <button
-                  type="button"
-                  class="btn order-table-btn"
-                  (click)="deleteuping(element?.id)"
-                >
-                  <i class="fa-solid fa-trash"></i>&nbsp;Delete
-                </button>
-              </div>
-            </td> -->
+            
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="6" class="text-center">
-              No Pety Cash Record Is Found For {{ "" }} !
+              No Vendor Settlement Record Is Found For {{ "" }} !
             </td>
           </tr>
         </ng-template>

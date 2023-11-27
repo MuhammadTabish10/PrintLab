@@ -1,0 +1,21 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { VendorSettlementComponent } from './vendor-settlement.component';
+
+describe('VendorSettlementComponent', () => {
+  let component: VendorSettlementComponent;
+  let fixture: ComponentFixture<VendorSettlementComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [VendorSettlementComponent]
+    });
+    fixture = TestBed.createComponent(VendorSettlementComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
