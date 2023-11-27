@@ -79,6 +79,11 @@ import { TreeSelectModule } from 'primeng/treeselect';
 import { JobDesignerOrdersComponent } from './pages/job-designer-orders/job-designer-orders.component';
 import { JobProductionOrdersComponent } from './pages/job-production-orders/job-production-orders.component';
 import { JobPlateSetterOrdersComponent } from './pages/job-plate-setter-orders/job-plate-setter-orders.component';
+import { OrderProcessComponent } from './pages/order-process/order-process.component';
+import { TransactionsComponent } from './pages/transactions/transactions.component';
+import { TransactionRecordComponent } from './pages/transaction-record/transaction-record.component';
+import { PetyCashComponent } from './pages/pety-cash/pety-cash.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -133,6 +138,10 @@ import { JobPlateSetterOrdersComponent } from './pages/job-plate-setter-orders/j
     JobDesignerOrdersComponent,
     JobProductionOrdersComponent,
     JobPlateSetterOrdersComponent,
+    OrderProcessComponent,
+    TransactionsComponent,
+    TransactionRecordComponent,
+    PetyCashComponent,
   ],
   imports: [
     BrowserModule,
@@ -158,9 +167,10 @@ import { JobPlateSetterOrdersComponent } from './pages/job-plate-setter-orders/j
     FileUploadModule,
     DividerModule,
     PasswordModule,
-    TreeSelectModule
+    TreeSelectModule,
+    ConfirmDialogModule
   ],
-  providers: [AuthInterceptorProvider, InterceptorService,MessageService,
+  providers: [AuthInterceptorProvider, InterceptorService,MessageService,ConfirmDialogModule,
     provideRouter(routes, withHashLocation()), DatePipe],
   bootstrap: [AppComponent]
 })

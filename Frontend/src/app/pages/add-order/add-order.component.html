@@ -13,13 +13,17 @@
               <div class="my-3">
                 <label class="add-order-label m-0">Product</label>
                 <p-dropdown
-                styleClass="w-100"
-                [options]="productArray"
-                optionLabel="title"
-                [(ngModel)]="productToUpdate"
-                (onChange)="toggleFields($event.value)"
-                [placeholder]="productArray.length !== 1 ? placeholderText.product : productArray[0].title"
-              ></p-dropdown>
+                  styleClass="w-100"
+                  [options]="productArray"
+                  optionLabel="title"
+                  [(ngModel)]="productToUpdate"
+                  (onChange)="toggleFields($event.value)"
+                  [placeholder]="
+                    productArray.length !== 1
+                      ? placeholderText.product
+                      : productArray[0].title
+                  "
+                ></p-dropdown>
               </div>
             </div>
           </div>
@@ -34,7 +38,11 @@
                   optionLabel="paperStock"
                   [(ngModel)]="paperStockItem"
                   (onChange)="gsmFields($event.value)"
-                  [placeholder]="paperStock.length !== 1 ? placeholderText.paper : paperStock[0].paperStock"
+                  [placeholder]="
+                    paperStock.length !== 1
+                      ? placeholderText.paper
+                      : paperStock[0].paperStock
+                  "
                 ></p-dropdown>
               </div>
               <div *ngIf="categoryArray" class="my-3">
@@ -44,7 +52,11 @@
                   [options]="categoryArray"
                   optionLabel="name"
                   [(ngModel)]="category"
-                  [placeholder]="categoryArray.length !== 1 ? placeholderText.category : categoryArray[0].name"
+                  [placeholder]="
+                    categoryArray.length !== 1
+                      ? placeholderText.category
+                      : categoryArray[0].name
+                  "
                 ></p-dropdown>
               </div>
               <div *ngIf="size" class="my-3">
@@ -54,7 +66,9 @@
                   [options]="size"
                   optionLabel="label"
                   [(ngModel)]="sizeValue"
-                  [placeholder]="size.length !== 1 ? placeholderText.size : size[0].label"
+                  [placeholder]="
+                    size.length !== 1 ? placeholderText.size : size[0].label
+                  "
                 ></p-dropdown>
               </div>
               <div *ngIf="quantity" class="my-3">
@@ -64,7 +78,11 @@
                   [options]="quantity"
                   optionLabel="name"
                   [(ngModel)]="qtyValue"
-                  [placeholder]="quantity.length !== 1 ? placeholderText.quantity : quantity[0].name"
+                  [placeholder]="
+                    quantity.length !== 1
+                      ? placeholderText.quantity
+                      : quantity[0].name
+                  "
                 ></p-dropdown>
               </div>
               <div *ngIf="printSide" class="my-3">
@@ -75,7 +93,9 @@
                   (onChange)="jobColorOptions($event.value)"
                   optionLabel="name"
                   [(ngModel)]="sideOptionValue"
-                  [placeholder]="printSide.length !== 1 ? placeholderText : printSide[0].name"
+                  [placeholder]="
+                    printSide.length !== 1 ? placeholderText : printSide[0].name
+                  "
                 ></p-dropdown>
               </div>
               <div *ngIf="jobFront" class="my-3">
@@ -85,7 +105,11 @@
                   [options]="jobFront"
                   optionLabel="name"
                   [(ngModel)]="jobFrontValue"
-                  [placeholder]="jobFront.length !== 1 ? placeholderText.frontColor : jobFront[0].name"
+                  [placeholder]="
+                    jobFront.length !== 1
+                      ? placeholderText.frontColor
+                      : jobFront[0].name
+                  "
                 ></p-dropdown>
               </div>
               <div *ngIf="!isJobColorBackHidden && jobColorBack" class="my-3">
@@ -95,7 +119,11 @@
                   [options]="jobColorBack"
                   optionLabel="name"
                   [(ngModel)]="jobBackValue"
-                  [placeholder]="jobColorBack.length !== 1 ? placeholderText.backColor : jobColorBack[0].name"
+                  [placeholder]="
+                    jobColorBack.length !== 1
+                      ? placeholderText.backColor
+                      : jobColorBack[0].name
+                  "
                 ></p-dropdown>
               </div>
               <div class="mb-3" *ngIf="foundGsm">
@@ -194,14 +222,30 @@
               <span>{{ productName }}</span>
             </div>
             <div class="py-1">
-              <h6 class="fw-normal" *ngIf="paperStockItem?.name">Paper: {{paperStockItem?.name}}</h6>
-              <h6 class="fw-normal" *ngIf="category?.name">Category: {{category?.name}}</h6>
-              <h6 class="fw-normal" *ngIf="sizeValue?.name">Size: {{sizeValue?.name}}</h6>
-              <h6 class="fw-normal" *ngIf="qtyValue?.name">Qty: {{qtyValue?.name}}</h6>
-              <h6 class="fw-normal" *ngIf="sideOptionValue?.name">Side: {{sideOptionValue?.name}}</h6>
-              <h6 class="fw-normal" *ngIf="jobFrontValue?.name">FronColor: {{jobFrontValue?.name}}</h6>
-              <h6 class="fw-normal" *ngIf="jobBackValue?.name">BackColor: {{jobBackValue?.name}}</h6>
-              <h6 class="fw-normal" *ngIf="selectedGsm?.name">{{dynamicFields}} GSM: {{selectedGsm?.name}}</h6>
+              <h6 class="fw-normal" *ngIf="paperStockItem">
+                Paper: {{ paperStockItem?.name || paperStockItem.paperStock }}
+              </h6>
+              <h6 class="fw-normal" *ngIf="category?.name">
+                Category: {{ category?.name }}
+              </h6>
+              <h6 class="fw-normal" *ngIf="sizeValue">
+                Size: {{ sizeValue?.name || sizeValue.label }}
+              </h6>
+              <h6 class="fw-normal" *ngIf="qtyValue?.name">
+                Qty: {{ qtyValue?.name }}
+              </h6>
+              <h6 class="fw-normal" *ngIf="sideOptionValue?.name">
+                Side: {{ sideOptionValue?.name }}
+              </h6>
+              <h6 class="fw-normal" *ngIf="jobFrontValue?.name">
+                FronColor: {{ jobFrontValue?.name }}
+              </h6>
+              <h6 class="fw-normal" *ngIf="jobBackValue?.name">
+                BackColor: {{ jobBackValue?.name }}
+              </h6>
+              <h6 class="fw-normal" *ngIf="selectedGsm?.name">
+                {{ dynamicFields }} GSM: {{ selectedGsm?.name }}
+              </h6>
             </div>
             <div class="mt-4">
               <span>Total: </span>

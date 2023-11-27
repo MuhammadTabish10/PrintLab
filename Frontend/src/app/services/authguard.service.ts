@@ -67,7 +67,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'JobPlateSetter'
     }
     const userObj = {
-      url: ['/user', '/addUser'],
+      url: ['/user', '/addUser','/userPetyCash'],
       permissions: 'User'
     }
     const customerObj = {
@@ -78,6 +78,10 @@ export class AuthguardService implements CanActivate {
     const orderObj = {
       url: ['/orders', '/addOrder', '/viewOrder'],
       permissions: 'Orders'
+    }
+    const orderProcessObj = {
+      url: ['/orderProcess','/transactions','/transactionRecord'],
+      permissions: 'OrderProcess'
     }
     const ProductRule = {
       url: ['/ProductRule', '/addProductRule', '/viewProductRule'],
@@ -149,7 +153,7 @@ export class AuthguardService implements CanActivate {
     }
 
 
-    return [customerObj, userObj, ProductRule, orderObj, designerOrderObj, productionObj, plateSetterObj, dashboardObj, addproductObj, calculatorObj, permissionObj, paperStock, permissionConfiguration_Product_Field,
+    return [customerObj, userObj, ProductRule, orderObj, orderProcessObj, designerOrderObj, productionObj, plateSetterObj, dashboardObj, addproductObj, calculatorObj, permissionObj, paperStock, permissionConfiguration_Product_Field,
       permissionConfiguration_Settings, permissionConfiguration_Inventory, permissionConfiguration_Vendor, permissionConfiguration_CTP, permissionConfiguration_Paper_Size,
       permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate, permissionConfiguration_Uping, permissionConfiguration_Product_Process]
 

@@ -43,6 +43,10 @@ import { AddUsersComponent } from './pages/add-users/add-users.component';
 import { JobDesignerOrdersComponent } from './pages/job-designer-orders/job-designer-orders.component';
 import { JobProductionOrdersComponent } from './pages/job-production-orders/job-production-orders.component';
 import { JobPlateSetterOrdersComponent } from './pages/job-plate-setter-orders/job-plate-setter-orders.component';
+import { OrderProcessComponent } from './pages/order-process/order-process.component';
+import { TransactionsComponent } from './pages/transactions/transactions.component';
+import { TransactionRecordComponent } from './pages/transaction-record/transaction-record.component';
+import { PetyCashComponent } from './pages/pety-cash/pety-cash.component';
 
 export const routes: Routes = [
   {
@@ -256,6 +260,26 @@ export const routes: Routes = [
   {
     path: 'addInventory',
     component: AddInventoryComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'orderProcess',
+    component: OrderProcessComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'transactions',
+    component: TransactionsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'transactionRecord',
+    component: TransactionRecordComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'userPetyCash',
+    component: PetyCashComponent,
     canActivate: [AuthguardService]
   }
 ];

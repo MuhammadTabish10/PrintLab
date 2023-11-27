@@ -243,9 +243,12 @@ export class AddOrderComponent implements OnInit {
       this.jobColorBack = null;
     }
 
-    if (this.jobColorBack.length === 1) {
-      this.jobBackValue = this.jobColorBack[0];
+    if (this.jobColorBack) {
+      if (this.jobColorBack.length === 1) {
+        this.jobBackValue = this.jobColorBack[0];
+      }
     }
+
 
     this.gsms = title.productRulePaperStockList ? title.productRulePaperStockList : null;
 
@@ -371,7 +374,6 @@ export class AddOrderComponent implements OnInit {
     const conditionBackColor = this.orderToUpdate.jobColorsBack ? this.orderToUpdate.jobColorsBack.toString() : ''
     const foundPaperStockItem = this.paperStock != null ? this.paperStock.find((item: { paperStock: any; }) => item.paperStock === this.orderToUpdate.paper) : null;
     this.gsmFields(foundPaperStockItem)
-
     const parseSize = JSON.parse(this.orderToUpdate.size);
     const foundsizeItem = this.size != null ? this.size.find((item: { label: any; }) => item.label === parseSize.label) : null;
     const foundQtyItem = this.quantity != null ? this.quantity.find((item: { name: any; }) => item.name === this.orderToUpdate.quantity.toString()) : null;
@@ -382,7 +384,10 @@ export class AddOrderComponent implements OnInit {
     this.paperStockItem = foundPaperStockItem
     this.sizeValue = foundsizeItem
     this.qtyValue = foundQtyItem
-    this.sideOptionValue = foundSideOptItem
+    debugger
+    if (foundSideOptItem) {
+      this.sideOptionValue = foundSideOptItem
+    }
     this.jobFrontValue = foundFrontColorItem
     this.jobColorOptions(this.sideOptionValue)
     this.jobBackValue = foundBackColorItem
