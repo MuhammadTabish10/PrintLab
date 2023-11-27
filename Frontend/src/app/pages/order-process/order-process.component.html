@@ -1,0 +1,190 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="main-container">
+    <div class="ms-2">
+      <div class="mb-3">
+        <h3>Ctp Process</h3>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <h5>Estimated Amount:</h5>
+          <h6 class="text-muted">Rs: {{ "920" }}</h6>
+        </div>
+        <div class="col-2">
+          <h5>Cost:</h5>
+          <h6 class="text-muted">Rs: {{ "1,760" }}</h6>
+        </div>
+        <div class="col-2">
+          <h5>Variance:</h5>
+          <h6 class="text-muted">Rs: {{ "840" }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="card my-3">
+      <div class="card-header">
+        <h4>Purchase Order:</h4>
+      </div>
+      <div class="card-body">
+        <div>
+          <label class="fs-4 fw-medium">Plate Dimension:</label>
+          <label class="fs-5 fw-medium ms-2 text-muted">{{
+            transactions[0].plateDimension
+          }}</label>
+        </div>
+        <div>
+          <label class="fs-4 fw-medium">Vendor:</label>
+          <label class="fs-5 fw-medium ms-2 text-muted">{{
+            transactions[0].vendor
+          }}</label>
+        </div>
+        <div>
+          <label class="fs-4 fw-medium">Quantity:</label>
+          <label class="fs-5 fw-medium ms-2 text-muted">{{
+            transactions[0].qty
+          }}</label>
+        </div>
+        <div>
+          <label class="fs-4 fw-medium">Unit Price:</label>
+          <label class="fs-5 fw-medium ms-2 text-muted">{{
+            transactions[0].unitPrice
+          }}</label>
+        </div>
+        <div>
+          <label class="fs-4 fw-medium">Amount:</label>
+          <label class="fs-5 fw-medium ms-2 text-muted">{{
+            transactions[0].amount
+          }}</label>
+        </div>
+        <div class="text-end">
+          <button class="btn btn-dark me-2" (click)="addToTransaction()">
+            Accept
+          </button>
+          <button class="btn btn-danger px-3" (click)="reject()">Reject</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="m-lg-4" *ngIf="showAddBtn">
+    <div class="m-lg-4">
+      <button
+        pButton
+        label="Add"
+        class="p-button-dark bg-dark float-end"
+        icon="pi pi-plus"
+        routerLink="/transactionRecord"
+      ></button>
+    </div>
+  </div>
+
+  <div class="my-3 main-container" *ngIf="addTransaction">
+    <div>
+      <h3>Transaction</h3>
+    </div>
+
+    <div class="card text-nowrap">
+      <p-table
+        #dt1
+        [value]="transactions"
+        dataKey="id"
+        [globalFilterFields]="['name']"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex clearfix">
+            <!-- <span class="p-input-icon-right ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (keyup.enter)="searchUping($event.target, paginator.getPage())"
+                placeholder="Search keyword"
+              />
+            </span> -->
+
+            <button
+              pButton
+              label="Add"
+              class="p-button-dark bg-dark float-end"
+              icon="pi pi-plus"
+              routerLink="/transactionRecord"
+            ></button>
+
+            <button class="btn btn-danger" (click)="showDialog(dt1)">X</button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="col">
+              <div class="d-flex justify-content-center">Plate Dimension</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Vendor</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Quantity</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Unit Price</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Amount</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">User</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Payment Mode</div>
+            </th>
+            <!-- <th class="col">
+              <div class="d-flex justify-content-center">Action</div>
+            </th> -->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-element let-i="rowIndex">
+          <tr>
+            <td class="text-center">
+              {{ element?.plateDimension }}
+            </td>
+            <td class="text-center">
+              {{ element?.vendor }}
+            </td>
+            <td class="text-center">
+              {{ element?.qty }}
+            </td>
+            <td class="text-center">
+              {{ element?.unitPrice }}
+            </td>
+            <td class="text-center">
+              {{ element?.amount }}
+            </td>
+            <td class="text-center">
+              {{ element?.user }}
+            </td>
+            <td class="text-center">
+              {{ element?.paymentMode[i].name }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" class="text-center">No Transaction Found !</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>
+<p-dialog
+  header="Delete Permission"
+  class="form-hook"
+  [(visible)]="visible"
+  [style]="{ width: '50vw' }"
+>
+  <h4 class="mb-4">Are sure you want to delete this Transaction</h4>
+  <button (click)="deleteTransaction(tID)" class="btn btn-danger">
+    <i class="pi pi-trash"></i>
+    Confirm Delete
+  </button>
+</p-dialog>

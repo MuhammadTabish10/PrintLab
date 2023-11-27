@@ -1,0 +1,120 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+  <app-dashboard-head></app-dashboard-head>
+
+  <div class="main-container">
+    <div>
+      <h4>Transaction Record</h4>
+    </div>
+
+    <div class="order-body py-2">
+      <form
+        class="was-validated"
+        novalidate
+        #transactionForm="ngForm"
+        (ngSubmit)="addTransaction()"
+      >
+        <div class="row mx-auto">
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">PlateDimension</label>
+            <input
+              type="text"
+              class="order-search form-control order-form-input m-0 bg-light"
+              [(ngModel)]="transactions[0].plateDimension"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Plate Dimension"
+              name="plateDimension"
+              readonly
+            />
+          </div>
+          <div class="col-6 mt-4">
+            <label class="add-order-label m-0">Vendor</label>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="transactions"
+              optionLabel="vendor"
+              name="vendor"
+              [(ngModel)]="transactions"
+              [required]="true"
+            ></p-dropdown>
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Quantity</label>
+            <input
+              type="text"
+              class="order-search form-control order-form-input m-0 bg-light"
+              [(ngModel)]="transactions[0].qty"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Quantity"
+              name="Quantity name"
+              readonly
+            />
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Amount</label>
+            <input
+              type="number"
+              min="1"
+              step="1"
+              class="order-search form-control order-form-input m-0"
+              [(ngModel)]="transactions[0].amount"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Amount"
+              name="Quantity name"
+              required
+            />
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Unit Price</label>
+            <input
+              type="number"
+              min="1"
+              step="1"
+              class="order-search form-control order-form-input m-0"
+              [(ngModel)]="transactions[0].unitPrice"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Unit Price"
+              name="Unit Price name"
+              required
+            />
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">User</label>
+            <input
+              type="text"
+              class="order-search form-control order-form-input m-0 bg-light"
+              [(ngModel)]="transactions[0].user"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter User"
+              name="User name"
+              readonly
+            />
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Payment Mode</label>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="transactions[0].paymentMode!"
+              optionLabel="name"
+              name="paymentMode"
+              [(ngModel)]="transactions"
+              [required]="true"
+            ></p-dropdown>
+          </div>
+
+          <div class="col-12 my-3 d-flex justify-content-end mx-0">
+            <button
+              type="submit"
+              class="btn btn-dark"
+              routerLink="/orderProcess"
+              [disabled]="!transactionForm.valid"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>
