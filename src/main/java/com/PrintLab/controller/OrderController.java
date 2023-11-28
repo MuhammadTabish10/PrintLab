@@ -2,7 +2,6 @@ package com.PrintLab.controller;
 
 import com.PrintLab.dto.OrderDto;
 import com.PrintLab.model.Order;
-import com.PrintLab.model.User;
 import com.PrintLab.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

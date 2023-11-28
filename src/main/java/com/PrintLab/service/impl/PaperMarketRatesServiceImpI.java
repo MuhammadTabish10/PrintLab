@@ -419,11 +419,6 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         return values;
     }
 
-
-
-
-
-
     public PaperMarketRatesDto toDto(PaperMarketRates paperMarketRates) {
         return PaperMarketRatesDto.builder()
                 .id(paperMarketRates.getId())

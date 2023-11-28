@@ -1,8 +1,6 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.model.Ctp;
-import com.PrintLab.model.Uping;
-import com.PrintLab.model.Vendor;
+import com.PrintLab.model.UserPettyCash;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,13 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
-public interface CtpRepository extends JpaRepository<Ctp,Long> {
-    Ctp findByPlateDimension(String plateDimension);
-    List<Ctp> findAllByStatusIsTrue();
+public interface UserPettyCashRepository extends JpaRepository<UserPettyCash, Long> {
     @Modifying
-    @Query("UPDATE Ctp c SET c.status = false WHERE c.id = :id")
+    @Query("UPDATE UserPettyCash upc SET upc.status = false WHERE upc.id = :id")
     void setStatusInactive(@Param("id") Long id);
-    Ctp findByPlateDimensionAndVendor(String plateDimension, Vendor vendor);
+
+    @Query("SELECT upc FROM UserPettyCash upc WHERE upc.status = true ORDER BY upc.id DESC")
+    List<UserPettyCash> findAllInDesOrderByIdAndStatus();
 }

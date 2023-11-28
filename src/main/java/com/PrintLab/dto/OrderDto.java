@@ -27,6 +27,8 @@ public class OrderDto
     private Long jobColorsBack;
     private Boolean providedDesign;
     private String url;
+    private Long productRule;
+    private Boolean status;
     private User designer;
     private User production;
     private User plateSetter;
