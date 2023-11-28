@@ -1,8 +1,6 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.model.Ctp;
-import com.PrintLab.model.Uping;
-import com.PrintLab.model.Vendor;
+import com.PrintLab.model.VendorSettlement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,13 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
-public interface CtpRepository extends JpaRepository<Ctp,Long> {
-    Ctp findByPlateDimension(String plateDimension);
-    List<Ctp> findAllByStatusIsTrue();
+public interface VendorSettlementRepository extends JpaRepository<VendorSettlement, Long> {
     @Modifying
-    @Query("UPDATE Ctp c SET c.status = false WHERE c.id = :id")
+    @Query("UPDATE VendorSettlement vs SET vs.status = false WHERE vs.id = :id")
     void setStatusInactive(@Param("id") Long id);
-    Ctp findByPlateDimensionAndVendor(String plateDimension, Vendor vendor);
+
+    @Query("SELECT vs FROM VendorSettlement vs WHERE vs.status = true ORDER BY vs.id DESC")
+    List<VendorSettlement> findAllInDesOrderByIdAndStatus();
 }

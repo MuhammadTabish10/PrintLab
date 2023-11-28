@@ -12,14 +12,12 @@ import com.PrintLab.repository.UserRepository;
 import com.PrintLab.service.OrderService;
 import com.PrintLab.utils.EmailUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -70,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getAll() {
-        List<Order> orderList = orderRepository.findAllInDescendingOrderById();
+        List<Order> orderList = orderRepository.findAllInDesOrderByIdAndStatus();
         List<OrderDto> orderDtoList = new ArrayList<>();
 
         for (Order order : orderList) {
@@ -217,6 +215,8 @@ public class OrderServiceImpl implements OrderService {
                 .production(order.getProduction())
                 .designer(order.getDesigner())
                 .plateSetter(order.getPlateSetter())
+                .status(order.getStatus())
+                .productRule(order.getProductRule())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
                 .build();
@@ -241,6 +241,8 @@ public class OrderServiceImpl implements OrderService {
                 .production(orderDto.getProduction())
                 .designer(orderDto.getDesigner())
                 .plateSetter(orderDto.getPlateSetter())
+                .status(orderDto.getStatus())
+                .productRule(orderDto.getProductRule())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
                 .build();
