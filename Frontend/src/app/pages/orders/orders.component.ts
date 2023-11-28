@@ -30,6 +30,7 @@ export class OrdersComponent implements OnInit {
   selectedUser: any;
   selectedOrderId: any;
   assignedUsers: any;
+  plzSelect: boolean = false;
 
 
   constructor(private orderService: OrdersService,
@@ -120,12 +121,16 @@ export class OrdersComponent implements OnInit {
     this.visible = true;
     this.selectedOrderId = getById;
   }
-  saveOrder(user: any, role: any, orderId: number) {
-
-    this.orderService.saveAssignedUser(user.id, role.name, orderId).subscribe(
+  saveOrder(user?: any, role?: any, orderId?: number) {
+    debugger
+    this.orderService.saveAssignedUser(user?.id, role?.name, orderId ? orderId : 0).subscribe(
       (res: any) => {
+        this.plzSelect = false;
+        this.visible = false;
         this.getOrders();
-      }, err => { });
+      }, err => {
+        this.plzSelect = true;
+      });
   }
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });

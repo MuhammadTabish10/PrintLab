@@ -52,6 +52,10 @@ export class UserComponent {
     this.router.navigate(['/addUser'], { queryParams: { id: id.toString() } });
   }
 
+  petyCash(id: number) {
+    this.router.navigate(['/userPetyCash'], { queryParams: { id: id.toString() } });
+  }
+
   deleteUser(id: number) {
     this.userService.deleteUser(id)
       .pipe(takeUntil(this.destroy$))

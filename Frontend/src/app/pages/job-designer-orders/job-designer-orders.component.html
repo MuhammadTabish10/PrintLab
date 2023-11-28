@@ -28,6 +28,7 @@
           <th scope="col" class="col-3">Customer Name</th>
           <th scope="col" class="col-3">Product Name</th>
           <th scope="col" class="col-2">Price</th>
+          <th scope="col" class="col-2">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +42,15 @@
           <td>{{ order?.customer?.name }}</td>
           <td>{{ order?.product }}</td>
           <td>Rs. {{ order?.price }}</td>
+          <td>
+            <button
+              type="button"
+              class="btn order-table-btn"
+              (click)="orderProcessCtp(order.id)"
+            >
+              <i class="pi pi-plus"></i>&nbsp;<small>Order Process Ctp</small>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>

@@ -57,28 +57,32 @@
           }}</label>
         </div>
         <div class="text-end">
-          <button class="btn btn-dark me-2" (click)="addToTransaction()">
+          <button
+            class="btn btn-dark me-2"
+            (click)="addToTransaction()"
+            *ngIf="!showRejected && !showAccepted"
+          >
             Accept
           </button>
-          <button class="btn btn-danger px-3" (click)="reject()">Reject</button>
+          <button
+            class="btn btn-danger px-3"
+            (click)="reject()"
+            *ngIf="!showRejected && !showAccepted"
+          >
+            Reject
+          </button>
+          <label class="add-order-label text-danger fw-bold" *ngIf="showRejected">
+            Rejected
+          </label>
+          <label class="add-order-label text-dark fw-bold" *ngIf="showAccepted">
+            Accepted
+          </label>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="m-lg-4" *ngIf="showAddBtn">
-    <div class="m-lg-4">
-      <button
-        pButton
-        label="Add"
-        class="p-button-dark bg-dark float-end"
-        icon="pi pi-plus"
-        routerLink="/transactionRecord"
-      ></button>
-    </div>
-  </div>
-
-  <div class="my-3 main-container" *ngIf="addTransaction">
+  <div class="my-3 main-container">
     <div>
       <h3>Transaction</h3>
     </div>
@@ -107,10 +111,10 @@
               label="Add"
               class="p-button-dark bg-dark float-end"
               icon="pi pi-plus"
-              routerLink="/transactionRecord"
+              (click)="showDialog()"
             ></button>
 
-            <button class="btn btn-danger" (click)="showDialog(dt1)">X</button>
+            <!-- <button class="btn btn-danger" (click)="showDialog(dt1)">X</button> -->
           </div>
         </ng-template>
         <ng-template pTemplate="header">
@@ -142,7 +146,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-element let-i="rowIndex">
-          <tr>
+          <tr *ngIf="addTransaction">
             <td class="text-center">
               {{ element?.plateDimension }}
             </td>
@@ -176,7 +180,7 @@
   </div>
 </div>
 <p-toast></p-toast>
-<p-dialog
+<!-- <p-dialog
   header="Delete Permission"
   class="form-hook"
   [(visible)]="visible"
@@ -187,4 +191,115 @@
     <i class="pi pi-trash"></i>
     Confirm Delete
   </button>
+</p-dialog> -->
+
+<p-dialog
+  header="Transaction Record"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="main-container">
+    <div class="order-body py-2">
+      <form class="was-validated" novalidate #transactionForm="ngForm">
+        <div class="row mx-auto">
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">PlateDimension</label>
+            <input
+              type="text"
+              class="order-search form-control order-form-input m-0 bg-light"
+              value="{{ plateDimension }}"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Plate Dimension"
+              name="plateDimension"
+              readonly
+            />
+          </div>
+          <div class="col-6 mt-4">
+            <label class="add-order-label m-0">Vendor</label>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="vendor"
+              optionLabel="vendor"
+              name="vendor"
+              [required]="true"
+            ></p-dropdown>
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Quantity</label>
+            <input
+              type="text"
+              class="order-search form-control order-form-input m-0 bg-light"
+              value="{{ qty }}"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Quantity"
+              name="Quantity name"
+              readonly
+            />
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Amount</label>
+            <input
+              type="number"
+              min="1"
+              step="1"
+              class="order-search form-control order-form-input m-0"
+              value="{{ amount }}"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Amount"
+              name="Quantity name"
+              required
+            />
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Unit Price</label>
+            <input
+              type="number"
+              min="1"
+              step="1"
+              class="order-search form-control order-form-input m-0"
+              value="{{ unitPrice }}"
+              style="border: 1px solid #ced4da"
+              placeholder="Enter Unit Price"
+              name="Unit Price name"
+              required
+            />
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">User</label>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="user"
+              optionLabel="name"
+              name="user"
+              [required]="true"
+            ></p-dropdown>
+          </div>
+          <div class="col-6 my-3">
+            <label class="add-order-label m-0">Payment Mode</label>
+            <p-dropdown
+              styleClass="w-100"
+              [options]="paymentMode"
+              optionLabel="name"
+              name="paymentMode"
+              [required]="true"
+            ></p-dropdown>
+          </div>
+
+          <div class="col-12 my-3 d-flex justify-content-end mx-0">
+            <button
+              type="submit"
+              class="btn btn-dark"
+              (click)="close()"
+              [disabled]="!transactionForm.valid"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </p-dialog>
