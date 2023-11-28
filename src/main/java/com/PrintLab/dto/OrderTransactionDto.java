@@ -1,5 +1,7 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.Order;
+import com.PrintLab.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +19,7 @@ public class OrderTransactionDto {
     private Double unitPrice;
     private Double amount;
     private String paymentMode;
+    private Long userId;
+    private Order order;
     private Boolean status;
 }

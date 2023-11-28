@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -35,6 +36,15 @@ public class OrderTransactionController {
     public ResponseEntity<OrderTransactionDto> getOrderTransactionById(@PathVariable Long id) {
         OrderTransactionDto orderTransactionDto = orderTransactionService.findById(id);
         return ResponseEntity.ok(orderTransactionDto);
+    }
+
+    @GetMapping("/order-transaction/order/{order-id}/process/{process-type}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
+    public ResponseEntity<HashMap<String,Object>> getOrderTransactionById(@PathVariable(name = "order-id") Long orderId,
+                                                                          @PathVariable(name = "process-type") String processType) {
+
+        HashMap<String,Object> purchaseOrder = orderTransactionService.getOrderProcess(orderId,processType);
+        return ResponseEntity.ok(purchaseOrder);
     }
 
     @GetMapping("order-transaction/plate-dimension/{plate-dimension}")

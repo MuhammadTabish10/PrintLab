@@ -2,6 +2,7 @@ package com.PrintLab.repository;
 
 import com.PrintLab.model.Ctp;
 import com.PrintLab.model.Uping;
+import com.PrintLab.model.Vendor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,5 @@ public interface CtpRepository extends JpaRepository<Ctp,Long> {
     @Modifying
     @Query("UPDATE Ctp c SET c.status = false WHERE c.id = :id")
     void setStatusInactive(@Param("id") Long id);
+    Ctp findByPlateDimensionAndVendor(String plateDimension, Vendor vendor);
 }

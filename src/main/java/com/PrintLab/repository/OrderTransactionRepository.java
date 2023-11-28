@@ -1,6 +1,5 @@
 package com.PrintLab.repository;
 
-import com.PrintLab.dto.OrderTransactionDto;
 import com.PrintLab.model.OrderTransaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

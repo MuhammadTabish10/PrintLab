@@ -216,6 +216,7 @@ public class OrderServiceImpl implements OrderService {
                 .designer(order.getDesigner())
                 .plateSetter(order.getPlateSetter())
                 .status(order.getStatus())
+                .productRule(order.getProductRule())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
                 .build();
@@ -241,6 +242,7 @@ public class OrderServiceImpl implements OrderService {
                 .designer(orderDto.getDesigner())
                 .plateSetter(orderDto.getPlateSetter())
                 .status(orderDto.getStatus())
+                .productRule(orderDto.getProductRule())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
                 .build();
