@@ -46,15 +46,6 @@
       </span>
     </li>
 
-    <li *ngIf="sessionStorageService.hasPermission('UserPetycash')">
-      <span class="sidebar-list-hover" *ngIf="isDropDown1Open == true">
-        <i class="fa fa-user fa-2x"></i>
-        <a class="nav-text nav-link" [routerLink]="['/userPetyCash']">
-          Pety Cash
-        </a>
-      </span>
-    </li>
-
     <li *ngIf="sessionStorageService.hasPermission('ProductRule')" class="mt-2">
       <span class="sidebar-list-hover">
         <i class="fa fa-shopping-bag fa-2x"></i>
@@ -71,7 +62,7 @@
       </span>
     </li>
 
-    <li
+    <!-- <li
       *ngIf="sessionStorageService.hasPermission('OrderProcess')"
       class="mt-2"
     >
@@ -81,7 +72,7 @@
           Order Process
         </a>
       </span>
-    </li>
+    </li> -->
 
     <li *ngIf="sessionStorageService.hasPermission('JobDesigner')" class="mt-2">
       <span class="sidebar-list-hover">
@@ -159,21 +150,6 @@
       </span>
     </li>
 
-    <li
-      class="settingOptions mt-2"
-      *ngIf="sessionStorageService.hasPermission('Configuration_Vendor')"
-    >
-      <span>
-        <a
-          class="sidebar-list-hover-settings nav-link"
-          [routerLink]="['/vendorSettlement']"
-          *ngIf="isDropDown2Open == true"
-        >
-          <i class="fa fa-gear fa-2x"></i>
-          <span class="nav-text">Vendor Settlement</span>
-        </a>
-      </span>
-    </li>
 
     <li *ngIf="sessionStorageService.hasPermission('Calculator')" class="mt-2">
       <span class="sidebar-list-hover">

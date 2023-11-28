@@ -3,7 +3,7 @@
   <app-dashboard-head></app-dashboard-head>
   <div class="container-fluid px-0">
     <div>
-      <h4>User</h4>
+      <h3>User</h3>
     </div>
   </div>
   <div class="card text-nowrap">
@@ -56,6 +56,13 @@
                 (click)="deleteUser(user?.id)"
               >
                 <i class="fa-solid fa-trash"></i>&nbsp;Delete
+              </button>
+              <button
+                type="button"
+                class="btn order-table-btn"
+                (click)="petyCash(user?.id)"
+              >
+              <i class="fa-solid fa-wallet"></i>&nbsp;Pety Cash
               </button>
             </div>
           </td>

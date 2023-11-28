@@ -2,7 +2,9 @@
 <div class="body-position">
   <app-dashboard-head></app-dashboard-head>
   <div class="main-container">
-    <div></div>
+    <div>
+      <h3>Vendor</h3>
+    </div>
 
     <!-- <div class="order-body">
       <div class="order-search-panel">
@@ -67,7 +69,7 @@
       >
         <ng-template pTemplate="caption">
           <div class="flex clearfix">
-            <span class="p-input-icon-left ml-auto">
+            <span class="p-input-icon-right ml-auto">
               <i class="pi pi-search"></i>
               <input
                 pInputText
@@ -76,11 +78,10 @@
                 placeholder="Search Vendor"
               />
             </span>
-            <h4 class="text-center">Vendor</h4>
             <button
               pButton
               label="Add"
-              class="p-button-dark bg-dark jus"
+              class="p-button-dark bg-dark float-end"
               icon="pi pi-plus"
               routerLink="/addVendor"
             ></button>
@@ -162,6 +163,13 @@
                   (click)="deleteVendor(vendor?.id)"
                 >
                   <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="vendorSettlement(vendor?.id)"
+                >
+                  <i class="fa-solid fa-wallet"></i>&nbsp;Settlement
                 </button>
               </div>
             </td>

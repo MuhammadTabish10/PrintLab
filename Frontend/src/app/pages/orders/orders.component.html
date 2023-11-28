@@ -107,30 +107,38 @@
     [draggable]="false"
     [resizable]="false"
   >
-    <div class="text-center">
-      <label class="d-block add-order-label m-0">Select Role</label>
-      <p-dropdown
-        appendTo="body"
-        [options]="roleArray"
-        [(ngModel)]="selectedRole"
-        (onChange)="getUsersByRole($event.value)"
-        placeholder="Select a Role"
-        optionLabel="name"
-      ></p-dropdown>
-      <p-dropdown
-        *ngIf="selectedRole"
-        appendTo="body"
-        [options]="userArray"
-        [filter]="true"
-        filterBy="name"
-        [(ngModel)]="selectedUser"
-        placeholder="Select a User"
-        optionLabel="name"
-      ></p-dropdown>
+    <div class="row mx-auto my-3">
+      <div class="col-6">
+        <label class="d-block add-order-label m-0">Select Role</label>
+        <p-dropdown
+          styleClass="w-100"
+          appendTo="body"
+          [options]="roleArray"
+          [(ngModel)]="selectedRole"
+          (onChange)="getUsersByRole($event.value)"
+          placeholder="Select a Role"
+          optionLabel="name"
+        ></p-dropdown>
+      </div>
+      <div class="col-6">
+        <label class="d-block add-order-label m-0">Select User</label>
+        <p-dropdown
+          styleClass="w-100"
+          appendTo="body"
+          [options]="userArray"
+          [filter]="true"
+          filterBy="name"
+          [(ngModel)]="selectedUser"
+          placeholder="Select a User"
+          emptyMessage="Select a role first"
+          optionLabel="name"
+        ></p-dropdown>
+      </div>
     </div>
-    <div class="d-flex justify-content-end">
+    <div class="text-danger row ms-3" *ngIf="plzSelect">Please Assign then Save</div>
+    <div class="d-flex justify-content-end me-3">
       <button
-        class="btn btn-sm btn-dark"
+        class="btn btn-dark"
         (click)="saveOrder(selectedUser, selectedRole, selectedOrderId)"
       >
         Save

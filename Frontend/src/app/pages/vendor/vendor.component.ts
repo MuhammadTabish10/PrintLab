@@ -63,8 +63,12 @@ export class VendorComponent implements OnInit, OnDestroy {
       );
   }
 
-  editVendor(id: any) {
+  editVendor(id: number) {
     this.router.navigate(['/addVendor'], { queryParams: { id: id } });
+  }
+
+  vendorSettlement(id: number) {
+    this.router.navigate(['/vendorSettlement'], { queryParams: { id: id } });
   }
 
   searchVendor(name: any) {

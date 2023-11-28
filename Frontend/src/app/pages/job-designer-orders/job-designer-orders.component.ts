@@ -51,6 +51,9 @@ export class JobDesignerOrdersComponent implements OnInit {
     }
   }
 
+  orderProcessCtp(id: number) {
+    this.router.navigate(['/orderProcess'], { queryParams: { id: id } });
+  }
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
