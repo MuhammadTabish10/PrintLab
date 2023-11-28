@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Table } from 'primeng/table';
+import { ActivatedRoute } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Transactions } from 'src/app/Model/transactions';
+import { OrderProcessService } from 'src/app/services/order-process.service';
 
 @Component({
   selector: 'app-order-process',
@@ -8,69 +10,106 @@ import { Transactions } from 'src/app/Model/transactions';
   styleUrls: ['./order-process.component.css']
 })
 export class OrderProcessComponent implements OnInit {
-  transactions: Transactions[] = [
-    {
-      id: 1,
-      plateDimension: '450 x 370 mm',
-      vendor: 'Sidra Ctp',
-      qty: 8,
-      unitPrice: 220,
-      amount: 1000,
-      user: 'Admin',
-      paymentMode: [
-        { name: 'Cash' },
-        { name: 'Credit' }
-      ]
-    }
-  ];
-  plateDimension: any = '450 x 370 mm';
-  vendor: any = [{
-    vendor: 'Sidra Ctp'
-  }];
-  qty: any = 8;
-  unitPrice: any = 220;
-  amount: any = 1000;
-  user: any = [{ name: 'Admin' }];
-  paymentMode: any = [{ name: 'Cash' }, { name: 'Credit' }];
 
-
-  addTransaction: boolean = false;
+  transactions: any = [];
+  plateDimension: string = '';
+  vendor: string = '';
+  quantity: number = 0;
+  unitPrice: number = 0;
+  amount: number = 0;
+  paymentMode: any;
   visible: boolean = false;
   tID!: number
   showRejected: boolean = false;
   showAccepted: boolean = false;
+  options: boolean = false;
+  idFromQueryParam: number = 0;
+  error: boolean = false;
+  ctp: string = 'CTP';
+  variance: number = 0;
+  selectedMode: any
+  selectedVendor: any
+
+
+  constructor(
+    private orderProcessService: OrderProcessService,
+    private route: ActivatedRoute,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
-
+    this.paymentMode = [{ name: 'Cash' }, { name: 'Credit' }];
+    this.route.queryParams.subscribe(param => {
+      this.idFromQueryParam = +param['id']
+    }, error => {
+      this.showError(error);
+      this.error = true;
+    });
+    this.getCtpProcess(this.idFromQueryParam, this.ctp);
   }
 
-  addToTransaction(): boolean {
-    debugger
+  getCtpProcess(orderId: number, ctp: string) {
+    this.orderProcessService.getOrderProcess(orderId, ctp).subscribe(process => {
+      this.transactions.push(process);
+      this.variance = this.transactions[0].unitPrice * this.transactions[0].quantity;
+      this.plateDimension = this.transactions[0].plateDimension;
+      this.quantity = this.transactions[0].quantity;
+      this.amount = this.transactions[0].amount;
+      this.unitPrice = this.transactions[0].unitPrice;
+    }, error => {
+    });
+  }
+
+  addCreditOnVendor(): void {
+    this.showAccepted = true;
+    this.showRejected = false;
+  }
+
+  addToTransaction(): void {
     this.showRejected = false;
     this.showAccepted = true;
-    this.addTransaction = true;
-    return this.addTransaction;
-  }
-
-  deleteTransaction(id: number): boolean {
+    let orderObj = {
+      plateDimension: this.plateDimension,
+      vendor: this.selectedVendor.vendor.name,
+      quantity: this.quantity,
+      unitPrice: this.unitPrice,
+      amount: this.amount,
+      paymentMode: this.selectedMode.name,
+      order: {
+        id: this.idFromQueryParam
+      }
+    }
     debugger
-    this.visible = false;
-    this.addTransaction = false;
-    return this.addTransaction;
+    this.orderProcessService.addTransaction(orderObj).subscribe(transaction => {
+      console.log(transaction);
+
+     }, error => { });
+    this.getCtpProcess(this.idFromQueryParam, this.ctp);
   }
 
   reject(): boolean {
-    this.addTransaction = false;
     this.showRejected = true;
     return this.showRejected;
   }
 
-  showDialog() {
+  showDialog(): boolean {
     this.visible = true;
+    return this.visible;
   }
 
-  close() {
+  close(): boolean {
+    this.addToTransaction();
     this.visible = false;
+    return this.visible;
+  }
+
+  creditOrCash(): boolean {
+    this.options = true;
+    return this.options;
+  }
+
+  showError(error: any) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 
 }
