@@ -17,7 +17,6 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
     private final OrderTransactionRepository orderTransactionRepository;
     private final OrderRepository orderRepository;
     private final CtpRepository ctpRepository;
-    private final UserRepository userRepository;
     private final VendorRepository vendorRepository;
     private final ProductRuleRepository productRuleRepository;
     private final VendorSettlementRepository vendorSettlementRepository;
@@ -29,11 +28,10 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
     private static final String CREDIT = "Credit";
     private static final String CASH = "Cash";
 
-    public OrderTransactionServiceImpl(OrderTransactionRepository orderTransactionRepository, OrderRepository orderRepository, CtpRepository ctpRepository, UserRepository userRepository, VendorRepository vendorRepository, ProductRuleRepository productRuleRepository, VendorSettlementRepository vendorSettlementRepository, UserPettyCashRepository userPettyCashRepository, HelperUtils helperUtils) {
+    public OrderTransactionServiceImpl(OrderTransactionRepository orderTransactionRepository, OrderRepository orderRepository, CtpRepository ctpRepository, VendorRepository vendorRepository, ProductRuleRepository productRuleRepository, VendorSettlementRepository vendorSettlementRepository, UserPettyCashRepository userPettyCashRepository, HelperUtils helperUtils) {
         this.orderTransactionRepository = orderTransactionRepository;
         this.orderRepository = orderRepository;
         this.ctpRepository = ctpRepository;
-        this.userRepository = userRepository;
         this.vendorRepository = vendorRepository;
         this.productRuleRepository = productRuleRepository;
         this.vendorSettlementRepository = vendorSettlementRepository;
