@@ -90,9 +90,6 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
             existingUser.setName(user.getName());
-            if(!existingUser.getPassword().equals(user.getPassword())){
-                existingUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            }
             existingUser.setPhone(user.getPhone());
             existingUser.setCnic(user.getCnic());
             existingUser.setEmail(user.getEmail());
@@ -108,7 +105,9 @@ public class UserServiceImpl implements UserService {
             existingRoleValues.addAll(newRoleValues);
 
             User updatedUser = userRepository.save(existingUser);
+            emailUtils.sendUpdateEmail(user.getEmail());
             return toDto(updatedUser);
+
         } else {
             throw new RecordNotFoundException(String.format("User not found for id => %d", id));
         }

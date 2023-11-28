@@ -44,6 +44,37 @@ public class EmailUtils {
         }
 
     @Async
+    public Boolean sendUpdateEmail(String userEmail) {
+
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(sender);
+            helper.setTo(userEmail);
+            helper.setSubject("Update on Your PrintLab Account");
+
+            String emailContent = "Dear PrintLab User,\n\n"
+                    + "We hope this email finds you well. Thank you for being a valued member of PrintLab!\n\n"
+                    + "We want to inform you about an important update regarding your account. Please review the details below:\n\n"
+                    + "Account Email: " + userEmail + "\n\n"
+                    + "Thank you for choosing PrintLab!\n\n"
+                    + "Best Regards,\n"
+                    + "The PrintLab Team";
+
+            helper.setText(emailContent);
+
+            javaMailSender.send(message);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    @Async
     public Boolean sendOrderAssignedEmail(String userEmail, Order order) {
 
         try {
