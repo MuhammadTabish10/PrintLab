@@ -19,7 +19,7 @@ public class OrderTransactionController {
     }
 
     @PostMapping("/order-transaction")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<OrderTransactionDto> createOrderTransaction(@RequestBody OrderTransactionDto orderTransactionDto) {
         return ResponseEntity.ok(orderTransactionService.save(orderTransactionDto));
     }
