@@ -46,11 +46,11 @@
             <th class="col">
               <div class="d-flex justify-content-center">Credit</div>
             </th>
-            <th class="col">
+            <!-- <th class="col">
               <div class="d-flex justify-content-center">Date</div>
-            </th>
+            </th> -->
             <th class="col">
-              <div class="d-flex justify-content-center">Time</div>
+              <div class="d-flex justify-content-center">Date & Time</div>
             </th>
             <th class="col">
               <div class="d-flex justify-content-center">Order Id</div>
@@ -63,25 +63,19 @@
         <ng-template pTemplate="body" let-element>
           <tr>
             <td class="text-center">
-              {{ element?.plateDimension }}
+              {{ element?.id }}
             </td>
             <td class="text-center">
-              {{ element?.vendor }}
+              {{ element?.debit }}
             </td>
             <td class="text-center">
-              {{ element?.qty }}
+              {{ element?.credit }}
             </td>
             <td class="text-center">
-              {{ element?.unitPrice }}
+              {{ element?.dateAndTime }}
             </td>
             <td class="text-center">
-              {{ element?.amount }}
-            </td>
-            <td class="text-center">
-              {{ element?.user }}
-            </td>
-            <td class="text-center">
-              {{ element?.paymentMode }}
+              {{ element?.order?.id }}
             </td>
             <!-- <td class="text-center">
               <div

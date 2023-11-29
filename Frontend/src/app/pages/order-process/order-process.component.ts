@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Transactions } from 'src/app/Model/transactions';
 import { OrderProcessService } from 'src/app/services/order-process.service';
+import { PetyCashService } from 'src/app/services/pety-cash.service';
 
 @Component({
   selector: 'app-order-process',
@@ -34,7 +35,8 @@ export class OrderProcessComponent implements OnInit {
   constructor(
     private orderProcessService: OrderProcessService,
     private route: ActivatedRoute,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private pettyCashService: PetyCashService,
   ) { }
 
   ngOnInit(): void {
@@ -50,19 +52,60 @@ export class OrderProcessComponent implements OnInit {
 
   getCtpProcess(orderId: number, ctp: string) {
     this.orderProcessService.getOrderProcess(orderId, ctp).subscribe(process => {
+      debugger
       this.transactions.push(process);
       this.variance = this.transactions[0].unitPrice * this.transactions[0].quantity;
       this.plateDimension = this.transactions[0].plateDimension;
       this.quantity = this.transactions[0].quantity;
       this.amount = this.transactions[0].amount;
       this.unitPrice = this.transactions[0].unitPrice;
+
     }, error => {
     });
   }
 
-  addCreditOnVendor(): void {
+  addCreditOnVendor(order: any): void {
     this.showAccepted = true;
     this.showRejected = false;
+    debugger
+    this.orderProcessService.addTransaction(order).subscribe(data => { }, error => { });
+  }
+
+  cash(order: any): boolean {
+    this.options = false;
+    order["paymentMode"] = "Cash";
+    order["order"] = {
+      id: this.idFromQueryParam
+    };
+    if (order && order.vendor) {
+      const vendorValue = order.vendor.name;
+      delete order.vendor;
+      order['vendor'] = vendorValue;
+    }
+    this.addUserPetyCash(order);
+    return this.options;
+  }
+
+  addUserPetyCash(order: any): void {
+    this.showAccepted = true;
+    this.showRejected = false;
+    this.orderProcessService.addTransaction(order).subscribe(data => { }, error => { });
+  }
+
+  credit(order: any): boolean {
+    this.options = false;
+    debugger
+    order["paymentMode"] = "Credit";
+    order["order"] = {
+      id: this.idFromQueryParam
+    };
+    if (order && order.vendor) {
+      const vendorValue = order.vendor.name;
+      delete order.vendor;
+      order['vendor'] = vendorValue;
+    }
+    this.addCreditOnVendor(order);
+    return this.options;
   }
 
   addToTransaction(): void {
@@ -80,10 +123,7 @@ export class OrderProcessComponent implements OnInit {
       }
     }
     debugger
-    this.orderProcessService.addTransaction(orderObj).subscribe(transaction => {
-      console.log(transaction);
-
-     }, error => { });
+    this.orderProcessService.addTransaction(orderObj).subscribe(transaction => { }, error => { });
     this.getCtpProcess(this.idFromQueryParam, this.ctp);
   }
 
