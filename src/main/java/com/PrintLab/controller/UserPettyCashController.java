@@ -30,6 +30,13 @@ public class UserPettyCashController {
         return ResponseEntity.ok(userPettyCashDtoList);
     }
 
+    @GetMapping("/user-petty-cash/user/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
+    public ResponseEntity<List<UserPettyCashDto>> getAllUserPettyCashByUserId(@PathVariable Long id) {
+        List<UserPettyCashDto> userPettyCashDtoList = userPettyCashService.findByUser(id);
+        return ResponseEntity.ok(userPettyCashDtoList);
+    }
+
     @GetMapping("/user-petty-cash/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<UserPettyCashDto> getUserPettyCashById(@PathVariable Long id) {
