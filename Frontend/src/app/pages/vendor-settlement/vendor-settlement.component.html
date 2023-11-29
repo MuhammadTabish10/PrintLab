@@ -47,42 +47,46 @@
               <div class="d-flex justify-content-center">Credit</div>
             </th>
             <th class="col">
-              <div class="d-flex justify-content-center">Date</div>
+              <div class="d-flex justify-content-center">Date & Time</div>
             </th>
             <th class="col">
-              <div class="d-flex justify-content-center">Time</div>
-            </th>
+                <div class="d-flex justify-content-center">Status</div>
+              </th>
             <th class="col">
               <div class="d-flex justify-content-center">Order Id</div>
             </th>
+            
             <!-- <th class="col">
               <div class="d-flex justify-content-center">Action</div>
             </th> -->
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-element>
+        <ng-template pTemplate="body" let-element *ngFor="let vendorSettlement of vendorSettlementArray;">
           <tr>
             <td class="text-center">
-              {{ element?.plateDimension }}
+                {{vendorSettlement?.vendor_id}}
             </td>
             <td class="text-center">
-              {{ element?.vendor }}
+              {{ vendorSettlement?.debit }}
             </td>
             <td class="text-center">
-              {{ element?.qty }}
+              {{ vendorSettlement?.credit }}
             </td>
             <td class="text-center">
-              {{ element?.unitPrice }}
+              {{ vendorSettlement?.date_and_time }}
             </td>
             <td class="text-center">
-              {{ element?.amount }}
+              {{ vendorSettlement?.status }}
             </td>
             <td class="text-center">
+                {{ vendorSettlement?.order_id }}
+              </td>
+            <!-- <td class="text-center">
               {{ element?.user }}
             </td>
             <td class="text-center">
               {{ element?.paymentMode }}
-            </td>
+            </td> -->
 
           </tr>
         </ng-template>
