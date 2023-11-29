@@ -16,8 +16,8 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
 
     private final OrderTransactionRepository orderTransactionRepository;
     private final OrderRepository orderRepository;
-    private final CtpRepository ctpRepository;
     private final UserRepository userRepository;
+    private final CtpRepository ctpRepository;
     private final VendorRepository vendorRepository;
     private final ProductRuleRepository productRuleRepository;
     private final VendorSettlementRepository vendorSettlementRepository;
@@ -29,11 +29,11 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
     private static final String CREDIT = "Credit";
     private static final String CASH = "Cash";
 
-    public OrderTransactionServiceImpl(OrderTransactionRepository orderTransactionRepository, OrderRepository orderRepository, CtpRepository ctpRepository, UserRepository userRepository, VendorRepository vendorRepository, ProductRuleRepository productRuleRepository, VendorSettlementRepository vendorSettlementRepository, UserPettyCashRepository userPettyCashRepository, HelperUtils helperUtils) {
+    public OrderTransactionServiceImpl(OrderTransactionRepository orderTransactionRepository, OrderRepository orderRepository, UserRepository userRepository, CtpRepository ctpRepository, VendorRepository vendorRepository, ProductRuleRepository productRuleRepository, VendorSettlementRepository vendorSettlementRepository, UserPettyCashRepository userPettyCashRepository, HelperUtils helperUtils) {
         this.orderTransactionRepository = orderTransactionRepository;
         this.orderRepository = orderRepository;
-        this.ctpRepository = ctpRepository;
         this.userRepository = userRepository;
+        this.ctpRepository = ctpRepository;
         this.vendorRepository = vendorRepository;
         this.productRuleRepository = productRuleRepository;
         this.vendorSettlementRepository = vendorSettlementRepository;
@@ -47,7 +47,14 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         OrderTransaction orderTransaction = toEntity(orderTransactionDto);
         orderTransaction.setStatus(true);
 
-        User user = helperUtils.getCurrentUser();
+        User user = null;
+        if(orderTransaction.getUserId() == null){
+            user = helperUtils.getCurrentUser();
+        }
+        else {
+            user = userRepository.findById(orderTransaction.getUserId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", orderTransaction.getUserId())));
+        }
 
         Order order = orderRepository.findById(orderTransaction.getOrder().getId())
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", orderTransaction.getOrder().getId())));

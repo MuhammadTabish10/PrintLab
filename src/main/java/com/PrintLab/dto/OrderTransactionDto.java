@@ -1,7 +1,6 @@
 package com.PrintLab.dto;
 
 import com.PrintLab.model.Order;
-import com.PrintLab.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

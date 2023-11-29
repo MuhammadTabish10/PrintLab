@@ -1,10 +1,7 @@
 export interface Transactions {
-  id: number | null,
-  plateDimension: string;
-  vendor: string;
-  qty: number;
-  unitPrice: number;
-  amount: number;
-  user: string;
-  paymentMode: { name: string }[];
+  plateDimension: string  | null ;
+  vendor: string  | null;
+  quantity: number  | null;
+  unitPrice: number  | null;
+  amount: number  | null;
 }

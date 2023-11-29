@@ -15,6 +15,8 @@ export class JobProductionOrdersComponent {
   ordersArray: any = []
   tableData: Boolean = false
   search: string = ''
+  processOptions: boolean = false;
+  orderId: number = 0;
 
 
   constructor(private orderService: OrdersService,
@@ -50,6 +52,24 @@ export class JobProductionOrdersComponent {
       })
     }
   }
+
+  processes(orderId: number) {
+    this.processOptions = true;
+    this.orderId = orderId;
+  }
+
+  orderProcessCtp() {
+    this.router.navigate(['/orderProcess'], { queryParams: { id: this.orderId } });
+  }
+
+  orderProcessPress() {
+    this.router.navigate(['/orderProcessPress'], { queryParams: { id: this.orderId } });
+  }
+
+  orderProcessPaperMarket() {
+    this.router.navigate(['/orderProcessPaperMarket'], { queryParams: { id: this.orderId } });
+  }
+
 
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });

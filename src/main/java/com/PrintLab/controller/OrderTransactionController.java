@@ -19,7 +19,7 @@ public class OrderTransactionController {
     }
 
     @PostMapping("/order-transaction")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<OrderTransactionDto> createOrderTransaction(@RequestBody OrderTransactionDto orderTransactionDto) {
         return ResponseEntity.ok(orderTransactionService.save(orderTransactionDto));
     }
@@ -40,7 +40,7 @@ public class OrderTransactionController {
 
     @GetMapping("/order-transaction/order/{order-id}/process/{process-type}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
-    public ResponseEntity<HashMap<String,Object>> getOrderTransactionById(@PathVariable(name = "order-id") Long orderId,
+    public ResponseEntity<HashMap<String,Object>> getPurchaseOrder(@PathVariable(name = "order-id") Long orderId,
                                                                           @PathVariable(name = "process-type") String processType) {
 
         HashMap<String,Object> purchaseOrder = orderTransactionService.getOrderProcess(orderId,processType);

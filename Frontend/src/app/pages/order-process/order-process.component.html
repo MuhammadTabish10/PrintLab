@@ -9,7 +9,7 @@
       <div class="row">
         <div class="col-2">
           <h5>Estimated Amount:</h5>
-          <h6 class="text-muted">Rs: {{ "920" }}</h6>
+          <h6 class="text-muted">Rs: {{ transactions[0]?.amount }}</h6>
         </div>
         <div class="col-2">
           <h5>Cost:</h5>
@@ -17,7 +17,7 @@
         </div>
         <div class="col-2">
           <h5>Variance:</h5>
-          <h6 class="text-muted">Rs: {{ "840" }}</h6>
+          <h6 class="text-muted">Rs: {{ variance }}</h6>
         </div>
       </div>
     </div>
@@ -29,37 +29,37 @@
         <div>
           <label class="fs-4 fw-medium">Plate Dimension:</label>
           <label class="fs-5 fw-medium ms-2 text-muted">{{
-            transactions[0].plateDimension
+            transactions[0]?.plateDimension
           }}</label>
         </div>
         <div>
           <label class="fs-4 fw-medium">Vendor:</label>
           <label class="fs-5 fw-medium ms-2 text-muted">{{
-            transactions[0].vendor
+            transactions[0]?.vendor.name
           }}</label>
         </div>
         <div>
           <label class="fs-4 fw-medium">Quantity:</label>
           <label class="fs-5 fw-medium ms-2 text-muted">{{
-            transactions[0].qty
+            transactions[0]?.quantity
           }}</label>
         </div>
         <div>
           <label class="fs-4 fw-medium">Unit Price:</label>
           <label class="fs-5 fw-medium ms-2 text-muted">{{
-            transactions[0].unitPrice
+            transactions[0]?.unitPrice
           }}</label>
         </div>
         <div>
           <label class="fs-4 fw-medium">Amount:</label>
           <label class="fs-5 fw-medium ms-2 text-muted">{{
-            transactions[0].amount
+            transactions[0]?.amount
           }}</label>
         </div>
         <div class="text-end">
           <button
             class="btn btn-dark me-2"
-            (click)="addToTransaction()"
+            (click)="creditOrCash()"
             *ngIf="!showRejected && !showAccepted"
           >
             Accept
@@ -71,7 +71,10 @@
           >
             Reject
           </button>
-          <label class="add-order-label text-danger fw-bold" *ngIf="showRejected">
+          <label
+            class="add-order-label text-danger fw-bold"
+            *ngIf="showRejected"
+          >
             Rejected
           </label>
           <label class="add-order-label text-dark fw-bold" *ngIf="showAccepted">
@@ -145,16 +148,16 @@
             </th> -->
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-element let-i="rowIndex">
-          <tr *ngIf="addTransaction">
+        <ng-template pTemplate="body" let-element>
+          <tr>
             <td class="text-center">
-              {{ element?.plateDimension }}
+              {{ element.plateDimension }}
             </td>
             <td class="text-center">
-              {{ element?.vendor }}
+              {{ element.vendor.name }}
             </td>
             <td class="text-center">
-              {{ element?.qty }}
+              {{ element?.quantity }}
             </td>
             <td class="text-center">
               {{ element?.unitPrice }}
@@ -166,10 +169,11 @@
               {{ element?.user }}
             </td>
             <td class="text-center">
-              {{ element?.paymentMode[i].name }}
+              {{ element?.paymentMode }}
             </td>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="8" class="text-center">No Transaction Found !</td>
@@ -180,6 +184,7 @@
   </div>
 </div>
 <p-toast></p-toast>
+
 <!-- <p-dialog
   header="Delete Permission"
   class="form-hook"
@@ -210,8 +215,8 @@
             <input
               type="text"
               class="order-search form-control order-form-input m-0 bg-light"
-              value="{{ plateDimension }}"
               style="border: 1px solid #ced4da"
+              [(ngModel)]="plateDimension"
               placeholder="Enter Plate Dimension"
               name="plateDimension"
               readonly
@@ -221,9 +226,10 @@
             <label class="add-order-label m-0">Vendor</label>
             <p-dropdown
               styleClass="w-100"
-              [options]="vendor"
-              optionLabel="vendor"
+              [options]="transactions"
+              optionLabel="vendor.name"
               name="vendor"
+              [(ngModel)]="selectedVendor"
               [required]="true"
             ></p-dropdown>
           </div>
@@ -231,8 +237,8 @@
             <label class="add-order-label m-0">Quantity</label>
             <input
               type="text"
+              [(ngModel)]="quantity"
               class="order-search form-control order-form-input m-0 bg-light"
-              value="{{ qty }}"
               style="border: 1px solid #ced4da"
               placeholder="Enter Quantity"
               name="Quantity name"
@@ -245,11 +251,11 @@
               type="number"
               min="1"
               step="1"
+              [(ngModel)]="amount"
               class="order-search form-control order-form-input m-0"
-              value="{{ amount }}"
               style="border: 1px solid #ced4da"
               placeholder="Enter Amount"
-              name="Quantity name"
+              name="Amount name"
               required
             />
           </div>
@@ -259,30 +265,30 @@
               type="number"
               min="1"
               step="1"
+              [(ngModel)]="unitPrice"
               class="order-search form-control order-form-input m-0"
-              value="{{ unitPrice }}"
               style="border: 1px solid #ced4da"
               placeholder="Enter Unit Price"
               name="Unit Price name"
               required
             />
           </div>
-          <div class="col-6 my-3">
+          <!-- <div class="col-6 my-3">
             <label class="add-order-label m-0">User</label>
             <p-dropdown
               styleClass="w-100"
-              [options]="user"
               optionLabel="name"
               name="user"
               [required]="true"
             ></p-dropdown>
-          </div>
+          </div> -->
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Payment Mode</label>
             <p-dropdown
               styleClass="w-100"
               [options]="paymentMode"
               optionLabel="name"
+              [(ngModel)]="selectedMode"
               name="paymentMode"
               [required]="true"
             ></p-dropdown>
@@ -300,6 +306,28 @@
           </div>
         </div>
       </form>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="Chose the option"
+  [(visible)]="options"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="row">
+    <div class="col-6 text-end">
+      <button class="btn btn-dark px-3" (click)="cash(transactions[0])">
+        Cash
+      </button>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-dark px-3" (click)="credit(transactions[0])">
+        Credit
+      </button>
     </div>
   </div>
 </p-dialog>
