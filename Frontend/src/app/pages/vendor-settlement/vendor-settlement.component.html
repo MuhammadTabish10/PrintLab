@@ -1,104 +1,95 @@
 <app-sidebar></app-sidebar>
 <div class="body-position">
-  <app-dashboard-head></app-dashboard-head>
-  <div class="main-container">
-    <div>
-      <h3>{{ "" }} Vendor Settlement</h3>
-    </div>
+    <app-dashboard-head></app-dashboard-head>
+    <div class="main-container">
+        <div>
+            <h3>{{ "" }} Vendor Settlement</h3>
+        </div>
 
-    <div class="card text-nowrap">
-      <p-table
-        #dt1
-        [value]="vendorSettlementRecords"
-        dataKey="id"
-        [globalFilterFields]="['name']"
-      >
-        <ng-template pTemplate="caption">
-          <div class="flex clearfix">
-            <form #f="ngForm">
-              <span class="p-input-icon-right ml-auto">
-                <label class="d-block">Debit:</label>
-                <input pInputText type="text" placeholder="Add Debit" required/>
-              </span>
-              <span class="p-input-icon-right ms-2">
-                <label class="d-block">Credit:</label>
-                <input pInputText type="text" placeholder="Add Credit" required/>
-              </span>
+        <div class="card text-nowrap">
+            <p-table #dt1 [value]="vendorSettlementArray" dataKey="id" [globalFilterFields]="['name']">
+                <ng-template pTemplate="caption">
+                    <div class="flex clearfix">
+                        <form #f="ngForm">
+                            <span class="p-input-icon-right ml-auto">
+                                <label class="d-block">Debit:</label>
+                                <input pInputText type="text" placeholder="Add Debit" required />
+                            </span>
+                            <span class="p-input-icon-right ms-2">
+                                <label class="d-block">Credit:</label>
+                                <input pInputText type="text" placeholder="Add Credit" required />
+                            </span>
 
-              <button
-                [disabled]="!f.valid"
-                pButton
-                [label]="editMode ? 'Update' : 'Add'"
-                class="p-button-dark bg-dark float-end"
-                [icon]="editMode ? 'pi pi-check' : 'pi pi-plus'"
-              ></button>
-            </form>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="header">
-          <tr>
-            <th class="col">
-              <div class="d-flex justify-content-center">Vendor Id</div>
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Debit</div>
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Credit</div>
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Date & Time</div>
-            </th>
-            <th class="col">
-                <div class="d-flex justify-content-center">Status</div>
-              </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Order Id</div>
-            </th>
-            
-            <!-- <th class="col">
+                            <button [disabled]="!f.valid" pButton [label]="editMode ? 'Update' : 'Add'"
+                                class="p-button-dark bg-dark float-end"
+                                [icon]="editMode ? 'pi pi-check' : 'pi pi-plus'"></button>
+                        </form>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="col">
+                            <div class="d-flex justify-content-center">Vendor Id</div>
+                        </th>
+                        <th class="col">
+                            <div class="d-flex justify-content-center">Debit</div>
+                        </th>
+                        <th class="col">
+                            <div class="d-flex justify-content-center">Credit</div>
+                        </th>
+                        <th class="col">
+                            <div class="d-flex justify-content-center">Date & Time</div>
+                        </th>
+                        <th class="col">
+                            <div class="d-flex justify-content-center">Status</div>
+                        </th>
+                        <th class="col">
+                            <div class="d-flex justify-content-center">Order Id</div>
+                        </th>
+
+                        <!-- <th class="col">
               <div class="d-flex justify-content-center">Action</div>
             </th> -->
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-element *ngFor="let vendorSettlement of vendorSettlementArray;">
-          <tr>
-            <td class="text-center">
-                {{vendorSettlement?.vendor_id}}
-            </td>
-            <td class="text-center">
-              {{ vendorSettlement?.debit }}
-            </td>
-            <td class="text-center">
-              {{ vendorSettlement?.credit }}
-            </td>
-            <td class="text-center">
-              {{ vendorSettlement?.date_and_time }}
-            </td>
-            <td class="text-center">
-              {{ vendorSettlement?.status }}
-            </td>
-            <td class="text-center">
-                {{ vendorSettlement?.order_id }}
-              </td>
-            <!-- <td class="text-center">
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-element>
+                    <tr>
+                        <td class="text-center">
+                            {{element?.vendor.id}}
+                        </td>
+                        <td class="text-center">
+                            {{ element?.debit }}
+                        </td>
+                        <td class="text-center">
+                            {{ element?.credit }}
+                        </td>
+                        <td class="text-center">
+                            {{ element?.dateAndTime }}
+                        </td>
+                        <td class="text-center">
+                            {{ element?.status }}
+                        </td>
+                        <td class="text-center">
+                            {{ element?.order.id }}
+                        </td>
+                        <!-- <td class="text-center">
               {{ element?.user }}
             </td>
             <td class="text-center">
               {{ element?.paymentMode }}
             </td> -->
 
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="6" class="text-center">
-              No Vendor Settlement Record Is Found For {{ "" }} !
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            No Vendor Settlement Record Is Found For {{ "" }} !
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
     </div>
-  </div>
 </div>
 <p-toast></p-toast>
