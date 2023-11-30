@@ -65,6 +65,7 @@ export class AddOrderComponent implements OnInit {
     frontColor: 'Select Front Color',
     backColor: 'Select Back Color',
   };
+  productRuleId: number = 0;
 
   constructor(private orderService: OrdersService, private router: Router,
     private productService: ProductRuleService, private route: ActivatedRoute,
@@ -135,6 +136,7 @@ export class AddOrderComponent implements OnInit {
     if (Number.isNaN(this.idFromQueryParam)) {
       let obj = {
         product: this.productName,
+        productRule: this.productRuleId,
         paper: this.paperStockItem.paperStock,
         category: this.category.name,
         size: JSON.stringify(this.sizeValue),
@@ -186,6 +188,8 @@ export class AddOrderComponent implements OnInit {
   toggleFields(title: any) {
     this.emptyAllFields()
     this.cdr.detectChanges();
+
+    this.productRuleId = title.id;
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
     this.paperStock = title.productRulePaperStockList ? title.productRulePaperStockList : null;

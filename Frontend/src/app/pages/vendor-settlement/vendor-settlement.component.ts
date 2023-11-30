@@ -50,7 +50,7 @@ export class VendorSettlementComponent implements OnInit {
   }
 
   getVendorSettlementById(vendorId: number): void {
-    debugger
+
     this.vendorSettlementService.getVendorSettlementById(vendorId).subscribe((res: any) => {
       this.vendorSettlementRecords = res;
       this.updateCreditAndDebit();
