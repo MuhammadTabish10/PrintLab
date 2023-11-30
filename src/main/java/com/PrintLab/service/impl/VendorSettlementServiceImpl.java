@@ -54,6 +54,18 @@ public class VendorSettlementServiceImpl implements VendorSettlementService {
     }
 
     @Override
+    public List<VendorSettlementDto> findByVendor(Long vendorId) {
+        List<VendorSettlement> vendorSettlementList = vendorSettlementRepository.findByVendorIdAndStatus(vendorId);
+        List<VendorSettlementDto> vendorSettlementDtoList = new ArrayList<>();
+
+        for (VendorSettlement vendorSettlement : vendorSettlementList) {
+            VendorSettlementDto vendorSettlementDto = toDto(vendorSettlement);
+            vendorSettlementDtoList.add(vendorSettlementDto);
+        }
+        return vendorSettlementDtoList;
+    }
+
+    @Override
     public VendorSettlementDto findById(Long id) {
         VendorSettlement vendorSettlement = vendorSettlementRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("VendorSettlement not found for id => %d", id)));

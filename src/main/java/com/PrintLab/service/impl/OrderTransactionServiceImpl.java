@@ -144,8 +144,8 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         existingOrderTransaction.setVendor(orderTransactionDto.getVendor());
         existingOrderTransaction.setQuantity(orderTransactionDto.getQuantity());
         existingOrderTransaction.setUnitPrice(orderTransactionDto.getUnitPrice());
-        existingOrderTransaction.setAmount(orderTransactionDto.getAmount());
-        existingOrderTransaction.setPaymentMode(orderTransactionDto.getPaymentMode());
+        existingOrderTransaction.setAmount(orderTransactionDto.getQuantity() * orderTransactionDto.getUnitPrice());
+//        existingOrderTransaction.setPaymentMode(orderTransactionDto.getPaymentMode());
 
         OrderTransaction updatedOrderTransaction = orderTransactionRepository.save(existingOrderTransaction);
         return toDto(updatedOrderTransaction);

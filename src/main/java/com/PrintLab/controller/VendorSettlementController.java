@@ -18,7 +18,7 @@ public class VendorSettlementController {
     }
 
     @PostMapping("/vendor-settlement")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<VendorSettlementDto> createVendorSettlement(@RequestBody VendorSettlementDto vendorSettlementDto) {
         return ResponseEntity.ok(vendorSettlementService.save(vendorSettlementDto));
     }
@@ -30,6 +30,13 @@ public class VendorSettlementController {
         return ResponseEntity.ok(vendorSettlementDtoList);
     }
 
+    @GetMapping("/vendor-settlement/vendor/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
+    public ResponseEntity<List<VendorSettlementDto>> getAllVendorSettlementByVendorId(@PathVariable Long id) {
+        List<VendorSettlementDto> vendorSettlementDtoList = vendorSettlementService.findByVendor(id);
+        return ResponseEntity.ok(vendorSettlementDtoList);
+    }
+
     @GetMapping("/vendor-settlement/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<VendorSettlementDto> getVendorSettlementById(@PathVariable Long id) {
@@ -38,14 +45,14 @@ public class VendorSettlementController {
     }
 
     @DeleteMapping("/vendor-settlement/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<String> deleteVendorSettlement(@PathVariable Long id) {
         vendorSettlementService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/vendor-settlement/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<VendorSettlementDto> updateVendorSettlement(@PathVariable Long id, @RequestBody VendorSettlementDto vendorSettlementDto) {
         VendorSettlementDto updatedVendorSettlementDto = vendorSettlementService.update(id, vendorSettlementDto);
         return ResponseEntity.ok(updatedVendorSettlementDto);

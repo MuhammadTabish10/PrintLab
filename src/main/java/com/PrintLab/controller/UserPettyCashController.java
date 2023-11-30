@@ -18,7 +18,7 @@ public class UserPettyCashController {
     }
 
     @PostMapping("/user-petty-cash")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<UserPettyCashDto> createUserPettyCash(@RequestBody UserPettyCashDto userPettyCashDto) {
         return ResponseEntity.ok(userPettyCashService.save(userPettyCashDto));
     }
@@ -45,14 +45,14 @@ public class UserPettyCashController {
     }
 
     @DeleteMapping("/user-petty-cash/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<String> deleteUserPettyCash(@PathVariable Long id) {
         userPettyCashService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/user-petty-cash/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<UserPettyCashDto> updateUserPettyCash(@PathVariable Long id, @RequestBody UserPettyCashDto userPettyCashDto) {
         UserPettyCashDto updatedUserPettyCashDto = userPettyCashService.update(id, userPettyCashDto);
         return ResponseEntity.ok(updatedUserPettyCashDto);

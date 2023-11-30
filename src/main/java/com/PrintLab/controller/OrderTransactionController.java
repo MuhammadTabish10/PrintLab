@@ -55,14 +55,14 @@ public class OrderTransactionController {
     }
 
     @DeleteMapping("/order-transaction/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<String> deleteOrderTransaction(@PathVariable Long id) {
         orderTransactionService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/order-transaction/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<OrderTransactionDto> updateOrderTransaction(@PathVariable Long id, @RequestBody OrderTransactionDto orderTransactionDto) {
         OrderTransactionDto updatedOrderTransactionDto = orderTransactionService.update(id, orderTransactionDto);
         return ResponseEntity.ok(updatedOrderTransactionDto);
