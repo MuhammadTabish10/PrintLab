@@ -62,6 +62,8 @@ public class OrderServiceImpl implements OrderService {
         if(orderDto.getQuantity() == null){
             orderDto.setQuantity(1000.0);
         }
+
+        orderDto.setStatus(true);
         Order order = orderRepository.save(toEntity(orderDto));
         return toDto(order);
     }
