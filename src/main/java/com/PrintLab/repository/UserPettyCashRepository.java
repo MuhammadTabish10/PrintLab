@@ -17,4 +17,7 @@ public interface UserPettyCashRepository extends JpaRepository<UserPettyCash, Lo
 
     @Query("SELECT upc FROM UserPettyCash upc WHERE upc.status = true ORDER BY upc.id DESC")
     List<UserPettyCash> findAllInDesOrderByIdAndStatus();
+
+    @Query("SELECT upc FROM UserPettyCash upc JOIN upc.user u WHERE u.id = :userId AND upc.status = true")
+    List<UserPettyCash> findByUserIdAndStatus(@Param("userId") Long userId);
 }

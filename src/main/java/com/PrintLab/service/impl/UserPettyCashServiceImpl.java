@@ -62,6 +62,18 @@ public class UserPettyCashServiceImpl implements UserPettyCashService {
     }
 
     @Override
+    public List<UserPettyCashDto> findByUser(Long userId) {
+        List<UserPettyCash> userPettyCashList = userPettyCashRepository.findByUserIdAndStatus(userId);
+        List<UserPettyCashDto> userPettyCashDtoList = new ArrayList<>();
+
+        for (UserPettyCash userPettyCash : userPettyCashList) {
+            UserPettyCashDto userPettyCashDto = toDto(userPettyCash);
+            userPettyCashDtoList.add(userPettyCashDto);
+        }
+        return userPettyCashDtoList;
+    }
+
+    @Override
     @Transactional
     public void deleteById(Long id) {
         UserPettyCash userPettyCash = userPettyCashRepository.findById(id)
