@@ -15,14 +15,26 @@
       >
         <ng-template pTemplate="caption">
           <div class="flex clearfix">
-            <form #f="ngForm">
+            <form #f="ngForm" (ngSubmit)="onSubmit(f)">
               <span class="p-input-icon-right ml-auto">
                 <label class="d-block">Debit:</label>
-                <input pInputText type="text" placeholder="Add Debit" required/>
+                <input
+                  pInputText
+                  type="number"
+                  placeholder="Add Debit"
+                  name="debit"
+                  [(ngModel)]="debitValue"
+                />
               </span>
               <span class="p-input-icon-right ms-2">
                 <label class="d-block">Credit:</label>
-                <input pInputText type="text" placeholder="Add Credit" required/>
+                <input
+                  pInputText
+                  type="number"
+                  placeholder="Add Credit"
+                  name="credit"
+                  [(ngModel)]="creditValue"
+                />
               </span>
 
               <button
@@ -31,6 +43,7 @@
                 [label]="editMode ? 'Update' : 'Add'"
                 class="p-button-dark bg-dark float-end"
                 [icon]="editMode ? 'pi pi-check' : 'pi pi-plus'"
+                type="submit"
               ></button>
             </form>
           </div>
@@ -47,43 +60,58 @@
               <div class="d-flex justify-content-center">Credit</div>
             </th>
             <th class="col">
-              <div class="d-flex justify-content-center">Date</div>
+              <div class="d-flex justify-content-center">Date And Time</div>
             </th>
-            <th class="col">
+            <!-- <th class="col">
               <div class="d-flex justify-content-center">Time</div>
-            </th>
+            </th> -->
             <th class="col">
               <div class="d-flex justify-content-center">Order Id</div>
             </th>
-            <!-- <th class="col">
+            <th class="col">
               <div class="d-flex justify-content-center">Action</div>
-            </th> -->
+            </th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-element>
+        <ng-template pTemplate="body" let-element let-i="rowIndex">
           <tr>
             <td class="text-center">
-              {{ element?.plateDimension }}
+              {{ element?.vendor?.id }}
             </td>
             <td class="text-center">
-              {{ element?.vendor }}
+              {{ debit[i] }}
             </td>
             <td class="text-center">
-              {{ element?.qty }}
+              {{ credit[i] }}
             </td>
             <td class="text-center">
-              {{ element?.unitPrice }}
+              {{ element?.dateAndTime }}
             </td>
             <td class="text-center">
-              {{ element?.amount }}
+              {{ element?.order?.id }}
             </td>
             <td class="text-center">
-              {{ element?.user }}
+              <div
+                class="btn-group mr-2"
+                role="group"
+                aria-label="Second group"
+              >
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="editPettyCash(element.id)"
+                >
+                  <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="deleteById(element.id)"
+                >
+                  <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                </button>
+              </div>
             </td>
-            <td class="text-center">
-              {{ element?.paymentMode }}
-            </td>
-
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
@@ -94,6 +122,21 @@
           </tr>
         </ng-template>
       </p-table>
+    </div>
+    <div class="card flex justify-content-center">
+      <p-card header="Total :">
+        <div class="row mx-auto text-center">
+          <div class="col">
+            <h4>Total Debit:{{ totalDebit }}</h4>
+          </div>
+          <div class="col">
+            <h4>Total Credit:{{ totalCredit }}</h4>
+          </div>
+          <div class="col">
+            <h4>Total:{{ totalDebit - totalCredit }}</h4>
+          </div>
+        </div>
+      </p-card>
     </div>
   </div>
 </div>
