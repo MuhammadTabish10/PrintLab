@@ -1,5 +1,6 @@
 package com.PrintLab.repository;
 
+import com.PrintLab.model.UserPettyCash;
 import com.PrintLab.model.VendorSettlement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,4 +18,7 @@ public interface VendorSettlementRepository extends JpaRepository<VendorSettleme
 
     @Query("SELECT vs FROM VendorSettlement vs WHERE vs.status = true ORDER BY vs.id DESC")
     List<VendorSettlement> findAllInDesOrderByIdAndStatus();
+
+    @Query("SELECT vs FROM VendorSettlement vs JOIN vs.vendor v WHERE v.id = :vendorId AND vs.status = true")
+    List<VendorSettlement> findByVendorIdAndStatus(@Param("vendorId") Long vendorId);
 }
