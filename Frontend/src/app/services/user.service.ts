@@ -20,18 +20,17 @@ export class UserService {
     return this.http.get(url)
   }
 
-  deleteUser(id: any) {
+  deleteUser(id: number) {
     let url = `${this._url}/user/${id}`
-
     return this.http.delete(url)
   }
 
-  getUserById(id: any) {
+  getUserById(id: number) {
     let url = `${this._url}/user/${id}`
     return this.http.get(url)
   }
 
-  updateUser(id: any, obj: any) {
+  updateUser(id: number, obj: any) {
     let url = `${this._url}/user/${id}`
     return this.http.put(url, obj)
   }

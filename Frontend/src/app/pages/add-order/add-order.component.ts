@@ -384,7 +384,7 @@ export class AddOrderComponent implements OnInit {
     this.paperStockItem = foundPaperStockItem
     this.sizeValue = foundsizeItem
     this.qtyValue = foundQtyItem
-    debugger
+
     if (foundSideOptItem) {
       this.sideOptionValue = foundSideOptItem
     }

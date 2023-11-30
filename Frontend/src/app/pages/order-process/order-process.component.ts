@@ -52,7 +52,7 @@ export class OrderProcessComponent implements OnInit {
 
   getCtpProcess(orderId: number, ctp: string) {
     this.orderProcessService.getOrderProcess(orderId, ctp).subscribe(process => {
-      debugger
+
       this.transactions.push(process);
       this.variance = this.transactions[0].unitPrice * this.transactions[0].quantity;
       this.plateDimension = this.transactions[0].plateDimension;
@@ -67,7 +67,7 @@ export class OrderProcessComponent implements OnInit {
   addCreditOnVendor(order: any): void {
     this.showAccepted = true;
     this.showRejected = false;
-    debugger
+
     this.orderProcessService.addTransaction(order).subscribe(data => { }, error => { });
   }
 
@@ -94,7 +94,7 @@ export class OrderProcessComponent implements OnInit {
 
   credit(order: any): boolean {
     this.options = false;
-    debugger
+
     order["paymentMode"] = "Credit";
     order["order"] = {
       id: this.idFromQueryParam
@@ -122,7 +122,7 @@ export class OrderProcessComponent implements OnInit {
         id: this.idFromQueryParam
       }
     }
-    debugger
+
     this.orderProcessService.addTransaction(orderObj).subscribe(transaction => { }, error => { });
     this.getCtpProcess(this.idFromQueryParam, this.ctp);
   }

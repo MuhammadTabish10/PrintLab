@@ -11,13 +11,28 @@ export class PetyCashService {
   constructor(private http: HttpClient) { }
 
   addPetyCash(user: any) {
-    debugger
+
     let url = `${this.url}/user-petty-cash`
     return this.http.post(url, user)
   }
 
-  getUserPettyCashById(userId:number) {
-    let url = `${this.url}/user-petty-cash/${userId}`;
+  getPettyCashById(pettyCashId: number) {
+    let url = `${this.url}/user-petty-cash/${pettyCashId}`;
     return this.http.get(url);
+  }
+
+  updatePettyCashRecordById(recordId: number, obj: any) {
+    let url = `${this.url}/user-petty-cash/${recordId}`;
+    return this.http.put(url, obj)
+  }
+
+  getUserPettyCashById(userId: number) {
+    let url = `${this.url}/user-petty-cash/user/${userId}`;
+    return this.http.get(url);
+  }
+
+  deletePettyCashById(pettyCashId: number) {
+    let url = `${this.url}/user-petty-cash/${pettyCashId}`
+    return this.http.delete(url)
   }
 }

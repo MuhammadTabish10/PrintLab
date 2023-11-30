@@ -53,7 +53,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
     )
       .subscribe(
         (res?: any) => {
-          debugger
+
           this.userToUpdate = res;
           this.email = this.userToUpdate.email;
           this.nameValue = this.userToUpdate.name;

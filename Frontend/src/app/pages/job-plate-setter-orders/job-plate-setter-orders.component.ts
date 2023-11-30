@@ -15,6 +15,8 @@ export class JobPlateSetterOrdersComponent implements OnInit {
   ordersArray: any = []
   tableData: Boolean = false
   search: string = ''
+  orderId: number = 0;
+  processOptions: boolean = false;
 
 
   constructor(private orderService: OrdersService,
@@ -49,6 +51,16 @@ export class JobPlateSetterOrdersComponent implements OnInit {
         this.visible = true
       })
     }
+  }
+
+  processes(orderId: number) {
+    this.processOptions = true;
+    this.orderId = orderId;
+  }
+
+  orderProcessCtp() {
+
+    this.router.navigate(['/orderProcess'], { queryParams: { id: this.orderId } });
   }
 
   showError(error: any) {

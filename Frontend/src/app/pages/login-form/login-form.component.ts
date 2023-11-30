@@ -31,7 +31,7 @@ export class LoginFormComponent implements OnInit {
 
 
   addUser() {
-    debugger
+
     let obj = {
       email: this.userNamevalue,
       password: this.passwordValue

@@ -122,7 +122,7 @@ export class OrdersComponent implements OnInit {
     this.selectedOrderId = getById;
   }
   saveOrder(user?: any, role?: any, orderId?: number) {
-    debugger
+
     this.orderService.saveAssignedUser(user?.id, role?.name, orderId ? orderId : 0).subscribe(
       (res: any) => {
         this.plzSelect = false;

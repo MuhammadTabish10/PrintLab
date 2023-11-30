@@ -14,7 +14,7 @@ export class OrderProcessService {
   constructor(private http: HttpClient) { }
 
   addTransaction(order: any) {
-    debugger
+
     let url = `${this.url}/order-transaction`
     return this.http.post(url, order)
   }
