@@ -115,9 +115,7 @@ export class PetyCashComponent implements OnInit {
     const debitValue = form.value.debit;
     const creditValue = form.value.credit;
     const lastIndex = this.petyCashRecords.length - 1;
-
     if (!this.editMode && lastIndex >= 0) {
-      debugger
       const lastElement = this.petyCashRecords[lastIndex];
       const obj = lastElement;
       obj.debit = debitValue;
