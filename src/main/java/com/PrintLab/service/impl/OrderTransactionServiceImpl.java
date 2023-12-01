@@ -48,12 +48,12 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         orderTransaction.setStatus(true);
 
         User user = null;
-        if(orderTransaction.getUserId() == null){
+        if(orderTransaction.getUser() == null){
             user = helperUtils.getCurrentUser();
         }
         else {
-            user = userRepository.findById(orderTransaction.getUserId())
-                    .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", orderTransaction.getUserId())));
+            user = userRepository.findById(orderTransaction.getUser().getId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", orderTransaction.getUser().getId())));
         }
 
         Order order = orderRepository.findById(orderTransaction.getOrder().getId())
@@ -90,7 +90,7 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
             throw new RecordNotFoundException("Payment Mode is Null");
         }
 
-        orderTransaction.setUserId(user.getId());
+        orderTransaction.setUser(user);
         orderTransaction.setOrder(order);
         OrderTransaction savedOrderTransaction = orderTransactionRepository.save(orderTransaction);
         return toDto(savedOrderTransaction);
@@ -206,7 +206,7 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
                 .unitPrice(orderTransaction.getUnitPrice())
                 .amount(orderTransaction.getAmount())
                 .paymentMode(orderTransaction.getPaymentMode())
-                .userId(orderTransaction.getUserId())
+                .user(orderTransaction.getUser())
                 .order(orderTransaction.getOrder())
                 .status(orderTransaction.getStatus())
                 .build();
@@ -221,7 +221,7 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
                 .unitPrice(orderTransactionDto.getUnitPrice())
                 .amount(orderTransactionDto.getAmount())
                 .paymentMode(orderTransactionDto.getPaymentMode())
-                .userId(orderTransactionDto.getUserId())
+                .user(orderTransactionDto.getUser())
                 .order(orderTransactionDto.getOrder())
                 .status(orderTransactionDto.getStatus())
                 .build();
