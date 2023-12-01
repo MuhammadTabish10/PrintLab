@@ -34,8 +34,10 @@ public class VendorSettlementServiceImpl implements VendorSettlementService {
         vendorSettlement.setVendor(vendorRepository.findById(vendorSettlement.getVendor().getId())
                 .orElseThrow(() -> new RecordNotFoundException(String.format("VendorSettlement not found for id => %d", vendorSettlement.getVendor().getId()))));
 
-        vendorSettlement.setOrder(orderRepository.findById(vendorSettlement.getOrder().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", vendorSettlement.getOrder().getId()))));
+        if (vendorSettlement.getOrder() != null) {
+            vendorSettlement.setOrder(orderRepository.findById(vendorSettlement.getOrder().getId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", vendorSettlement.getOrder().getId()))));
+        }
 
         VendorSettlement savedVendorSettlement = vendorSettlementRepository.save(vendorSettlement);
         return toDto(savedVendorSettlement);
@@ -92,8 +94,10 @@ public class VendorSettlementServiceImpl implements VendorSettlementService {
         existingVendorSettlement.setVendor(vendorRepository.findById(vendorSettlementDto.getVendor().getId())
                 .orElseThrow(() -> new RecordNotFoundException(String.format("VendorSettlement not found for id => %d", vendorSettlementDto.getVendor().getId()))));
 
-        existingVendorSettlement.setOrder(orderRepository.findById(vendorSettlementDto.getOrder().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", vendorSettlementDto.getOrder().getId()))));
+        if (vendorSettlementDto.getOrder() != null) {
+            existingVendorSettlement.setOrder(orderRepository.findById(vendorSettlementDto.getOrder().getId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", vendorSettlementDto.getOrder().getId()))));
+        }
 
         VendorSettlement updatedVendorSettlement = vendorSettlementRepository.save(existingVendorSettlement);
         return toDto(updatedVendorSettlement);

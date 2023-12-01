@@ -20,4 +20,8 @@ public interface OrderTransactionRepository extends JpaRepository<OrderTransacti
     @Query("SELECT ot FROM OrderTransaction ot WHERE ot.status = true ORDER BY ot.id DESC")
     List<OrderTransaction> findAllInDesOrderByIdAndStatus();
 
+    @Query("SELECT ot FROM OrderTransaction ot WHERE ot.order.id = :orderId AND ot.status = true")
+    List<OrderTransaction> findAllByOrderIdAndStatus(Long orderId);
+
+
 }
