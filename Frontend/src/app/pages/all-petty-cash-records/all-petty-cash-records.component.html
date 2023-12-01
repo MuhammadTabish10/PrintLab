@@ -3,17 +3,17 @@
   <app-dashboard-head></app-dashboard-head>
   <div class="main-container">
     <div>
-      <h3>{{ vendorName }} Settlement</h3>
+      <h3>All Pety Cash</h3>
     </div>
 
     <div class="card text-nowrap">
       <p-table
         #dt1
-        [value]="vendorSettlementRecords"
+        [value]="pettyCashRecords"
         dataKey="id"
         [globalFilterFields]="['name']"
       >
-        <ng-template pTemplate="caption">
+        <!-- <ng-template pTemplate="caption">
           <div class="flex clearfix">
             <form #f="ngForm" (ngSubmit)="onSubmit(f)">
               <span class="p-input-icon-right ml-auto">
@@ -36,17 +36,6 @@
                   [(ngModel)]="creditValue"
                 />
               </span>
-              <span class="p-input-icon-right ms-2">
-                <label class="d-block">Order Id:</label>
-                <input
-                  pInputText
-                  type="number"
-                  placeholder="Add Order ID"
-                  name="orderId"
-                  required
-                  [(ngModel)]="orderId"
-                />
-              </span>
 
               <button
                 [disabled]="!f.valid"
@@ -58,11 +47,11 @@
               ></button>
             </form>
           </div>
-        </ng-template>
+        </ng-template> -->
         <ng-template pTemplate="header">
           <tr>
             <th class="col">
-              <div class="d-flex justify-content-center">Vendor Id</div>
+              <div class="d-flex justify-content-center">User Id</div>
             </th>
             <th class="col">
               <div class="d-flex justify-content-center">Debit</div>
@@ -70,24 +59,24 @@
             <th class="col">
               <div class="d-flex justify-content-center">Credit</div>
             </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Date And Time</div>
-            </th>
             <!-- <th class="col">
-              <div class="d-flex justify-content-center">Time</div>
+              <div class="d-flex justify-content-center">Date</div>
             </th> -->
+            <th class="col">
+              <div class="d-flex justify-content-center">Date & Time</div>
+            </th>
             <th class="col">
               <div class="d-flex justify-content-center">Order Id</div>
             </th>
-            <th class="col">
+            <!-- <th class="col">
               <div class="d-flex justify-content-center">Action</div>
-            </th>
+            </th> -->
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-element let-i="rowIndex">
           <tr>
             <td class="text-center">
-              {{ element?.vendor?.id }}
+              {{ element.user.id }}
             </td>
             <td class="text-center">
               {{ debit[i] }}
@@ -98,10 +87,10 @@
             <td class="text-center">
               {{ element?.dateAndTime }}
             </td>
-            <td class="text-center cursor-pointer" routerLink="/orders">
+            <td class="text-center">
               {{ element?.order?.id }}
             </td>
-            <td class="text-center">
+            <!-- <td class="text-center">
               <div
                 class="btn-group mr-2"
                 role="group"
@@ -122,13 +111,13 @@
                   <i class="fa-solid fa-trash"></i>&nbsp;Delete
                 </button>
               </div>
-            </td>
+            </td> -->
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="6" class="text-center">
-              No Vendor Settlement Record Is Found For {{ vendorName }} !
+              No Pety Cash Record Is Found !
             </td>
           </tr>
         </ng-template>

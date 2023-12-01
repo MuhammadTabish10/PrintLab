@@ -31,6 +31,11 @@ export class VendorSettlementServiceService {
     return this.http.get(url);
   }
 
+  getAllVendorSettlements() {
+    let url = `${this.url}/vendor-settlement`;
+    return this.http.get(url);
+  }
+
   deleteSettlementById(settlementId: number) {
     let url = `${this.url}/vendor-settlement/${settlementId}`
     return this.http.delete(url)

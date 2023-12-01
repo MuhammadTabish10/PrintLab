@@ -53,14 +53,14 @@ export class JobPlateSetterOrdersComponent implements OnInit {
     }
   }
 
-  processes(orderId: number) {
-    this.processOptions = true;
-    this.orderId = orderId;
-  }
+  // processes(orderId: number) {
+  //   this.processOptions = true;
+  //   this.orderId = orderId;
+  // }
 
-  orderProcessCtp() {
+  orderProcessCtp(orderId: number) {
 
-    this.router.navigate(['/orderProcess'], { queryParams: { id: this.orderId } });
+    this.router.navigate(['/orderProcess'], { queryParams: { id: orderId } });
   }
 
   showError(error: any) {

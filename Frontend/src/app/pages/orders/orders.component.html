@@ -93,6 +93,13 @@
               >
                 <i class="pi pi-plus"></i>&nbsp;<small>Assign Order</small>
               </button>
+              <button
+                type="button"
+                class="btn order-table-btn"
+                (click)="orderProcessCtp(order?.id)"
+              >
+                <i class="pi pi-list"></i>&nbsp;<small>Order Process Ctp</small>
+              </button>
             </div>
           </td>
         </tr>
@@ -135,7 +142,9 @@
         ></p-dropdown>
       </div>
     </div>
-    <div class="text-danger row ms-3" *ngIf="plzSelect">Please Assign then Save</div>
+    <div class="text-danger row ms-3" *ngIf="plzSelect">
+      Please Assign then Save
+    </div>
     <div class="d-flex justify-content-end me-3">
       <button
         class="btn btn-dark"
@@ -146,4 +155,30 @@
     </div>
   </p-dialog>
   <p-toast></p-toast>
+  <!-- <p-dialog
+    header="Chose the option"
+    [(visible)]="processOptions"
+    [breakpoints]="{ '960px': '75vw' }"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div class="row">
+      <div class="col text-center">
+        <button class="btn btn-dark px-3" (click)="orderProcessCtp()">
+          Order Process Ctp
+        </button>
+      </div>
+      <div class="col-4 text-center">
+        <button class="btn btn-dark px-3" (click)="orderProcessPress()">
+          Order Process Press
+        </button>
+      </div>
+      <div class="col-4">
+        <button class="btn btn-dark px-3" (click)="orderProcessPaperMarket()">
+          Order Process Press
+        </button>
+      </div>
+    </div>
+  </p-dialog> -->
 </div>

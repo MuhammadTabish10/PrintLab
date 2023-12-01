@@ -4,6 +4,8 @@ import { MessageService } from 'primeng/api';
 import { Transactions } from 'src/app/Model/transactions';
 import { OrderProcessService } from 'src/app/services/order-process.service';
 import { PetyCashService } from 'src/app/services/pety-cash.service';
+import { SessionStorageService } from 'src/app/services/session-storage.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-order-process',
@@ -30,6 +32,8 @@ export class OrderProcessComponent implements OnInit {
   variance: number = 0;
   selectedMode: any
   selectedVendor: any
+  users: any;
+  selectedUser: any;
 
 
   constructor(
@@ -37,6 +41,8 @@ export class OrderProcessComponent implements OnInit {
     private route: ActivatedRoute,
     private messageService: MessageService,
     private pettyCashService: PetyCashService,
+    public sessionStorageService: SessionStorageService,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
@@ -48,18 +54,24 @@ export class OrderProcessComponent implements OnInit {
       this.error = true;
     });
     this.getCtpProcess(this.idFromQueryParam, this.ctp);
+    this.getAllUsers();
   }
 
+  getAllUsers(): void {
+    this.userService.getUsers().subscribe(users => {
+      this.users = users;
+    }, error => { });
+  }
   getCtpProcess(orderId: number, ctp: string) {
     this.orderProcessService.getOrderProcess(orderId, ctp).subscribe(process => {
 
       this.transactions.push(process);
+      debugger
       this.variance = this.transactions[0].unitPrice * this.transactions[0].quantity;
       this.plateDimension = this.transactions[0].plateDimension;
       this.quantity = this.transactions[0].quantity;
       this.amount = this.transactions[0].amount;
       this.unitPrice = this.transactions[0].unitPrice;
-
     }, error => {
     });
   }
@@ -118,11 +130,12 @@ export class OrderProcessComponent implements OnInit {
       unitPrice: this.unitPrice,
       amount: this.amount,
       paymentMode: this.selectedMode.name,
+      userId:this.selectedUser.id,
       order: {
         id: this.idFromQueryParam
       }
     }
-
+    debugger
     this.orderProcessService.addTransaction(orderObj).subscribe(transaction => { }, error => { });
     this.getCtpProcess(this.idFromQueryParam, this.ctp);
   }

@@ -48,6 +48,8 @@ import { TransactionsComponent } from './pages/transactions/transactions.compone
 import { TransactionRecordComponent } from './pages/transaction-record/transaction-record.component';
 import { PetyCashComponent } from './pages/pety-cash/pety-cash.component';
 import { VendorSettlementComponent } from './pages/vendor-settlement/vendor-settlement.component';
+import { AllSettlementsComponent } from './pages/all-settlements/all-settlements.component';
+import { AllPettyCashRecordsComponent } from './pages/all-petty-cash-records/all-petty-cash-records.component';
 
 export const routes: Routes = [
   {
@@ -287,7 +289,17 @@ export const routes: Routes = [
     path: 'vendorSettlement',
     component: VendorSettlementComponent,
     canActivate: [AuthguardService]
-  }
+  },
+  {
+    path: 'allSettlements',
+    component: AllSettlementsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'allPettyCashRecords',
+    component: AllPettyCashRecordsComponent,
+    canActivate: [AuthguardService]
+  },
 ];
 
 @NgModule({

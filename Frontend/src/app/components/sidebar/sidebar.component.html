@@ -19,7 +19,7 @@
       </span>
     </li>
 
-    <li
+    <!-- <li
       class="sidebar-list-hover mt-2"
       *ngIf="sessionStorageService.hasPermission('Configuration_User')"
     >
@@ -37,10 +37,10 @@
           ></i>
         </span>
       </span>
-    </li>
+    </li> -->
 
     <li *ngIf="sessionStorageService.hasPermission('User')">
-      <span class="sidebar-list-hover" *ngIf="isDropDown1Open == true">
+      <span class="sidebar-list-hover">
         <i class="fa fa-user fa-2x"></i>
         <a class="nav-text nav-link" [routerLink]="['/user']"> User </a>
       </span>
@@ -114,7 +114,7 @@
       </span>
     </li>
 
-    <li
+    <!-- <li
       class="sidebar-list-hover mt-2"
       *ngIf="sessionStorageService.hasPermission('Configuration_Vendor')"
     >
@@ -132,7 +132,7 @@
           ></i>
         </span>
       </span>
-    </li>
+    </li> -->
 
     <li
       class="settingOptions mt-2"
@@ -142,14 +142,12 @@
         <a
           class="sidebar-list-hover-settings nav-link"
           [routerLink]="['/vendor']"
-          *ngIf="isDropDown2Open == true"
         >
           <i class="fa fa-gear fa-2x"></i>
           <span class="nav-text">Vendor</span>
         </a>
       </span>
     </li>
-
 
     <li *ngIf="sessionStorageService.hasPermission('Calculator')" class="mt-2">
       <span class="sidebar-list-hover">

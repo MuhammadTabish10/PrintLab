@@ -31,6 +31,8 @@ export class OrdersComponent implements OnInit {
   selectedOrderId: any;
   assignedUsers: any;
   plzSelect: boolean = false;
+  processOptions: boolean = false;
+  orderId: number = 0;
 
 
   constructor(private orderService: OrdersService,
@@ -132,6 +134,24 @@ export class OrdersComponent implements OnInit {
         this.plzSelect = true;
       });
   }
+
+  // processes(orderId: number) {
+  //   this.processOptions = true;
+  //   this.orderId = orderId;
+  // }
+
+  orderProcessCtp(orderId: number) {
+    this.router.navigate(['/orderProcess'], { queryParams: { id: orderId } });
+  }
+
+  // orderProcessPress() {
+  //   this.router.navigate(['/orderProcessPress'], { queryParams: { id: this.orderId } });
+  // }
+
+  // orderProcessPaperMarket() {
+  //   this.router.navigate(['/orderProcessPaperMarket'], { queryParams: { id: this.orderId } });
+  // }
+
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }

@@ -46,9 +46,9 @@
             <button
               type="button"
               class="btn order-table-btn"
-              (click)="processes(order?.id)"
+              (click)="orderProcessCtp(order?.id)"
             >
-              <i class="pi pi-list"></i>&nbsp;<small>Processes</small>
+              <i class="pi pi-list"></i>&nbsp;<small>Order Process Ctp</small>
             </button>
           </td>
         </tr>
@@ -56,7 +56,7 @@
     </table>
   </div>
   <p-toast></p-toast>
-  <p-dialog
+  <!-- <p-dialog
     header="Chose the option"
     [(visible)]="processOptions"
     [breakpoints]="{ '960px': '75vw' }"
@@ -67,10 +67,10 @@
     <div class="row">
       <div class="col text-center">
         <button class="btn btn-dark px-3" (click)="orderProcessCtp()">
-          Order Process Ctp
+
         </button>
       </div>
-      <!-- <div class="col-4 text-center">
+      <div class="col-4 text-center">
         <button class="btn btn-dark px-3" (click)="orderProcessPress()">
           Order Process Press
         </button>
@@ -79,7 +79,7 @@
         <button class="btn btn-dark px-3" (click)="orderProcessPaperMarket()">
           Order Process Press
         </button>
-      </div> -->
+      </div>
     </div>
-  </p-dialog>
+  </p-dialog> -->
 </div>

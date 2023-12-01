@@ -31,6 +31,11 @@ export class PetyCashService {
     return this.http.get(url);
   }
 
+  getAllUserPettyCash() {
+    let url = `${this.url}/user-petty-cash`;
+    return this.http.get(url);
+  }
+
   deletePettyCashById(pettyCashId: number) {
     let url = `${this.url}/user-petty-cash/${pettyCashId}`
     return this.http.delete(url)

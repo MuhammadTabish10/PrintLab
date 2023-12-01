@@ -1,22 +1,18 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { VendorSettlementServiceService } from 'src/app/services/vendor-settlement-service.service';
-import { VendorService } from 'src/app/services/vendor.service';
+import { PetyCashService } from 'src/app/services/pety-cash.service';
 
 @Component({
-  selector: 'app-vendor-settlement',
-  templateUrl: './vendor-settlement.component.html',
-  styleUrls: ['./vendor-settlement.component.css']
+  selector: 'app-all-petty-cash-records',
+  templateUrl: './all-petty-cash-records.component.html',
+  styleUrls: ['./all-petty-cash-records.component.css']
 })
-export class VendorSettlementComponent implements OnInit {
+export class AllPettyCashRecordsComponent {
   editMode: boolean = false;
-  vendorSettlementRecords: any[] = [];
-  idFromQueryParam: number = 0;
+  pettyCashRecords: any[] = [];
   error: boolean = false;
-  vendorName: string = '';
   debit: number[] = [];
   credit: number[] = [];
   recordId: number = 0;
@@ -25,38 +21,22 @@ export class VendorSettlementComponent implements OnInit {
   creditValue: number = 0;
   totalDebit: number = 0;
   totalCredit: number = 0;
-  orderId: number | null | undefined;
 
   constructor(
-    private vendorSettlementService: VendorSettlementServiceService,
-    private vendorService: VendorService,
-    private route: ActivatedRoute,
+    private pettyCashService: PetyCashService,
     private datePipe: DatePipe,
     private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(param => {
-      this.idFromQueryParam = +param['id'];
-    }, error => {
-      this.showError(error);
-      this.error = true;
-    });
-    this.getVendorSettlementById(this.idFromQueryParam);
-    this.getUserById(this.idFromQueryParam);
+    this.getAllPettyCash();
   }
 
-  getUserById(id: number): void {
-    this.vendorService.getVendorById(id).subscribe((vendor: any) => {
-      debugger
-      this.vendorName = vendor.name;
-    }, error => { });
-  }
 
-  getVendorSettlementById(vendorId: number): void {
+  getAllPettyCash(): void {
     debugger
-    this.vendorSettlementService.getVendorSettlementById(vendorId).subscribe((res: any) => {
-      this.vendorSettlementRecords = res;
+    this.pettyCashService.getAllUserPettyCash().subscribe((res: any) => {
+      this.pettyCashRecords = res;
       this.updateCreditAndDebit();
       this.transformDate();
       this.calculateTotal();
@@ -67,7 +47,7 @@ export class VendorSettlementComponent implements OnInit {
 
 
   transformDate(): void {
-    this.vendorSettlementRecords.forEach((el: any) => {
+    this.pettyCashRecords.forEach((el: any) => {
       const dateArray = el.dateAndTime.split(/[ :\-]/);
       el.dateAndTime = new Date(
         parseInt(dateArray[0], 10),
@@ -82,14 +62,14 @@ export class VendorSettlementComponent implements OnInit {
   }
 
   updateCreditAndDebit() {
-    this.vendorSettlementRecords.forEach(element => {
+    this.pettyCashRecords.forEach(element => {
       this.debit.push(element.debit);
       this.credit.push(element.credit);
     });
   }
 
   debited(settlementObj: any) {
-    this.vendorSettlementService.addSettlement(settlementObj).subscribe(res => {
+    this.pettyCashService.addPetyCash(settlementObj).subscribe(res => {
       window.location.reload();
     }, error => {
     });
@@ -97,7 +77,7 @@ export class VendorSettlementComponent implements OnInit {
 
   editPettyCash(settlementId: number): void {
     this.recordId = settlementId;
-    this.vendorSettlementService.getSettlementId(settlementId).subscribe((res: any) => {
+    this.pettyCashService.getPettyCashById(settlementId).subscribe((res: any) => {
       this.editMode = true;
       this.recordObj = res;
       this.debitValue = res.debit;
@@ -106,8 +86,8 @@ export class VendorSettlementComponent implements OnInit {
   }
 
   deleteById(settlementId: number): void {
-    this.vendorSettlementService.deleteSettlementById(settlementId).subscribe(res => {
-      this.getVendorSettlementById(this.idFromQueryParam);
+    this.pettyCashService.deletePettyCashById(settlementId).subscribe(res => {
+      this.getAllPettyCash();
     }, error => { });
   }
 
@@ -115,14 +95,14 @@ export class VendorSettlementComponent implements OnInit {
   onSubmit(form: NgForm) {
     const debitValue = form.value.debit;
     const creditValue = form.value.credit;
-    const lastIndex = this.vendorSettlementRecords.length - 1;
+    const lastIndex = this.pettyCashRecords.length - 1;
     if (!this.editMode && lastIndex >= 0) {
-      const lastElement = this.vendorSettlementRecords[lastIndex];
+      const lastElement = this.pettyCashRecords[lastIndex];
       const obj = lastElement;
       obj.debit = debitValue;
       obj.credit = creditValue;
       obj.vendor = { id: obj.vendor.id };
-      obj.order = { id: this.orderId };
+      obj.order = { id: obj.order.id };
       delete obj.dateAndTime;
       delete obj.id;
       this.debited(obj);
@@ -134,7 +114,7 @@ export class VendorSettlementComponent implements OnInit {
   }
 
   updateSettlementRecord(recordId: number, obj: any) {
-    this.vendorSettlementService.updateSettlementById(recordId, obj).subscribe(data => {
+    this.pettyCashService.updatePettyCashRecordById(recordId, obj).subscribe(data => {
       window.location.reload();
     }, error => {
     });

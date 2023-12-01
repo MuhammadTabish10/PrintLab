@@ -137,12 +137,12 @@
             <th class="col">
               <div class="d-flex justify-content-center">Amount</div>
             </th>
-            <th class="col">
+            <!-- <th class="col">
               <div class="d-flex justify-content-center">User</div>
             </th>
             <th class="col">
               <div class="d-flex justify-content-center">Payment Mode</div>
-            </th>
+            </th> -->
             <!-- <th class="col">
               <div class="d-flex justify-content-center">Action</div>
             </th> -->
@@ -165,12 +165,12 @@
             <td class="text-center">
               {{ element?.amount }}
             </td>
-            <td class="text-center">
+            <!-- <td class="text-center">
               {{ element?.user }}
             </td>
             <td class="text-center">
-              {{ element?.paymentMode }}
-            </td>
+              {{ selectedMode.name }}
+            </td> -->
           </tr>
         </ng-template>
 
@@ -273,15 +273,20 @@
               required
             />
           </div>
-          <!-- <div class="col-6 my-3">
+          <div
+            class="col-6 my-3"
+            *ngIf="sessionStorageService.hasPermission('Orders')"
+          >
             <label class="add-order-label m-0">User</label>
             <p-dropdown
+              [options]="users"
               styleClass="w-100"
               optionLabel="name"
               name="user"
+              [(ngModel)]="selectedUser"
               [required]="true"
             ></p-dropdown>
-          </div> -->
+          </div>
           <div class="col-6 my-3">
             <label class="add-order-label m-0">Payment Mode</label>
             <p-dropdown

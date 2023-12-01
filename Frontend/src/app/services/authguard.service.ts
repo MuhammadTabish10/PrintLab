@@ -67,7 +67,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'JobPlateSetter'
     }
     const userObj = {
-      url: ['/user', '/addUser','/userPetyCash'],
+      url: ['/user', '/addUser','/userPetyCash','/allPettyCashRecords'],
       permissions: 'User'
     }
     const customerObj = {
@@ -124,7 +124,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'Configuration_Inventory'
     }
     const permissionConfiguration_Vendor = {
-      url: ['/vendor', '/addVendor', '/vendorSettlement'],
+      url: ['/vendor', '/addVendor', '/vendorSettlement','/allSettlements'],
       permissions: 'Configuration_Vendor'
     }
     const permissionConfiguration_CTP = {

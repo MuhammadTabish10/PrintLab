@@ -13,60 +13,90 @@
           <div class="row">
             <div class="col-6 my-2">
               <h4>Product</h4>
-              <div>{{order?.product}}</div>
+              <div>{{ order?.product }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Customer name</h4>
-              <div>{{order?.customer?.name}}</div>
+              <div>{{ order?.customer?.name }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Customer Business</h4>
-              <div>{{order?.customer?.businessName}}</div>
+              <div>{{ order?.customer?.businessName }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Paper</h4>
-              <div>{{order?.paper}}</div>
+              <div>{{ order?.paper }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Category</h4>
-              <div>{{order?.category}}</div>
+              <div>{{ order?.category }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>GSM</h4>
-              <div>{{order?.gsm}}</div>
+              <div>{{ order?.gsm }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Design</h4>
-              <div>{{order?.providedDesign}}</div>
+              <div>{{ order?.providedDesign }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Size</h4>
-              <div>{{size?.label}}</div>
+              <div>{{ size?.label }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Print Side</h4>
-              <div>{{order?.sideOptionValue}}</div>
+              <div>{{ order?.sideOptionValue }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Front Colors</h4>
-              <div>{{order?.jobColorsFront}}</div>
+              <div>{{ order?.jobColorsFront }}</div>
             </div>
-            <div class="col-6 my-2" *ngIf="order?.sideOptionValue !== 'SINGLE_SIDED'">
+            <div
+              class="col-6 my-2"
+              *ngIf="order?.sideOptionValue !== 'SINGLE_SIDED'"
+            >
               <h4>Back Colors</h4>
-              <div>{{order?.jobColorsBack}}</div>
+              <div>{{ order?.jobColorsBack }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Quantity</h4>
-              <div>{{order?.quantity}}</div>
+              <div>{{ order?.quantity }}</div>
             </div>
             <div class="col-6 my-2">
               <h4>Price</h4>
-              <div>{{order?.price}}</div>
+              <div>{{ order?.price }}</div>
             </div>
+            <div class="col-6 my-2">
+              <h4>Plate Dimension</h4>
+              <div>{{ productRule?.ctp?.plateDimension }}</div>
+            </div>
+            <div class="col-6 my-2">
+              <h4>CTP Vendor</h4>
+              <div>{{ productRule?.ctp?.vendor?.name }}</div>
+            </div>
+            <div class="col-6 my-2">
+              <h4>Ctp Vendor Processes Materials</h4>
+              <div>
+                {{ getFormattedMaterials() }}
+              </div>
+            </div>
+
+            <div class="col-6 my-2">
+              <h4>Press Machine</h4>
+              <div>{{ productRule?.pressMachine?.vendor?.name }}</div>
+            </div>
+            <!-- <div class="col-6 my-2">
+              <h4>Brand</h4>
+              <div>{{ "" }}</div>
+            </div>
+            <div class="col-6 my-2">
+              <h4>Made In</h4>
+              <div>{{ "" }}</div>
+            </div> -->
             <div class="col-6 my-2">
               <h4>Image URL</h4>
               <div>
-                <img src="{{order?.url}}" alt="PrintLab" width="600">
+                <img src="{{ order?.url }}" alt="PrintLab" width="600" />
               </div>
             </div>
           </div>

@@ -53,13 +53,13 @@ export class JobProductionOrdersComponent {
     }
   }
 
-  processes(orderId: number) {
-    this.processOptions = true;
-    this.orderId = orderId;
-  }
+  // processes(orderId: number) {
+  //   this.processOptions = true;
+  //   this.orderId = orderId;
+  // }
 
-  orderProcessCtp() {
-    this.router.navigate(['/orderProcess'], { queryParams: { id: this.orderId } });
+  orderProcessCtp(orderId: number) {
+    this.router.navigate(['/orderProcess'], { queryParams: { id: orderId } });
   }
 
   orderProcessPress() {

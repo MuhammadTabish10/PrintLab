@@ -30,7 +30,6 @@ export class PetyCashComponent implements OnInit {
   constructor(
     private pettyCashService: PetyCashService,
     private userService: UserService,
-    private router: Router,
     private route: ActivatedRoute,
     private messageService: MessageService,
     private datePipe: DatePipe
@@ -121,7 +120,7 @@ export class PetyCashComponent implements OnInit {
       obj.debit = debitValue;
       obj.credit = creditValue;
       obj.user = { id: obj.user.id };
-      obj.order = { id: obj.order.id };
+      // obj.order = { id: obj.order.id };
       delete obj.dateAndTime;
       delete obj.id;
       this.debited(obj);

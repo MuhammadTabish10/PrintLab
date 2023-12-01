@@ -1,20 +1,19 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { VendorSettlementServiceService } from 'src/app/services/vendor-settlement-service.service';
 import { VendorService } from 'src/app/services/vendor.service';
 
 @Component({
-  selector: 'app-vendor-settlement',
-  templateUrl: './vendor-settlement.component.html',
-  styleUrls: ['./vendor-settlement.component.css']
+  selector: 'app-all-settlements',
+  templateUrl: './all-settlements.component.html',
+  styleUrls: ['./all-settlements.component.css']
 })
-export class VendorSettlementComponent implements OnInit {
+export class AllSettlementsComponent implements OnInit {
+
   editMode: boolean = false;
   vendorSettlementRecords: any[] = [];
-  idFromQueryParam: number = 0;
   error: boolean = false;
   vendorName: string = '';
   debit: number[] = [];
@@ -25,37 +24,22 @@ export class VendorSettlementComponent implements OnInit {
   creditValue: number = 0;
   totalDebit: number = 0;
   totalCredit: number = 0;
-  orderId: number | null | undefined;
 
   constructor(
     private vendorSettlementService: VendorSettlementServiceService,
     private vendorService: VendorService,
-    private route: ActivatedRoute,
     private datePipe: DatePipe,
     private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(param => {
-      this.idFromQueryParam = +param['id'];
-    }, error => {
-      this.showError(error);
-      this.error = true;
-    });
-    this.getVendorSettlementById(this.idFromQueryParam);
-    this.getUserById(this.idFromQueryParam);
+    this.getAllVendorSettlements();
   }
 
-  getUserById(id: number): void {
-    this.vendorService.getVendorById(id).subscribe((vendor: any) => {
-      debugger
-      this.vendorName = vendor.name;
-    }, error => { });
-  }
 
-  getVendorSettlementById(vendorId: number): void {
+  getAllVendorSettlements(): void {
     debugger
-    this.vendorSettlementService.getVendorSettlementById(vendorId).subscribe((res: any) => {
+    this.vendorSettlementService.getAllVendorSettlements().subscribe((res: any) => {
       this.vendorSettlementRecords = res;
       this.updateCreditAndDebit();
       this.transformDate();
@@ -107,7 +91,7 @@ export class VendorSettlementComponent implements OnInit {
 
   deleteById(settlementId: number): void {
     this.vendorSettlementService.deleteSettlementById(settlementId).subscribe(res => {
-      this.getVendorSettlementById(this.idFromQueryParam);
+      this.getAllVendorSettlements();
     }, error => { });
   }
 
@@ -122,7 +106,7 @@ export class VendorSettlementComponent implements OnInit {
       obj.debit = debitValue;
       obj.credit = creditValue;
       obj.vendor = { id: obj.vendor.id };
-      obj.order = { id: this.orderId };
+      obj.order = { id: obj.order.id };
       delete obj.dateAndTime;
       delete obj.id;
       this.debited(obj);
