@@ -24,9 +24,12 @@ public class OrderTransaction {
     private Double amount;
     private String paymentMode;
     private Boolean status;
-    private Long userId;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
