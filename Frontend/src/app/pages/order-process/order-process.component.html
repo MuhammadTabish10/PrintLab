@@ -93,7 +93,7 @@
     <div class="card text-nowrap">
       <p-table
         #dt1
-        [value]="transactions"
+        [value]="transactions[0]?.orderTransactions"
         dataKey="id"
         [globalFilterFields]="['name']"
       >
@@ -137,12 +137,12 @@
             <th class="col">
               <div class="d-flex justify-content-center">Amount</div>
             </th>
-            <!-- <th class="col">
+            <th class="col">
               <div class="d-flex justify-content-center">User</div>
             </th>
             <th class="col">
               <div class="d-flex justify-content-center">Payment Mode</div>
-            </th> -->
+            </th>
             <!-- <th class="col">
               <div class="d-flex justify-content-center">Action</div>
             </th> -->
@@ -151,10 +151,10 @@
         <ng-template pTemplate="body" let-element>
           <tr>
             <td class="text-center">
-              {{ element.plateDimension }}
+              {{ element?.plateDimension }}
             </td>
             <td class="text-center">
-              {{ element.vendor.name }}
+              {{ element?.vendor }}
             </td>
             <td class="text-center">
               {{ element?.quantity }}
@@ -165,12 +165,12 @@
             <td class="text-center">
               {{ element?.amount }}
             </td>
-            <!-- <td class="text-center">
-              {{ element?.user }}
+            <td class="text-center">
+              {{ element?.user?.name }}
             </td>
             <td class="text-center">
-              {{ selectedMode.name }}
-            </td> -->
+              {{ element?.paymentMode }}
+            </td>
           </tr>
         </ng-template>
 

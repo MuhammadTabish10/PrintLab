@@ -64,7 +64,6 @@ export class OrderProcessComponent implements OnInit {
   }
   getCtpProcess(orderId: number, ctp: string) {
     this.orderProcessService.getOrderProcess(orderId, ctp).subscribe(process => {
-
       this.transactions.push(process);
       debugger
       this.variance = this.transactions[0].unitPrice * this.transactions[0].quantity;
@@ -130,14 +129,16 @@ export class OrderProcessComponent implements OnInit {
       unitPrice: this.unitPrice,
       amount: this.amount,
       paymentMode: this.selectedMode.name,
-      userId:this.selectedUser.id,
+      userId: { name: this.selectedUser?.id },
       order: {
         id: this.idFromQueryParam
       }
     }
-    debugger
-    this.orderProcessService.addTransaction(orderObj).subscribe(transaction => { }, error => { });
-    this.getCtpProcess(this.idFromQueryParam, this.ctp);
+    this.orderProcessService.addTransaction(orderObj).subscribe(transaction => {
+      window.location.reload();
+    }, error => {
+
+    });
   }
 
   reject(): boolean {
