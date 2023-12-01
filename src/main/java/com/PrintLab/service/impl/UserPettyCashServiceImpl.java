@@ -35,8 +35,10 @@ public class UserPettyCashServiceImpl implements UserPettyCashService {
         userPettyCash.setUser(userRepository.findById(userPettyCash.getUser().getId())
                 .orElseThrow(() -> new RecordNotFoundException(String.format("UserPettyCash not found for id => %d", userPettyCash.getUser().getId()))));
 
-        userPettyCash.setOrder(orderRepository.findById(userPettyCash.getOrder().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", userPettyCash.getOrder().getId()))));
+        if (userPettyCash.getOrder() != null) {
+            userPettyCash.setOrder(orderRepository.findById(userPettyCash.getOrder().getId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", userPettyCash.getOrder().getId()))));
+        }
 
         UserPettyCash savedUserPettyCash = userPettyCashRepository.save(userPettyCash);
         return toDto(savedUserPettyCash);
@@ -93,8 +95,10 @@ public class UserPettyCashServiceImpl implements UserPettyCashService {
         existingUserPettyCash.setUser(userRepository.findById(userPettyCashDto.getUser().getId())
                 .orElseThrow(() -> new RecordNotFoundException(String.format("UserPettyCash not found for id => %d", userPettyCashDto.getUser().getId()))));
 
-        existingUserPettyCash.setOrder(orderRepository.findById(userPettyCashDto.getOrder().getId())
-                .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", userPettyCashDto.getOrder().getId()))));
+        if (userPettyCashDto.getOrder() != null) {
+            existingUserPettyCash.setOrder(orderRepository.findById(userPettyCashDto.getOrder().getId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", userPettyCashDto.getOrder().getId()))));
+        }
 
         UserPettyCash updatedUserPettyCash = userPettyCashRepository.save(existingUserPettyCash);
         return toDto(updatedUserPettyCash);

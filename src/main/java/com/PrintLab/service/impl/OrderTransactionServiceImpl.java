@@ -172,11 +172,14 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
 
                 Ctp ctpForUnitPrice = ctpRepository.findByPlateDimensionAndVendor(ctp.getPlateDimension(), ctp.getVendor());
 
+                List<OrderTransaction> orderTransactionList = orderTransactionRepository.findAllByOrderIdAndStatus(orderId);
+
                 resultMap.put("plateDimension", ctp.getPlateDimension());
                 resultMap.put("vendor", ctp.getVendor());
                 resultMap.put("quantity", jobFrontColor + jobBackColor);
                 resultMap.put("unitPrice", ctpForUnitPrice.getRate());
                 resultMap.put("amount", ctpForUnitPrice.getRate() * (jobFrontColor + jobBackColor));
+                resultMap.put("orderTransactions", orderTransactionList);
             }
             case PAPER_MARKET:
             {
