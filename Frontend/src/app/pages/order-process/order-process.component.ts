@@ -65,7 +65,7 @@ export class OrderProcessComponent implements OnInit {
   getCtpProcess(orderId: number, ctp: string) {
     this.orderProcessService.getOrderProcess(orderId, ctp).subscribe(process => {
       this.transactions.push(process);
-      debugger
+
       this.variance = this.transactions[0].unitPrice * this.transactions[0].quantity;
       this.plateDimension = this.transactions[0].plateDimension;
       this.quantity = this.transactions[0].quantity;

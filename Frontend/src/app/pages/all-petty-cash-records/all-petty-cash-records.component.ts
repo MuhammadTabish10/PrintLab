@@ -34,7 +34,7 @@ export class AllPettyCashRecordsComponent {
 
 
   getAllPettyCash(): void {
-    debugger
+
     this.pettyCashService.getAllUserPettyCash().subscribe((res: any) => {
       this.pettyCashRecords = res;
       this.updateCreditAndDebit();

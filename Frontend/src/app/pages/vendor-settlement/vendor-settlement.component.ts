@@ -48,13 +48,13 @@ export class VendorSettlementComponent implements OnInit {
 
   getUserById(id: number): void {
     this.vendorService.getVendorById(id).subscribe((vendor: any) => {
-      debugger
+
       this.vendorName = vendor.name;
     }, error => { });
   }
 
   getVendorSettlementById(vendorId: number): void {
-    debugger
+
     this.vendorSettlementService.getVendorSettlementById(vendorId).subscribe((res: any) => {
       this.vendorSettlementRecords = res;
       this.updateCreditAndDebit();

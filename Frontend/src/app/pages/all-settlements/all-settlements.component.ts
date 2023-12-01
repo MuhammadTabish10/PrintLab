@@ -38,7 +38,7 @@ export class AllSettlementsComponent implements OnInit {
 
 
   getAllVendorSettlements(): void {
-    debugger
+
     this.vendorSettlementService.getAllVendorSettlements().subscribe((res: any) => {
       this.vendorSettlementRecords = res;
       this.updateCreditAndDebit();
