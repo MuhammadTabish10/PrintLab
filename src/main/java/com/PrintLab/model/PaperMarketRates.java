@@ -21,9 +21,7 @@ public class PaperMarketRates
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreationTimestamp
     private LocalDateTime timeStamp;
-
     private String paperStock;
     private String brand;
     private String madeIn;
