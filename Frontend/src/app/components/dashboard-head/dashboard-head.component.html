@@ -1,10 +1,21 @@
-<nav class="navbar navbar-light">
-  <div class="container-fluid ps-0 pe-0">
-    <form class="input-group">
-      <div class="order-table-btn p-3 offset-11" (click)="logout()">
+<div class="clearfix">
+  <nav class="navbar navbar-light float-end">
+    <div class="container-fluid ps-0 pe-0">
+      <form class="input-group">
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon">
+            <i class="pi pi-user"> {{ userName }} </i>
+          </span>
+          <button class="bg-dark text-white" (click)="logout()">
+            <span class="d-none d-lg-inline-block">Log-out</span
+            ><i class="fa-solid fa-arrow-right-from-bracket ps-2"></i>
+          </button>
+        </div>
+        <!-- <div class="order-table-btn p-3 offset-11" (click)="logout()">
         <span class="d-none d-lg-inline-block">Log-out</span
         ><i class="fa-solid fa-arrow-right-from-bracket ps-2"></i>
-      </div>
-    </form>
-  </div>
-</nav>
+      </div> -->
+      </form>
+    </div>
+  </nav>
+</div>

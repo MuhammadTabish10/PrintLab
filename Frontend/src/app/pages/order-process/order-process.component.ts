@@ -129,7 +129,7 @@ export class OrderProcessComponent implements OnInit {
       unitPrice: this.unitPrice,
       amount: this.amount,
       paymentMode: this.selectedMode.name,
-      userId: { name: this.selectedUser?.id },
+      user: { id: this.selectedUser?.id },
       order: {
         id: this.idFromQueryParam
       }

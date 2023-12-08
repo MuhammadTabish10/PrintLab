@@ -174,7 +174,7 @@ import { AllSettlementsComponent } from './pages/all-settlements/all-settlements
     DividerModule,
     PasswordModule,
     TreeSelectModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,ConfirmDialogModule,
     provideRouter(routes, withHashLocation()), DatePipe],

@@ -105,7 +105,7 @@ export class PetyCashComponent implements OnInit {
 
   deleteById(pettyCashId: number): void {
     this.pettyCashService.deletePettyCashById(pettyCashId).subscribe(res => {
-      this.getUserPettyCashById(this.idFromQueryParam);
+      window.location.reload();
     }, error => { });
   }
 
