@@ -22,6 +22,8 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,11 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     public PaperMarketRatesDto save(PaperMarketRatesDto paperMarketRatesDto) {
         paperMarketRatesDto.setRecordType("manual");
         PaperMarketRates paperMarketRates = toEntity(paperMarketRatesDto);
+
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
+        paperMarketRates.setTimeStamp(timeStampUtc);
+
         PaperMarketRates savedPaperMarketRates = paperMarketRatesRepository.save(paperMarketRates);
         return toDto(savedPaperMarketRates);
     }
@@ -197,18 +204,6 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         return paperMarketRatesRepository.findDistinctPaperStocks();
     }
 
-//    @Override
-//    public Set<Vendor> findDistinctVendorsByPaperStock(String paperStock) {
-//        Set<Long> vendorIdList = paperMarketRatesRepository.findDistinctVendorsByPaperStock(paperStock);
-//        Set<Vendor> vendorSet = new HashSet<>();
-//        for (Long vendorId : vendorIdList) {
-//            Vendor vendor = vendorRepository.findById(vendorId)
-//                    .orElseThrow(() -> new RecordNotFoundException("Vendor not found for id: " + vendorId));
-//            vendorSet.add(vendor);
-//        }
-//        return vendorSet;
-//    }
-
     @Override
     public Set<String> findDistinctBrandsByPaperStock(String paperStock) {
         return paperMarketRatesRepository.findDistinctBrandsByPaperStock(paperStock);
@@ -348,7 +343,9 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 
             // Check if rounded ratePkr values are different
             if (existingRate != newRate) {
-                existingPmr.setTimeStamp(LocalDateTime.now());
+                ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+                LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
+                existingPmr.setTimeStamp(timeStampUtc);
             }
 
             existingPmr.setPaperStock(paperMarketRates.getPaperStock());
