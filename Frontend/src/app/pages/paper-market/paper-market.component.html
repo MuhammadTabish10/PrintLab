@@ -105,6 +105,11 @@
                   display="menu"
                   [showAddButton]="false"
                 >
+                  <ng-template pTemplate="header">
+                    <div class="px-3 pt-3 pb-0">
+                      <span class="font-bold">Date Picker</span>
+                    </div>
+                  </ng-template>
                   <ng-template
                     pTemplate="filter"
                     let-value
@@ -112,6 +117,7 @@
                   >
                     <p-calendar
                       (onSelect)="onDateSelect($event)"
+                      placeholder="Calendar"
                     ></p-calendar>
                   </ng-template>
                 </p-columnFilter>
@@ -596,8 +602,6 @@
         [showCurrentPageReport]="true"
       ></p-paginator>
     </div>
-
-
   </div>
 </div>
 <p-toast></p-toast>

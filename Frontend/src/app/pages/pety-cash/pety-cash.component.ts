@@ -121,8 +121,10 @@ export class PetyCashComponent implements OnInit {
       obj.credit = creditValue;
       obj.user = { id: obj.user.id };
       // obj.order = { id: obj.order.id };
+      delete obj.order;
       delete obj.dateAndTime;
       delete obj.id;
+      debugger
       this.debited(obj);
     } else {
       this.recordObj.credit = this.creditValue;

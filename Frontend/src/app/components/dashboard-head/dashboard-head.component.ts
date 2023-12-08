@@ -11,6 +11,7 @@ import { UserService } from 'src/app/services/user.service';
 export class DashboardHeadComponent implements OnInit {
 
   userName: string | undefined | null;
+  role: string | undefined | null;
 
   constructor(
     private router: Router,
@@ -21,18 +22,8 @@ export class DashboardHeadComponent implements OnInit {
   ngOnInit(): void {
     const token = localStorage.getItem('token');
     const decodedToken = this.authService.getDecodedAccessToken(token!);
-    const user = decodedToken.sub;
-    this.getUserName(user);
-  }
-
-  getUserName(user: string): void {
-    this.userService.getUsers().subscribe((users:any) => {
-
-      const findUserName = users.find((allUsers:any) => allUsers.email === user);
-      this.userName = findUserName.name;
-    }, err => {
-
-    });
+    this.userName = decodedToken.sub;
+    this.role = decodedToken.ROLES[0];
   }
 
   logout() {
