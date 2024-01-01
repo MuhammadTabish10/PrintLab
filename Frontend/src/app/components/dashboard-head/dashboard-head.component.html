@@ -1,20 +1,17 @@
-<div class="clearfix">
-  <nav class="navbar navbar-light float-end">
+<div class="clearfix me-1">
+  <nav class="navbar navbar-light float-end my-0 py-1">
     <div class="container-fluid ps-0 pe-0">
       <form class="input-group">
         <div class="p-inputgroup">
-          <span class="p-inputgroup-addon">
-            <i class="pi pi-user"> {{role}}  {{ userName }} </i>
-          </span>
+          <div class="user-info">
+            <i class="pi pi-user">  {{ userName }}  </i>
+            <span class="role">{{ role }}</span>
+          </div>
           <button class="bg-dark text-white" (click)="logout()">
             <span class="d-none d-lg-inline-block">Log-out</span
             ><i class="fa-solid fa-arrow-right-from-bracket ps-2"></i>
           </button>
         </div>
-        <!-- <div class="order-table-btn p-3 offset-11" (click)="logout()">
-        <span class="d-none d-lg-inline-block">Log-out</span
-        ><i class="fa-solid fa-arrow-right-from-bracket ps-2"></i>
-      </div> -->
       </form>
     </div>
   </nav>

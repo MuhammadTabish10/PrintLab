@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { tap } from 'rxjs';
-import { AuthguardService } from 'src/app/services/authguard.service';
 import { LoginService } from 'src/app/services/login.service';
 
 
@@ -22,7 +20,11 @@ export class LoginFormComponent implements OnInit {
   passwordToggle: string = 'password'
   showPassword: boolean = false
 
-  constructor(private router: Router, private loginService: LoginService,private messageService: MessageService) {
+  constructor(
+    private router: Router,
+    private loginService: LoginService,
+    private messageService: MessageService
+    ) {
   }
 
   ngOnInit(): void {

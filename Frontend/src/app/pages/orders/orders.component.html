@@ -47,7 +47,8 @@
             No record found
           </td>
         </tr>
-        <tr *ngFor="let order of ordersArray" class="order-table-row-hover">
+        <tr *ngFor="let order of ordersArray" class="order-table-row-hover"
+        [ngClass]="{'highlighted': order?.id === idFromQueryParam }">
           <th scope="row" class="tracking-id">{{ order?.id }}</th>
           <td>{{ order?.customer?.name }}</td>
           <td>{{ order?.product }}</td>

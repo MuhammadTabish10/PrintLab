@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrdersService } from 'src/app/services/orders.service';
 import { MessageService } from 'primeng/api';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 
 export interface Roles {
   name?: string;
@@ -15,7 +16,7 @@ export interface AssignedUser {
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.css']
+  styleUrls: ['./orders.component.css'],
 })
 export class OrdersComponent implements OnInit {
 
@@ -33,12 +34,15 @@ export class OrdersComponent implements OnInit {
   plzSelect: boolean = false;
   processOptions: boolean = false;
   orderId: number = 0;
+  idFromQueryParam: number | undefined | null;
 
 
-  constructor(private orderService: OrdersService,
+  constructor(
+    private orderService: OrdersService,
     private router: Router,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
   ) { }
 
 
@@ -51,7 +55,11 @@ export class OrdersComponent implements OnInit {
       { name: "ROLE_PRODUCTION" },
       { name: "ROLE_PLATE_SETTER" }
     ]
-
+    this.route.queryParams.subscribe(param => {
+      this.idFromQueryParam = +param['id'];
+    }, error => {
+      this.showError(error);
+    })
   }
 
   getOrders() {

@@ -87,7 +87,7 @@
             <td class="text-center">
               {{ element?.dateAndTime }}
             </td>
-            <td class="text-center" routerLink="/orders">
+            <td class="text-center" (click)="getOrderId(element.order?.id)">
               {{ element?.order?.id }}
             </td>
             <td class="text-center">

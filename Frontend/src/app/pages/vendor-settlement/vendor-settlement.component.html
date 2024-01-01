@@ -98,7 +98,7 @@
             <td class="text-center">
               {{ element?.dateAndTime }}
             </td>
-            <td class="text-center cursor-pointer" routerLink="/orders">
+            <td class="text-center cursor-pointer" (click)="getOrderId(element.order?.id)">
               {{ element?.order?.id }}
             </td>
             <td class="text-center">

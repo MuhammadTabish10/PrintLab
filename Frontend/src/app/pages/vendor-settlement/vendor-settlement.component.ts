@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { VendorSettlementServiceService } from 'src/app/services/vendor-settlement-service.service';
 import { VendorService } from 'src/app/services/vendor.service';
@@ -32,7 +32,8 @@ export class VendorSettlementComponent implements OnInit {
     private vendorService: VendorService,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -155,5 +156,9 @@ export class VendorSettlementComponent implements OnInit {
 
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+
+  getOrderId(orderId: number): void {
+    this.router.navigate(['/orders'], { queryParams: { id: orderId } });
   }
 }

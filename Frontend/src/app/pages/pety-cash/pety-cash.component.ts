@@ -32,7 +32,8 @@ export class PetyCashComponent implements OnInit {
     private userService: UserService,
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -153,9 +154,9 @@ export class PetyCashComponent implements OnInit {
     }
   }
 
-  // getPetyCashById(pettyCashId: number) {
-
-  // }
+  getOrderId(orderId: number): void {
+    this.router.navigate(['/orders'], { queryParams: { id: orderId } });
+  }
 
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });

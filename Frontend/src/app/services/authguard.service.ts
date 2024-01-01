@@ -14,7 +14,7 @@ export class AuthguardService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    ;
+    
     const jwtToken = localStorage.getItem('token');
     if (jwtToken) {
       const decodedToken = this.getDecodedAccessToken(jwtToken);
