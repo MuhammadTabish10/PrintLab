@@ -37,6 +37,7 @@ public class Order
     private Boolean ctpProcess;
     private Boolean pressMachineProcess;
     private Boolean paperMarketProcess;
+    private Boolean isRejected;
 
     @ManyToOne()
     @JoinColumn(name = "customer_id")

@@ -46,6 +46,7 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
     public OrderTransactionDto save(OrderTransactionDto orderTransactionDto) {
         OrderTransaction orderTransaction = toEntity(orderTransactionDto);
         orderTransaction.setStatus(true);
+        orderTransaction.setIsAccepted(true);
 
         User user = null;
         if(orderTransaction.getUser() == null){
@@ -181,6 +182,8 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
                 resultMap.put("unitPrice", ctpForUnitPrice.getRate());
                 resultMap.put("amount", ctpForUnitPrice.getRate() * (jobFrontColor + jobBackColor));
                 resultMap.put("orderTransactions", orderTransactionList);
+                resultMap.put("isRejected",order.getIsRejected());
+                resultMap.put("markAsDone",order.getCtpProcess());
             }
             case PAPER_MARKET:
             {
@@ -189,6 +192,7 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         }
         return resultMap;
     }
+
 
     private static int countColors(String input) {
         if (input == null || input.isEmpty()) {
@@ -225,7 +229,6 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
                 .paymentMode(orderTransactionDto.getPaymentMode())
                 .user(orderTransactionDto.getUser())
                 .order(orderTransactionDto.getOrder())
-//                .markAsDone(orderTransactionDto.getMarkAsDone())
                 .isAccepted(orderTransactionDto.getIsAccepted())
                 .status(orderTransactionDto.getStatus())
                 .build();

@@ -67,15 +67,16 @@ export class OrderProcessComponent implements OnInit {
     this.transactions = [];
     this.orderProcessService.getOrderProcess(orderId, ctp).subscribe((process: any) => {
       const lastIndex = process.orderTransactions.length - 1;
-      // this.markAsDone = process.orderTransactions[lastIndex].markAsDone ? process.orderTransactions[lastIndex].markAsDone : false;
-      // this.showAccepted = process.orderTransactions[lastIndex].accepted ? process.orderTransactions[lastIndex].accepted : false;
-      // this.showRejected = process.orderTransactions[lastIndex].rejected ? process.orderTransactions[lastIndex].rejected : false;
+      this.showAccepted = process.orderTransactions[lastIndex].isAccepted ? process.orderTransactions[lastIndex].isAccepted : false;
+      this.showRejected = process.isRejected ? process.isRejected : false;
+      this.markAsDone = process.markAsDone;
       this.transactions.push(process);
       this.variance = process.unitPrice * process.quantity;
       this.plateDimension = process.plateDimension;
       this.quantity = process.quantity;
       this.amount = process.amount;
       this.unitPrice = process.unitPrice;
+      debugger
     }, error => {
     });
   }
@@ -84,8 +85,8 @@ export class OrderProcessComponent implements OnInit {
     // this.showAccepted = true;
     // this.showRejected = false;
     this.orderProcessService.addTransaction(order).subscribe(data => {
-      this.getCtpProcess(this.idFromQueryParam,this.ctp);
-     }, error => { });
+      this.getCtpProcess(this.idFromQueryParam, this.ctp);
+    }, error => { });
   }
 
   cash(order: any): boolean {
@@ -100,8 +101,6 @@ export class OrderProcessComponent implements OnInit {
       delete order.vendor;
       order['vendor'] = vendorValue;
     }
-    debugger
-    order["orderTransactions"][lastIndex]["isAccepted"] = true;
     debugger
     this.addUserPetyCash(order);
     return this.options;
@@ -127,7 +126,6 @@ export class OrderProcessComponent implements OnInit {
       delete order.vendor;
       order['vendor'] = vendorValue;
     }
-    order["orderTransactions"][lastIndex]["isAccepted"] = true;
     this.addCreditOnVendor(order);
     return this.options;
   }
@@ -158,7 +156,10 @@ export class OrderProcessComponent implements OnInit {
   }
 
   reject(): boolean {
-    this.showRejected = true;
+    // this.showRejected = true;
+    this.orderProcessService.rejectOrder(this.idFromQueryParam, this.ctp, true).subscribe(res => {
+      this.getCtpProcess(this.idFromQueryParam, this.ctp);
+    }, error => { });
     return this.showRejected;
   }
 
@@ -182,8 +183,12 @@ export class OrderProcessComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 
-  markToDone(order: any) {
-
+  markToDone() {
+    this.orderProcessService.markCtpAsDone(this.idFromQueryParam, this.ctp, this.markAsDone).subscribe(res => {
+      this.getCtpProcess(this.idFromQueryParam, this.ctp);
+    }, error => {
+      this.showError(error);
+    });
   }
 
 }

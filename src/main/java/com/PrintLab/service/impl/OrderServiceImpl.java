@@ -38,28 +38,26 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDto save(OrderDto orderDto) {
-        if(orderDto.getSideOptionValue() == null){
+        if (orderDto.getSideOptionValue() == null) {
             orderDto.setSideOptionValue("SINGLE_SIDED");
         }
-        if(!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")){
-            if(orderDto.getJobColorsFront() == null){
+        if (!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+            if (orderDto.getJobColorsFront() == null) {
                 orderDto.setJobColorsFront(1L);
             }
-            if(orderDto.getJobColorsBack() == null){
+            if (orderDto.getJobColorsBack() == null) {
                 orderDto.setJobColorsBack(1L);
             }
-        }
-        else if(orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")){
-            if(orderDto.getJobColorsFront() == null){
+        } else if (orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+            if (orderDto.getJobColorsFront() == null) {
+                orderDto.setJobColorsFront(1L);
+            }
+        } else if (orderDto.getSideOptionValue().equals("SINGLE_SIDED")) {
+            if (orderDto.getJobColorsFront() == null) {
                 orderDto.setJobColorsFront(1L);
             }
         }
-        else if(orderDto.getSideOptionValue().equals("SINGLE_SIDED")){
-            if(orderDto.getJobColorsFront() == null){
-                orderDto.setJobColorsFront(1L);
-            }
-        }
-        if(orderDto.getQuantity() == null){
+        if (orderDto.getQuantity() == null) {
             orderDto.setQuantity(1000.0);
         }
 
@@ -141,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
             existingOrder.setProvidedDesign(orderDto.getProvidedDesign());
             existingOrder.setUrl(orderDto.getUrl());
             existingOrder.setCustomer(customerRepository.findById(orderDto.getCustomer().getId())
-                    .orElseThrow(()-> new RecordNotFoundException("Customer not found at id => " + orderDto.getCustomer().getId())));
+                    .orElseThrow(() -> new RecordNotFoundException("Customer not found at id => " + orderDto.getCustomer().getId())));
 
             Order updatedOrder = orderRepository.save(existingOrder);
             return toDto(updatedOrder);
@@ -159,15 +157,13 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
 
-        if(role.equalsIgnoreCase("ROLE_PRODUCTION")){
+        if (role.equalsIgnoreCase("ROLE_PRODUCTION")) {
             order.setProduction(user);
             emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
-        }
-        else if(role.equalsIgnoreCase("ROLE_DESIGNER")){
+        } else if (role.equalsIgnoreCase("ROLE_DESIGNER")) {
             order.setDesigner(user);
             emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
-        }
-        else if (role.equalsIgnoreCase("ROLE_PLATE_SETTER")) {
+        } else if (role.equalsIgnoreCase("ROLE_PLATE_SETTER")) {
             order.setPlateSetter(user);
             emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
         }
@@ -217,6 +213,18 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.setPressMachineProcessMarkAsDone(id);
     }
 
+    @Override
+    public void reject(Long id, Boolean rejected) {
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+        if (optionalOrder.isPresent()) {
+            Order existingOrder = optionalOrder.get();
+            existingOrder.setIsRejected(rejected);
+            orderRepository.save(existingOrder);
+        } else {
+            throw new RecordNotFoundException(String.format("Order not found for id => %d", id));
+        }
+    }
+
 
     public OrderDto toDto(Order order) {
         return OrderDto.builder()
@@ -243,7 +251,7 @@ public class OrderServiceImpl implements OrderService {
                 .status(order.getStatus())
                 .productRule(order.getProductRule())
                 .customer(customerRepository.findById(order.getCustomer().getId())
-                        .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
+                        .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .build();
     }
 
@@ -269,7 +277,7 @@ public class OrderServiceImpl implements OrderService {
                 .status(orderDto.getStatus())
                 .productRule(orderDto.getProductRule())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
-                        .orElseThrow(()-> new RecordNotFoundException("Customer not found")))
+                        .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .build();
     }
 }

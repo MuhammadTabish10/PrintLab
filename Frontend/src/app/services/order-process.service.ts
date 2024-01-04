@@ -14,7 +14,6 @@ export class OrderProcessService {
   constructor(private http: HttpClient) { }
 
   addTransaction(order: any) {
-
     let url = `${this.url}/order-transaction`
     return this.http.post(url, order)
   }
@@ -34,4 +33,13 @@ export class OrderProcessService {
     return this.http.put(url, order)
   }
 
+  rejectOrder(id: number, process: string, rejected: boolean) {
+    let url = `${this.url}/order/${process}/${id}`;
+    return this.http.put(url, rejected);
+  }
+
+  markCtpAsDone(id: number, process: string, markAsDone: boolean) {
+    let url = `${this.url}/order/${process}/${id}`;
+    return this.http.put(url, markAsDone)
+  }
 }

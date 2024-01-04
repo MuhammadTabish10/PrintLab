@@ -35,5 +35,6 @@ public class OrderDto
     private User designer;
     private User production;
     private User plateSetter;
+    private Boolean isRejected;
     private Customer customer;
 }

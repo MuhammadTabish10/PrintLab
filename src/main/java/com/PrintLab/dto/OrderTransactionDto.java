@@ -21,7 +21,6 @@ public class OrderTransactionDto {
     private String paymentMode;
     private User user;
     private Order order;
-    private Boolean status;
-//    private Boolean markAsDone;
     private Boolean isAccepted;
+    private Boolean status;
 }

@@ -41,4 +41,8 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     @Query("UPDATE Order o SET o.paperMarketProcess = true WHERE o.id = :id")
     void setPaperMarketProcessProcessMarkAsDone(@Param("id") Long id);
 
+    @Modifying
+    @Query("UPDATE Order o SET o.isRejected = true WHERE o.id = :id")
+    void setCtpRejected(@Param("id") Long id);
+
 }

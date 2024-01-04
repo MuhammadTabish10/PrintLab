@@ -11,8 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class OrderController
-{
+public class OrderController {
     private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
@@ -60,6 +59,7 @@ public class OrderController
         return ResponseEntity.ok().build();
     }
 
+
     @PutMapping("/order/paper-market-process/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> markPaperMarketAsDone(@PathVariable Long id) {
@@ -97,5 +97,12 @@ public class OrderController
     public ResponseEntity<List<Order>> getAllAssignedOrders() {
         List<Order> orderList = orderService.getAssignedOrdersForLoggedInUser();
         return ResponseEntity.ok(orderList);
+    }
+
+    @PutMapping("/order/{process}/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
+    public ResponseEntity<String> rejected(@PathVariable Long id, @RequestBody Boolean rejected) {
+        orderService.reject(id, rejected);
+        return ResponseEntity.ok().build();
     }
 }
