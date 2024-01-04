@@ -2,7 +2,6 @@ package com.PrintLab.repository;
 
 import com.PrintLab.model.Order;
 import com.PrintLab.model.User;
-import com.PrintLab.model.UserPettyCash;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,5 +29,16 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     @Query("UPDATE Order o SET o.status = false WHERE o.id = :id")
     void setStatusInactive(@Param("id") Long id);
 
+    @Modifying
+    @Query("UPDATE Order o SET o.ctpProcess = true WHERE o.id = :id")
+    void setCtpMarkAsDone(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE Order o SET o.pressMachineProcess = true WHERE o.id = :id")
+    void setPressMachineProcessMarkAsDone(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE Order o SET o.paperMarketProcess = true WHERE o.id = :id")
+    void setPaperMarketProcessProcessMarkAsDone(@Param("id") Long id);
 
 }

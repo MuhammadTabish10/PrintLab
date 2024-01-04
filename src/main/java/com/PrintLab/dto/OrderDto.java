@@ -29,6 +29,9 @@ public class OrderDto
     private String url;
     private Long productRule;
     private Boolean status;
+    private Boolean ctpProcess;
+    private Boolean pressMachineProcess;
+    private Boolean paperMarketProcess;
     private User designer;
     private User production;
     private User plateSetter;

@@ -64,6 +64,9 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderDto.setStatus(true);
+        orderDto.setCtpProcess(false);
+        orderDto.setPressMachineProcess(false);
+        orderDto.setPaperMarketProcess(false);
         Order order = orderRepository.save(toEntity(orderDto));
         return toDto(order);
     }
@@ -196,6 +199,23 @@ public class OrderServiceImpl implements OrderService {
         return assignedOrders;
     }
 
+    @Override
+    @Transactional
+    public void updateCtpProcess(Long id) {
+        orderRepository.setCtpMarkAsDone(id);
+    }
+
+    @Override
+    @Transactional
+    public void updatePaperMarketProcess(Long id) {
+        orderRepository.setPaperMarketProcessProcessMarkAsDone(id);
+    }
+
+    @Override
+    @Transactional
+    public void updatePressMachineProcess(Long id) {
+        orderRepository.setPressMachineProcessMarkAsDone(id);
+    }
 
 
     public OrderDto toDto(Order order) {
@@ -214,6 +234,9 @@ public class OrderServiceImpl implements OrderService {
                 .jobColorsBack(order.getJobColorsBack())
                 .providedDesign(order.getProvidedDesign())
                 .url(order.getUrl())
+                .ctpProcess(order.getCtpProcess())
+                .pressMachineProcess(order.getPressMachineProcess())
+                .paperMarketProcess(order.getPaperMarketProcess())
                 .production(order.getProduction())
                 .designer(order.getDesigner())
                 .plateSetter(order.getPlateSetter())
