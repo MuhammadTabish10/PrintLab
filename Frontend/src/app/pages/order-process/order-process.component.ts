@@ -64,29 +64,32 @@ export class OrderProcessComponent implements OnInit {
     }, error => { });
   }
   getCtpProcess(orderId: number, ctp: string) {
+    this.transactions = [];
     this.orderProcessService.getOrderProcess(orderId, ctp).subscribe((process: any) => {
       const lastIndex = process.orderTransactions.length - 1;
-      this.markAsDone = process.orderTransactions[lastIndex].markAsDone ? process.orderTransactions[lastIndex].markAsDone : false;
-      this.showAccepted = process.orderTransactions[lastIndex].accepted ? process.orderTransactions[lastIndex].accepted : false;
-      this.showRejected = process.orderTransactions[lastIndex].rejected ? process.orderTransactions[lastIndex].rejected : false;
+      // this.markAsDone = process.orderTransactions[lastIndex].markAsDone ? process.orderTransactions[lastIndex].markAsDone : false;
+      // this.showAccepted = process.orderTransactions[lastIndex].accepted ? process.orderTransactions[lastIndex].accepted : false;
+      // this.showRejected = process.orderTransactions[lastIndex].rejected ? process.orderTransactions[lastIndex].rejected : false;
       this.transactions.push(process);
-      debugger
-      this.variance = this.transactions[lastIndex].unitPrice * this.transactions[lastIndex].quantity;
-      this.plateDimension = this.transactions[lastIndex].plateDimension;
-      this.quantity = this.transactions[lastIndex].quantity;
-      this.amount = this.transactions[lastIndex].amount;
-      this.unitPrice = this.transactions[lastIndex].unitPrice;
+      this.variance = process.unitPrice * process.quantity;
+      this.plateDimension = process.plateDimension;
+      this.quantity = process.quantity;
+      this.amount = process.amount;
+      this.unitPrice = process.unitPrice;
     }, error => {
     });
   }
 
   addCreditOnVendor(order: any): void {
-    this.showAccepted = true;
-    this.showRejected = false;
-    this.orderProcessService.addTransaction(order).subscribe(data => { }, error => { });
+    // this.showAccepted = true;
+    // this.showRejected = false;
+    this.orderProcessService.addTransaction(order).subscribe(data => {
+      this.getCtpProcess(this.idFromQueryParam,this.ctp);
+     }, error => { });
   }
 
   cash(order: any): boolean {
+    const lastIndex = order.orderTransactions.length - 1;
     this.options = false;
     order["paymentMode"] = "Cash";
     order["order"] = {
@@ -97,17 +100,23 @@ export class OrderProcessComponent implements OnInit {
       delete order.vendor;
       order['vendor'] = vendorValue;
     }
+    debugger
+    order["orderTransactions"][lastIndex]["isAccepted"] = true;
+    debugger
     this.addUserPetyCash(order);
     return this.options;
   }
 
   addUserPetyCash(order: any): void {
-    this.showAccepted = true;
-    this.showRejected = false;
-    this.orderProcessService.addTransaction(order).subscribe(data => { }, error => { });
+    // this.showAccepted = true;
+    // this.showRejected = false;
+    this.orderProcessService.addTransaction(order).subscribe(data => {
+      this.getCtpProcess(this.idFromQueryParam, this.ctp);
+    }, error => { });
   }
 
   credit(order: any): boolean {
+    const lastIndex = order.orderTransactions.length - 1;
     this.options = false;
     order["paymentMode"] = "Credit";
     order["order"] = {
@@ -118,6 +127,7 @@ export class OrderProcessComponent implements OnInit {
       delete order.vendor;
       order['vendor'] = vendorValue;
     }
+    order["orderTransactions"][lastIndex]["isAccepted"] = true;
     this.addCreditOnVendor(order);
     return this.options;
   }
@@ -141,7 +151,7 @@ export class OrderProcessComponent implements OnInit {
       }
     }
     this.orderProcessService.addTransaction(orderObj).subscribe(transaction => {
-      window.location.reload();
+      this.getCtpProcess(this.idFromQueryParam, this.ctp);
     }, error => {
 
     });
