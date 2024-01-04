@@ -1,0 +1,44 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid ps-6">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="main-container">
+    <div>
+      <h3>Order TimeLine</h3>
+    </div>
+    <!-- TimeLine -->
+    <div class="card py-5">
+      <p-timeline
+        [value]="events"
+        align="alternate"
+        styleClass="customized-timeline"
+      >
+        <ng-template pTemplate="marker" let-event>
+          <span
+            class="custom-marker shadow-2 rounded-circle text-white p-1"
+            [style.backgroundColor]="event.color"
+          >
+            <i [ngClass]="event.icon"></i>
+          </span>
+        </ng-template>
+        <ng-template pTemplate="content" let-event>
+          <p-card [header]="event.status" [subheader]="event.date">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Inventore sed consequuntur error repudiandae numquam deserunt
+              quisquam repellat libero asperiores earum nam nobis, culpa ratione
+              quam perferendis esse, cupiditate neque quas!
+            </p>
+            <button
+              pButton
+              label="Edit & View"
+              class="btn btn-dark text-white"
+              (click)="orderProcess()"
+            ></button>
+          </p-card>
+        </ng-template>
+      </p-timeline>
+    </div>
+    <!-- TimeLine -->
+  </div>
+</div>
+<p-toast></p-toast>

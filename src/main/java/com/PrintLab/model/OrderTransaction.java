@@ -23,6 +23,8 @@ public class OrderTransaction {
     private Double unitPrice;
     private Double amount;
     private String paymentMode;
+//    private Boolean markAsDone;
+    private Boolean isAccepted;
     private Boolean status;
 
     @ManyToOne

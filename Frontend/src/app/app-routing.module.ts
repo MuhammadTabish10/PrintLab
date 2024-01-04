@@ -50,6 +50,7 @@ import { PetyCashComponent } from './pages/pety-cash/pety-cash.component';
 import { VendorSettlementComponent } from './pages/vendor-settlement/vendor-settlement.component';
 import { AllSettlementsComponent } from './pages/all-settlements/all-settlements.component';
 import { AllPettyCashRecordsComponent } from './pages/all-petty-cash-records/all-petty-cash-records.component';
+import { OrderTimeLineComponent } from './pages/order-process/order-time-line/order-time-line.component';
 
 export const routes: Routes = [
   {
@@ -298,6 +299,11 @@ export const routes: Routes = [
   {
     path: 'allPettyCashRecords',
     component: AllPettyCashRecordsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'order-timeline',
+    component: OrderTimeLineComponent,
     canActivate: [AuthguardService]
   },
 ];

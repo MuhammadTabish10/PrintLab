@@ -24,4 +24,9 @@ export class OrderProcessService {
     return this.http.get(url);
   }
 
+  updateOrderProcess(orderId: number, order: any) {
+    let url = `${this.url}/order-transaction/${orderId}`;
+    return this.http.put(url, order)
+  }
+
 }

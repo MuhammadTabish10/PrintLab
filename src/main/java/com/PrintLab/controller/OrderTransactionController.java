@@ -67,4 +67,5 @@ public class OrderTransactionController {
         OrderTransactionDto updatedOrderTransactionDto = orderTransactionService.update(id, orderTransactionDto);
         return ResponseEntity.ok(updatedOrderTransactionDto);
     }
+
 }

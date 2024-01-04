@@ -146,7 +146,8 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         existingOrderTransaction.setUnitPrice(orderTransactionDto.getUnitPrice());
         existingOrderTransaction.setAmount(orderTransactionDto.getQuantity() * orderTransactionDto.getUnitPrice());
 //        existingOrderTransaction.setPaymentMode(orderTransactionDto.getPaymentMode());
-
+//        existingOrderTransaction.setMarkAsDone(orderTransactionDto.getMarkAsDone());
+        existingOrderTransaction.setIsAccepted(orderTransactionDto.getIsAccepted());
         OrderTransaction updatedOrderTransaction = orderTransactionRepository.save(existingOrderTransaction);
         return toDto(updatedOrderTransaction);
     }
@@ -205,6 +206,7 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
                 .quantity(orderTransaction.getQuantity())
                 .unitPrice(orderTransaction.getUnitPrice())
                 .amount(orderTransaction.getAmount())
+                .isAccepted(orderTransaction.getIsAccepted())
                 .paymentMode(orderTransaction.getPaymentMode())
                 .user(orderTransaction.getUser())
                 .order(orderTransaction.getOrder())
@@ -223,6 +225,8 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
                 .paymentMode(orderTransactionDto.getPaymentMode())
                 .user(orderTransactionDto.getUser())
                 .order(orderTransactionDto.getOrder())
+//                .markAsDone(orderTransactionDto.getMarkAsDone())
+                .isAccepted(orderTransactionDto.getIsAccepted())
                 .status(orderTransactionDto.getStatus())
                 .build();
     }

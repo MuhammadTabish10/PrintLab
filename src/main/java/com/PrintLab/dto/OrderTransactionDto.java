@@ -22,4 +22,6 @@ public class OrderTransactionDto {
     private User user;
     private Order order;
     private Boolean status;
+//    private Boolean markAsDone;
+    private Boolean isAccepted;
 }

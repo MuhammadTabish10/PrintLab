@@ -4,6 +4,8 @@ import { CustomerService } from 'src/app/services/customer.service';
 import { MessageService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Customer } from "src/app/Model/Customer";
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-customer',
@@ -23,31 +25,37 @@ export class CustomerComponent implements OnInit, OnDestroy {
   constructor(
     private customerService: CustomerService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
     this.getCustomers();
   }
 
-  getCustomers() {
+  getCustomers(): void {
 
     this.customerService.getCustomer()
       .pipe(takeUntil(this.destroy$))
       .subscribe(
-        (res: any) => {
-          this.customersArray = res as Customer[];
+        (res: Customer[]) => {
+          this.customersArray = res;
+          this.customersArray.forEach((el: any) => {
+            const dateArray = el.createdAt;
+            const [year, month, day] = dateArray;
+            el.createdAt = this.datePipe.transform(new Date(year, month - 1, day), 'EEEE, MMMM d, yyyy');
+          });
           this.tableData = this.customersArray.length === 0;
         },
         (error: any) => this.showError(error)
       );
   }
 
-  editCustomer(id: number) {
-    this.router.navigate(['/addCustomer'], { queryParams: { id: id.toString() } });
+  editCustomer(id: number | undefined | null) {
+    this.router.navigate(['/addCustomer'], { queryParams: { id: id!.toString() } });
   }
 
-  deleteCustomer(id: number) {
+  deleteCustomer(id: number | undefined | null) {
     this.customerService.deleteCustomer(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -84,8 +92,4 @@ export class CustomerComponent implements OnInit, OnDestroy {
   }
 }
 
-interface Customer {
-  id: number;
-  name: string;
-  businessName: string;
-}
+

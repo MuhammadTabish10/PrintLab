@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Transactions } from 'src/app/Model/transactions';
+// import { Transactions } from 'src/app/Model/transactions';
 import { OrderProcessService } from 'src/app/services/order-process.service';
-import { PetyCashService } from 'src/app/services/pety-cash.service';
+// import { PetyCashService } from 'src/app/services/pety-cash.service';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -34,13 +34,14 @@ export class OrderProcessComponent implements OnInit {
   selectedVendor: any
   users: any;
   selectedUser: any;
+  markAsDone: boolean = false;
 
 
   constructor(
     private orderProcessService: OrderProcessService,
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private pettyCashService: PetyCashService,
+    // private pettyCashService: PetyCashService,
     public sessionStorageService: SessionStorageService,
     private userService: UserService
   ) { }
@@ -63,14 +64,18 @@ export class OrderProcessComponent implements OnInit {
     }, error => { });
   }
   getCtpProcess(orderId: number, ctp: string) {
-    this.orderProcessService.getOrderProcess(orderId, ctp).subscribe(process => {
+    this.orderProcessService.getOrderProcess(orderId, ctp).subscribe((process: any) => {
+      const lastIndex = process.orderTransactions.length - 1;
+      this.markAsDone = process.orderTransactions[lastIndex].markAsDone ? process.orderTransactions[lastIndex].markAsDone : false;
+      this.showAccepted = process.orderTransactions[lastIndex].accepted ? process.orderTransactions[lastIndex].accepted : false;
+      this.showRejected = process.orderTransactions[lastIndex].rejected ? process.orderTransactions[lastIndex].rejected : false;
       this.transactions.push(process);
-
-      this.variance = this.transactions[0].unitPrice * this.transactions[0].quantity;
-      this.plateDimension = this.transactions[0].plateDimension;
-      this.quantity = this.transactions[0].quantity;
-      this.amount = this.transactions[0].amount;
-      this.unitPrice = this.transactions[0].unitPrice;
+      debugger
+      this.variance = this.transactions[lastIndex].unitPrice * this.transactions[lastIndex].quantity;
+      this.plateDimension = this.transactions[lastIndex].plateDimension;
+      this.quantity = this.transactions[lastIndex].quantity;
+      this.amount = this.transactions[lastIndex].amount;
+      this.unitPrice = this.transactions[lastIndex].unitPrice;
     }, error => {
     });
   }
@@ -78,7 +83,6 @@ export class OrderProcessComponent implements OnInit {
   addCreditOnVendor(order: any): void {
     this.showAccepted = true;
     this.showRejected = false;
-
     this.orderProcessService.addTransaction(order).subscribe(data => { }, error => { });
   }
 
@@ -105,7 +109,6 @@ export class OrderProcessComponent implements OnInit {
 
   credit(order: any): boolean {
     this.options = false;
-
     order["paymentMode"] = "Credit";
     order["order"] = {
       id: this.idFromQueryParam
@@ -128,6 +131,9 @@ export class OrderProcessComponent implements OnInit {
       quantity: this.quantity,
       unitPrice: this.unitPrice,
       amount: this.amount,
+      markAsDone: this.markAsDone,
+      accepted: this.showAccepted,
+      rejected: this.showRejected,
       paymentMode: this.selectedMode.name,
       user: { id: this.selectedUser?.id },
       order: {
@@ -164,6 +170,10 @@ export class OrderProcessComponent implements OnInit {
 
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+
+  markToDone(order: any) {
+
   }
 
 }

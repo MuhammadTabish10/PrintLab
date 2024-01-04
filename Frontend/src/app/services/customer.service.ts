@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { Customer } from "../Model/Customer";
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +13,14 @@ export class CustomerService {
   constructor(private http: HttpClient) { }
 
   postCustomer(obj: any) {
-
+debugger
     let url = `${this._url}/customer`
     return this.http.post(url, obj)
   }
 
-  getCustomer() {
+  getCustomer(): Observable<Customer[]> {
     let url = `${this._url}/customer`
-    return this.http.get(url)
+    return this.http.get<Customer[]>(url)
   }
 
   deleteCustomer(id: any) {
@@ -26,9 +28,9 @@ export class CustomerService {
     return this.http.delete(url)
   }
 
-  getCustomerById(id: any) {
+  getCustomerById(id: any): Observable<Customer> {
     let url = `${this._url}/customer/${id}`
-    return this.http.get(url)
+    return this.http.get<Customer>(url)
   }
 
   updateCustomer(id: any, obj: any) {

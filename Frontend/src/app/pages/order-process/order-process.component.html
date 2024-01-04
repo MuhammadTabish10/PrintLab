@@ -19,6 +19,16 @@
           <h5>Variance:</h5>
           <h6 class="text-muted">Rs: {{ variance }}</h6>
         </div>
+        <div class="col text-end">
+          <p-checkbox
+            [binary]="true"
+            inputId="binary"
+            name="mark"
+            label="Mark As Done"
+            [(ngModel)]="markAsDone"
+            (click)="markToDone(transactions[0])"
+          ></p-checkbox>
+        </div>
       </div>
     </div>
     <div class="card my-3">

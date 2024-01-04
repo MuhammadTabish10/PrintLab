@@ -1,52 +1,478 @@
 <app-sidebar></app-sidebar>
 <div class="body-position">
-    <app-dashboard-head></app-dashboard-head>
+  <app-dashboard-head></app-dashboard-head>
 
-    <div class="main-container">
-        <div>
-            <h4>{{buttonName}} Customer</h4>
-        </div>
+  <div class="main-container">
+    <div>
+      <h4>{{ buttonName }} Customer</h4>
+    </div>
 
-        <div class="order-body py-2">
-          <form
+    <div class="order-body py-2 px-3">
+      <form
         class="was-validated"
         novalidate
         #customerForm="ngForm"
         (ngSubmit)="addCustomer()"
       >
-            <div class="container">
-                <div class="row">
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Name</label>
-                        <input type="text" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="nameValue" style="border:1px solid #ced4da;" placeholder="Enter Name" name="name" required>
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Business Name</label>
-                        <input type="text" class="order-search form-control order-form-input m-0"
-                            [(ngModel)]="businessValue" style="border:1px solid #ced4da;" placeholder="Enter Business Name" name="Business name" required>
-                    </div>
-                    <div class="col-6 my-3">
-                        <label class="add-order-label m-0">Status</label><br>
-                        <label class="switch mt-2">
-                            <input type="checkbox" [checked]="statusFlag" (click)="getStatusValue()">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                    <div class="col-12 my-3 d-flex justify-content-center mx-0">
-                        <button type="submit" class="btn order-table-btn btn-search-panel w-25"
-                        [disabled]="!customerForm.valid"
-                            >{{buttonName}}
-                        </button>
-                    </div>
-                </div>
+        <div class="container-fluid card my-3">
+          <div class="row">
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Title</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.title"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Title"
+                name="title"
+                required
+              />
             </div>
-          </form>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Name</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.name"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Name"
+                name="name"
+                required
+              />
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Middle Name</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.middleName"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Middle Name"
+                name="mName"
+                required
+              />
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Last Name</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.lastName"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Last Name"
+                name="lName"
+                required
+              />
+            </div>
+            <!-- <div class="row mx-auto px-0"> -->
+            <div class="col my-3">
+              <label class="add-order-label m-0">Company Name</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0 w-100"
+                [(ngModel)]="customer.businessName"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Company Name"
+                name="companyName"
+                required
+              />
+            </div>
+            <div class="col my-3">
+              <label class="add-order-label m-0">Email</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.email"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Email"
+                name="email"
+                required
+              />
+            </div>
+            <div class="col my-3">
+              <label class="add-order-label m-0">Phone Number</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.phoneNo"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Phone Number"
+                name="phoneNo"
+                required
+              />
+            </div>
+            <div class="col my-3">
+              <label class="add-order-label m-0">Mobile Number</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.mobileNo"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Phone Number"
+                name="phoneNo"
+                required
+              />
+            </div>
+            <div class="col my-3">
+              <label class="add-order-label m-0">Website</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.website"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Website Name"
+                name="wName"
+                required
+              />
+            </div>
+            <!-- </div> -->
+
+            <div class="my-3">
+              <p-checkbox
+                [binary]="true"
+                inputId="binary"
+                label="Is a sub-customer"
+                name="subCustomer"
+                [(ngModel)]="customer.subCustomer"
+              ></p-checkbox>
+            </div>
+
+            <div class="col-3 my-3" *ngIf="customer.subCustomer">
+              <label class="add-order-label m-0">Parent Customer</label>
+              <div *ngIf="idFromQueryParam">
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="customerArray"
+                  optionLabel="name"
+                  name="pCustomer"
+                  (ngModelChange)="parentCustomer($event)"
+                  [(ngModel)]="customer.parentCustomerId"
+                ></p-dropdown>
+              </div>
+              <div *ngIf="!idFromQueryParam">
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="customerArrayOnAdd"
+                  optionLabel="name"
+                  name="pCustomer"
+                  (ngModelChange)="parentCustomer($event)"
+                  [(ngModel)]="parentId"
+                ></p-dropdown>
+              </div>
+            </div>
+            <div class="my-3" *ngIf="customer.subCustomer">
+              <p-checkbox
+                [binary]="true"
+                inputId="binary"
+                label="Bill parent customer"
+                name="billParentCustomer"
+                [(ngModel)]="customer.billParentCustomer"
+              ></p-checkbox>
+            </div>
+          </div>
         </div>
+
+        <!-- Address Collapse Section -->
+
+        <div class="row mx-auto bg-dark text-white border-bottom">
+          <div
+            class="col"
+            data-bs-toggle="collapse"
+            data-bs-target="#addressSection"
+            aria-expanded="false"
+            aria-controls="addressSection"
+          >
+            <h2>Address</h2>
+          </div>
+          <div class="col text-end">
+            <i
+              class="pi pi-arrow-down pt-2"
+              style="font-size: 1.5rem"
+              data-bs-toggle="collapse"
+              data-bs-target="#addressSection"
+              aria-expanded="false"
+              aria-controls="addressSection"
+            ></i>
+          </div>
+        </div>
+
+        <!-- Address Collapse Content -->
+        <div class="container-fluid collapse card my-1" id="addressSection">
+          <div class="row">
+            <div class="col-12">
+              <h2>Billing Address</h2>
+            </div>
+            <div class="col-12">
+              <label class="add-order-label m-0">Street Address</label>
+              <textarea
+                name="sAddressB"
+                [(ngModel)]="customer.billingStreetAddress"
+                id="sAddressB"
+                class="d-block"
+                cols="63"
+                rows="2"
+              ></textarea>
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">City</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.billingCity"
+                style="border: 1px solid #ced4da"
+                (click)="check()"
+                placeholder="Enter City"
+                name="bCity"
+                required
+              />
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Province</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.billingProvince"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Province"
+                name="bProvince"
+                required
+              />
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Postal Code</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.billingPostalCode"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Poster Code"
+                name="bPosterCode"
+                required
+              />
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Country</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.billingCountry"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Country"
+                name="bCountry"
+                required
+              />
+            </div>
+            <div class="col-12">
+              <h2>Shipping Address</h2>
+            </div>
+            <div class="my-3">
+              <p-checkbox
+                [binary]="true"
+                inputId="binary"
+                name="sameAsBAddress"
+                label="Same as billing address"
+                (click)="sameAs()"
+                [(ngModel)]="customer.sameAsBilling"
+              ></p-checkbox>
+            </div>
+            <div class="col-12">
+              <label class="add-order-label m-0">Street Address</label>
+              <textarea
+                name="sAddressS"
+                id="sAddressS"
+                class="d-block"
+                cols="63"
+                rows="2"
+                [(ngModel)]="customer.shippingStreetAddress"
+              ></textarea>
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">City</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.shippingCity"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter City"
+                name="sCity"
+                required
+              />
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Province</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.shippingProvince"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Province"
+                name="sProvince"
+                required
+              />
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Postal Code</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.shippingPostalCode"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Poster Code"
+                name="sPosterCode"
+                required
+              />
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Country</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.shippingCountry"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Country"
+                name="sCountry"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Balance Collapse Section -->
+        <div class="row mx-auto bg-dark text-white border-bottom">
+          <div
+            class="col"
+            data-bs-toggle="collapse"
+            data-bs-target="#balanceSection"
+            aria-expanded="false"
+            aria-controls="balanceSection"
+          >
+            <h2>Balance</h2>
+          </div>
+          <div class="col text-end">
+            <i
+              class="pi pi-arrow-down pt-2"
+              style="font-size: 1.5rem"
+              data-bs-toggle="collapse"
+              data-bs-target="#balanceSection"
+              aria-expanded="false"
+              aria-controls="balanceSection"
+            ></i>
+          </div>
+        </div>
+
+        <!-- Balance Collapse content -->
+        <div class="container-fluid collapse card my-1" id="balanceSection">
+          <div class="row">
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Opening Balance</label>
+              <input
+                type="number"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="customer.openingBalance"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Opening Balance"
+                name="openingBalance"
+                required
+              />
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">As Of</label>
+              <div class="mt-2">
+                <p-calendar
+                  [(ngModel)]="customer.asOf"
+                  [showIcon]="true"
+                  [style]="{ height: '45px' }"
+                  name="asOf"
+                ></p-calendar>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payments And Taxation Section-->
+        <div class="row mx-auto bg-dark text-white border-bottom">
+          <div
+            class="col"
+            data-bs-toggle="collapse"
+            data-bs-target="#paymentSection"
+            aria-expanded="false"
+            aria-controls="paymentSection"
+          >
+            <h2>Payment And Taxtation</h2>
+          </div>
+          <div class="col text-end">
+            <i
+              class="pi pi-arrow-down pt-2"
+              style="font-size: 1.5rem"
+              data-bs-toggle="collapse"
+              data-bs-target="#paymentSection"
+              aria-expanded="false"
+              aria-controls="paymentSection"
+            ></i>
+          </div>
+        </div>
+
+        <!-- Payment And Taxtation content -->
+        <div class="collapse container-fluid card my-1" id="paymentSection">
+          <div class="row">
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Primary Payment Method</label>
+              <p-dropdown
+                styleClass="w-100"
+                [options]="productField[0]?.productFieldValuesList"
+                optionLabel="name"
+                optionValue="name"
+                name="paymentMethod"
+                [(ngModel)]="customer.primaryPaymentMethod"
+              ></p-dropdown>
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Terms</label>
+              <p-dropdown
+                styleClass="w-100"
+                [options]="term[0]?.productFieldValuesList"
+                optionLabel="name"
+                optionValue="name"
+                name="terms"
+                [(ngModel)]="customer.terms"
+              ></p-dropdown>
+            </div>
+            <div class="col-3 my-3">
+              <label class="add-order-label m-0">Tax</label>
+              <p-dropdown
+                styleClass="w-100"
+                [options]="tax[0]?.productFieldValuesList"
+                optionLabel="name"
+                optionValue="name"
+                name="tax"
+                [(ngModel)]="customer.tax"
+              ></p-dropdown>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="col-6 my-3">
+              <label class="add-order-label m-0">Status</label><br />
+              <label class="switch mt-2">
+                <input
+                  type="checkbox"
+                  [checked]="statusFlag"
+                  (click)="getStatusValue()"
+                />
+                <span class="slider round"></span>
+              </label>
+            </div> -->
+        <div class="col-12 text-end my-4">
+          <button
+            type="submit"
+            class="btn btn-dark px-4"
+            [disabled]="!customerForm.valid"
+          >
+            {{ buttonName }}
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 <p-toast></p-toast>
-<!-- <p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
-  [draggable]="false" [resizable]="false">
-  <h5 class="error-modal-head">{{error}}</h5>
-</p-dialog> -->

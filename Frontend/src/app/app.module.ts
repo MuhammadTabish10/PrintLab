@@ -87,6 +87,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { VendorSettlementComponent } from './pages/vendor-settlement/vendor-settlement.component';
 import { AllPettyCashRecordsComponent } from './pages/all-petty-cash-records/all-petty-cash-records.component';
 import { AllSettlementsComponent } from './pages/all-settlements/all-settlements.component';
+import { CheckboxModule } from 'primeng/checkbox';
+import { OrderTimeLineComponent } from './pages/order-process/order-time-line/order-time-line.component';
+import { TimelineModule } from 'primeng/timeline';
 
 @NgModule({
   declarations: [
@@ -148,6 +151,7 @@ import { AllSettlementsComponent } from './pages/all-settlements/all-settlements
     VendorSettlementComponent,
     AllPettyCashRecordsComponent,
     AllSettlementsComponent,
+    OrderTimeLineComponent,
   ],
   imports: [
     BrowserModule,
@@ -175,6 +179,8 @@ import { AllSettlementsComponent } from './pages/all-settlements/all-settlements
     PasswordModule,
     TreeSelectModule,
     ConfirmDialogModule,
+    CheckboxModule,
+    TimelineModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,ConfirmDialogModule,
     provideRouter(routes, withHashLocation()), DatePipe],
