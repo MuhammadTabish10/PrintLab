@@ -34,6 +34,9 @@ public class Order
     private String url;
     private Long productRule;
     private Boolean status;
+    private Boolean ctpProcess;
+    private Boolean pressMachineProcess;
+    private Boolean paperMarketProcess;
 
     @ManyToOne()
     @JoinColumn(name = "customer_id")

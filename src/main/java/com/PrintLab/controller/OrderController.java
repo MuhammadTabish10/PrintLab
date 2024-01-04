@@ -53,6 +53,27 @@ public class OrderController
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/order/ctp-process/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> markCtpAsDone(@PathVariable Long id) {
+        orderService.updateCtpProcess(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/order/paper-market-process/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> markPaperMarketAsDone(@PathVariable Long id) {
+        orderService.updatePaperMarketProcess(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/order/press-machine-process/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> markPressMachineAsDone(@PathVariable Long id) {
+        orderService.updatePressMachineProcess(id);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/order/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<OrderDto> updateOrder(@PathVariable Long id, @RequestBody OrderDto orderDto) {
