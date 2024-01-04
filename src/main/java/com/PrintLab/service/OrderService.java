@@ -17,9 +17,9 @@ public interface OrderService
     OrderDto updateOrder(Long id, OrderDto orderDto);
     OrderDto assignOrderToUser(Long orderId, Long userId, String role);
     List<Order> getAssignedOrdersForLoggedInUser();
-    void updateCtpProcess(Long id);
-    void updatePaperMarketProcess(Long id);
-    void updatePressMachineProcess(Long id);
+    void updateCtpProcess(Long id, Boolean isDone);
+    void updatePaperMarketProcess(Long id, Boolean isDone);
+    void updatePressMachineProcess(Long id, Boolean isDone);
 }
 
 

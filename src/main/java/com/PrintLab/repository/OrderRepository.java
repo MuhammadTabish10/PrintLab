@@ -30,15 +30,14 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     void setStatusInactive(@Param("id") Long id);
 
     @Modifying
-    @Query("UPDATE Order o SET o.ctpProcess = true WHERE o.id = :id")
-    void setCtpMarkAsDone(@Param("id") Long id);
+    @Query("UPDATE Order o SET o.ctpProcess = :isDone WHERE o.id = :id")
+    void setCtpMarkAsDone(@Param("id") Long id, @Param("isDone") Boolean isDone);
 
     @Modifying
-    @Query("UPDATE Order o SET o.pressMachineProcess = true WHERE o.id = :id")
-    void setPressMachineProcessMarkAsDone(@Param("id") Long id);
+    @Query("UPDATE Order o SET o.pressMachineProcess = :isDone WHERE o.id = :id")
+    void setPressMachineProcessMarkAsDone(@Param("id") Long id, @Param("isDone") Boolean isDone);
 
     @Modifying
-    @Query("UPDATE Order o SET o.paperMarketProcess = true WHERE o.id = :id")
-    void setPaperMarketProcessProcessMarkAsDone(@Param("id") Long id);
-
+    @Query("UPDATE Order o SET o.paperMarketProcess = :isDone WHERE o.id = :id")
+    void setPaperMarketProcessProcessMarkAsDone(@Param("id") Long id, @Param("isDone") Boolean isDone);
 }
