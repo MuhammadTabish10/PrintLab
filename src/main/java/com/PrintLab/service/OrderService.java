@@ -22,11 +22,9 @@ public interface OrderService {
 
     List<Order> getAssignedOrdersForLoggedInUser();
 
-    void updateCtpProcess(Long id);
-
-    void updatePaperMarketProcess(Long id);
-
-    void updatePressMachineProcess(Long id);
+    void updateCtpProcess(Long id, Boolean isDone);
+    void updatePaperMarketProcess(Long id, Boolean isDone);
+    void updatePressMachineProcess(Long id, Boolean isDone);
 
     void reject(Long id, Boolean rejected);
 }

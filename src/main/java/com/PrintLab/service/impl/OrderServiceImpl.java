@@ -197,20 +197,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void updateCtpProcess(Long id) {
-        orderRepository.setCtpMarkAsDone(id);
+    public void updateCtpProcess(Long id, Boolean isDone) {
+        orderRepository.setCtpMarkAsDone(id, isDone);
     }
 
     @Override
     @Transactional
-    public void updatePaperMarketProcess(Long id) {
-        orderRepository.setPaperMarketProcessProcessMarkAsDone(id);
+    public void updatePaperMarketProcess(Long id, Boolean isDone) {
+        orderRepository.setPaperMarketProcessProcessMarkAsDone(id, isDone);
     }
 
     @Override
     @Transactional
-    public void updatePressMachineProcess(Long id) {
-        orderRepository.setPressMachineProcessMarkAsDone(id);
+    public void updatePressMachineProcess(Long id, Boolean isDone) {
+        orderRepository.setPressMachineProcessMarkAsDone(id, isDone);
     }
 
     @Override
