@@ -15059,3 +15059,15 @@ input:checked + .slider:before {
 .p-column-filter-overlay-menu .p-column-filter-constraint .p-column-filter-matchmode-dropdown {
   display:none;
 }
+
+/* .p-card-title {
+  border-bottom: 3px solid #ccc;
+} */
+
+.p-card .p-card-subtitle{
+  font-weight: bold;
+}
+
+.red-subheader .p-card .p-card-subtitle {
+  color:  #c95c57;
+}

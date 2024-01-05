@@ -79,29 +79,12 @@ export class AddCustomerComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getAllCustomers();
     this.getPrimaryPaymentMethod();
     this.getTerms();
     this.getTax();
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(param => {
       this.idFromQueryParam = +param['id'] || 0;
       this.buttonName = this.idFromQueryParam ? 'Update' : 'Save';
-
-      // if (this.idFromQueryParam) {
-      //   this.customerService.getCustomerById(this.idFromQueryParam).subscribe(
-      //     (res: any) => {
-      //       this.customerToUpdate = res;
-      //       this.nameValue = this.customerToUpdate.name;
-      //       this.businessValue = this.customerToUpdate.businessName;
-      //       this.status = this.customerToUpdate.status;
-      //       this.statusFlag = this.status === 'Active';
-      //     },
-      //     (error: any) => {
-      //       this.showError(error);
-      //       this.visible = true;
-      //     }
-      //   );
-      // }
       this.patchCustomer();
     });
   }
@@ -111,16 +94,7 @@ export class AddCustomerComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  check() {
-    console.log(this.customer);
-
-  }
   addCustomer() {
-    // const obj = {
-    //   name: this.nameValue,
-    //   businessName: this.businessValue,
-    //   status: this.status
-    // }
     if (this.idFromQueryParam) {
       this.customer.parentCustomerId = this.parentId;
     }
@@ -154,7 +128,9 @@ export class AddCustomerComponent implements OnInit {
         if (this.idFromQueryParam) {
           this.customerArray = res.filter(customer => customer.parentCustomerId !== this.idFromQueryParam && customer.parentCustomerId !== null);
           this.customerArray = res.filter(customer => customer.id !== this.idFromQueryParam);
-
+          const check = this.customerArray.filter(customer => customer.parentCustomerId === this.idFromQueryParam);
+          this.customerArray = this.customerArray.filter(customer => !check.includes(customer));
+          debugger
         } else {
           this.customerArrayOnAdd = res;
         }
@@ -167,7 +143,7 @@ export class AddCustomerComponent implements OnInit {
       this.customerService.getCustomerById(this.idFromQueryParam).subscribe(
         (res: Customer) => {
           this.customer = res;
-
+          this.getAllCustomers();
           if (this.customer && this.customer.asOf) {
             const dateObject = this.customer.asOf;
             const datePipe = new DatePipe('en-US');

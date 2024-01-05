@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 // import { Transactions } from 'src/app/Model/transactions';
 import { OrderProcessService } from 'src/app/services/order-process.service';
+import { OrdersService } from 'src/app/services/orders.service';
+import { ProductRuleService } from 'src/app/services/product-rule.service';
 // import { PetyCashService } from 'src/app/services/pety-cash.service';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
 import { UserService } from 'src/app/services/user.service';
@@ -36,25 +38,35 @@ export class OrderProcessComponent implements OnInit {
   selectedUser: any;
   markAsDone: boolean = false;
 
+  // History
+
+  order: any
+  size: any;
+  productRule: any;
+  gsm: any;
+  material: string[] = [];
+
+
 
   constructor(
     private orderProcessService: OrderProcessService,
     private route: ActivatedRoute,
     private messageService: MessageService,
-    // private pettyCashService: PetyCashService,
     public sessionStorageService: SessionStorageService,
-    private userService: UserService
+    private userService: UserService,
+    private orderService: OrdersService,
+    private productRuleService: ProductRuleService
   ) { }
 
   ngOnInit(): void {
     this.paymentMode = [{ name: 'Cash' }, { name: 'Credit' }];
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
+      this.getOrderById()
     }, error => {
       this.showError(error);
       this.error = true;
     });
-    this.getCtpProcess(this.idFromQueryParam, this.ctp);
     this.getAllUsers();
   }
 
@@ -67,8 +79,9 @@ export class OrderProcessComponent implements OnInit {
     this.transactions = [];
     this.orderProcessService.getOrderProcess(orderId, ctp).subscribe((process: any) => {
       const lastIndex = process.orderTransactions.length - 1;
-      this.showAccepted = process.orderTransactions[lastIndex].isAccepted ? process.orderTransactions[lastIndex].isAccepted : false;
-      this.showRejected = process.isRejected ? process.isRejected : false;
+      debugger
+      this.showAccepted = process?.orderTransactions[lastIndex]?.isAccepted ? process?.orderTransactions[lastIndex]?.isAccepted : false;
+      this.showRejected = process?.isRejected ? process?.isRejected : false;
       this.markAsDone = process.markAsDone;
       this.transactions.push(process);
       this.variance = process.unitPrice * process.quantity;
@@ -90,7 +103,6 @@ export class OrderProcessComponent implements OnInit {
   }
 
   cash(order: any): boolean {
-    const lastIndex = order.orderTransactions.length - 1;
     this.options = false;
     order["paymentMode"] = "Cash";
     order["order"] = {
@@ -107,15 +119,12 @@ export class OrderProcessComponent implements OnInit {
   }
 
   addUserPetyCash(order: any): void {
-    // this.showAccepted = true;
-    // this.showRejected = false;
     this.orderProcessService.addTransaction(order).subscribe(data => {
       this.getCtpProcess(this.idFromQueryParam, this.ctp);
     }, error => { });
   }
 
   credit(order: any): boolean {
-    const lastIndex = order.orderTransactions.length - 1;
     this.options = false;
     order["paymentMode"] = "Credit";
     order["order"] = {
@@ -156,7 +165,6 @@ export class OrderProcessComponent implements OnInit {
   }
 
   reject(): boolean {
-    // this.showRejected = true;
     this.orderProcessService.rejectOrder(this.idFromQueryParam, this.ctp, true).subscribe(res => {
       this.getCtpProcess(this.idFromQueryParam, this.ctp);
     }, error => { });
@@ -184,11 +192,38 @@ export class OrderProcessComponent implements OnInit {
   }
 
   markToDone() {
-    this.orderProcessService.markCtpAsDone(this.idFromQueryParam, this.ctp, this.markAsDone).subscribe(res => {
+    this.orderProcessService.markCtpAsDone(this.idFromQueryParam, this.markAsDone).subscribe(res => {
+      debugger
       this.getCtpProcess(this.idFromQueryParam, this.ctp);
     }, error => {
       this.showError(error);
     });
   }
 
+  getOrderById() {
+    this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
+      this.order = res
+      this.size = JSON.parse(this.order.size);
+      this.getProductRuleById(this.order.productRule);
+    }, error => {
+      this.showError(error);
+      this.visible = true
+    })
+  }
+  getProductRuleById(id: number) {
+    this.productRuleService.getProductRuleById(id).subscribe(res => {
+      this.getCtpProcess(this.idFromQueryParam, this.ctp);
+      this.productRule = res;
+      this.productRule.ctp.vendor.vendorProcessList.forEach((element: any) => {
+        this.material.push(element.materialType);
+      });
+
+    }, error => { });
+  }
+
+  getFormattedMaterials(): string {
+    return this.material
+      .filter(material => material !== null)
+      .join(', ');
+  }
 }
