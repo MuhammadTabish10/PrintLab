@@ -125,7 +125,7 @@ export class PetyCashComponent implements OnInit {
       delete obj.order;
       delete obj.dateAndTime;
       delete obj.id;
-      debugger
+      
       this.debited(obj);
     } else {
       this.recordObj.credit = this.creditValue;

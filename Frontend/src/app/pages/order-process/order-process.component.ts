@@ -79,7 +79,6 @@ export class OrderProcessComponent implements OnInit {
     this.transactions = [];
     this.orderProcessService.getOrderProcess(orderId, ctp).subscribe((process: any) => {
       const lastIndex = process.orderTransactions.length - 1;
-      debugger
       this.showAccepted = process?.orderTransactions[lastIndex]?.isAccepted ? process?.orderTransactions[lastIndex]?.isAccepted : false;
       this.showRejected = process?.isRejected ? process?.isRejected : false;
       this.markAsDone = process.markAsDone;
@@ -113,7 +112,7 @@ export class OrderProcessComponent implements OnInit {
       delete order.vendor;
       order['vendor'] = vendorValue;
     }
-    debugger
+    
     this.addUserPetyCash(order);
     return this.options;
   }
@@ -193,7 +192,7 @@ export class OrderProcessComponent implements OnInit {
 
   markToDone() {
     this.orderProcessService.markCtpAsDone(this.idFromQueryParam, this.markAsDone).subscribe(res => {
-      debugger
+      
       this.getCtpProcess(this.idFromQueryParam, this.ctp);
     }, error => {
       this.showError(error);

@@ -24,7 +24,6 @@ export class AddCustomerComponent implements OnInit {
   visible: boolean = false;
   isASubCustomer: boolean = false;
   customerArrayOnAdd!: Customer[]
-  parentId: any;
   customer: Customer = {
     id: undefined,
     title: undefined,
@@ -67,6 +66,7 @@ export class AddCustomerComponent implements OnInit {
   parentName: any;
   term: any[] = [];
   tax: any[] = [];
+  selectedParent: any;
 
   constructor(
     private customerService: CustomerService,
@@ -79,6 +79,7 @@ export class AddCustomerComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.getAllCustomers();
     this.getPrimaryPaymentMethod();
     this.getTerms();
     this.getTax();
@@ -95,10 +96,11 @@ export class AddCustomerComponent implements OnInit {
   }
 
   addCustomer() {
-    if (this.idFromQueryParam) {
-      this.customer.parentCustomerId = this.parentId;
-    }
-    debugger
+    // if (this.idFromQueryParam) {
+    //   this.customer.parentCustomerId = this.parentId;
+    // }
+    this.customer.parentCustomerId = this.selectedParent.id
+    
     const request = this.idFromQueryParam ?
       this.customerService.updateCustomer(this.idFromQueryParam, this.customer) :
       this.customerService.postCustomer(this.customer);
@@ -125,15 +127,15 @@ export class AddCustomerComponent implements OnInit {
   getAllCustomers(): void {
     this.customerService.getCustomer().subscribe(
       (res: Customer[]) => {
-        if (this.idFromQueryParam) {
-          this.customerArray = res.filter(customer => customer.parentCustomerId !== this.idFromQueryParam && customer.parentCustomerId !== null);
-          this.customerArray = res.filter(customer => customer.id !== this.idFromQueryParam);
-          const check = this.customerArray.filter(customer => customer.parentCustomerId === this.idFromQueryParam);
-          this.customerArray = this.customerArray.filter(customer => !check.includes(customer));
-          debugger
-        } else {
-          this.customerArrayOnAdd = res;
-        }
+        // if (this.idFromQueryParam) {
+        
+        this.customerArray = res.filter(customer => customer.parentCustomerId !== this.idFromQueryParam && customer.parentCustomerId !== null);
+        this.customerArray = res.filter(customer => customer.id !== this.idFromQueryParam);
+        const check = this.customerArray.filter(customer => customer.parentCustomerId === this.idFromQueryParam);
+        this.customerArray = this.customerArray.filter(customer => !check.includes(customer));
+        // } else {
+        //   this.customerArrayOnAdd = res;
+        // }
       }, error => {
       })
   }
@@ -143,7 +145,7 @@ export class AddCustomerComponent implements OnInit {
       this.customerService.getCustomerById(this.idFromQueryParam).subscribe(
         (res: Customer) => {
           this.customer = res;
-          this.getAllCustomers();
+          this.selectedParent = this.customerArray.find(customerArray => customerArray.id === this.customer.parentCustomerId);
           if (this.customer && this.customer.asOf) {
             const dateObject = this.customer.asOf;
             const datePipe = new DatePipe('en-US');
@@ -158,15 +160,15 @@ export class AddCustomerComponent implements OnInit {
         });
     }
   }
-  parentCustomer(parentId: any) {
+  // parentCustomer(parentId: any) {
 
-    if (this.idFromQueryParam) {
-      this.customer.parentCustomerId = null;
-      this.parentId = parentId.id;
-    } else {
-      this.customer.parentCustomerId = parentId.id;
-    }
-  }
+  //   if (this.idFromQueryParam) {
+  //     this.customer.parentCustomerId = null;
+  //     this.parentId = parentId.id;
+  //   } else {
+  //     this.customer.parentCustomerId = parentId.id;
+  //   }
+  // }
   sameAs() {
     if (this.customer.sameAsBilling) {
       this.customer.shippingStreetAddress = this.customer.billingStreetAddress;
@@ -188,7 +190,7 @@ export class AddCustomerComponent implements OnInit {
     this.productFieldService.searchProductField("Customer Primary Payment Method").subscribe(
       (res: any) => {
         this.productField = res;
-        debugger
+        
       }, error => {
       }
     )
@@ -197,7 +199,7 @@ export class AddCustomerComponent implements OnInit {
     this.productFieldService.searchProductField("Customer Term").subscribe(
       (res: any) => {
         this.term = res;
-        debugger
+        
       }, error => {
       }
     )
@@ -206,7 +208,7 @@ export class AddCustomerComponent implements OnInit {
     this.productFieldService.searchProductField("Customer Tax").subscribe(
       (res: any) => {
         this.tax = res;
-        debugger
+        
       }, error => {
       }
     )

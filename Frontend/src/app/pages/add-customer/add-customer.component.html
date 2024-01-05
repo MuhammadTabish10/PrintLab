@@ -139,7 +139,7 @@
 
             <div class="col-3 my-3" *ngIf="customer.subCustomer">
               <label class="add-order-label m-0">Parent Customer</label>
-              <div *ngIf="idFromQueryParam">
+              <!-- <div *ngIf="idFromQueryParam">
                 <p-dropdown
                   styleClass="w-100"
                   [options]="customerArray"
@@ -148,17 +148,16 @@
                   (ngModelChange)="parentCustomer($event)"
                   [(ngModel)]="customer.parentCustomerId"
                 ></p-dropdown>
-              </div>
-              <div *ngIf="!idFromQueryParam">
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="customerArrayOnAdd"
-                  optionLabel="name"
-                  name="pCustomer"
-                  (ngModelChange)="parentCustomer($event)"
-                  [(ngModel)]="parentId"
-                ></p-dropdown>
-              </div>
+              </div> -->
+              <!-- <div *ngIf="!idFromQueryParam"> -->
+              <p-dropdown
+                styleClass="w-100"
+                [options]="customerArray"
+                optionLabel="name"
+                name="pCustomer"
+                [(ngModel)]="selectedParent"
+              ></p-dropdown>
+              <!-- </div> -->
             </div>
             <div class="my-3" *ngIf="customer.subCustomer">
               <p-checkbox
