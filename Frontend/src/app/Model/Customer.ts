@@ -25,7 +25,7 @@ export interface Customer {
   shippingPostalCode: string | null | undefined;
   shippingCountry: string | null | undefined;
   openingBalance: string | null | undefined;
-  asOf: Date | null | undefined;
+  asOf: Date | null | undefined | string;
   primaryPaymentMethod: string | null | undefined;
   terms: string | null | undefined;
   tax: string | null | undefined;

@@ -14,162 +14,190 @@
         #customerForm="ngForm"
         (ngSubmit)="addCustomer()"
       >
-        <div class="container-fluid card my-3">
-          <div class="row">
-            <div class="col-3 my-3">
-              <label class="add-order-label m-0">Title</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="customer.title"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Title"
-                name="title"
-                required
-              />
-            </div>
-            <div class="col-3 my-3">
-              <label class="add-order-label m-0">Name</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="customer.name"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Name"
-                name="name"
-                required
-              />
-            </div>
-            <div class="col-3 my-3">
-              <label class="add-order-label m-0">Middle Name</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="customer.middleName"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Middle Name"
-                name="mName"
-                required
-              />
-            </div>
-            <div class="col-3 my-3">
-              <label class="add-order-label m-0">Last Name</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="customer.lastName"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Last Name"
-                name="lName"
-                required
-              />
-            </div>
-            <!-- <div class="row mx-auto px-0"> -->
-            <div class="col my-3">
-              <label class="add-order-label m-0">Company Name</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0 w-100"
-                [(ngModel)]="customer.businessName"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Company Name"
-                name="companyName"
-                required
-              />
-            </div>
-            <div class="col my-3">
-              <label class="add-order-label m-0">Email</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="customer.email"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Email"
-                name="email"
-                required
-              />
-            </div>
-            <div class="col my-3">
-              <label class="add-order-label m-0">Phone Number</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="customer.phoneNo"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Phone Number"
-                name="phoneNo"
-                required
-              />
-            </div>
-            <div class="col my-3">
-              <label class="add-order-label m-0">Mobile Number</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="customer.mobileNo"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Phone Number"
-                name="phoneNo"
-                required
-              />
-            </div>
-            <div class="col my-3">
-              <label class="add-order-label m-0">Website</label>
-              <input
-                type="text"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="customer.website"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Website Name"
-                name="wName"
-                required
-              />
-            </div>
-            <!-- </div> -->
 
-            <div class="my-3">
-              <p-checkbox
-                [binary]="true"
-                inputId="binary"
-                label="Is a sub-customer"
-                name="subCustomer"
-                [(ngModel)]="customer.subCustomer"
-              ></p-checkbox>
-            </div>
+          <!-- Name And Contact Collapse Section -->
 
-            <div class="col-3 my-3" *ngIf="customer.subCustomer">
-              <label class="add-order-label m-0">Parent Customer</label>
-              <!-- <div *ngIf="idFromQueryParam">
+          <div class="row mx-auto bg-dark text-white border-bottom">
+            <div
+              class="col"
+              data-bs-toggle="collapse"
+              data-bs-target="#nameSection"
+              aria-expanded="false"
+              aria-controls="nameSection"
+            >
+              <h2>Name and Contact</h2>
+            </div>
+            <div class="col text-end">
+              <i
+                class="pi pi-arrow-down pt-2"
+                style="font-size: 1.5rem"
+                data-bs-toggle="collapse"
+                data-bs-target="#nameSection"
+                aria-expanded="false"
+                aria-controls="nameSection"
+              ></i>
+            </div>
+          </div>
+
+          <!-- Name And Contact Collapse Content -->
+          <div class="container-fluid collapse card my-1 show" id="nameSection">
+            <div class="row mx-auto">
+              <div class="col-3 my-3">
+                <label class="add-order-label m-0">Title</label>
+                <input
+                  type="text"
+                  class="order-search form-control order-form-input m-0"
+                  [(ngModel)]="customer.title"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter Title"
+                  name="title"
+                  required
+                />
+              </div>
+              <div class="col-3 my-3">
+                <label class="add-order-label m-0">Name</label>
+                <input
+                  type="text"
+                  class="order-search form-control order-form-input m-0"
+                  [(ngModel)]="customer.name"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter Name"
+                  name="name"
+                  required
+                />
+              </div>
+              <div class="col-3 my-3">
+                <label class="add-order-label m-0">Middle Name</label>
+                <input
+                  type="text"
+                  class="order-search form-control order-form-input m-0"
+                  [(ngModel)]="customer.middleName"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter Middle Name"
+                  name="mName"
+                  required
+                />
+              </div>
+              <div class="col-3 my-3">
+                <label class="add-order-label m-0">Last Name</label>
+                <input
+                  type="text"
+                  class="order-search form-control order-form-input m-0"
+                  [(ngModel)]="customer.lastName"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter Last Name"
+                  name="lName"
+                  required
+                />
+              </div>
+              <!-- <div class="row mx-auto px-0"> -->
+              <div class="col my-3">
+                <label class="add-order-label m-0">Company Name</label>
+                <input
+                  type="text"
+                  class="order-search form-control order-form-input m-0 w-100"
+                  [(ngModel)]="customer.businessName"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter Company Name"
+                  name="companyName"
+                  required
+                />
+              </div>
+              <div class="col my-3">
+                <label class="add-order-label m-0">Email</label>
+                <input
+                  type="text"
+                  class="order-search form-control order-form-input m-0"
+                  [(ngModel)]="customer.email"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter Email"
+                  name="email"
+                  required
+                />
+              </div>
+              <div class="col my-3">
+                <label class="add-order-label m-0">Phone Number</label>
+                <input
+                  type="text"
+                  class="order-search form-control order-form-input m-0"
+                  [(ngModel)]="customer.phoneNo"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter Phone Number"
+                  name="phoneNo"
+                  required
+                />
+              </div>
+              <div class="col my-3">
+                <label class="add-order-label m-0">Mobile Number</label>
+                <input
+                  type="text"
+                  class="order-search form-control order-form-input m-0"
+                  [(ngModel)]="customer.mobileNo"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter Phone Number"
+                  name="phoneNo"
+                  required
+                />
+              </div>
+              <div class="col my-3">
+                <label class="add-order-label m-0">Website</label>
+                <input
+                  type="text"
+                  class="order-search form-control order-form-input m-0"
+                  [(ngModel)]="customer.website"
+                  style="border: 1px solid #ced4da"
+                  placeholder="Enter Website Name"
+                  name="wName"
+                  required
+                />
+              </div>
+              <!-- </div> -->
+
+              <div class="my-3">
+                <p-checkbox
+                  [binary]="true"
+                  inputId="binaryCustomer"
+                  label="Is a sub-customer"
+                  name="subCustomer"
+                  (click)="clear()"
+                  [(ngModel)]="customer.subCustomer"
+                ></p-checkbox>
+              </div>
+
+              <div class="col-3 my-3" *ngIf="customer.subCustomer">
+                <label class="add-order-label m-0">Parent Customer</label>
+                <!-- <div *ngIf="idFromQueryParam">
+                    <p-dropdown
+                      styleClass="w-100"
+                      [options]="customerArray"
+                      optionLabel="name"
+                      name="pCustomer"
+                      (ngModelChange)="parentCustomer($event)"
+                      [(ngModel)]="customer.parentCustomerId"
+                    ></p-dropdown>
+                  </div> -->
+                <!-- <div *ngIf="!idFromQueryParam"> -->
                 <p-dropdown
                   styleClass="w-100"
                   [options]="customerArray"
                   optionLabel="name"
                   name="pCustomer"
-                  (ngModelChange)="parentCustomer($event)"
-                  [(ngModel)]="customer.parentCustomerId"
+                  [(ngModel)]="selectedParent"
                 ></p-dropdown>
-              </div> -->
-              <!-- <div *ngIf="!idFromQueryParam"> -->
-              <p-dropdown
-                styleClass="w-100"
-                [options]="customerArray"
-                optionLabel="name"
-                name="pCustomer"
-                [(ngModel)]="selectedParent"
-              ></p-dropdown>
-              <!-- </div> -->
-            </div>
-            <div class="my-3" *ngIf="customer.subCustomer">
-              <p-checkbox
-                [binary]="true"
-                inputId="binary"
-                label="Bill parent customer"
-                name="billParentCustomer"
-                [(ngModel)]="customer.billParentCustomer"
-              ></p-checkbox>
+                <!-- </div> -->
+              </div>
+              <div class="my-3" *ngIf="customer.subCustomer">
+                <p-checkbox
+                  [binary]="true"
+                  inputId="binaryBill"
+                  label="Bill parent customer"
+                  name="billParentCustomer"
+                  [(ngModel)]="customer.billParentCustomer"
+                ></p-checkbox>
+              </div>
             </div>
           </div>
-        </div>
+
 
         <!-- Address Collapse Section -->
 
@@ -196,7 +224,7 @@
         </div>
 
         <!-- Address Collapse Content -->
-        <div class="container-fluid collapse card my-1" id="addressSection">
+        <div class="container-fluid collapse card my-1 show" id="addressSection">
           <div class="row">
             <div class="col-12">
               <h2>Billing Address</h2>
@@ -266,7 +294,7 @@
             <div class="my-3">
               <p-checkbox
                 [binary]="true"
-                inputId="binary"
+                inputId="binaryAddress"
                 name="sameAsBAddress"
                 label="Same as billing address"
                 (click)="sameAs()"
@@ -359,7 +387,7 @@
         </div>
 
         <!-- Balance Collapse content -->
-        <div class="container-fluid collapse card my-1" id="balanceSection">
+        <div class="container-fluid collapse card my-1 show" id="balanceSection">
           <div class="row">
             <div class="col-3 my-3">
               <label class="add-order-label m-0">Opening Balance</label>
@@ -411,7 +439,7 @@
         </div>
 
         <!-- Payment And Taxtation content -->
-        <div class="collapse container-fluid card my-1" id="paymentSection">
+        <div class="collapse container-fluid card my-1 show" id="paymentSection">
           <div class="row">
             <div class="col-3 my-3">
               <label class="add-order-label m-0">Primary Payment Method</label>
