@@ -151,11 +151,23 @@ export class AuthguardService implements CanActivate {
       url: ['/productProcess', '/addProductProcess'],
       permissions: 'Configuration_Product_Process'
     }
+    const labourObj = {
+      url: ['/get-binding-labours', '/add-binding-labour'],
+      permissions: 'BindingLabours'
+    }
+    const laminationVendorObj = {
+      url: ['/get-lamination-vendors', '/add-lamination-vendor'],
+      permissions: 'LaminationVendors'
+    }
+    const uvVendorObj = {
+      url: ['/get-uv-vendors', '/add-uv-vendor'],
+      permissions: 'UV_Vendors'
+    }
 
 
     return [customerObj, userObj, ProductRule, orderObj, orderProcessObj, designerOrderObj, productionObj, plateSetterObj, dashboardObj, addproductObj, calculatorObj, permissionObj, paperStock, permissionConfiguration_Product_Field,
       permissionConfiguration_Settings, permissionConfiguration_Inventory, permissionConfiguration_Vendor, permissionConfiguration_CTP, permissionConfiguration_Paper_Size,
-      permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate, permissionConfiguration_Uping, permissionConfiguration_Product_Process]
+      permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate, permissionConfiguration_Uping, permissionConfiguration_Product_Process,labourObj,laminationVendorObj,uvVendorObj]
 
 
     // const configurationObj = {

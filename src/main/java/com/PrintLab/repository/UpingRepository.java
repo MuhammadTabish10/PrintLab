@@ -27,4 +27,6 @@ public interface UpingRepository extends JpaRepository<Uping,Long> {
 
     @Query(value = "SELECT column_name FROM information_schema.columns WHERE table_name = 'uping'", nativeQuery = true)
     List<String> getTableColumns();
+
+    List<Uping> findByCategory(String category);
 }

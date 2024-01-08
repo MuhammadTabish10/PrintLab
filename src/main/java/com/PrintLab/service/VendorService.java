@@ -15,4 +15,6 @@ public interface VendorService
     String deleteById(Long id);
     VendorDto updateVendor(Long id, VendorDto vendorDto);
     void deleteVendorProcessById(Long id, Long vendorProcessId);
+
+    List<VendorDto> getVendorByProcess(String process);
 }

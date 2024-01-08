@@ -260,6 +260,54 @@
 
     <li
       class="settingOptions mt-2"
+      *ngIf="sessionStorageService.hasPermission('BindingLabours')"
+    >
+      <span>
+        <a
+          class="sidebar-list-hover-settings"
+          *ngIf="isDropDown4Open"
+          class="sidebar-list-hover-settings nav-link"
+          [routerLink]="['/get-binding-labours']"
+        >
+          <i class="fa fa-gear fa-2x"></i>
+          <span class="nav-text">BindingLabours</span>
+        </a>
+      </span>
+    </li>
+    <li
+      class="settingOptions mt-2"
+      *ngIf="sessionStorageService.hasPermission('LaminationVendors')"
+    >
+      <span>
+        <a
+          class="sidebar-list-hover-settings"
+          *ngIf="isDropDown4Open"
+          class="sidebar-list-hover-settings nav-link"
+          [routerLink]="['/get-lamination-vendors']"
+        >
+          <i class="fa fa-gear fa-2x"></i>
+          <span class="nav-text">Lamination Vendors</span>
+        </a>
+      </span>
+    </li>
+    <li
+      class="settingOptions mt-2"
+      *ngIf="sessionStorageService.hasPermission('UV_Vendors')"
+    >
+      <span>
+        <a
+          class="sidebar-list-hover-settings"
+          *ngIf="isDropDown4Open"
+          class="sidebar-list-hover-settings nav-link"
+          [routerLink]="['/get-uv-vendors']"
+        >
+          <i class="fa fa-gear fa-2x"></i>
+          <span class="nav-text">UV Vendors</span>
+        </a>
+      </span>
+    </li>
+    <li
+      class="settingOptions mt-2"
       *ngIf="sessionStorageService.hasPermission('Configuration_CTP')"
     >
       <span>

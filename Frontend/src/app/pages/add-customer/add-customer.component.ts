@@ -99,11 +99,9 @@ export class AddCustomerComponent implements OnInit {
     this.customer.parentCustomerId = this.selectedParent ? this.selectedParent.id : null;
     const formattedDate = this.datePipe.transform(this.customer.asOf, 'yyyy-MM-dd');
     this.customer.asOf = formattedDate;
-    debugger
     const request = this.idFromQueryParam ?
       this.customerService.updateCustomer(this.idFromQueryParam, this.customer) :
       this.customerService.postCustomer(this.customer);
-
     request.pipe(takeUntil(this.destroy$)).subscribe(
       () => this.router.navigateByUrl('/customers'),
       (error: any) => {
@@ -126,15 +124,10 @@ export class AddCustomerComponent implements OnInit {
   getAllCustomers(): void {
     this.customerService.getCustomer().subscribe(
       (res: Customer[]) => {
-        // if (this.idFromQueryParam) {
-
         this.customerArray = res.filter(customer => customer.parentCustomerId !== this.idFromQueryParam && customer.parentCustomerId !== null);
         this.customerArray = res.filter(customer => customer.id !== this.idFromQueryParam);
         const check = this.customerArray.filter(customer => customer.parentCustomerId === this.idFromQueryParam);
         this.customerArray = this.customerArray.filter(customer => !check.includes(customer));
-        // } else {
-        //   this.customerArrayOnAdd = res;
-        // }
       }, error => {
       })
   }

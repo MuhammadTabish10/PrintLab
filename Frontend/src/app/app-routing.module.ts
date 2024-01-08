@@ -51,6 +51,12 @@ import { VendorSettlementComponent } from './pages/vendor-settlement/vendor-sett
 import { AllSettlementsComponent } from './pages/all-settlements/all-settlements.component';
 import { AllPettyCashRecordsComponent } from './pages/all-petty-cash-records/all-petty-cash-records.component';
 import { OrderTimeLineComponent } from './pages/order-process/order-time-line/order-time-line.component';
+import { GetBindingLaboursComponent } from './pages/Labour/get-binding-labours/get-binding-labours.component';
+import { AddBindingLaboursComponent } from './pages/Labour/add-binding-labours/add-binding-labours.component';
+import { LaminationVendorsComponent } from './pages/Labour/lamination-vendors/lamination-vendors.component';
+import { AddLaminationVendorsComponent } from './pages/Labour/add-lamination-vendors/add-lamination-vendors.component';
+import { GetUvVendorsComponent } from './pages/Labour/get-uv-vendors/get-uv-vendors.component';
+import { AddUvVendorsComponent } from './pages/Labour/add-uv-vendors/add-uv-vendors.component';
 
 export const routes: Routes = [
   {
@@ -304,6 +310,36 @@ export const routes: Routes = [
   {
     path: 'order-timeline',
     component: OrderTimeLineComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'get-binding-labours',
+    component: GetBindingLaboursComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'add-binding-labour',
+    component: AddBindingLaboursComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'get-lamination-vendors',
+    component: LaminationVendorsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'add-lamination-vendor',
+    component: AddLaminationVendorsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'get-uv-vendors',
+    component: GetUvVendorsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'add-uv-vendor',
+    component: AddUvVendorsComponent,
     canActivate: [AuthguardService]
   },
 ];

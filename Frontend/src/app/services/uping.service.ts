@@ -62,4 +62,9 @@ export class UpingService {
     let url = `${this._url}/uping/product-sizes/${size}`
     return this.http.get(url, { params })
   }
+
+  searchUpingByCategory(category: string) {
+    let url = `${this._url}/uping/product-sizes/name/${category}`;
+    return this.http.get(url)
+  }
 }

@@ -3,7 +3,9 @@ package com.PrintLab.service.impl;
 import com.PrintLab.dto.VendorDto;
 import com.PrintLab.dto.VendorProcessDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.model.*;
+import com.PrintLab.model.ProductProcess;
+import com.PrintLab.model.Vendor;
+import com.PrintLab.model.VendorProcess;
 import com.PrintLab.repository.ProductProcessRepository;
 import com.PrintLab.repository.VendorProcessRepository;
 import com.PrintLab.repository.VendorRepository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -37,7 +40,7 @@ public class VendorServiceImpl implements VendorService {
         Vendor createdVendor = vendorRepository.save(vendor);
 
         List<VendorProcess> vendorProcessList = vendor.getVendorProcessList();
-        if(vendorProcessList != null && !vendorProcessList.isEmpty()){
+        if (vendorProcessList != null && !vendorProcessList.isEmpty()) {
             for (VendorProcess vendorProcess : vendorProcessList) {
                 vendorProcess.setVendor(createdVendor);
                 vendorProcess.setProductProcess(productProcessRepository.findById(vendorProcess.getProductProcess().getId())
@@ -86,14 +89,13 @@ public class VendorServiceImpl implements VendorService {
 
 
     @Override
-    public VendorDto findById(Long id){
+    public VendorDto findById(Long id) {
         Optional<Vendor> optionalVendor = vendorRepository.findById(id);
 
-        if(optionalVendor.isPresent()) {
+        if (optionalVendor.isPresent()) {
             Vendor vendor = optionalVendor.get();
             return toDto(vendor);
-        }
-        else {
+        } else {
             throw new RecordNotFoundException(String.format("Vendor not found for id => %d", id));
         }
     }
@@ -102,11 +104,10 @@ public class VendorServiceImpl implements VendorService {
     public VendorDto findByName(String name) {
         Optional<Vendor> vendorOptional = Optional.ofNullable(vendorRepository.findByName(name));
 
-        if(vendorOptional.isPresent()){
+        if (vendorOptional.isPresent()) {
             Vendor vendor = vendorOptional.get();
             return toDto(vendor);
-        }
-        else {
+        } else {
             throw new RecordNotFoundException(String.format("Vendor not found at => %s", name));
         }
     }
@@ -128,11 +129,10 @@ public class VendorServiceImpl implements VendorService {
     public String deleteById(Long id) {
         Optional<Vendor> optionalVendor = vendorRepository.findById(id);
 
-        if(optionalVendor.isPresent()) {
+        if (optionalVendor.isPresent()) {
             Vendor vendor = optionalVendor.get();
             vendorRepository.setStatusInactive(id);
-        }
-        else{
+        } else {
             throw new RecordNotFoundException(String.format("Vendor not found for id => %d", id));
         }
         return null;
@@ -203,12 +203,27 @@ public class VendorServiceImpl implements VendorService {
                 vendor.getVendorProcessList().remove(vendorProcessToDelete);
                 vendorProcessRepository.delete(vendorProcessToDelete);
                 vendorRepository.save(vendor);
-            } else{
+            } else {
                 throw new RecordNotFoundException("Vendor Process not found");
             }
         } else {
             throw new RecordNotFoundException(String.format("Vendor not found for id => %d", id));
         }
+    }
+
+    @Override
+    public List<VendorDto> getVendorByProcess(String process) {
+        List<Vendor> vendorList = vendorRepository.findByVendorProcessList_ProductProcess_Name(process);
+
+        if (vendorList.isEmpty()) {
+            throw new RecordNotFoundException(String.format("Vendor not found on Product process => %s", process));
+        }
+
+        Set<Vendor> uniqueVendors = new HashSet<>(vendorList);
+
+        return uniqueVendors.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     public VendorDto toDto(Vendor vendor) {
@@ -220,7 +235,7 @@ public class VendorServiceImpl implements VendorService {
                     .rateSqft(vendorProcess.getRateSqft())
                     .notes(vendorProcess.getNotes())
                     .productProcess(productProcessService.toDto(productProcessRepository.findById(vendorProcess.getProductProcess().getId())
-                            .orElseThrow(()-> new RecordNotFoundException("Product Process Not Found"))))
+                            .orElseThrow(() -> new RecordNotFoundException("Product Process Not Found"))))
                     .build();
             vendorProcessDto.add(dto);
         }

@@ -101,4 +101,11 @@ public class UpingController
         List<UpingDto> updatedUpingDto = upingService.uploadFile(multipartFile);
         return ResponseEntity.ok(updatedUpingDto);
     }
+
+    @GetMapping("/product-sizes/name/{category}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<UpingDto>> getUppingByCategory(@PathVariable String category) {
+        List<UpingDto> upingDtoList = upingService.findByCategory(category);
+        return ResponseEntity.ok(upingDtoList);
+    }
 }

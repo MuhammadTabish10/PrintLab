@@ -1,0 +1,119 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid ps-6">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="main-container">
+    <div>
+      <h3>Binding Labours</h3>
+    </div>
+    <div class="card text-nowrap">
+      <p-table
+        #dt1
+        [value]="bindingLabourList"
+        dataKey="id"
+        [globalFilterFields]="['name']"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex clearfix">
+            <span class="p-input-icon-right ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="searchLabour($event.target)"
+                placeholder="Search Binding Labour"
+              />
+            </span>
+            <button
+              pButton
+              label="Add"
+              class="p-button-dark bg-dark float-end"
+              icon="pi pi-plus"
+              routerLink="/add-binding-labour"
+            ></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="col">
+              <div class="d-flex justify-content-center">Time Stamp</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Vendor</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Added By</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Type</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Size Category</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Size Name</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Rate</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Action</div>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-labour let-i="rowIndex">
+          <tr>
+            <td class="text-center">
+              {{ labour?.timeStamp }}
+            </td>
+            <td class="text-center">
+              {{ labour?.name }}
+            </td>
+            <td class="text-center">
+              {{ labour?.createdBy }}
+            </td>
+            <td class="text-center">
+              {{ labour?.type }}
+            </td>
+            <td class="text-center">
+              {{ labour?.category }}
+            </td>
+            <td class="text-center">
+              {{ labour?.size }}
+            </td>
+            <td class="text-center">
+              {{ labour?.rate }}
+            </td>
+            <td class="text-center">
+              <div
+                class="btn-group mr-2"
+                role="group"
+                aria-label="Second group"
+              >
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="editBindingLabour(labour?.id)"
+                >
+                  <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="deleteBindingLabour(labour)"
+                >
+                  <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" class="text-center">No Binding Labour Found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>

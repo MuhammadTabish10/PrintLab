@@ -20,4 +20,6 @@ public interface UpingService
     UpingDto updateUping(Long id, UpingDto upingDto);
     void deleteUpingPaperSizeById(Long id, Long upingPaperSizeId);
     List<UpingDto> uploadFile(MultipartFile multipartFile);
+
+    List<UpingDto> findByCategory(String category);
 }

@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -268,12 +266,12 @@ public class UpingServiceImpl implements UpingService {
             List<String> upingTableColumns = upingRepository.getTableColumns();
             upingTableColumns.remove("id");
 
-            if(excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("id"))){
+            if (excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("id"))) {
                 excelColumns.remove("id");
             }
 
-            if(excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("unit"))){
-                for(int i = 1; i < upingFile.size(); i++){
+            if (excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("unit"))) {
+                for (int i = 1; i < upingFile.size(); i++) {
                     List<String> oneRow = upingFile.get(i);
 
                     if (oneRow.get(7).equalsIgnoreCase("MM")) {
@@ -285,8 +283,7 @@ public class UpingServiceImpl implements UpingService {
 
                         String concatenatedString = l1 + "x" + l2;
                         oneRow.set(4, concatenatedString);
-                    }
-                    else if(oneRow.get(7).equalsIgnoreCase("INCH")) {
+                    } else if (oneRow.get(7).equalsIgnoreCase("INCH")) {
                         Double convertedValue1 = Double.parseDouble(oneRow.get(2)) * 25.4;
                         Double convertedValue2 = Double.parseDouble(oneRow.get(3)) * 25.4;
 
@@ -303,7 +300,7 @@ public class UpingServiceImpl implements UpingService {
                 throw new RecordNotFoundException("Excel columns do not match Uping table columns.");
             }
 
-            for(int i = 1; i < upingFile.size(); i++){
+            for (int i = 1; i < upingFile.size(); i++) {
                 List<String> oneRow = upingFile.get(i);
                 Uping uping = Uping.builder()
                         .category(oneRow.get(0))
@@ -327,8 +324,21 @@ public class UpingServiceImpl implements UpingService {
         return upingDtoList;
     }
 
-    private void calculateMmAndInch(List<String> excelColumns){
-        if(excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("unit"))){
+    @Override
+    public List<UpingDto> findByCategory(String category) {
+        List<Uping> upingList = upingRepository.findByCategory(category);
+
+        if (upingList.isEmpty()) {
+            throw new RecordNotFoundException(String.format("Size not found by category => %s", category));
+        }
+
+        return upingList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private void calculateMmAndInch(List<String> excelColumns) {
+        if (excelColumns.stream().anyMatch(c -> c.equalsIgnoreCase("unit"))) {
         }
     }
 

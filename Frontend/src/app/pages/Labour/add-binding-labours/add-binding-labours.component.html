@@ -1,0 +1,194 @@
+<app-sidebar></app-sidebar>
+<div class="body-position">
+  <app-dashboard-head></app-dashboard-head>
+
+  <div class="main-container">
+    <div>
+      <h4>{{ buttonName }} Binding Labour</h4>
+    </div>
+    <div class="order-body py-2">
+      <div class="container card">
+        <form #form="ngForm" (ngSubmit)="submit()">
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label d-inline-block m-0 mb-1"
+                >Vendor</label
+              >
+              <p-dropdown
+                [options]="bindingLabourList"
+                styleClass="w-100"
+                optionLabel="name"
+                optionValue="name"
+                placeholder="Select Vendor"
+                [(ngModel)]="bindingLabour.name"
+                name="vendor"
+                [filter]="true"
+                filterBy="name"
+                [showClear]="true"
+                #vendorModel="ngModel"
+                [required]="true"
+                [ngClass]="{
+                  'ng-dirty ng-invalid':
+                    vendorModel.invalid &&
+                    (vendorModel.dirty || vendorModel.touched)
+                }"
+              >
+              </p-dropdown>
+              <div
+                *ngIf="
+                  vendorModel.invalid &&
+                  (vendorModel.dirty || vendorModel.touched)
+                "
+              >
+                <div *ngIf="vendorModel.errors" class="text-danger m-1">
+                  Vendor is required.
+                </div>
+              </div>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0 mb-1">Type</label>
+              <p-dropdown
+                [options]="bindingTypes?.productFieldValuesList"
+                styleClass="w-100"
+                optionLabel="name"
+                optionValue="name"
+                placeholder="Select Binding Type"
+                [(ngModel)]="bindingLabour.type"
+                [filter]="true"
+                filterBy="name"
+                [showClear]="true"
+                name="type"
+                #typeModel="ngModel"
+                [required]="true"
+                [ngClass]="{
+                  'ng-dirty ng-invalid':
+                    typeModel.invalid && (typeModel.dirty || typeModel.touched)
+                }"
+              >
+              </p-dropdown>
+              <div
+                *ngIf="
+                  typeModel.invalid && (typeModel.dirty || typeModel.touched)
+                "
+              >
+                <div *ngIf="typeModel.errors" class="text-danger m-1">
+                  Type is required.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0 mb-1">Size Category</label>
+              <p-dropdown
+                [options]="sizeCategory?.productFieldValuesList"
+                styleClass="w-100"
+                optionLabel="name"
+                optionValue="name"
+                (onChange)="onCategoryChange($event.value)"
+                placeholder="Select Size Category"
+                [(ngModel)]="bindingLabour.category"
+                [filter]="true"
+                filterBy="name"
+                [showClear]="true"
+                name="category"
+                #categoryModel="ngModel"
+                [required]="true"
+                [ngClass]="{
+                  'ng-dirty ng-invalid':
+                    categoryModel.invalid &&
+                    (categoryModel.dirty || categoryModel.touched)
+                }"
+              >
+              </p-dropdown>
+              <div
+                *ngIf="
+                  categoryModel.invalid &&
+                  (categoryModel.dirty || categoryModel.touched)
+                "
+              >
+                <div *ngIf="categoryModel.errors" class="text-danger m-1">
+                  Category is required.
+                </div>
+              </div>
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0 mb-1">Size Name</label>
+              <p-dropdown
+                [options]="uppingArray"
+                styleClass="w-100"
+                optionLabel="productSize"
+                optionValue="productSize"
+                placeholder="Select Size Name"
+                [filter]="true"
+                filterBy="productSize"
+                [showClear]="true"
+                emptyMessage="Select Category First"
+                [(ngModel)]="bindingLabour.size"
+                name="size"
+                #sizeModel="ngModel"
+                [required]="true"
+                [ngClass]="{
+                  'ng-dirty ng-invalid':
+                    sizeModel.invalid &&
+                    (sizeModel.dirty || sizeModel.touched) &&
+                    bindingLabour.category
+                }"
+              >
+              </p-dropdown>
+              <div
+                *ngIf="
+                  sizeModel.invalid && (sizeModel.dirty || sizeModel.touched)
+                "
+              >
+                <div
+                  *ngIf="sizeModel.errors && bindingLabour?.category"
+                  class="text-danger m-1"
+                >
+                  Size name is required.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 my-3 p-fluid">
+              <label class="add-order-label d-inline-block m-0 mb-1"
+                >Rate</label
+              >
+              <div class="flex-auto">
+                  <p-inputNumber
+                  [(ngModel)]="bindingLabour.rate"
+                  inputId="minmax"
+                  [min]="0"
+                  [max]="10000"
+                  [format]="true"
+                  mode="currency"
+                  currency="PKR"
+                  name="rate"
+                  #rateModel="ngModel"
+                  [required]="true"
+                >
+                </p-inputNumber>
+                <div
+                  *ngIf="
+                    rateModel.invalid && (rateModel.dirty || rateModel.touched)
+                  "
+                >
+                  <div *ngIf="rateModel.errors" class="text-danger m-1">
+                    Rate is required.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col my-3 d-flex align-items-end justify-content-end">
+              <button type="submit" class="btn btn-dark col-2">
+                {{ buttonName }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>

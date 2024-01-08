@@ -20,7 +20,7 @@ export class VendorService {
     let url = `${this._url}/vendor`
     return this.http.get(url)
   }
-  getVendorByProductProcess(processId:any) {
+  getVendorByProductProcess(processId: any) {
     let url = `${this._url}/vendor/${processId}/product-process`
     return this.http.get(url)
   }
@@ -49,4 +49,10 @@ export class VendorService {
     let url = `${this._url}/vendor/names/${name}`
     return this.http.get(url)
   }
+
+  getVendorByProductProcessName(process: string) {
+    let url = `${this._url}/vendor/${process}/product-process-name`;
+    return this.http.get(url)
+  }
+
 }

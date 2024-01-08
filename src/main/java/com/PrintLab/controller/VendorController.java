@@ -10,16 +10,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/vendor")
-public class VendorController
-{
+public class VendorController {
     public final VendorService vendorService;
+
     public VendorController(VendorService vendorService) {
         this.vendorService = vendorService;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<VendorDto> createVendor(@RequestBody VendorDto vendorDto){
+    public ResponseEntity<VendorDto> createVendor(@RequestBody VendorDto vendorDto) {
         return ResponseEntity.ok(vendorService.save(vendorDto));
     }
 
@@ -68,7 +68,7 @@ public class VendorController
     @DeleteMapping("/{id}/{vendor-process-id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteVendorProcess(@PathVariable Long id, @PathVariable(name = "vendor-process-id") Long pvId) {
-        vendorService.deleteVendorProcessById(id,pvId);
+        vendorService.deleteVendorProcessById(id, pvId);
         return ResponseEntity.ok().build();
     }
 
@@ -78,4 +78,12 @@ public class VendorController
         VendorDto updatedVendorDto = vendorService.updateVendor(id, vendorDto);
         return ResponseEntity.ok(updatedVendorDto);
     }
+
+    @GetMapping("/{process}/product-process-name")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<VendorDto>> getVendorByProductProcess(@PathVariable String process) {
+        List<VendorDto> vendorDtoList = vendorService.getVendorByProcess(process);
+        return ResponseEntity.ok(vendorDtoList);
+    }
+
 }

@@ -90,6 +90,12 @@ import { AllSettlementsComponent } from './pages/all-settlements/all-settlements
 import { CheckboxModule } from 'primeng/checkbox';
 import { OrderTimeLineComponent } from './pages/order-process/order-time-line/order-time-line.component';
 import { TimelineModule } from 'primeng/timeline';
+import { GetBindingLaboursComponent } from './pages/Labour/get-binding-labours/get-binding-labours.component';
+import { AddBindingLaboursComponent } from './pages/Labour/add-binding-labours/add-binding-labours.component';
+import { LaminationVendorsComponent } from './pages/Labour/lamination-vendors/lamination-vendors.component';
+import { AddLaminationVendorsComponent } from './pages/Labour/add-lamination-vendors/add-lamination-vendors.component';
+import { GetUvVendorsComponent } from './pages/Labour/get-uv-vendors/get-uv-vendors.component';
+import { AddUvVendorsComponent } from './pages/Labour/add-uv-vendors/add-uv-vendors.component';
 
 @NgModule({
   declarations: [
@@ -152,6 +158,12 @@ import { TimelineModule } from 'primeng/timeline';
     AllPettyCashRecordsComponent,
     AllSettlementsComponent,
     OrderTimeLineComponent,
+    GetBindingLaboursComponent,
+    AddBindingLaboursComponent,
+    LaminationVendorsComponent,
+    AddLaminationVendorsComponent,
+    GetUvVendorsComponent,
+    AddUvVendorsComponent,
   ],
   imports: [
     BrowserModule,
