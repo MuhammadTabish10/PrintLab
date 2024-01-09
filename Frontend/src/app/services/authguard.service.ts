@@ -17,6 +17,7 @@ export class AuthguardService implements CanActivate {
 
     const jwtToken = localStorage.getItem('token');
     if (jwtToken) {
+
       const decodedToken = this.getDecodedAccessToken(jwtToken);
       const userPermissions = decodedToken.PERMISSIONS;
       const userRoles = decodedToken.ROLES;
@@ -27,10 +28,12 @@ export class AuthguardService implements CanActivate {
       const matchingPermission = permissionsObj.find((p: any) => p.url.some((u: any) => this.urlMatches(u, url)));
 
       if (matchingPermission) {
+
         permission = matchingPermission;
       }
 
       if (userPermissions.includes(permission.permissions)) {
+
         return true;
       } else {
         this.router.navigate(['/unauthorized']); // Redirect to an unauthorized page or handle it as needed

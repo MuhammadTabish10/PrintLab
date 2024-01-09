@@ -32,12 +32,16 @@ export class LaminationVendorsComponent {
   getLaminationVendors(): void {
     this.labourService.getAllLaminationVendors().pipe(takeUntil(this.destroy$)).subscribe(
       (res: LaminationVendor[]) => {
+
         this.laminationVendorList = res;
-        this.laminationVendorList.forEach((el: any) => {
+
+        this.laminationVendorList.forEach((el: LaminationVendor) => {
           const dateArray = el.timeStamp;
-          let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
-          timeStamp.setHours(timeStamp.getHours() + 5);
-          el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+          if (Array.isArray(dateArray)) {
+            let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+            timeStamp.setHours(timeStamp.getHours() + 5);
+            el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+          }
         });
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
@@ -62,20 +66,38 @@ export class LaminationVendorsComponent {
   }
 
 
-  searchVendor(name: any) {
-    if (!name.value) {
-      this.getLaminationVendors();
-    } else {
-      this.labourService.searchLaminationVendorByName(name.value)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(
-          (res: LaminationVendor[]) => {
-            this.laminationVendorList = res;
-          },
-          (error: any) => this.errorHandleService.showError(error.error.error)
-        );
+  searchVendor(name: EventTarget | null) {
+
+    if (!(name instanceof HTMLInputElement)) {
+      return;
     }
+
+    const inputValue = name.value.trim();
+
+    if (!inputValue) {
+      this.getLaminationVendors();
+      return;
+    }
+
+    this.labourService.searchLaminationVendorByName(inputValue)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (res: LaminationVendor[]) => {
+          this.laminationVendorList = res;
+
+          this.laminationVendorList.forEach((el: LaminationVendor) => {
+            const dateArray = el.timeStamp;
+            if (Array.isArray(dateArray)) {
+              let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+              timeStamp.setHours(timeStamp.getHours() + 5);
+              el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+            }
+          });
+        },
+        (error: any) => this.errorHandleService.showError(error.error.error)
+      );
   }
+
 
   ngOnDestroy(): void {
     this.destroy$.next();

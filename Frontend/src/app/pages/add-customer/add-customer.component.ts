@@ -198,7 +198,7 @@ export class AddCustomerComponent implements OnInit {
     )
   }
   clear() {
-    debugger
+
     if (!this.customer.subCustomer) {
       this.selectedParent = null;
       this.customer.billParentCustomer = null;

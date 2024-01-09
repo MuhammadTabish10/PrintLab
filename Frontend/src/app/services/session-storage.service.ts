@@ -8,15 +8,15 @@ export class SessionStorageService {
 
   userPermissions: string[] = [];
 
-  constructor(private authGuardSerivce:AuthguardService) {
+  constructor(private authGuardSerivce: AuthguardService) {
 
     const token = localStorage.getItem('token');
     const decodedToken = authGuardSerivce.getDecodedAccessToken(token!);
-    
+
     if (decodedToken) {
 
-    let  decodedTokenPermissions= decodedToken.PERMISSIONS;
-    this.userPermissions=decodedTokenPermissions
+      let decodedTokenPermissions = decodedToken.PERMISSIONS;
+      this.userPermissions = decodedTokenPermissions
     }
   }
 

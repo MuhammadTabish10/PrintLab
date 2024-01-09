@@ -11,6 +11,6 @@ public interface BindingLabourRepository extends JpaRepository<BindingLabour, Lo
 //    Optional<BindingLabour> findByIdAndStatusIsTrue(Long id);
     List<BindingLabour> findByStatus(boolean status);
 
-    List<BindingLabour> findLabourByNameLike(String name);
+    List<BindingLabour> findLabourByNameLikeAndStatusIsTrue(String name);
 
 }

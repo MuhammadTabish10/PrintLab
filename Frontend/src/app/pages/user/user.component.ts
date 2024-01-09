@@ -1,8 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
+import { User } from 'src/app/Model/User';
+import { ErrorHandleService } from 'src/app/services/error-handle.service';
+import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -11,19 +13,16 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent {
-  visible: boolean = false;
-  error: string = '';
-  tableData: boolean = true;
-  userArray: Users[] = [];
-  search: string = '';
+  userArray: User[] = [];
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private userService: UserService,
     private router: Router,
-    private messageService: MessageService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private errorService: ErrorHandleService,
+    private successService: SuccessMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -34,57 +33,75 @@ export class UserComponent {
     this.userService.getUsers()
       .pipe(takeUntil(this.destroy$))
       .subscribe(
-        (res: any) => {
+        (res: User[]) => {
 
-          this.userArray = res as Users[];
-          this.tableData = this.userArray.length === 0;
-          this.userArray.forEach((el: any) => {
+          this.userArray = res;
+          this.userArray.forEach((el: User) => {
             const dateArray = el.createdAt;
-            el.createdAt = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
-            el.createdAt = this.datePipe.transform(el.createdAt, 'EEEE, MMMM d, yyyy, h:mm a');
+            if (Array.isArray(dateArray)) {
+              el.createdAt = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+              el.createdAt = this.datePipe.transform(el.createdAt, 'EEEE, MMMM d, yyyy, h:mm a');
+            }
           });
         },
-        (error: any) => this.showError(error)
+        (error) => {
+          this.errorService.showError(error.error.error);
+        }
       );
   }
 
   editUser(id: number) {
-    this.router.navigate(['/addUser'], { queryParams: { id: id.toString() } });
+    this.router.navigate(['/addUser'], { queryParams: { id: id } });
   }
 
   petyCash(id: number) {
-    this.router.navigate(['/userPetyCash'], { queryParams: { id: id.toString() } });
+    this.router.navigate(['/userPetyCash'], { queryParams: { id: id } });
   }
 
-  deleteUser(id: number) {
-    this.userService.deleteUser(id)
+  deleteUser(user: User) {
+    this.userService.deleteUser(user.id!)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
-        () => this.getUsers(),
-        (error: any) => this.showError(error)
+        () => {
+          const result = `User ${user.name} deleted successfully`;
+          this.successService.showSuccess(result);
+          this.getUsers();
+        },
+        (error) => {
+          this.errorService.showError(error.error.error);
+        }
       );
   }
 
-  searchUser(name: any) {
-    if (!name.value) {
-      this.getUsers();
-    } else {
-      this.userService.searchUser(name.value)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(
-          (res: any) => {
+  searchUser(name: EventTarget) {
 
-            this.userArray = res as Users[];
-            this.tableData = this.userArray.length === 0;
-          },
-          (error: any) => this.showError(error)
-        );
+    if (!(name instanceof HTMLInputElement)) {
+      return;
     }
-  }
 
-  showError(error: any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
-    this.visible = true;
+    const inputValue = name.value.trim();
+    if (!inputValue) {
+      this.getUsers();
+      return;
+    }
+
+    this.userService.searchUser(inputValue)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (res: User[]) => {
+          this.userArray = res;
+          this.userArray.forEach((el: User) => {
+            const dateArray = el.createdAt;
+            if (Array.isArray(dateArray)) {
+              el.createdAt = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+              el.createdAt = this.datePipe.transform(el.createdAt, 'EEEE, MMMM d, yyyy, h:mm a');
+            }
+          });
+        },
+        (error) => {
+          this.errorService.showError(error.error.error);
+        }
+      );
   }
 
   ngOnDestroy(): void {
@@ -93,10 +110,3 @@ export class UserComponent {
   }
 }
 
-interface Users {
-  id: number;
-  createdAt: Date;
-  name: string;
-  phoneNumber: string;
-  cnicNumber: string;
-}

@@ -4,7 +4,7 @@
 
   <div class="main-container">
     <div>
-      <h4>{{ buttonName }} User</h4>
+      <h4>{{ mode }} User</h4>
     </div>
 
     <div class="order-body py-2">
@@ -21,7 +21,7 @@
               <input
                 type="text"
                 class="order-search form-control order-form-input m-0"
-                [(ngModel)]="email"
+                [(ngModel)]="user.email"
                 style="border: 1px solid #ced4da"
                 placeholder="Enter email"
                 name="email"
@@ -33,7 +33,7 @@
               <input
                 type="text"
                 class="order-search form-control order-form-input m-0"
-                [(ngModel)]="nameValue"
+                [(ngModel)]="user.name"
                 style="border: 1px solid #ced4da"
                 placeholder="Enter Name"
                 name="name"
@@ -47,7 +47,7 @@
                 >Password</label
               >
               <p-password
-                [(ngModel)]="password"
+                [(ngModel)]="user.password"
                 [style]="{ width: '100%' }"
                 [inputStyle]="{ width: '100%' }"
                 [toggleMask]="true"
@@ -75,7 +75,7 @@
               <input
                 type="text"
                 class="order-search form-control order-form-input m-0"
-                [(ngModel)]="phoneNumber"
+                [(ngModel)]="user.phone"
                 style="border: 1px solid #ced4da"
                 placeholder="Enter Phone Number"
                 name="Phone Number"
@@ -89,7 +89,7 @@
               <input
                 type="text"
                 class="order-search form-control order-form-input m-0"
-                [(ngModel)]="cnicNumber"
+                [(ngModel)]="user.cnic"
                 style="border: 1px solid #ced4da"
                 placeholder="Enter cnic Number"
                 name="cnic Number"
@@ -100,13 +100,28 @@
               <label class="add-order-label m-0">Roles</label>
               <p-dropdown
                 styleClass="w-100"
-                [options]="rolesObj"
+                [options]="roles"
                 [required]="true"
+                name="role"
+                #role="ngModel"
+                [(ngModel)]="user.roles![0]"
                 optionLabel="name"
-                name="roles"
-                [(ngModel)]="roles"
-                placeholder="Select Roles"
-              ></p-dropdown>
+                [filter]="true"
+                filterBy="name"
+                [showClear]="true"
+                placeholder="Select a Role"
+              >
+                <ng-template pTemplate="selectedItem">
+                  <div class="flex align-items-center gap-2" *ngIf="user">
+                    <div>{{ user.roles![0].name }}</div>
+                  </div>
+                </ng-template>
+                <ng-template let-roles pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ roles.name }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
             </div>
           </div>
           <div class="row">
@@ -116,7 +131,7 @@
                 class="btn order-table-btn btn-search-panel w-25"
                 [disabled]="!customerForm.valid"
               >
-                {{ buttonName }}
+                {{ mode }}
               </button>
             </div>
           </div>

@@ -88,7 +88,7 @@ export class OrderProcessComponent implements OnInit {
       this.quantity = process.quantity;
       this.amount = process.amount;
       this.unitPrice = process.unitPrice;
-      debugger
+
     }, error => {
     });
   }
@@ -112,7 +112,7 @@ export class OrderProcessComponent implements OnInit {
       delete order.vendor;
       order['vendor'] = vendorValue;
     }
-    
+
     this.addUserPetyCash(order);
     return this.options;
   }
@@ -192,7 +192,7 @@ export class OrderProcessComponent implements OnInit {
 
   markToDone() {
     this.orderProcessService.markCtpAsDone(this.idFromQueryParam, this.markAsDone).subscribe(res => {
-      
+
       this.getCtpProcess(this.idFromQueryParam, this.ctp);
     }, error => {
       this.showError(error);

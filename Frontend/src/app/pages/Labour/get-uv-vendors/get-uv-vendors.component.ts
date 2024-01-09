@@ -32,13 +32,18 @@ export class GetUvVendorsComponent {
   getUvVendors(): void {
     this.labourService.getAllUvVendors().pipe(takeUntil(this.destroy$)).subscribe(
       (res: UV_Vendor[]) => {
+
         this.uV_VendorList = res;
-        this.uV_VendorList.forEach((el: any) => {
+
+        this.uV_VendorList.forEach((el: UV_Vendor) => {
           const dateArray = el.timeStamp;
-          let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
-          timeStamp.setHours(timeStamp.getHours() + 5);
-          el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+          if (Array.isArray(dateArray)) {
+            let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+            timeStamp.setHours(timeStamp.getHours() + 5);
+            el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+          }
         });
+
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
@@ -71,7 +76,18 @@ export class GetUvVendorsComponent {
         .pipe(takeUntil(this.destroy$))
         .subscribe(
           (res: UV_Vendor[]) => {
+
             this.uV_VendorList = res;
+
+            this.uV_VendorList.forEach((el: UV_Vendor) => {
+              const dateArray = el.timeStamp;
+              if (Array.isArray(dateArray)) {
+                let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+                timeStamp.setHours(timeStamp.getHours() + 5);
+                el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+              }
+            });
+            
           },
           (error: any) => this.errorHandleService.showError(error.error.error)
         );

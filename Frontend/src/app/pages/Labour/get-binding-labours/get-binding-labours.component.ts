@@ -34,23 +34,26 @@ export class GetBindingLaboursComponent implements OnInit, OnDestroy {
     this.labourService.getAllBindingLabours().pipe(takeUntil(this.destroy$)).subscribe(
       (res: BindingLabour[]) => {
         this.bindingLabourList = res;
-        this.bindingLabourList.forEach((el: any) => {
+        this.bindingLabourList.forEach((el: BindingLabour) => {
           const dateArray = el.timeStamp;
-          let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
-          timeStamp.setHours(timeStamp.getHours() + 5);
-          el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+          if (Array.isArray(dateArray)) {
+            let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+            timeStamp.setHours(timeStamp.getHours() + 5);
+            el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+          }
         });
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
   }
 
+
   editBindingLabour(id: number) {
     this.router.navigate(['/add-binding-labour'], { queryParams: { id: id } });
   }
 
   deleteBindingLabour(labour: BindingLabour) {
-    debugger
+
     this.labourService.deleteBindingLabourById(labour.id!)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -73,6 +76,16 @@ export class GetBindingLaboursComponent implements OnInit, OnDestroy {
           (res: BindingLabour[]) => {
 
             this.bindingLabourList = res;
+
+            this.bindingLabourList.forEach((el: BindingLabour) => {
+              const dateArray = el.timeStamp;
+              if (Array.isArray(dateArray)) {
+                let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
+                timeStamp.setHours(timeStamp.getHours() + 5);
+                el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+              }
+            });
+
           },
           (error: any) => this.errorHandleService.showError(error.error.error)
         );

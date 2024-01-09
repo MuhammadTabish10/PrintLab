@@ -10,5 +10,5 @@ public interface UV_VendorRepository extends JpaRepository<UV_Vendor,Long> {
 
     List<UV_Vendor> findByStatus(boolean status);
 
-    List<UV_Vendor> findVendorByNameLike(String name);
+    List<UV_Vendor> findVendorByNameLikeAndStatusIsTrue(String name);
 }

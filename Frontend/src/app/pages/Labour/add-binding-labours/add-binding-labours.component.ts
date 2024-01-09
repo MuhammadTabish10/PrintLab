@@ -136,7 +136,7 @@ export class AddBindingLaboursComponent {
       (res: BindingLabour) => {
         this.bindingLabour = res;
         if (this.idFromQueryParam) {
-          debugger
+
           this.onCategoryChange(res.category)
         }
       }, error => {

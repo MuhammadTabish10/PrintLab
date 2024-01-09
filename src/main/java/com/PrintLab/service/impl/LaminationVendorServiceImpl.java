@@ -55,7 +55,7 @@ public class LaminationVendorServiceImpl implements LaminationVendorService {
 
     @Override
     public List<LaminationVendorDto> searchByName(String name) {
-        List<LaminationVendor> laminationVendorList = laminationVendorRepository.findVendorByNameLike("%" + name + "%");
+        List<LaminationVendor> laminationVendorList = laminationVendorRepository.findVendorByNameLikeAndStatusIsTrue("%" + name + "%");
 
         return laminationVendorList.stream()
                 .map(this::toDto)

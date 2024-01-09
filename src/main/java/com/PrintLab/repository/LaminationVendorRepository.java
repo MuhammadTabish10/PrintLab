@@ -10,5 +10,5 @@ public interface LaminationVendorRepository extends JpaRepository<LaminationVend
 
     List<LaminationVendor> findByStatus(boolean status);
 
-    List<LaminationVendor> findVendorByNameLike(String name);
+    List<LaminationVendor> findVendorByNameLikeAndStatusIsTrue(String name);
 }

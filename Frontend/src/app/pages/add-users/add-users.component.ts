@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { EMPTY, Subject, of, takeUntil } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Subject, takeUntil } from 'rxjs';
+import { User } from 'src/app/Model/User';
+import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { RolesService } from 'src/app/services/roles.service';
+import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { UserService } from 'src/app/services/user.service';
+import { Roles } from 'src/app/Model/User';
 
 @Component({
   selector: 'app-add-users',
@@ -12,60 +14,47 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./add-users.component.css']
 })
 export class AddUsersComponent implements OnInit, OnDestroy {
-  buttonName: string = 'Add';
-  nameValue: string = '';
-  phoneNumber: string = '';
-  cnicNumber: string = '';
-  idFromQueryParam!: number;
-  userToUpdate: any = [];
-  error: string = '';
-  visible: boolean = false;
-  password: string = '';
-  roles: any = [];
-  rolesObj: any = [];
-  email: string = '';
+  mode: string = 'Add';
+  idFromQueryParam: number | null | undefined;
+  user: User = {
+    id: undefined,
+    name: undefined,
+    createdAt: undefined,
+    email: undefined,
+    password: undefined,
+    phone: undefined,
+    cnic: undefined,
+    roles: [],
+    status: undefined
+  };
+  roles: Roles[] = [];
+
+
   private destroy$ = new Subject<void>();
 
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
-    private messageService: MessageService,
-    private roleService: RolesService
+    private roleService: RolesService,
+    private errorService: ErrorHandleService,
+    private successService: SuccessMessageService
   ) { }
 
   ngOnInit(): void {
     this.getRoles();
-
     this.route.queryParams
-    .pipe(
-      takeUntil(this.destroy$),
-      switchMap((param) => {
-        this.idFromQueryParam = +param['id'] || 0;
-        this.buttonName = this.idFromQueryParam ? 'Update' : 'Add';
-
+      .pipe(
+        takeUntil(this.destroy$))
+      .subscribe(param => {
+        this.idFromQueryParam = +param['id'] || null;
+        this.mode = this.idFromQueryParam ? 'Update' : 'Add';
         if (this.idFromQueryParam) {
-          return this.userService.getUserById(this.idFromQueryParam);
-        } else {
-          return EMPTY;
+          this.patchValues(this.idFromQueryParam);
         }
-      })
-    )
-      .subscribe(
-        (res?: any) => {
-
-          this.userToUpdate = res;
-          this.email = this.userToUpdate.email;
-          this.nameValue = this.userToUpdate.name;
-          this.password = this.userToUpdate.password;
-          this.phoneNumber = this.userToUpdate.phone;
-          this.cnicNumber = this.userToUpdate.cnic;
-          this.roles = this.userToUpdate.roles[0];
-
-        },
-        (error: any) => {
-          this.showError(error);
-          this.visible = true;
+      },
+        (error) => {
+          this.errorService.showError(error.error.error);
         }
       );
   }
@@ -76,53 +65,52 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   addUser() {
-    const obj = {
-      email: this.email,
-      name: this.nameValue,
-      password: this.password,
-      phone: this.phoneNumber,
-      cnic: this.cnicNumber,
-      roles: [{ id: this.roles.id }]
-    };
 
     const request = this.idFromQueryParam
-      ? this.userService.updateUser(this.idFromQueryParam, obj)
-      : this.userService.addUser(obj);
+      ? this.userService.updateUser(this.idFromQueryParam, this.user)
+      : this.userService.addUser(this.user);
 
     request.pipe(takeUntil(this.destroy$)).subscribe(
-      () => this.router.navigateByUrl('/user'),
-      (error: any) => {
+      () => {
+        const successMsg = `User ${this.user.name} is successfully ${this.mode}d.`;
+        this.successService.showSuccess(successMsg);
+        setTimeout(() => {
+          this.router.navigateByUrl('/user');
+        }, 1000);
+      },
+      (error) => {
         if (error.error.text) {
-          this.showSuccess(error);
+          this.successService.showSuccess(error.error.text);
+          this.navigateToUserList();
         }
-        this.visible = true;
+
       }
     );
   }
 
   getRoles() {
     this.roleService.getRoles().subscribe(
-      (role) => {
-        this.rolesObj = role;
+      (role: any) => {
+        this.roles = role;
       },
       (error) => {
-        this.showError(error);
+        this.errorService.showError(error.error.error);
       }
     );
   }
 
-  showError(error: any) {
-
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
-  }
-  showSuccess(error: any) {
-
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: error.error.text });
-    this.navigateToUserList();
-  }
   navigateToUserList() {
     setTimeout(() => {
       this.router.navigateByUrl('/user');
-    }, 700);
+    }, 1000);
+  }
+
+  patchValues(id: number): void {
+    this.userService.getUserById(id).subscribe(
+      (res: User) => {
+        this.user = res;
+      }, error => {
+        this.errorService.showError(error.error.error);
+      });
   }
 }

@@ -54,7 +54,7 @@ public class UV_VendorServiceImpl implements UV_VendorService {
 
     @Override
     public List<UV_VendorDto> searchByName(String name) {
-        List<UV_Vendor> uvVendorList = uvVendorRepository.findVendorByNameLike("%" + name + "%");
+        List<UV_Vendor> uvVendorList = uvVendorRepository.findVendorByNameLikeAndStatusIsTrue("%" + name + "%");
 
         return uvVendorList.stream()
                 .map(this::toDto)

@@ -60,7 +60,7 @@ public class BindingLabourImpl implements BindingLabourService {
 
     @Override
     public List<BindingLabourDto> searchByName(String name) {
-        List<BindingLabour> bindingLabourList = bindingLabourRepository.findLabourByNameLike("%" + name + "%");
+        List<BindingLabour> bindingLabourList = bindingLabourRepository.findLabourByNameLikeAndStatusIsTrue("%" + name + "%");
 
         return bindingLabourList.stream()
                 .map(this::toDto)

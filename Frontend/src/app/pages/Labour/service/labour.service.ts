@@ -42,7 +42,7 @@ export class LabourService {
   }
 
   deleteBindingLabourById(id: number): Observable<BindingLabour> {
-    debugger
+
     let url = `${this.BASE_URL}/binding-labour/${id}`
     return this.http.delete<BindingLabour>(url)
   }
@@ -82,7 +82,7 @@ export class LabourService {
   }
 
   searchBindingLabourByName(name: string): Observable<BindingLabour[]> {
-    debugger
+
     let url = `${this.BASE_URL}/binding-labours/${name}`
     return this.http.get<BindingLabour[]>(url)
   }
