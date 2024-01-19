@@ -117,10 +117,6 @@ public class InventoryServiceImpl implements InventoryService {
         }
     }
 
-
-//    size = ["18\"x23\"","17\"x24\"","25\"x36\""]
-//    gsm = ["90","110","200","48"]
-
     @Override
     @Transactional
     public PaperMarketRatesDto updatePaperMarketRate(Long inventoryId) {
