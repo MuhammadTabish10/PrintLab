@@ -1,0 +1,158 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid ps-6">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="main-container">
+    <div>
+      <h3>Product Categories</h3>
+    </div>
+
+    <div class="card">
+      <p-treeTable
+        [value]="files"
+        [scrollable]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex clearfix">
+            <span class="p-input-icon-right ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="searchProduct($event.target)"
+                placeholder="Search Product"
+              />
+            </span>
+            <button
+              pButton
+              label="Add"
+              class="p-button-dark bg-dark float-end"
+              icon="pi pi-plus"
+              (click)="show()"
+            ></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Type</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+          <tr [ttRow]="rowNode">
+            <td>
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              {{ rowData.name }}
+            </td>
+            <td>{{ rowData.size }}</td>
+            <td>{{ rowData.type }}</td>
+            <td class="text-center">
+              <div
+                class="btn-group mr-2"
+                role="group"
+                aria-label="Second group"
+              >
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="editProductCategory(rowData)"
+                >
+                  <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="deleteProductCategory(rowData)"
+                >
+                  <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>
+<p-dialog
+  header="Category Information"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '30vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="main-container">
+    <div class="order-body py-2">
+      <form class="was-validated" novalidate #addFrom="ngForm">
+        <div class="row mx-auto">
+          <div class="col-12 my-3">
+            <label class="add-order-label m-0">Name</label>
+            <input
+              type="text"
+              class="order-search form-control order-form-input m-0 bg-light"
+              style="border: 1px solid #ced4da"
+              [(ngModel)]="productCategory.name"
+              placeholder="Enter Name"
+              name="name"
+              required
+            />
+          </div>
+          <div class="my-3">
+            <p-checkbox
+              [binary]="true"
+              inputId="binaryAddress"
+              name="isSub"
+              (click)="clear()"
+              label="Is a sub category"
+              [(ngModel)]="productCategory.header"
+            ></p-checkbox>
+          </div>
+          <div class="col-12 my-3" *ngIf="productCategory.header">
+            <label class="add-order-label m-0 mb-1">Parent Category</label>
+            <p-dropdown
+              [options]="productList"
+              styleClass="w-100"
+              optionLabel="name"
+              optionValue="name"
+              placeholder="Select Category"
+              [(ngModel)]="productCategory.id"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              name="category"
+              #categoryModel="ngModel"
+              [required]="true"
+              [ngClass]="{
+                'ng-dirty ng-invalid':
+                  categoryModel.invalid && (categoryModel.dirty || categoryModel.touched)
+              }"
+            >
+            </p-dropdown>
+            <div
+              *ngIf="
+                categoryModel.invalid && (categoryModel.dirty || categoryModel.touched)
+              "
+            >
+              <div *ngIf="categoryModel.errors" class="text-danger m-1">
+                Parent is required.
+              </div>
+            </div>
+          </div>
+          <div class="col-12 my-3 d-flex justify-content-end mx-0">
+            <button
+              type="submit"
+              class="btn btn-dark"
+              [disabled]="!addFrom.valid"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</p-dialog>

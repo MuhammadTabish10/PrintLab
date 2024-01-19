@@ -57,6 +57,8 @@ import { LaminationVendorsComponent } from './pages/Labour/lamination-vendors/la
 import { AddLaminationVendorsComponent } from './pages/Labour/add-lamination-vendors/add-lamination-vendors.component';
 import { GetUvVendorsComponent } from './pages/Labour/get-uv-vendors/get-uv-vendors.component';
 import { AddUvVendorsComponent } from './pages/Labour/add-uv-vendors/add-uv-vendors.component';
+import { ProductCategoriesComponent } from './pages/Product/product-categories/product-categories.component';
+import { ProductServicesComponent } from './pages/Product/product-services/product-services.component';
 
 export const routes: Routes = [
   {
@@ -340,6 +342,16 @@ export const routes: Routes = [
   {
     path: 'add-uv-vendor',
     component: AddUvVendorsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'product-categories',
+    component: ProductCategoriesComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'product-services',
+    component: ProductServicesComponent,
     canActivate: [AuthguardService]
   },
 ];

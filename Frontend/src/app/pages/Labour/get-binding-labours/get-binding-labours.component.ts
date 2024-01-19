@@ -34,6 +34,7 @@ export class GetBindingLaboursComponent implements OnInit, OnDestroy {
     this.labourService.getAllBindingLabours().pipe(takeUntil(this.destroy$)).subscribe(
       (res: BindingLabour[]) => {
         this.bindingLabourList = res;
+
         this.bindingLabourList.forEach((el: BindingLabour) => {
           const dateArray = el.timeStamp;
           if (Array.isArray(dateArray)) {

@@ -60,7 +60,7 @@ export class JobPlateSetterOrdersComponent implements OnInit {
 
   orderProcessCtp(orderId: number) {
 
-    this.router.navigate(['/orderProcess'], { queryParams: { id: orderId } });
+    this.router.navigate(['/order-timeline'], { queryParams: { id: orderId } });
   }
 
   showError(error: any) {

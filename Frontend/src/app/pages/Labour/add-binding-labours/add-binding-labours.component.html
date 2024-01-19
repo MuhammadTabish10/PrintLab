@@ -156,7 +156,7 @@
                 >Rate</label
               >
               <div class="flex-auto">
-                  <p-inputNumber
+                <p-inputNumber
                   [(ngModel)]="bindingLabour.rate"
                   inputId="minmax"
                   [min]="0"
@@ -181,7 +181,11 @@
               </div>
             </div>
             <div class="col my-3 d-flex align-items-end justify-content-end">
-              <button type="submit" class="btn btn-dark col-2">
+              <button
+                type="submit"
+                class="btn btn-dark col-2"
+                [disabled]="!form.valid"
+              >
                 {{ buttonName }}
               </button>
             </div>

@@ -59,7 +59,7 @@ export class JobProductionOrdersComponent {
   // }
 
   orderProcessCtp(orderId: number) {
-    this.router.navigate(['/orderProcess'], { queryParams: { id: orderId } });
+    this.router.navigate(['/order-timeline'], { queryParams: { id: orderId } });
   }
 
   orderProcessPress() {

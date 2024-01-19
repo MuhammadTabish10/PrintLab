@@ -27,5 +27,5 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     @Query("UPDATE Vendor v SET v.status = false WHERE v.id = :id")
     void setStatusInactive(@Param("id") Long id);
 
-    List<Vendor> findByVendorProcessList_ProductProcess_Name(String process);
+    List<Vendor> findByVendorProcessList_ProductProcess_NameAndStatusIsTrue(String process);
 }

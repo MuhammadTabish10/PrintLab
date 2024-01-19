@@ -1,6 +1,5 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.dto.ProductProcessDto;
 import com.PrintLab.dto.ProductRuleDto;
 import com.PrintLab.service.ProductRuleService;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class ProductRuleController {
     }
 
     @GetMapping("/product-rule/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<ProductRuleDto> getProductRuleById(@PathVariable Long id) {
         ProductRuleDto productRuleDto = productRuleService.getProductRuleById(id);
         return ResponseEntity.ok(productRuleDto);

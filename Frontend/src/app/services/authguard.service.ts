@@ -70,7 +70,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'JobPlateSetter'
     }
     const userObj = {
-      url: ['/user', '/addUser','/userPetyCash','/allPettyCashRecords'],
+      url: ['/user', '/addUser', '/userPetyCash', '/allPettyCashRecords'],
       permissions: 'User'
     }
     const customerObj = {
@@ -83,7 +83,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'Orders'
     }
     const orderProcessObj = {
-      url: ['/orderProcess','/transactions','/transactionRecord','/order-timeline'],
+      url: ['/orderProcess', '/transactions', '/transactionRecord', '/order-timeline'],
       permissions: 'OrderProcess'
     }
     const ProductRule = {
@@ -127,7 +127,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'Configuration_Inventory'
     }
     const permissionConfiguration_Vendor = {
-      url: ['/vendor', '/addVendor', '/vendorSettlement','/allSettlements'],
+      url: ['/vendor', '/addVendor', '/vendorSettlement', '/allSettlements'],
       permissions: 'Configuration_Vendor'
     }
     const permissionConfiguration_CTP = {
@@ -166,11 +166,27 @@ export class AuthguardService implements CanActivate {
       url: ['/get-uv-vendors', '/add-uv-vendor'],
       permissions: 'UV_Vendors'
     }
+    const ProductCategoriesObj = {
+      url: ['/product-categories'],
+      permissions: 'ProductCategories'
+    }
+    const ProductServicesObj = {
+      url: ['/product-services'],
+      permissions: 'ProductServices'
+    }
 
 
-    return [customerObj, userObj, ProductRule, orderObj, orderProcessObj, designerOrderObj, productionObj, plateSetterObj, dashboardObj, addproductObj, calculatorObj, permissionObj, paperStock, permissionConfiguration_Product_Field,
-      permissionConfiguration_Settings, permissionConfiguration_Inventory, permissionConfiguration_Vendor, permissionConfiguration_CTP, permissionConfiguration_Paper_Size,
-      permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate, permissionConfiguration_Uping, permissionConfiguration_Product_Process,labourObj,laminationVendorObj,uvVendorObj]
+    return [
+      customerObj, userObj, ProductRule, orderObj, orderProcessObj,
+      designerOrderObj, productionObj, plateSetterObj, dashboardObj,
+      addproductObj, calculatorObj, permissionObj, paperStock,
+      permissionConfiguration_Product_Field, permissionConfiguration_Settings,
+      permissionConfiguration_Inventory, permissionConfiguration_Vendor,
+      permissionConfiguration_CTP, permissionConfiguration_Paper_Size,
+      permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate,
+      permissionConfiguration_Uping, permissionConfiguration_Product_Process, labourObj,
+      laminationVendorObj, uvVendorObj, ProductCategoriesObj, ProductServicesObj,
+    ]
 
 
     // const configurationObj = {

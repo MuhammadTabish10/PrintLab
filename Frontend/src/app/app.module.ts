@@ -61,7 +61,6 @@ import { AddProductRuleComponent } from './pages/add-product-rule/add-product-ru
 import { PaperStockComponent } from './pages/paper-stock/paper-stock.component';
 import { AddPaperStockComponent } from './pages/add-paper-stock/add-paper-stock.component';
 import { ViewProductRuleComponent } from './pages/view-product-rule/view-product-rule.component';
-import { trigger, state, style, animate, transition } from '@angular/animations';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -96,7 +95,9 @@ import { LaminationVendorsComponent } from './pages/Labour/lamination-vendors/la
 import { AddLaminationVendorsComponent } from './pages/Labour/add-lamination-vendors/add-lamination-vendors.component';
 import { GetUvVendorsComponent } from './pages/Labour/get-uv-vendors/get-uv-vendors.component';
 import { AddUvVendorsComponent } from './pages/Labour/add-uv-vendors/add-uv-vendors.component';
-
+import { ProductCategoriesComponent } from './pages/Product/product-categories/product-categories.component';
+import { ProductServicesComponent } from './pages/Product/product-services/product-services.component';
+import { TreeTableModule } from 'primeng/treetable';
 @NgModule({
   declarations: [
     AppComponent,
@@ -164,6 +165,8 @@ import { AddUvVendorsComponent } from './pages/Labour/add-uv-vendors/add-uv-vend
     AddLaminationVendorsComponent,
     GetUvVendorsComponent,
     AddUvVendorsComponent,
+    ProductCategoriesComponent,
+    ProductServicesComponent,
   ],
   imports: [
     BrowserModule,
@@ -193,6 +196,7 @@ import { AddUvVendorsComponent } from './pages/Labour/add-uv-vendors/add-uv-vend
     ConfirmDialogModule,
     CheckboxModule,
     TimelineModule,
+    TreeTableModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,ConfirmDialogModule,
     provideRouter(routes, withHashLocation()), DatePipe],

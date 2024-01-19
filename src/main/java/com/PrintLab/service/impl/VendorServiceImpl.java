@@ -213,7 +213,7 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public List<VendorDto> getVendorByProcess(String process) {
-        List<Vendor> vendorList = vendorRepository.findByVendorProcessList_ProductProcess_Name(process);
+        List<Vendor> vendorList = vendorRepository.findByVendorProcessList_ProductProcess_NameAndStatusIsTrue(process);
 
         if (vendorList.isEmpty()) {
             throw new RecordNotFoundException(String.format("Vendor not found on Product process => %s", process));

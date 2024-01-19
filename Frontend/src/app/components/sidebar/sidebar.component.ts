@@ -14,6 +14,7 @@ export class SidebarComponent {
   isDropDown3Open: boolean = false;
   isDropDown4Open: boolean = false;
   isDropDown5Open: boolean = false;
+  isDropDown6Open: boolean = false;
 
 
   constructor(public sessionStorageService: SessionStorageService) {
@@ -29,27 +30,43 @@ export class SidebarComponent {
       this.isDropDown2Open = false;
       this.isDropDown3Open = false;
       this.isDropDown4Open = false;
+      this.isDropDown5Open = false;
+      this.isDropDown6Open = false;
     } else if (dropdownNumber === 2) {
       this.isDropDown2Open = !this.isDropDown2Open;
       this.isDropDown1Open = false;
       this.isDropDown3Open = false;
       this.isDropDown4Open = false;
+      this.isDropDown5Open = false;
+      this.isDropDown6Open = false;
     } else if (dropdownNumber === 3) {
       this.isDropDown3Open = !this.isDropDown3Open;
       this.isDropDown1Open = false;
       this.isDropDown2Open = false;
       this.isDropDown4Open = false;
+      this.isDropDown5Open = false;
+      this.isDropDown6Open = false;
     } else if (dropdownNumber === 4) {
       this.isDropDown4Open = !this.isDropDown4Open;
       this.isDropDown1Open = false;
       this.isDropDown2Open = false;
       this.isDropDown3Open = false;
+      this.isDropDown5Open = false;
+      this.isDropDown6Open = false;
     } else if (dropdownNumber === 5) {
       this.isDropDown5Open = !this.isDropDown5Open;
       this.isDropDown1Open = false;
       this.isDropDown2Open = false;
       this.isDropDown3Open = false;
       this.isDropDown4Open = false;
+      this.isDropDown6Open = false;
+    } else if (dropdownNumber === 6) {
+      this.isDropDown6Open = !this.isDropDown6Open;
+      this.isDropDown1Open = false;
+      this.isDropDown2Open = false;
+      this.isDropDown3Open = false;
+      this.isDropDown4Open = false;
+      this.isDropDown5Open = false;
     }
   }
 }
