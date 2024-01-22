@@ -18,6 +18,10 @@ public class ProductCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Long parent_product_category_id;
     private Boolean status;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_product_category_id")
+    private ProductCategory parentProductCategory;
+
 }

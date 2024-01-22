@@ -73,7 +73,13 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         if (optionalProductCategory.isPresent()) {
             ProductCategory existingProductCategory = optionalProductCategory.get();
             existingProductCategory.setName(productCategoryDto.getName());
-            existingProductCategory.setParent_product_category_id(productCategoryDto.getParent_product_category_id());
+
+            if (productCategoryDto.getParentProductCategory()!= null) {
+                ProductCategory parentCategory = productCategoryRepository.findById(productCategoryDto.getParentProductCategory().getId())
+                        .orElseThrow(() -> new RecordNotFoundException("Parent Product Category not found"));
+                existingProductCategory.setParentProductCategory(parentCategory);
+            }
+
             ProductCategory updatedProductCategory = productCategoryRepository.save(existingProductCategory);
             return toDto(updatedProductCategory);
         } else {
@@ -85,7 +91,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return ProductCategoryDto.builder()
                 .id(productCategory.getId())
                 .name(productCategory.getName())
-                .parent_product_category_id(productCategory.getParent_product_category_id())
+                .parentProductCategory(productCategory.getParentProductCategory())
                 .status(productCategory.getStatus())
                 .build();
     }
@@ -94,7 +100,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return ProductCategory.builder()
                 .id(productCategoryDto.getId())
                 .name(productCategoryDto.getName())
-                .parent_product_category_id(productCategoryDto.getParent_product_category_id())
+                .parentProductCategory(productCategoryDto.getParentProductCategory())
                 .status(productCategoryDto.getStatus())
                 .build();
     }
