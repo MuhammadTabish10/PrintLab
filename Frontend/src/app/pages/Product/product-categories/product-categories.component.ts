@@ -5,7 +5,7 @@ import { NodeService } from 'src/app/services/node.service';
 import { ServiceService } from '../Service/service.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 
 @Component({
@@ -17,64 +17,78 @@ export class ProductCategoriesComponent implements OnInit {
   files!: TreeNode[];
 
   visible: boolean = false;
+  rowId: number | undefined | null;
 
   private destroy$ = new Subject<void>();
 
   productCategory: ProductCategory = {
     id: undefined,
     name: undefined,
-    field: undefined,
-    header: undefined,
+    isSub: false,
+    parent_product_category_id: {
+      id: undefined,
+      name: undefined,
+    },
     status: undefined,
   }
-  productList: ProductCategory[] = [];
+  productList: TreeNode<ProductCategory>[] = [];
+  mode: string = 'Save';
 
   constructor(
     private nodeService: NodeService,
     private service: ServiceService,
     private errorHandleService: ErrorHandleService,
+    private route: ActivatedRoute,
     private router: Router,
     private successMsgService: SuccessMessageService,
   ) { }
 
   ngOnInit() {
     this.getProductList();
-    this.files = [
-      {
-        data: { name: 'Root', size: '10 KB', type: 'Folder' },
-        children: [
-          {
-            data: { name: 'Subfolder 1', size: '5 KB', type: 'Folder' },
-            children: [
-              { data: { name: 'File 1', size: '2 KB', type: 'File' } },
-              { data: { name: 'File 2', size: '3 KB', type: 'File' } }
-            ]
-          },
-          {
-            data: { name: 'Subfolder 2', size: '3 KB', type: 'Folder' },
-            children: [
-              { data: { name: 'File 3', size: '1 KB', type: 'File' } }
-            ]
-          }
-        ]
-      }
-    ];
+    // this.files = [
+    //   {
+    //     data: { name: 'Root', size: '10 KB', type: 'Folder' },
+    //     children: [
+    //       {
+    //         data: { name: 'Subfolder 1', size: '5 KB', type: 'Folder' },
+    //         children: [
+    //           { data: { name: 'File 1', size: '2 KB', type: 'File' } },
+    //           { data: { name: 'File 2', size: '3 KB', type: 'File' } }
+    //         ]
+    //       },
+    //       {
+    //         data: { name: 'Subfolder 2', size: '3 KB', type: 'Folder' },
+    //         children: [
+    //           { data: { name: 'File 3', size: '1 KB', type: 'File' } }
+    //         ]
+    //       }
+    //     ]
+    //   }
+    // ];
 
   }
 
   editProductCategory(row: ProductCategory) {
     this.visible = true;
+    debugger
     this.productCategory.name = row.name;
+    this.rowId = row.id;
+    this.mode = this.rowId ? 'Update' : 'Save';
   }
 
   getProductList(): void {
     this.service.getAllProductCategory().pipe(takeUntil(this.destroy$)).subscribe(
       (res: ProductCategory[]) => {
-        this.productList = res;
+        debugger
+        this.productList = res.map(category => ({
+          data: category,
+          children: []
+        }));
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
   }
+
 
   deleteProductCategory(row: ProductCategory) {
     this.service.deleteProductCategoryById(row.id!)
@@ -105,7 +119,10 @@ export class ProductCategoriesComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (res: ProductCategory[]) => {
-          this.productList = res;
+          this.productList = res.map(category => ({
+            data: category,
+            children: []
+          }));
         },
         (error: any) => this.errorHandleService.showError(error.error.error)
       );
@@ -121,9 +138,37 @@ export class ProductCategoriesComponent implements OnInit {
 
   clear() {
 
-    if (!this.productCategory.header) {
+    if (!this.productCategory) {
 
     }
+  }
+
+  submit() {
+    debugger
+    if (!this.productCategory.isSub) {
+      this.productCategory.name = this.productCategory.parent_product_category_id.name
+    } else {
+      this.productCategory.parent_product_category_id.id = this.productCategory.id;
+    }
+    const serviceToCall = !this.rowId ? this.service.postProductCategory(this.productCategory)
+      : this.service.updateProductCategory(this.rowId, this.productCategory);
+
+    serviceToCall.subscribe(
+      (res: ProductCategory) => {
+        const successMsg = `Product Category ${this.productCategory.name} is successfully ${this.mode}d.`;
+        this.successMsgService.showSuccess(successMsg);
+        setTimeout(() => {
+          this.visible = false;
+          this.getProductList();
+        }, 1500);
+      }, error => {
+        if (error.status === 400) {
+          this.errorHandleService.showError("Bad Request. Please check your inputs.");
+        } else {
+          this.errorHandleService.showError(error.error.error);
+        }
+      }
+    );
   }
 }
 

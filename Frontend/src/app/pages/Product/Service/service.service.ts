@@ -19,7 +19,7 @@ export class ServiceService {
   }
 
   postProductService(obj: ProductService): Observable<ProductService> {
-    let url = `${this.BASE_URL}/product-service`;
+    let url = `${this.BASE_URL}/product-and-service`;
     return this.http.post<ProductService>(url, obj);
   }
 
@@ -29,7 +29,7 @@ export class ServiceService {
     return this.http.get<ProductCategory[]>(url);
   }
   getAllProductService(): Observable<ProductService[]> {
-    let url = `${this.BASE_URL}/product-service`;
+    let url = `${this.BASE_URL}/product-and-service`;
     return this.http.get<ProductService[]>(url);
   }
 
@@ -39,7 +39,7 @@ export class ServiceService {
   }
 
   deleteProductServiceById(id: number): Observable<ProductService> {
-    let url = `${this.BASE_URL}/product-service/${id}`;
+    let url = `${this.BASE_URL}/product-and-service/${id}`;
     return this.http.delete<ProductService>(url);
   }
 
@@ -48,7 +48,7 @@ export class ServiceService {
     return this.http.get<ProductCategory>(url);
   }
   getProductServiceById(id: number): Observable<ProductService> {
-    let url = `${this.BASE_URL}/product-service/${id}`;
+    let url = `${this.BASE_URL}/product-and-service/${id}`;
     return this.http.get<ProductService>(url);
   }
 
@@ -57,7 +57,7 @@ export class ServiceService {
     return this.http.put<ProductCategory>(url, obj);
   }
   updateProductService(id: number, obj: ProductService): Observable<ProductService> {
-    let url = `${this.BASE_URL}/product-service/${id}`;
+    let url = `${this.BASE_URL}/product-and-service/${id}`;
     return this.http.put<ProductService>(url, obj);
   }
 
@@ -66,7 +66,7 @@ export class ServiceService {
     return this.http.get<ProductCategory[]>(url);
   }
   searchProductServiceByName(name: string): Observable<ProductService[]> {
-    let url = `${this.BASE_URL}/product-service/${name}`;
+    let url = `${this.BASE_URL}/product-and-service/${name}`;
     return this.http.get<ProductService[]>(url);
   }
 }

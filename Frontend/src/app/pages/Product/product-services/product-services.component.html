@@ -14,7 +14,8 @@
       >
         <ng-template pTemplate="caption">
           <div class="flex clearfix">
-            <span class="p-input-icon-right ml-auto">
+
+            <span class="p-input-icon-right ml-auto d-none">
               <i class="pi pi-search"></i>
               <input
                 pInputText
@@ -23,6 +24,7 @@
                 placeholder="Search Product"
               />
             </span>
+
             <button
               pButton
               label="Add"
@@ -60,7 +62,7 @@
               {{ vendor?.name }}
             </td>
             <td class="text-center">
-              {{ vendor?.category }}
+              {{ vendor?.productCategory.name }}
             </td>
             <td class="text-center">
               {{ vendor?.type }}
@@ -115,7 +117,7 @@
 >
   <div class="main-container">
     <div class="order-body py-2">
-      <form class="was-validated" novalidate #addFrom="ngForm">
+      <form class="was-validated" novalidate #addFrom="ngForm" (ngSubmit)="submit()">
         <div class="row mx-auto">
           <div class="col-12 my-3">
             <label class="add-order-label m-0">Name</label>
@@ -133,12 +135,12 @@
           <div class="col-12 my-3">
             <label class="add-order-label m-0 mb-1">Category</label>
             <p-dropdown
-              [options]="productList"
+              [options]="categories"
               styleClass="w-100"
               optionLabel="name"
               optionValue="name"
               placeholder="Select Category"
-              [(ngModel)]="productService.category"
+              [(ngModel)]="productService.productCategory.name"
               [filter]="true"
               filterBy="name"
               [showClear]="true"
@@ -166,7 +168,7 @@
           <div class="col-12 my-3">
             <label class="add-order-label m-0 mb-1">Type</label>
             <p-dropdown
-              [options]="productList"
+              [options]="productTypes?.productFieldValuesList"
               styleClass="w-100"
               optionLabel="name"
               optionValue="name"
@@ -202,7 +204,7 @@
               id="desc"
               cols="40"
               rows="10"
-              [(ngModel)]="productService.desc"
+              [(ngModel)]="productService.description"
             ></textarea>
           </div>
           <div class="col-6 my-3 p-fluid">
@@ -240,7 +242,7 @@
               class="btn btn-dark"
               [disabled]="!addFrom.valid"
             >
-              Save
+              {{mode}}
             </button>
           </div>
         </div>

@@ -8,7 +8,7 @@
 
     <div class="card">
       <p-treeTable
-        [value]="files"
+        [value]="productList"
         [scrollable]="true"
         [tableStyle]="{ 'min-width': '50rem' }"
       >
@@ -87,7 +87,12 @@
 >
   <div class="main-container">
     <div class="order-body py-2">
-      <form class="was-validated" novalidate #addFrom="ngForm">
+      <form
+        class="was-validated"
+        novalidate
+        #addFrom="ngForm"
+        (ngSubmit)="submit()"
+      >
         <div class="row mx-auto">
           <div class="col-12 my-3">
             <label class="add-order-label m-0">Name</label>
@@ -108,33 +113,35 @@
               name="isSub"
               (click)="clear()"
               label="Is a sub category"
-              [(ngModel)]="productCategory.header"
+              [(ngModel)]="productCategory.isSub"
             ></p-checkbox>
           </div>
-          <div class="col-12 my-3" *ngIf="productCategory.header">
+          <div class="col-12 my-3" *ngIf="productCategory.isSub">
             <label class="add-order-label m-0 mb-1">Parent Category</label>
             <p-dropdown
               [options]="productList"
               styleClass="w-100"
-              optionLabel="name"
-              optionValue="name"
+              optionLabel="data.id"
+              optionValue="data.id"
               placeholder="Select Category"
-              [(ngModel)]="productCategory.id"
+              [(ngModel)]="productCategory.parent_product_category_id.name"
               [filter]="true"
-              filterBy="name"
+              filterBy="data.id"
               [showClear]="true"
               name="category"
               #categoryModel="ngModel"
               [required]="true"
               [ngClass]="{
                 'ng-dirty ng-invalid':
-                  categoryModel.invalid && (categoryModel.dirty || categoryModel.touched)
+                  categoryModel.invalid &&
+                  (categoryModel.dirty || categoryModel.touched)
               }"
             >
             </p-dropdown>
             <div
               *ngIf="
-                categoryModel.invalid && (categoryModel.dirty || categoryModel.touched)
+                categoryModel.invalid &&
+                (categoryModel.dirty || categoryModel.touched)
               "
             >
               <div *ngIf="categoryModel.errors" class="text-danger m-1">
@@ -148,7 +155,7 @@
               class="btn btn-dark"
               [disabled]="!addFrom.valid"
             >
-              Save
+              {{ mode }}
             </button>
           </div>
         </div>

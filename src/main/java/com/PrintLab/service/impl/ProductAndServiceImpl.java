@@ -4,6 +4,7 @@ import com.PrintLab.dto.ProductAndServiceDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.ProductAndService;
 import com.PrintLab.repository.ProductAndServiceRepository;
+import com.PrintLab.repository.ProductCategoryRepository;
 import com.PrintLab.service.ProductAndServiceService;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +17,37 @@ import java.util.Optional;
 public class ProductAndServiceImpl implements ProductAndServiceService {
 
     private final ProductAndServiceRepository productAndServiceRepository;
+    private final ProductCategoryRepository productCategoryRepository;
 
-    public ProductAndServiceImpl(ProductAndServiceRepository productAndServiceRepository) {
+    public ProductAndServiceImpl(ProductAndServiceRepository productAndServiceRepository, ProductCategoryRepository productCategoryRepository) {
         this.productAndServiceRepository = productAndServiceRepository;
+        this.productCategoryRepository = productCategoryRepository;
     }
+
+//    @Override
+//    @Transactional
+//    public ProductAndServiceDto save(ProductAndServiceDto productAndServiceDto) {
+//        ProductAndService productAndService = toEntity(productAndServiceDto);
+//        productAndService.setStatus(true);
+//        return toDto(productAndServiceRepository.save(productAndService));
+//    }
 
     @Override
     @Transactional
     public ProductAndServiceDto save(ProductAndServiceDto productAndServiceDto) {
         ProductAndService productAndService = toEntity(productAndServiceDto);
         productAndService.setStatus(true);
+
+        productAndService.setProductCategory(
+                productAndServiceDto.getProductCategory() != null && productAndServiceDto.getProductCategory().getId() == null
+                        ? productCategoryRepository.save(productAndServiceDto.getProductCategory())
+                        : productAndServiceDto.getProductCategory()
+        );
+
         return toDto(productAndServiceRepository.save(productAndService));
     }
+
+
 
     @Override
     public List<ProductAndServiceDto> getAll() {
