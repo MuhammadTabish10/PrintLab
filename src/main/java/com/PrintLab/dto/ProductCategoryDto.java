@@ -1,5 +1,6 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.ProductCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,6 @@ public class ProductCategoryDto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Long parent_product_category_id;
     private Boolean status;
+    private ProductCategory parentProductCategory;
 }
