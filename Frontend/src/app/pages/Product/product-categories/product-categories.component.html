@@ -8,7 +8,7 @@
 
     <div class="card">
       <p-treeTable
-        [value]="productList"
+        [value]="files"
         [scrollable]="true"
         [tableStyle]="{ 'min-width': '50rem' }"
       >
@@ -44,10 +44,8 @@
           <tr [ttRow]="rowNode">
             <td>
               <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-              {{ rowData.name }}
+              {{ rowData?.name }}
             </td>
-            <td>{{ rowData.size }}</td>
-            <td>{{ rowData.type }}</td>
             <td class="text-center">
               <div
                 class="btn-group mr-2"
@@ -116,15 +114,15 @@
               [(ngModel)]="productCategory.isSub"
             ></p-checkbox>
           </div>
-          <div class="col-12 my-3" *ngIf="productCategory.isSub">
+          <div class="col-12 my-3" *ngIf="productCategory.isSub && productCategory.parentProductCategory">
             <label class="add-order-label m-0 mb-1">Parent Category</label>
             <p-dropdown
-              [options]="productList"
+              [options]="files"
               styleClass="w-100"
-              optionLabel="data.id"
+              optionLabel="data.name"
               optionValue="data.id"
               placeholder="Select Category"
-              [(ngModel)]="productCategory.parent_product_category_id.name"
+              [(ngModel)]="productCategory.parentProductCategory.id"
               [filter]="true"
               filterBy="data.id"
               [showClear]="true"

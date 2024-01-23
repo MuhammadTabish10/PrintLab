@@ -25,7 +25,7 @@ export class ProductServicesComponent {
       id: undefined,
       status: true,
       isSub: undefined,
-      parent_product_category_id: {
+      parentProductCategory: {
         id: undefined,
         name: undefined,
       },
@@ -124,6 +124,7 @@ export class ProductServicesComponent {
 
   submit() {
     debugger
+    this.productService.productCategory.parentProductCategory = null;
     const serviceToCall = !this.rowId ? this.service.postProductService(this.productService)
       : this.service.updateProductService(this.rowId, this.productService);
 

@@ -25,7 +25,7 @@ export class ProductCategoriesComponent implements OnInit {
     id: undefined,
     name: undefined,
     isSub: false,
-    parent_product_category_id: {
+    parentProductCategory: {
       id: undefined,
       name: undefined,
     },
@@ -33,6 +33,7 @@ export class ProductCategoriesComponent implements OnInit {
   }
   productList: TreeNode<ProductCategory>[] = [];
   mode: string = 'Save';
+  transFormList: any[] = [];
 
   constructor(
     private nodeService: NodeService,
@@ -45,27 +46,6 @@ export class ProductCategoriesComponent implements OnInit {
 
   ngOnInit() {
     this.getProductList();
-    // this.files = [
-    //   {
-    //     data: { name: 'Root', size: '10 KB', type: 'Folder' },
-    //     children: [
-    //       {
-    //         data: { name: 'Subfolder 1', size: '5 KB', type: 'Folder' },
-    //         children: [
-    //           { data: { name: 'File 1', size: '2 KB', type: 'File' } },
-    //           { data: { name: 'File 2', size: '3 KB', type: 'File' } }
-    //         ]
-    //       },
-    //       {
-    //         data: { name: 'Subfolder 2', size: '3 KB', type: 'Folder' },
-    //         children: [
-    //           { data: { name: 'File 3', size: '1 KB', type: 'File' } }
-    //         ]
-    //       }
-    //     ]
-    //   }
-    // ];
-
   }
 
   editProductCategory(row: ProductCategory) {
@@ -77,16 +57,47 @@ export class ProductCategoriesComponent implements OnInit {
   }
 
   getProductList(): void {
+    this.transFormList = [];
+    this.files = [];
     this.service.getAllProductCategory().pipe(takeUntil(this.destroy$)).subscribe(
       (res: ProductCategory[]) => {
         debugger
-        this.productList = res.map(category => ({
-          data: category,
-          children: []
-        }));
+        this.transFormRes(res);
+        // this.productList = res.map(category => ({
+        //   data: category,
+        //   children: []
+        // }));
+        // this.productList.forEach(category => {
+        //   category?.children?.push(category);
+        // })
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
+  }
+  transFormRes(res: ProductCategory[]) {
+    debugger
+    for (let r of res) {
+      if (r.parentProductCategory === null) {
+        let obj = {
+          data: { id: r.id, name: r.name, status: r.status, },
+          children: []
+        }
+        this.transFormList.push(obj)
+      } else {
+        let findChild = this.transFormList.find(f => f.data.id === r.parentProductCategory?.id)
+        if (!findChild) {
+          let obj = {
+            data: { id: r.id, name: r.name, status: r.status, },
+            children: []
+          }
+          this.transFormList.push(obj)
+        }
+        findChild?.children.push({
+          data: { id: r.id, name: r.name, status: r.status }
+        })
+      }
+    }
+    this.files = this.transFormList;
   }
 
 
@@ -146,9 +157,12 @@ export class ProductCategoriesComponent implements OnInit {
   submit() {
     debugger
     if (!this.productCategory.isSub) {
-      this.productCategory.name = this.productCategory.parent_product_category_id.name
+      this.productCategory.parentProductCategory = null;
     } else {
-      this.productCategory.parent_product_category_id.id = this.productCategory.id;
+      this.productCategory.parentProductCategory = {
+        id: this.productCategory.parentProductCategory?.id,
+        name: this.productCategory.parentProductCategory?.name
+      }
     }
     const serviceToCall = !this.rowId ? this.service.postProductCategory(this.productCategory)
       : this.service.updateProductCategory(this.rowId, this.productCategory);
@@ -159,6 +173,16 @@ export class ProductCategoriesComponent implements OnInit {
         this.successMsgService.showSuccess(successMsg);
         setTimeout(() => {
           this.visible = false;
+          this.productCategory = {
+            id: undefined,
+            name: undefined,
+            isSub: false,
+            parentProductCategory: {
+              id: undefined,
+              name: undefined,
+            },
+            status: undefined,
+          };
           this.getProductList();
         }, 1500);
       }, error => {
