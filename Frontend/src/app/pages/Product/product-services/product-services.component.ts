@@ -125,6 +125,20 @@ export class ProductServicesComponent {
   submit() {
     debugger
     this.productService.productCategory.parentProductCategory = null;
+    if (this.rowId) {
+      // Assuming this.productService.productCategory is an object
+      if ('name' in this.productService.productCategory) {
+        delete this.productService.productCategory.name;
+      }
+      if ('parentProductCategory' in this.productService.productCategory) {
+        delete this.productService.productCategory.parentProductCategory;
+      }
+      if ('status' in this.productService.productCategory) {
+        delete this.productService.productCategory.status;
+      }
+    }
+
+    console.log(this.productService);
     const serviceToCall = !this.rowId ? this.service.postProductService(this.productService)
       : this.service.updateProductService(this.rowId, this.productService);
 
