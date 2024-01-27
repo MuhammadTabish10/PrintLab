@@ -59,6 +59,9 @@ import { GetUvVendorsComponent } from './pages/Labour/get-uv-vendors/get-uv-vend
 import { AddUvVendorsComponent } from './pages/Labour/add-uv-vendors/add-uv-vendors.component';
 import { ProductCategoriesComponent } from './pages/Product/product-categories/product-categories.component';
 import { ProductServicesComponent } from './pages/Product/product-services/product-services.component';
+import { GetInvoicesComponent } from './pages/Invoice/get-invoices/get-invoices.component';
+import { AddInvoiceComponent } from './pages/Invoice/add-invoice/add-invoice.component';
+import { InvoicePrintComponent } from './pages/Invoice/invoice-print/invoice-print.component';
 
 export const routes: Routes = [
   {
@@ -347,6 +350,21 @@ export const routes: Routes = [
   {
     path: 'product-categories',
     component: ProductCategoriesComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'get-invoices',
+    component: GetInvoicesComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'add-invoice',
+    component: AddInvoiceComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'print-invoice',
+    component: InvoicePrintComponent,
     canActivate: [AuthguardService]
   },
   {

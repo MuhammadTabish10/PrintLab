@@ -1,0 +1,570 @@
+<ng-container *ngIf="!hide">
+  <app-sidebar></app-sidebar>
+  <div class="container-fluid ps-6">
+    <app-dashboard-head></app-dashboard-head>
+    <form #form="ngForm" (ngSubmit)="submit()">
+      <div class="main-container">
+        <div>
+          <h3>Invoice no. {{ "" }}</h3>
+        </div>
+        <div class="row mt-3 mb-1">
+          <div class="col-3">
+            <label class="add-order-label m-0 mb-1">Customer</label>
+            <ng-container *ngIf="!idFromQueryParam; else elseBlock">
+              <p-dropdown
+                [options]="customerList"
+                styleClass="w-100"
+                optionLabel="name"
+                placeholder="Select Customer"
+                [(ngModel)]="tempCustomer"
+                [filter]="true"
+                filterBy="name"
+                (onChange)="fillData($event.value)"
+                [showClear]="true"
+                name="customerName"
+                #customerModel="ngModel"
+                [required]="true"
+                [ngClass]="{
+                  'ng-dirty ng-invalid':
+                    customerModel.invalid &&
+                    (customerModel.dirty || customerModel.touched)
+                }"
+              >
+              </p-dropdown>
+              <div
+                *ngIf="
+                  customerModel.invalid &&
+                  (customerModel.dirty || customerModel.touched)
+                "
+              >
+                <div *ngIf="customerModel.errors" class="text-danger m-1">
+                  Customer is required.
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #elseBlock>
+              <p-dropdown
+                [options]="customerList"
+                styleClass="w-100"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Select Customer"
+                [(ngModel)]="tempCustomer"
+                [filter]="true"
+                filterBy="name"
+                (onChange)="fillData($event.value)"
+                [showClear]="true"
+                name="customerName"
+                #customerModel="ngModel"
+                [required]="true"
+                [ngClass]="{
+                  'ng-dirty ng-invalid':
+                    customerModel.invalid &&
+                    (customerModel.dirty || customerModel.touched)
+                }"
+              >
+              </p-dropdown>
+              <div
+                *ngIf="
+                  customerModel.invalid &&
+                  (customerModel.dirty || customerModel.touched)
+                "
+              >
+                <div *ngIf="customerModel.errors" class="text-danger m-1">
+                  Customer is required.
+                </div>
+              </div>
+            </ng-template>
+          </div>
+          <div class="col-3">
+            <label class="add-order-label m-0 ms-2 mb-2">Customer Email</label>
+            <input
+              type="text"
+              placeholder="Auto Filled!"
+              class="form-control order-form-input"
+              [(ngModel)]="invoice.customerEmail"
+              style="border: 1px solid #ced4da"
+              name="email"
+              readonly
+            />
+          </div>
+          <div class="col-5 text-end">
+            <h5>Balance Due</h5>
+            <h2 class="mt-1">PKR {{ "50000.00" }}</h2>
+          </div>
+        </div>
+        <div class="row offset-3">
+          <p-checkbox
+            [binary]="true"
+            inputId="binaryCustomer"
+            label="Send Later"
+            name="sendLater"
+            [(ngModel)]="invoice.sendLater"
+          ></p-checkbox>
+        </div>
+        <div class="row my-3">
+          <div class="col-2">
+            <label class="add-order-label m-0 mb-1">Billing Address</label>
+            <textarea
+              name="sAddressB"
+              [(ngModel)]="invoice.billingAddress"
+              id="sAddressB"
+              class="d-block"
+              cols="25"
+              rows="3"
+              placeholder=" Auto Filled!"
+              readonly
+            ></textarea>
+          </div>
+          <div class="col-2 mt-4 pt-3">
+            <label class="add-order-label m-0 mb-1 ms-1">Terms</label>
+            <!-- <p-dropdown
+          [options]="termList?.productFieldValuesList"
+          styleClass="w-100"
+          optionLabel="name"
+          optionValue="name"
+          [(ngModel)]="customer.terms"
+          [filter]="true"
+          filterBy="name"
+          [showClear]="true"
+          name="customerTerms"
+          #termModel="ngModel"
+          [required]="true"
+          [ngClass]="{
+            'ng-dirty ng-invalid':
+              termModel.invalid && (termModel.dirty || termModel.touched)
+          }"
+        >
+        </p-dropdown>
+        <div
+          *ngIf="termModel.invalid && (termModel.dirty || termModel.touched)"
+        >
+          <div *ngIf="termModel.errors" class="text-danger m-1">
+            Term is required.
+          </div>
+        </div> -->
+            <input
+              placeholder="Auto Filled!"
+              type="text"
+              class="form-control order-form-input"
+              [(ngModel)]="invoice.terms"
+              style="border: 1px solid #ced4da"
+              name="terms"
+              readonly
+            />
+          </div>
+          <div class="col-2 mt-4">
+            <label class="add-order-label m-0 mb-1">Invoice Date</label>
+            <p-calendar
+              styleClass="w-100"
+              name="invoiceDate"
+              [(ngModel)]="invoice.invoiceDate"
+              [showIcon]="true"
+              placeholder="Select Date"
+              (ngModelChange)="updateDueDateMinDate()"
+            ></p-calendar>
+          </div>
+          <div class="col-2 mt-4">
+            <label class="add-order-label m-0 mb-1">Due Date</label>
+            <p-calendar
+              styleClass="w-100"
+              [(ngModel)]="invoice.dueDate"
+              name="dueDate"
+              placeholder="Select Date"
+              [showIcon]="true"
+              [minDate]="minDueDate"
+            ></p-calendar>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row my-3">
+          <p-card>
+            <button class="btn btn-dark my-3" type="button" (click)="addRow()">
+              Add Row
+            </button>
+            <p-table
+              [value]="invoice.invoiceProductDtoList"
+              styleClass="p-datatable-gridlines"
+              [tableStyle]="{ 'min-width': '50rem' }"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>Product Service</th>
+                  <th>Description</th>
+                  <th>Qty</th>
+                  <th>Rate</th>
+                  <th>Amount</th>
+                  <th>Action</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row let-i="rowIndex">
+                <tr>
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <p-calendar
+                      styleClass="w-100"
+                      [(ngModel)]="row.dateRow"
+                      placeholder="Date"
+                      class="lengthDate"
+                      [name]="'dueDate[' + i + ']'"
+                      [showIcon]="true"
+                      [appendTo]="'body'"
+                    ></p-calendar>
+                  </td>
+                  <td>
+                    <div class="text-nowrap">
+                      <p-dropdown
+                        [options]="productServiceList"
+                        styleClass="w-100"
+                        placeholder="Product"
+                        optionLabel="name"
+                        optionValue="name"
+                        [(ngModel)]="row.productRow"
+                        [filter]="true"
+                        filterBy="name"
+                        (onChange)="getDesc($event.value, i)"
+                        [appendTo]="'body'"
+                        [showClear]="true"
+                        [name]="'product[' + i + ']'"
+                        #product="ngModel"
+                        [required]="true"
+                        [ngClass]="{
+                          'ng-dirty ng-invalid':
+                            product.invalid &&
+                            (product.dirty || product.touched)
+                        }"
+                      >
+                      </p-dropdown>
+                      <div
+                        *ngIf="
+                          product.invalid && (product.dirty || product.touched)
+                        "
+                      >
+                        <div *ngIf="product.errors" class="text-danger m-1">
+                          Product is required.
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <textarea
+                        [name]="'desc[' + i + ']'"
+                        [(ngModel)]="row.description"
+                        placeholder=" Description Auto Fill!"
+                        id="desc"
+                        class="d-block"
+                        cols="25"
+                        rows="2"
+                        readonly
+                      ></textarea>
+                    </div>
+                  </td>
+                  <td>
+                    <p-inputNumber
+                      [(ngModel)]="row.qty"
+                      inputId="minmaxQty"
+                      [min]="0"
+                      [max]="10000"
+                      [format]="true"
+                      (onInput)="calculateAmount(invoice, i)"
+                      [name]="'qty[' + i + ']'"
+                      #qtyModel="ngModel"
+                      placeholder="Quantity"
+                      [required]="true"
+                    ></p-inputNumber>
+                    <div
+                      *ngIf="
+                        qtyModel.invalid && (qtyModel.dirty || qtyModel.touched)
+                      "
+                    >
+                      <div *ngIf="qtyModel.errors" class="text-danger m-1">
+                        Quantity is required.
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <p-inputNumber
+                      [(ngModel)]="row.rate"
+                      placeholder="Rate"
+                      inputId="minmaxRate"
+                      [min]="0"
+                      [max]="10000"
+                      [format]="true"
+                      mode="currency"
+                      (onInput)="calculateAmount(invoice, i)"
+                      currency="PKR"
+                      [name]="'rate[' + i + ']'"
+                      #rateModel="ngModel"
+                      [required]="true"
+                    >
+                    </p-inputNumber>
+                    <div
+                      *ngIf="
+                        rateModel.invalid &&
+                        (rateModel.dirty || rateModel.touched)
+                      "
+                    >
+                      <div *ngIf="rateModel.errors" class="text-danger m-1">
+                        Rate is required.
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <p-inputNumber
+                      [(ngModel)]="row.amount"
+                      placeholder="Auto! through rate x qty"
+                      inputId="minmaxAmount"
+                      [min]="0"
+                      [max]="10000"
+                      [format]="true"
+                      mode="currency"
+                      currency="PKR"
+                      [name]="'amount[' + i + ']'"
+                      #amountModel="ngModel"
+                      [required]="true"
+                      [readonly]="true"
+                    >
+                    </p-inputNumber>
+                    <div
+                      *ngIf="
+                        amountModel.invalid &&
+                        (amountModel.dirty || amountModel.touched)
+                      "
+                    >
+                      <div *ngIf="amountModel.errors" class="text-danger m-1">
+                        Amount is required.
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      [ngClass]="
+                        i === 0
+                          ? 'pi pi-lock text-dark'
+                          : 'pi pi-trash text-danger pointer-event bg-white border-0'
+                      "
+                      pButton
+                      [pTooltip]="
+                        i === 0 ? 'First invoice will be locked' : 'Delete row'
+                      "
+                      tooltipPosition="top"
+                      class="pointer-event border-0 bg-white"
+                      (click)="removeRow(i)"
+                    ></button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-card>
+        </div>
+      </div>
+      <div class="container-fluid my-3">
+        <div class="row ms-3">
+          <div class="col-3">
+            <label class="add-order-label m-0 mb-1">Message of invoice</label>
+            <textarea
+              name="msg"
+              [(ngModel)]="invoice.message"
+              id="msg"
+              class="d-block"
+              cols="25"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+        <div class="row ms-3 mt-3">
+          <div class="col-3">
+            <label class="add-order-label m-0 mb-1">Message of statement</label>
+            <textarea
+              name="statement"
+              [(ngModel)]="invoice.statement"
+              id="statement"
+              class="d-block"
+              cols="25"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+        <div class="row ms-3 mt-3">
+          <div class="col-3">
+            <label class="add-order-label m-0 d-block">Invoice no</label>
+            <p-inputNumber
+              [(ngModel)]="invoice.invoiceNo"
+              inputId="minmaxNo"
+              [min]="0"
+              [max]="10000"
+              [format]="true"
+              placeholder=" Invoice No"
+              name="invoiceNo"
+              #invoiceNoModel="ngModel"
+              [required]="true"
+            >
+            </p-inputNumber>
+            <div
+              *ngIf="
+                invoiceNoModel.invalid &&
+                (invoiceNoModel.dirty || invoiceNoModel.touched)
+              "
+            >
+              <div *ngIf="invoiceNoModel.errors" class="text-danger m-1">
+                Invoice No# is required.
+              </div>
+            </div>
+            <!-- <input
+              type="number"
+              class="order-search form-control order-form-input"
+
+              style="border: 1px solid #ced4da"
+
+            /> -->
+          </div>
+        </div>
+      </div>
+      <div class="row my-3 bg-dark py-3 d-flex justify-content-between">
+        <div class="col-2">
+          <button class="btn btn-outline-light ms-3" type="button">
+            Clear
+          </button>
+        </div>
+        <div class="col-2 pt-2">
+          <p-toast></p-toast>
+          <button
+            type="button"
+            (click)="openPrintPreview()"
+            class="text-light ms-5 pointer-event bg-dark border-0 text-decoration-underline"
+          >
+            Print Preview
+          </button>
+        </div>
+        <div class="col-2">
+          <button class="btn btn-outline-warning ms-5" type="submit" [disabled]="!form.valid">
+            Save & Send
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-container>
+<p-dialog
+  [(visible)]="showPrintPreview"
+  [breakpoints]="{ '960px': '100vw 100vh' }"
+  [style]="{ width: '100vw', height: '100vh' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="false"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <h3>PrintLab</h3>
+      </div>
+      <div class="col-6 text-end">
+        <h3>Invoice</h3>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <h6>3011 8888 40</h6>
+      <h6>finance@printlab.pk</h6>
+      <h6>www.printlab.pk</h6>
+    </div>
+    <div class="row">
+      <div class="col-5 bg-dark text-white">
+        <span>Bill To: </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 border border-3 py-1">
+        <h6>Mr Zubair</h6>
+        <h6>Ivory Saloon by Anum Zubair</h6>
+        <h6>Karachi</h6>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col-8 p-0">
+        <table class="table table-dark bg-dark text-center">
+          <thead class="bg-dark">
+            <tr>
+              <th class="border p-0">Date</th>
+              <th class="border p-0">Total Due</th>
+              <th class="border p-0">Invoice #</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white text-dark">
+              <td class="border border-1 p-0">2312</td>
+              <td class="border border-1 p-0">
+                <div class="d-flex justify-content-between">
+                  <span>PKR</span>
+                  <span>21321</span>
+                </div>
+              </td>
+              <td class="border border-1 p-0">321312</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-10 p-0">
+        <table class="text-center overflow-auto">
+          <thead class="bg-dark text-white">
+            <tr>
+              <th class="border p-0">Item</th>
+              <th class="border p-0 col-2">QTY</th>
+              <th class="border p-0 col-2">Rate</th>
+              <th class="border p-0 col-3">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white text-dark">
+              <td class="border border-1 p-0">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quia,
+                labore!
+              </td>
+              <td class="border border-1 p-0">
+                <div class="d-flex justify-content-between">
+                  <span>PKR</span>
+                  <span>21321</span>
+                </div>
+              </td>
+              <td class="border border-1 p-0">321312</td>
+              <td class="border border-1 p-0">321312</td>
+            </tr>
+            <tr class="bg-white text-dark">
+              <td></td>
+              <td class="border border-1 p-0" colspan="2">Total</td>
+              <td class="border border-1 p-0"></td>
+            </tr>
+            <tr class="bg-white text-dark">
+              <td></td>
+              <td class="border border-1 p-0" colspan="2">Recieved</td>
+              <td class="border border-1 p-0"></td>
+            </tr>
+            <tr class="bg-white text-dark">
+              <td></td>
+              <td class="border border-1 p-0" colspan="2">Balance</td>
+              <td class="border border-1 p-0"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      class="text-dark border border-bottom-0 border-start-0 border-end-0 mt-5 border-dark"
+    >
+      <div>
+        <span class="pi pi-arrow-right"></span>
+        <span>All prices above are in Pakistani Rupee and tax exclusive</span>
+      </div>
+      <div>
+        <span class="pi pi-arrow-right"></span>
+        <span>This is a computer generated invoice no signature required</span>
+      </div>
+    </div>
+  </div>
+</p-dialog>

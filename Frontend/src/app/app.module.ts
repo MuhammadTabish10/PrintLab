@@ -98,6 +98,12 @@ import { AddUvVendorsComponent } from './pages/Labour/add-uv-vendors/add-uv-vend
 import { ProductCategoriesComponent } from './pages/Product/product-categories/product-categories.component';
 import { ProductServicesComponent } from './pages/Product/product-services/product-services.component';
 import { TreeTableModule } from 'primeng/treetable';
+import { GetInvoicesComponent } from './pages/Invoice/get-invoices/get-invoices.component';
+import { AddInvoiceComponent } from './pages/Invoice/add-invoice/add-invoice.component';
+import { InvoicePrintComponent } from './pages/Invoice/invoice-print/invoice-print.component';
+import { TooltipModule } from 'primeng/tooltip';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -167,6 +173,9 @@ import { TreeTableModule } from 'primeng/treetable';
     AddUvVendorsComponent,
     ProductCategoriesComponent,
     ProductServicesComponent,
+    GetInvoicesComponent,
+    AddInvoiceComponent,
+    InvoicePrintComponent,
   ],
   imports: [
     BrowserModule,
@@ -197,6 +206,8 @@ import { TreeTableModule } from 'primeng/treetable';
     CheckboxModule,
     TimelineModule,
     TreeTableModule,
+    TooltipModule,
+    DynamicDialogModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,ConfirmDialogModule,
     provideRouter(routes, withHashLocation()), DatePipe],

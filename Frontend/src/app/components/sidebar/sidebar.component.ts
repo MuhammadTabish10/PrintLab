@@ -15,6 +15,7 @@ export class SidebarComponent {
   isDropDown4Open: boolean = false;
   isDropDown5Open: boolean = false;
   isDropDown6Open: boolean = false;
+  isDropDown7Open: boolean = false;
 
 
   constructor(public sessionStorageService: SessionStorageService) {
@@ -67,6 +68,14 @@ export class SidebarComponent {
       this.isDropDown3Open = false;
       this.isDropDown4Open = false;
       this.isDropDown5Open = false;
+    }else if (dropdownNumber === 7) {
+      this.isDropDown7Open = !this.isDropDown7Open;
+      this.isDropDown1Open = false;
+      this.isDropDown2Open = false;
+      this.isDropDown3Open = false;
+      this.isDropDown4Open = false;
+      this.isDropDown5Open = false;
+      this.isDropDown6Open = false;
     }
   }
 }

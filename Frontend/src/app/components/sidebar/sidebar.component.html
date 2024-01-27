@@ -425,26 +425,29 @@
     </li>
 
     <li
-    class="sidebar-list-hover mt-2"
-    *ngIf="sessionStorageService.hasPermission('ProductServices')"
-  >
-    <span (click)="toggleDropDown(6)">
-      <i class="fa fa-bars fa-2x"></i>
-      <span class="nav-text fw-bolder">
-        Product Services
-        <i
-          class="fa-solid fa-chevron-down dd-icon-settings"
-          *ngIf="isDropDown6Open == false"
-        ></i>
-        <i
-          class="fa-solid fa-chevron-up dd-icon-settings"
-          *ngIf="isDropDown6Open == true"
-        ></i>
+      class="sidebar-list-hover mt-2"
+      *ngIf="sessionStorageService.hasPermission('ProductServices')"
+    >
+      <span (click)="toggleDropDown(6)">
+        <i class="fa fa-bars fa-2x"></i>
+        <span class="nav-text fw-bolder">
+          Product Services
+          <i
+            class="fa-solid fa-chevron-down dd-icon-settings"
+            *ngIf="isDropDown6Open == false"
+          ></i>
+          <i
+            class="fa-solid fa-chevron-up dd-icon-settings"
+            *ngIf="isDropDown6Open == true"
+          ></i>
+        </span>
       </span>
-    </span>
-  </li>
+    </li>
 
-    <li *ngIf="sessionStorageService.hasPermission('ProductCategories')" class="mt-2">
+    <li
+      *ngIf="sessionStorageService.hasPermission('ProductCategories')"
+      class="mt-2"
+    >
       <span class="sidebar-list-hover" *ngIf="isDropDown6Open">
         <i class="fa fa-plus"></i>
         <a class="nav-text nav-link" [routerLink]="['/product-categories']">
@@ -453,7 +456,10 @@
       </span>
     </li>
 
-    <li *ngIf="sessionStorageService.hasPermission('ProductServices')" class="mt-2">
+    <li
+      *ngIf="sessionStorageService.hasPermission('ProductServices')"
+      class="mt-2"
+    >
       <span class="sidebar-list-hover" *ngIf="isDropDown6Open">
         <i class="fa fa-plus"></i>
         <a class="nav-text nav-link" [routerLink]="['/product-services']">
@@ -462,5 +468,36 @@
       </span>
     </li>
 
+    <li
+      class="sidebar-list-hover mt-2"
+      *ngIf="sessionStorageService.hasPermission('Invoice')"
+    >
+      <span (click)="toggleDropDown(7)">
+        <i class="fa fa-bars fa-2x"></i>
+        <span class="nav-text fw-bolder">
+          Invoice Section
+          <i
+            class="fa-solid fa-chevron-down dd-icon-settings"
+            *ngIf="isDropDown7Open == false"
+          ></i>
+          <i
+            class="fa-solid fa-chevron-up dd-icon-settings"
+            *ngIf="isDropDown7Open == true"
+          ></i>
+        </span>
+      </span>
+    </li>
+
+    <li
+      *ngIf="sessionStorageService.hasPermission('Invoice')"
+      class="mt-2"
+    >
+      <span class="sidebar-list-hover" *ngIf="isDropDown7Open">
+        <i class="fa fa-plus"></i>
+        <a class="nav-text nav-link" [routerLink]="['/get-invoices']">
+          Invoice
+        </a>
+      </span>
+    </li>
   </ul>
 </nav>

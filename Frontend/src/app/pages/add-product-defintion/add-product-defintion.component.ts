@@ -78,12 +78,17 @@ export class AddProductDefintionComponent implements OnInit {
 
   addProduct() {
     this.typeValue == "TEXTFIELD" || this.typeValue == "TOGGLE" ? this.pfvaluesArray = [] : null;
+    this.nameValue.split(' ');
+    const result = this.nameValue
+      .split(' ')
+      .map((word: string) => word.toUpperCase())
+      .join('_');
     this.pfvaluesArray.forEach((element: any) => {
       element.name = element.name.split(' ');
       element.name = element.name.map((word: any) => word.toUpperCase()).join('_')
     })
     let obj = {
-      name: this.nameValue,
+      name: result,
       status: this.statusValue,
       sequence: this.sequenceValue,
       type: this.typeValue,

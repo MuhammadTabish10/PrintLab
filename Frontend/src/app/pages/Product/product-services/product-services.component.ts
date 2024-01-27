@@ -162,7 +162,8 @@ export class ProductServicesComponent {
   }
 
   getProductServiceType() {
-    const fieldName = 'Product And Service';
+    const fieldName = 'Product_And_Service';
+    fieldName.toUpperCase();
     this.productFieldService.searchProductField(fieldName).subscribe(
       (res: any) => {
         this.productTypes = res[0];

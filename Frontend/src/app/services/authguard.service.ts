@@ -166,13 +166,17 @@ export class AuthguardService implements CanActivate {
       url: ['/get-uv-vendors', '/add-uv-vendor'],
       permissions: 'UV_Vendors'
     }
-    const ProductCategoriesObj = {
+    const productCategoriesObj = {
       url: ['/product-categories'],
       permissions: 'ProductCategories'
     }
-    const ProductServicesObj = {
+    const productServicesObj = {
       url: ['/product-services'],
       permissions: 'ProductServices'
+    }
+    const invoiceObj = {
+      url: ['/get-invoices','/add-invoice','/print-invoice'],
+      permissions: 'Invoice'
     }
 
 
@@ -185,7 +189,7 @@ export class AuthguardService implements CanActivate {
       permissionConfiguration_CTP, permissionConfiguration_Paper_Size,
       permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate,
       permissionConfiguration_Uping, permissionConfiguration_Product_Process, labourObj,
-      laminationVendorObj, uvVendorObj, ProductCategoriesObj, ProductServicesObj,
+      laminationVendorObj, uvVendorObj, productCategoriesObj, productServicesObj,invoiceObj,
     ]
 
 
