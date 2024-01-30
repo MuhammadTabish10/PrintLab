@@ -30,6 +30,13 @@ public class ProductCategoryController {
         return ResponseEntity.ok(productCategoryList);
     }
 
+    @GetMapping("/product-sub-category-by/{name}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<ProductCategoryDto>> getAllSubCategoryByCategory(@PathVariable String name) {
+        List<ProductCategoryDto> productCategoryDtoList = productCategoryService.searchByCategory(name);
+        return ResponseEntity.ok(productCategoryDtoList);
+    }
+
     @GetMapping("/product-category/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ProductCategoryDto> getCtpById(@PathVariable Long id) {

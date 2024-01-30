@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Customer } from 'src/app/Model/Customer';
 import { Invoice, InvoiceProduct } from 'src/app/Model/Invoice';
 import { ProductField } from 'src/app/Model/ProductField';
@@ -10,6 +10,8 @@ import { ProductService } from 'src/app/Model/ProductService';
 import { InvoiceService } from '../Service/invoice.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { ProductDefinitionService } from 'src/app/services/product-definition.service';
+import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 
 
 @Component({
@@ -21,7 +23,17 @@ export class AddInvoiceComponent implements OnInit {
   private destroy$ = new Subject<void>();
 
   minDueDate!: Date;
-  customerList: any[] = [];
+  send: string = 'Send';
+  customerList: Customer[] = [];
+  termList: ProductField | undefined | null;
+  productServiceList: ProductService[] = [];
+  showPrintPreview = false;
+  hide: boolean = false;
+  idFromQueryParam: number | undefined | null;
+  mode: string = 'Save';
+  balanceDue: number = 50000.00;
+  onlySend: boolean = false;
+
   tempCustomer: Customer = {
     id: undefined,
     title: undefined,
@@ -55,29 +67,13 @@ export class AddInvoiceComponent implements OnInit {
     tax: undefined,
     status: undefined,
   }
-  termList: ProductField | undefined | null;
-  productServiceList: any[] = [];
-  showPrintPreview = false;
-  hide: boolean = false;
-  idFromQueryParam: number | undefined | null;
-  mode: string = 'Save';
-  rows: InvoiceProduct[] = [
-    {
-      id: undefined,
-      dateRow: undefined,
-      productRow: undefined,
-      description: undefined,
-      qty: undefined,
-      rate: undefined,
-      amount: undefined,
-      status: undefined,
-    }
-  ];
+
   invoice: Invoice = {
     id: undefined,
     invoiceNo: undefined,
     customer: undefined,
     customerEmail: undefined,
+    business: undefined,
     sendLater: undefined,
     billingAddress: undefined,
     terms: undefined,
@@ -87,6 +83,8 @@ export class AddInvoiceComponent implements OnInit {
       id: undefined,
       dateRow: undefined,
       productRow: undefined,
+      productName: undefined,
+      type: undefined,
       description: undefined,
       qty: undefined,
       rate: undefined,
@@ -106,34 +104,74 @@ export class AddInvoiceComponent implements OnInit {
     private invoiceService: InvoiceService,
     private router: Router,
     private route: ActivatedRoute,
+    private productFieldService: ProductDefinitionService
   ) { }
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === 'p') {
       this.hide = true;
-      this.openPrintPreview();
+      this.showPrintPreview = true;
+      event.preventDefault();
+    }
+
+    if (event.key === 'Escape') {
+      this.hide = false;
+      this.showPrintPreview = false;
     }
   }
 
+
   ngOnInit(): void {
-    this.getCustomerList();
-    this.getProdutList();
-    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(param => {
-      this.idFromQueryParam = +param['id'] || null;
-      this.mode = this.idFromQueryParam ? 'Update' : 'Save';
-      if (this.idFromQueryParam) {
-        this.patchValues(this.idFromQueryParam);
-      }
-    });
+    this.initializeData();
+    this.handleQueryParams();
   }
 
+  private initializeData(): void {
+    this.getInvoiceNo();
+    this.getCustomerList();
+    this.getProdutList();
+  }
+
+  private handleQueryParams(): void {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(
+      (param) => {
+        this.idFromQueryParam = +param['id'] || null;
+        this.onlySend = param['send'] || false;
+        this.mode = this.idFromQueryParam ? 'Update' : 'Save';
+
+        if (this.onlySend) {
+          this.setupViewForSend();
+        }
+
+        if (this.idFromQueryParam) {
+          this.patchValuesIfNeeded(this.idFromQueryParam);
+        }
+
+      },
+      (error) => {
+        this.errorHandleService.showError(error.error.error);
+      }
+    );
+  }
+
+  private setupViewForSend(): void {
+    this.hide = true;
+    this.showPrintPreview = true;
+  }
+
+  private patchValuesIfNeeded(id: number): void {
+    this.patchValues(id);
+  }
+
+
   addRow() {
-    debugger
     this.invoice.invoiceProductDtoList.push({
       id: undefined,
       dateRow: undefined,
       productRow: undefined,
+      productName: undefined,
+      type: undefined,
       description: undefined,
       qty: undefined,
       rate: undefined,
@@ -143,7 +181,6 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   removeRow(index: number) {
-    debugger
     if (index !== 0) {
       this.invoice.invoiceProductDtoList.splice(index, 1);
     }
@@ -152,13 +189,6 @@ export class AddInvoiceComponent implements OnInit {
   openPrintPreview() {
     this.hide = true;
     this.showPrintPreview = true;
-    window.addEventListener('afterprint', () => {
-      this.hide = false;
-      this.showPrintPreview = false;
-    });
-    setTimeout(() => {
-      window.print();
-    }, 100);
   }
 
   getCustomerList() {
@@ -167,96 +197,173 @@ export class AddInvoiceComponent implements OnInit {
         this.customerList = res;
       },
       error => {
+        this.errorHandleService.showError(error.error.error);
       }
     )
   }
-  fillData(customer: Customer) {
-    if (!this.idFromQueryParam) {
-      this.invoice.customerEmail = customer.email;
-      this.invoice.billingAddress = customer.billingStreetAddress;
-      this.invoice.terms = customer.terms;
+
+  fillData(selectedCustomer: Customer | number) {
+    if (!selectedCustomer) {
+      this.clearInvoiceDetails();
     } else {
-      debugger
-      customer = this.customerList.find(c => c.id === customer);
-      this.invoice.customerEmail = customer.email;
-      this.invoice.billingAddress = customer.billingStreetAddress;
-      this.invoice.terms = customer.terms;
+      const customer = this.getCustomerById(selectedCustomer);
+      this.updateInvoiceDetails(customer);
     }
   }
+
+  private clearInvoiceDetails() {
+    this.invoice.customerEmail = null;
+    this.invoice.billingAddress = null;
+    this.invoice.terms = null;
+    this.invoice.business = null;
+  }
+
+  private getCustomerById(selectedCustomer: Customer | number): Customer | undefined {
+    if (!this.idFromQueryParam) {
+      return selectedCustomer as Customer;
+    } else {
+      const customerId = selectedCustomer as number;
+      return this.customerList.find(c => c.id === customerId);
+    }
+  }
+
+  private updateInvoiceDetails(customer?: Customer) {
+    this.invoice.customerEmail = customer?.email;
+    this.invoice.billingAddress = customer?.billingStreetAddress;
+    this.invoice.terms = customer?.terms;
+    this.invoice.business = customer?.businessName;
+  }
+
   getProdutList() {
     this.productService.getAllProductService().subscribe(
       (res: ProductService[]) => {
         this.productServiceList = res;
       },
-      error => { }
+      error => {
+        this.errorHandleService.showError(error.error.error);
+      }
     )
   }
 
   submit() {
-    if (!this.idFromQueryParam) {
-      this.invoice.customer = this.tempCustomer.name;
-    } else {
-      const customerObj = this.customerList.find(c => c.id === this.tempCustomer);
-      this.invoice.customer = customerObj.name;
-    }
-    this.invoice.invoiceProductDtoList.forEach((invoice => {
-      invoice.status = true;
-    }));
-    console.log(this.invoice);
-    const serviceToCall = !this.idFromQueryParam ? this.invoiceService.postInvoice(this.invoice)
-      : this.invoiceService.updateInvoice(this.idFromQueryParam, this.invoice);
+    this.updateCustomerId();
+    this.updateInvoiceProductStatus();
     debugger
+    if (!this.invoice.sendLater && !this.idFromQueryParam) {
+      this.openPrintPreview()
+    }
+
+    console.log(this.invoice);
+
+    const serviceToCall = this.idFromQueryParam
+      ? this.invoiceService.updateInvoice(this.idFromQueryParam, this.invoice)
+      : this.invoiceService.postInvoice(this.invoice);
+
     serviceToCall.subscribe(
       (res: Invoice) => {
         const successMsg = `Invoice NO: ${this.invoice.invoiceNo} is successfully ${this.mode}d.`;
         this.successMsg.showSuccess(successMsg);
-        setTimeout(() => {
-          this.router.navigate(['/get-invoices']);
-        }, 2000);
-      }, error => {
-        if (error.status === 400) {
-          this.errorHandleService.showError("Bad Request. Please check your inputs.");
-        } else {
-          this.errorHandleService.showError(error.error.error);
+        if (!this.showPrintPreview) {
+          setTimeout(() => {
+            this.router.navigate(['/get-invoices']);
+          }, 2000);
         }
+      },
+      (error: BackendErrorResponse) => {
+        this.errorHandleService.showError(error.error.error);
       }
     );
   }
 
+  private updateCustomerId(): void {
+    if (this.idFromQueryParam) {
+      const customerObj = this.customerList.find((c) => c.id === this.tempCustomer.id);
+      this.invoice.customer = customerObj?.id;
+    } else {
+      this.invoice.customer = this.tempCustomer?.id;
+    }
+  }
+
+  private updateInvoiceProductStatus(): void {
+    this.invoice.invoiceProductDtoList.forEach((invoice: InvoiceProduct) => {
+      invoice.status = true;
+    });
+  }
+
+
   patchValues(id: number): void {
-    debugger
     this.invoiceService.getInvoiceById(id).subscribe(
       (res: Invoice) => {
-        const customer = this.customerList.find(c => c.name === res.customer);
-        debugger
-        this.tempCustomer = customer.id;
-        if (res.invoiceDate) {
-          res.invoiceDate = new Date(res.invoiceDate);
-        }
 
-        if (res.dueDate) {
-          res.dueDate = new Date(res.dueDate);
-        }
-        res.invoiceProductDtoList.forEach((product: InvoiceProduct) => {
-          if (product.dateRow) {
-            product.dateRow = new Date(product.dateRow);
-          }
-        });
-        this.invoice = res;
+        const customer = this.customerList.find(c => c.id === res.customer as number);
+        this.tempCustomer.id = customer?.id;
+
+        this.parseDateFields(res);
+
         const productList = res.invoiceProductDtoList.filter(
           invoice => invoice.status !== false && invoice.status !== null
         );
-        this.invoice.invoiceProductDtoList = productList;
-      }, error => {
+        productList.forEach((invoice: InvoiceProduct) => {
+          const matchingProduct = this.productServiceList.find((product: ProductService) => product.id === invoice.productRow);
+
+          if (matchingProduct) {
+            invoice.productName = matchingProduct.name;
+          }
+        });
+
+        this.invoice = { ...res, invoiceProductDtoList: productList };
+
+      },
+      (error: BackendErrorResponse) => {
         this.errorHandleService.showError(error.error.error);
-      });
+      }
+    );
   }
-  getDesc(product: ProductService, i: number) {
-    product = this.productServiceList.find(p => p.name === product);
-    if (product.description) {
-      this.invoice.invoiceProductDtoList![i].description = product.description;
-      this.invoice.invoiceProductDtoList![i].productRow = product.name;
+
+  private parseDateFields(invoice: Invoice): void {
+
+    const parseDateField = (field: Date | null | undefined) => {
+      if (field) {
+        return new Date(field);
+      }
+      return null;
+    };
+
+    invoice.invoiceDate = parseDateField(invoice.invoiceDate);
+    invoice.dueDate = parseDateField(invoice.dueDate);
+
+    invoice.invoiceProductDtoList.forEach((product: InvoiceProduct) => {
+      product.dateRow = parseDateField(product.dateRow);
+    });
+  }
+
+  AutoFillOthers(productId: number, i: number): void {
+    const selectedProduct = this.productServiceList.find(p => p.id === productId);
+    const productDto = this.invoice.invoiceProductDtoList![i];
+
+    if (selectedProduct) {
+      this.getDataForOtherFields(selectedProduct, productDto);
+    } else {
+      this.emptyAutoFilledFields(productDto);
     }
+
+    this.calculateAmount(this.invoice, i);
+  }
+
+  getDataForOtherFields(selectedProduct: ProductService, productDto: InvoiceProduct) {
+    productDto.type = selectedProduct.type;
+    productDto.description = selectedProduct.description;
+    productDto.productRow = selectedProduct.id;
+    productDto.productName = selectedProduct.name;
+    productDto.rate = selectedProduct.cost;
+  }
+
+  emptyAutoFilledFields(productDto: InvoiceProduct) {
+    productDto.type = null;
+    productDto.description = null;
+    productDto.productRow = null;
+    productDto.productName = null;
+    productDto.rate = null;
   }
 
   updateDueDateMinDate() {
@@ -266,11 +373,72 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   calculateAmount(value: Invoice, i: number) {
-    debugger
-    if (value.invoiceProductDtoList![i].qty && value.invoiceProductDtoList![i].rate) {
+    if (this.invoice.invoiceProductDtoList![i].productRow && value.invoiceProductDtoList![i].rate) {
       this.invoice.invoiceProductDtoList![i].amount = value.invoiceProductDtoList![i].qty! * value.invoiceProductDtoList![i].rate!;
     } else {
       this.invoice.invoiceProductDtoList![i].amount = 0;
     }
   }
+
+  generatePdfAndSendToEmail() {
+    const printPreviewElement = document.getElementById('print-preview');
+    const htmlContent = printPreviewElement!.innerHTML;
+    const email = this.invoice.customerEmail;
+
+    this.invoiceService.saveInvoiceAndGeneratePdf(htmlContent, email!).subscribe(
+      res => {
+      },
+      error => {
+        debugger
+        this.errorHandleService.showError(error.error);
+      }
+    );
+  }
+
+  closeModal() {
+    this.showPrintPreview = false;
+    this.hide = false;
+  }
+
+  getInvoiceNo() {
+    const fieldName = "Invoice_No";
+    this.productFieldService.searchProductField(fieldName).subscribe(
+      (res: any) => {
+        this.invoice.invoiceNo = Number(res[0].productFieldValuesList[0].name);
+        this.getAllInvoices();
+      }, error => {
+        this.errorHandleService.showError(error.error.error);
+      });
+  }
+
+  getAllInvoices() {
+    this.invoiceService.getAllInvoice().subscribe(
+      (res: Invoice[]) => {
+        if (res.length > 0 && !this.idFromQueryParam) {
+          const lastInvoiceNo = res[res.length - 1].invoiceNo;
+          this.invoice.invoiceNo = lastInvoiceNo;
+          this.invoice.invoiceNo!++;
+        }
+      }, error => {
+        this.errorHandleService.showError(error.error.error);
+      }
+    );
+  }
+
+  calculateTotal(): number {
+    if (this.invoice?.invoiceProductDtoList) {
+      return this.invoice.invoiceProductDtoList.reduce((total, row) => total + row.amount!, 0);
+    }
+    return 0;
+  }
+
+  calculateBalance(): number {
+    const receivedAmount = 3000;
+    return receivedAmount - this.calculateTotal();
+  }
+
+  saveFile() {
+    window.print();
+  }
+
 }

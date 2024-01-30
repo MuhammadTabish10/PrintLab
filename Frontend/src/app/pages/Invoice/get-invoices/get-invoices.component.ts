@@ -4,8 +4,9 @@ import { InvoiceService } from '../Service/invoice.service';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { Router } from '@angular/router';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
-import { DatePipe } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, map, of, takeUntil } from 'rxjs';
+import { CustomerService } from 'src/app/services/customer.service';
+import { Customer } from 'src/app/Model/Customer';
 
 @Component({
   selector: 'app-get-invoices',
@@ -14,15 +15,16 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class GetInvoicesComponent implements OnInit, OnDestroy {
   invoiceList: Invoice[] = []
+  customerNames: { [id: number]: string | null | undefined } = {};
 
   private destroy$ = new Subject<void>();
 
   constructor(
-    private invoiceService: InvoiceService,
-    private errorHandleService: ErrorHandleService,
-    private router: Router,
     private successMsgService: SuccessMessageService,
-    private datePipe: DatePipe,
+    private errorHandleService: ErrorHandleService,
+    private customerService: CustomerService,
+    private invoiceService: InvoiceService,
+    private router: Router,
   ) { }
 
 
@@ -89,22 +91,35 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
 
           this.invoiceList = res;
 
-          // this.invoiceList.forEach((el: Invoice) => {
-          //   const dateArray = el.timeStamp;
-          //   if (Array.isArray(dateArray)) {
-          //     let timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
-          //     timeStamp.setHours(timeStamp.getHours() + 5);
-          //     el.timeStamp = this.datePipe.transform(timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
-          //   }
-          // });
-
         },
         (error: any) => this.errorHandleService.showError(error.error.error)
       );
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  generatePdfAndSendToEmail(id: number) {
+    this.router.navigate(['/add-invoice'], { queryParams: { id: id, send: true } });
+  }
+
+  getCustomerName(customerId: number): Observable<string> {
+    if (!this.customerNames[customerId]) {
+      return this.customerService.getCustomerById(customerId).pipe(
+        map((res: Customer): string => {
+          this.customerNames[customerId] = res.name;
+          return res?.name!;
+        }),
+        catchError((error) => {
+          // Handle error, e.g., set a default name
+          this.customerNames[customerId] = 'Unknown Customer';
+          return of('Unknown Customer');
+        })
+      );
+    }
+    return of(this.customerNames[customerId] || 'Loading...');
   }
 }
 

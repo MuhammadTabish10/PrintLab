@@ -5,7 +5,7 @@
     <form #form="ngForm" (ngSubmit)="submit()">
       <div class="main-container">
         <div>
-          <h3>Invoice no. {{ "" }}</h3>
+          <h3>Invoice no. {{ invoice.invoiceNo }}</h3>
         </div>
         <div class="row mt-3 mb-1">
           <div class="col-3">
@@ -49,7 +49,7 @@
                 optionLabel="name"
                 optionValue="id"
                 placeholder="Select Customer"
-                [(ngModel)]="tempCustomer"
+                [(ngModel)]="tempCustomer.id"
                 [filter]="true"
                 filterBy="name"
                 (onChange)="fillData($event.value)"
@@ -90,7 +90,7 @@
           </div>
           <div class="col-5 text-end">
             <h5>Balance Due</h5>
-            <h2 class="mt-1">PKR {{ "50000.00" }}</h2>
+            <h2 class="mt-1">PKR {{ balanceDue.toFixed(2) }}</h2>
           </div>
         </div>
         <div class="row offset-3">
@@ -193,6 +193,7 @@
                   <th>#</th>
                   <th>Date</th>
                   <th>Product Service</th>
+                  <th>Type</th>
                   <th>Description</th>
                   <th>Qty</th>
                   <th>Rate</th>
@@ -221,11 +222,11 @@
                         styleClass="w-100"
                         placeholder="Product"
                         optionLabel="name"
-                        optionValue="name"
+                        optionValue="id"
                         [(ngModel)]="row.productRow"
                         [filter]="true"
                         filterBy="name"
-                        (onChange)="getDesc($event.value, i)"
+                        (onChange)="AutoFillOthers($event.value, i)"
                         [appendTo]="'body'"
                         [showClear]="true"
                         [name]="'product[' + i + ']'"
@@ -250,11 +251,21 @@
                     </div>
                   </td>
                   <td>
+                    <input
+                      type="text"
+                      pInputText
+                      [(ngModel)]="row.type"
+                      [readonly]="true"
+                      [name]="'type[' + i + ']'"
+                      placeholder="Type will Auto Filled!"
+                    />
+                  </td>
+                  <td>
                     <div>
                       <textarea
                         [name]="'desc[' + i + ']'"
                         [(ngModel)]="row.description"
-                        placeholder=" Description Auto Fill!"
+                        placeholder=" Description will Auto Filled!"
                         id="desc"
                         class="d-block"
                         cols="25"
@@ -273,7 +284,7 @@
                       (onInput)="calculateAmount(invoice, i)"
                       [name]="'qty[' + i + ']'"
                       #qtyModel="ngModel"
-                      placeholder="Quantity"
+                      placeholder="Type qty"
                       [required]="true"
                     ></p-inputNumber>
                     <div
@@ -289,17 +300,17 @@
                   <td>
                     <p-inputNumber
                       [(ngModel)]="row.rate"
-                      placeholder="Rate"
+                      placeholder="Auto! through Product"
                       inputId="minmaxRate"
                       [min]="0"
                       [max]="10000"
                       [format]="true"
                       mode="currency"
-                      (onInput)="calculateAmount(invoice, i)"
                       currency="PKR"
                       [name]="'rate[' + i + ']'"
                       #rateModel="ngModel"
                       [required]="true"
+                      [readonly]="true"
                     >
                     </p-inputNumber>
                     <div
@@ -396,13 +407,14 @@
             <p-inputNumber
               [(ngModel)]="invoice.invoiceNo"
               inputId="minmaxNo"
-              [min]="0"
+              [min]="1001"
               [max]="10000"
-              [format]="true"
+              [useGrouping]="false"
               placeholder=" Invoice No"
               name="invoiceNo"
               #invoiceNoModel="ngModel"
               [required]="true"
+              [readonly]="true"
             >
             </p-inputNumber>
             <div
@@ -441,9 +453,16 @@
             Print Preview
           </button>
         </div>
-        <div class="col-2">
-          <button class="btn btn-outline-warning ms-5" type="submit" [disabled]="!form.valid">
-            Save & Send
+        <div class="col-2 text-end">
+          <button
+            class="btn btn-outline-warning ms-5"
+            type="submit"
+            [disabled]="!form.valid"
+          >
+            {{ mode }}
+            <span *ngIf="!invoice.sendLater && !idFromQueryParam">{{
+              " & " + send
+            }}</span>
           </button>
         </div>
       </div>
@@ -451,14 +470,56 @@
   </div>
 </ng-container>
 <p-dialog
+  #printPreviewDialog
   [(visible)]="showPrintPreview"
-  [breakpoints]="{ '960px': '100vw 100vh' }"
-  [style]="{ width: '100vw', height: '100vh' }"
+  class="blackModal"
+  [breakpoints]="{ '960px': '100vw' }"
   [draggable]="false"
   [resizable]="false"
   [closable]="false"
+  [style]="{
+    border: '7px solid black',
+    'border-right': '7px solid black',
+  }"
 >
-  <div class="container">
+  <ng-template pTemplate="header">
+    <div
+      class="p-dialog-titlebar black-header bg-dark text-white"
+      style="padding: 15px; margin: -30px; padding-right: -30px; width: 200%"
+    >
+      <div class="header-icons clearfix">
+        <span class="pi pi-arrow-left"></span>
+        <span class="pi pi-arrow-right mx-3"></span>
+        <span>Page</span>
+        <input
+          type="text"
+          value=" 1"
+          readonly
+          class="ms-3 me-1 bg-dark col-2 py-0 text-white border border-white rounded"
+        /><span>of 1</span>
+        <span class="ms-3">-</span>
+        <span class="mx-2">+</span>
+        <span class="p-input-icon-right">
+          <i class="pi pi-arrows-v"></i>
+          <input
+            type="text"
+            pInputText
+            value="  Automatic Zoom"
+            class="p-inputtext-sm bg-dark text-white customInput"
+          />
+        </span>
+        <div class="float-end d-inline">
+          <span class="pi pi-save" (click)="saveFile()"></span>
+          <span
+            class="ms-3 pi pi-print"
+            (click)="generatePdfAndSendToEmail()"
+          ></span>
+          <span class="ms-3 pi pi-times" (click)="closeModal()"></span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="container my-3" id="print-preview">
     <div class="row">
       <div class="col-6">
         <h3>PrintLab</h3>
@@ -479,9 +540,9 @@
     </div>
     <div class="row">
       <div class="col-5 border border-3 py-1">
-        <h6>Mr Zubair</h6>
-        <h6>Ivory Saloon by Anum Zubair</h6>
-        <h6>Karachi</h6>
+        <h6>{{ invoice.customerEmail }},</h6>
+        <h6>{{ invoice.business }},</h6>
+        <h6>{{ invoice.billingAddress }}</h6>
       </div>
     </div>
     <div class="row my-3">
@@ -496,14 +557,16 @@
           </thead>
           <tbody>
             <tr class="bg-white text-dark">
-              <td class="border border-1 p-0">2312</td>
+              <td class="border border-1 p-0">
+                {{ invoice.invoiceDate?.toLocaleDateString() }}
+              </td>
               <td class="border border-1 p-0">
                 <div class="d-flex justify-content-between">
                   <span>PKR</span>
-                  <span>21321</span>
+                  <span>{{ balanceDue }}</span>
                 </div>
               </td>
-              <td class="border border-1 p-0">321312</td>
+              <td class="border border-1 p-0">{{ invoice.invoiceNo }}</td>
             </tr>
           </tbody>
         </table>
@@ -521,34 +584,41 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="bg-white text-dark">
-              <td class="border border-1 p-0">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quia,
-                labore!
+            <ng-container *ngFor="let row of invoice?.invoiceProductDtoList; let i = index">
+            <tr
+              class="bg-white text-dark"
+              *ngIf="row?.productName && row?.type"
+            >
+              <!-- ... your existing code ... -->
+              <td class="border border-1 py-0 px-5 text-nowrap">
+                {{ row?.productName }} {{ "[" + row?.type + "]" }}
               </td>
-              <td class="border border-1 p-0">
+              <td class="border border-1 py-0 px-5">{{ row?.qty }}</td>
+              <td class="border border-1 py-0">
                 <div class="d-flex justify-content-between">
-                  <span>PKR</span>
-                  <span>21321</span>
+                  <span class="justify-content-start">PKR</span>
+                  <span class="justify-content-end">{{ row?.rate }}</span>
                 </div>
               </td>
-              <td class="border border-1 p-0">321312</td>
-              <td class="border border-1 p-0">321312</td>
+              <td class="border border-1 py-0 px-5">{{ row?.amount }}</td>
+            </tr>
+          </ng-container>
+            <tr class="bg-white text-dark">
+              <td></td>
+              <td class="border border-1 py-0 px-5" colspan="2">Total</td>
+              <td class="border border-1 py-0 px-5">{{ calculateTotal() }}</td>
             </tr>
             <tr class="bg-white text-dark">
               <td></td>
-              <td class="border border-1 p-0" colspan="2">Total</td>
-              <td class="border border-1 p-0"></td>
+              <td class="border border-1 py-0 px-5" colspan="2">Recieved</td>
+              <td class="border border-1 py-0 px-5">3000</td>
             </tr>
             <tr class="bg-white text-dark">
               <td></td>
-              <td class="border border-1 p-0" colspan="2">Recieved</td>
-              <td class="border border-1 p-0"></td>
-            </tr>
-            <tr class="bg-white text-dark">
-              <td></td>
-              <td class="border border-1 p-0" colspan="2">Balance</td>
-              <td class="border border-1 p-0"></td>
+              <td class="border border-1 py-0 px-5" colspan="2">Balance</td>
+              <td class="border border-1 py-0 px-5">
+                {{ calculateBalance() }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -558,13 +628,14 @@
       class="text-dark border border-bottom-0 border-start-0 border-end-0 mt-5 border-dark"
     >
       <div>
-        <span class="pi pi-arrow-right"></span>
+        <span class="pi pi-arrow-right me-2"></span>
         <span>All prices above are in Pakistani Rupee and tax exclusive</span>
       </div>
       <div>
-        <span class="pi pi-arrow-right"></span>
+        <span class="pi pi-arrow-right me-2"></span>
         <span>This is a computer generated invoice no signature required</span>
       </div>
     </div>
   </div>
 </p-dialog>
+<p-toast></p-toast>

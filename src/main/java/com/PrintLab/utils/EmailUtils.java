@@ -2,11 +2,13 @@ package com.PrintLab.utils;
 
 import com.PrintLab.model.Order;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Component
@@ -99,6 +101,26 @@ public class EmailUtils {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Async
+    public boolean sendEmailWithAttachment(String to, String subject, String text, byte[] attachment, String attachmentName) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(sender);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(text);
+            helper.addAttachment(attachmentName, new ByteArrayResource(attachment));
+
+            javaMailSender.send(message);
+            return true;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

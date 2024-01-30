@@ -43,6 +43,9 @@
               <div class="d-flex justify-content-center">Category</div>
             </th>
             <th class="col">
+              <div class="d-flex justify-content-center">Sub Category</div>
+            </th>
+            <th class="col">
               <div class="d-flex justify-content-center">Type</div>
             </th>
             <th class="col">
@@ -63,6 +66,11 @@
             </td>
             <td class="text-center">
               {{ vendor?.productCategory.name }}
+            </td>
+            <td class="text-center">
+              <span *ngIf="vendor?.productCategory?.parentProductCategory?.name">
+                {{ vendor?.productCategory?.parentProductCategory?.name }}
+              </span>
             </td>
             <td class="text-center">
               {{ vendor?.type }}
@@ -143,6 +151,7 @@
               [(ngModel)]="productService.productCategory.id"
               [filter]="true"
               filterBy="name"
+              (onChange)="getSubCategories($event.value)"
               [showClear]="true"
               name="category"
               #categoryModel="ngModel"
@@ -162,6 +171,39 @@
             >
               <div *ngIf="categoryModel.errors" class="text-danger m-1">
                 Category is required.
+              </div>
+            </div>
+          </div>
+          <div class="col-12 my-3" *ngIf="subCategory?.parentProductCategory">
+            <label class="add-order-label m-0 mb-1">Sub Category</label>
+            <p-dropdown
+              [options]="[subCategory?.parentProductCategory]"
+              styleClass="w-100"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Select Sub Category"
+              [(ngModel)]="productService.productCategory.parentProductCategory!.id"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              name="subCategory"
+              #subCategoryModel="ngModel"
+              [required]="true"
+              [ngClass]="{
+                'ng-dirty ng-invalid':
+                  subCategoryModel.invalid &&
+                  (subCategoryModel.dirty || subCategoryModel.touched)
+              }"
+            >
+            </p-dropdown>
+            <div
+              *ngIf="
+                subCategoryModel.invalid &&
+                (subCategoryModel.dirty || subCategoryModel.touched)
+              "
+            >
+              <div *ngIf="subCategoryModel.errors" class="text-danger m-1">
+                Sub Category is required.
               </div>
             </div>
           </div>

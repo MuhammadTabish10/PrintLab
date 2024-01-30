@@ -14,8 +14,9 @@ import java.util.List;
 public class InvoiceDto {
     private Long id;
     private Long invoiceNo;
-    private String customer;
+    private Long customer;
     private String customerEmail;
+    private String business;
     private Boolean sendLater;
     private String billingAddress;
     private String terms;

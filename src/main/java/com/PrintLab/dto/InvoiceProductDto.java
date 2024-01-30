@@ -14,7 +14,8 @@ import java.util.Date;
 public class InvoiceProductDto {
     private Long id;
     private Date dateRow;
-    private String productRow;
+    private Long productRow;
+    private String type;
     private String description;
     private Integer qty;
     private Double rate;

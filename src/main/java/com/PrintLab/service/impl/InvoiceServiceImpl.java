@@ -88,20 +88,15 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional
     public InvoiceDto updateInvoice(Long id, InvoiceDto invoiceDto) {
-        // Convert the incoming DTO to an entity
         Invoice invoice = toEntity(invoiceDto);
-
-        // Retrieve the existing invoice from the database
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
 
-        // Check if the invoice exists
         if (optionalInvoice.isPresent()) {
-            // Get the existing invoice from the Optional
             Invoice existingInvoice = optionalInvoice.get();
 
-            // Update properties of the existingInvoice with the values from the DTO
             existingInvoice.setCustomer(invoice.getCustomer());
             existingInvoice.setCustomerEmail(invoice.getCustomerEmail());
+            existingInvoice.setBusiness(invoice.getBusiness());
             existingInvoice.setSendLater(invoice.getSendLater());
             existingInvoice.setBillingAddress(invoice.getBillingAddress());
             existingInvoice.setTerms(invoice.getTerms());
@@ -111,62 +106,48 @@ public class InvoiceServiceImpl implements InvoiceService {
             existingInvoice.setStatement(invoice.getStatement());
             existingInvoice.setInvoiceNo(invoiceDto.getInvoiceNo());
 
-            // Get the list of existing products associated with the existing invoice
             List<InvoiceProduct> existingProductValues = existingInvoice.getInvoiceProduct();
-
-            // Get the list of new products from the DTO
             List<InvoiceProduct> newProductValues = invoice.getInvoiceProduct();
-
-            // Lists to track new values to add and existing values to remove
             List<InvoiceProduct> newValuesToAdd = new ArrayList<>();
             List<InvoiceProduct> valuesToRemove = new ArrayList<>();
 
-            // Identify items to be removed
             for (InvoiceProduct existingProValue : existingProductValues) {
                 if (!newProductValues.contains(existingProValue)) {
                     valuesToRemove.add(existingProValue);
                 }
             }
 
-            // Remove items found in valuesToRemove from the database
+
             for (InvoiceProduct valueToRemove : valuesToRemove) {
-                // Delete the entity from the database
                 invoiceProductRepository.delete(valueToRemove);
             }
 
-            // Remove items found in valuesToRemove from the existingInvoice
             existingProductValues.removeAll(valuesToRemove);
 
-            // Update or add new items
             for (InvoiceProduct newValue : newProductValues) {
                 Optional<InvoiceProduct> existingValue = existingProductValues.stream()
                         .filter(prValue -> prValue.getId().equals(newValue.getId())).findFirst();
                 if (existingValue.isPresent()) {
-                    // Update existing value
                     InvoiceProduct existingPrValue = existingValue.get();
                     existingPrValue.setDateRow(newValue.getDateRow());
                     existingPrValue.setProductRow(newValue.getProductRow());
+                    existingPrValue.setType(newValue.getType());
                     existingPrValue.setDescription(newValue.getDescription());
                     existingPrValue.setQty(newValue.getQty());
                     existingPrValue.setRate(newValue.getRate());
                     existingPrValue.setAmount(newValue.getAmount());
                 } else {
-                    // Add new value
                     newValue.setInvoice(existingInvoice);
                     newValuesToAdd.add(newValue);
                 }
             }
 
-            // Add new values to the existingInvoice
             existingProductValues.addAll(newValuesToAdd);
 
-            // Save the updated invoice to the database
             Invoice updatedInvoice = invoiceRepository.save(existingInvoice);
 
-            // Convert the updated entity back to DTO for response
             return toDto(updatedInvoice);
         } else {
-            // Invoice with the given ID not found, throw an exception
             throw new RecordNotFoundException(String.format("Invoice not found for id => %d", id));
         }
     }
@@ -180,6 +161,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                         ipl.getId(),
                         ipl.getDateRow(),
                         ipl.getProductRow(),
+                        ipl.getType(),
                         ipl.getDescription(),
                         ipl.getQty(),
                         ipl.getRate(),
@@ -192,6 +174,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .id(invoice.getId())
                 .customer(invoice.getCustomer())
                 .customerEmail(invoice.getCustomerEmail())
+                .business(invoice.getBusiness())
                 .billingAddress(invoice.getBillingAddress())
                 .invoiceDate(invoice.getInvoiceDate())
                 .dueDate(invoice.getDueDate())
@@ -215,6 +198,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .id(invoiceDto.getId())
                 .customer(invoiceDto.getCustomer())
                 .customerEmail(invoiceDto.getCustomerEmail())
+                .business(invoiceDto.getBusiness())
                 .billingAddress(invoiceDto.getBillingAddress())
                 .sendLater(invoiceDto.getSendLater())
                 .terms(invoiceDto.getTerms())
@@ -232,6 +216,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .id(dto.getId())
                 .dateRow(dto.getDateRow())
                 .productRow(dto.getProductRow())
+                .type(dto.getType())
                 .description(dto.getDescription())
                 .qty(dto.getQty())
                 .rate(dto.getRate())

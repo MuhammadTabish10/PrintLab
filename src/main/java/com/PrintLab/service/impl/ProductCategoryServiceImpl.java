@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductCategoryServiceImpl implements ProductCategoryService {
@@ -85,6 +86,15 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         } else {
             throw new RecordNotFoundException(String.format("Product Category not found for id => %d", id));
         }
+    }
+
+    @Override
+    public List<ProductCategoryDto> searchByCategory(String name) {
+        List<ProductCategory> productCategoryList = productCategoryRepository.findByNameAndStatusIsTrue(name);
+
+        return productCategoryList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     public ProductCategoryDto toDto(ProductCategory productCategory) {

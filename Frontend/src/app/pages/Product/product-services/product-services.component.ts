@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { ProductField } from 'src/app/Model/ProductField';
-import { ProductCategory } from 'src/app/Model/ProductCategory';
+import { ProductCategory, parent } from 'src/app/Model/ProductCategory';
 
 @Component({
   selector: 'app-product-services',
@@ -41,6 +41,7 @@ export class ProductServicesComponent {
   rowId: number | undefined | null;
   mode: string = 'Save';
   productTypes: ProductField | undefined | null;
+  subCategory: ProductCategory | null | undefined;
 
   constructor(
     private service: ServiceService,
@@ -60,6 +61,7 @@ export class ProductServicesComponent {
     this.service.getAllProductService().pipe(takeUntil(this.destroy$)).subscribe(
       (res: ProductService[]) => {
         this.productList = res;
+        debugger
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
@@ -124,9 +126,8 @@ export class ProductServicesComponent {
 
   submit() {
     debugger
-    this.productService.productCategory.parentProductCategory = null;
+    // this.productService.productCategory.parentProductCategory = null;
     if (this.rowId) {
-      // Assuming this.productService.productCategory is an object
       if ('name' in this.productService.productCategory) {
         delete this.productService.productCategory.name;
       }
@@ -175,9 +176,22 @@ export class ProductServicesComponent {
     this.service.getAllProductCategory().pipe(takeUntil(this.destroy$)).subscribe(
       (res: ProductCategory[]) => {
         this.categories = res;
-        debugger
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
+  }
+
+  getSubCategories(id: number) {
+    this.service.getProductCategoryById(id).subscribe(
+      (res: ProductCategory) => {
+        debugger
+        if (res.parentProductCategory === null) {
+          this.subCategory = null;
+        }
+        this.subCategory = res;
+      }, error => {
+
+      }
+    )
   }
 }

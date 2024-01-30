@@ -1,8 +1,9 @@
 export interface Invoice {
   id: number | undefined | null;
   invoiceNo: number | undefined | null;
-  customer: string | undefined | null;
+  customer: number | undefined | null | string;
   customerEmail: string | undefined | null;
+  business: string | undefined | null;
   sendLater: boolean | undefined | null;
   billingAddress: string | undefined | null;
   terms: string | undefined | null;
@@ -16,7 +17,9 @@ export interface Invoice {
 export interface InvoiceProduct {
   id: number | undefined | null;
   dateRow: Date | undefined | null;
-  productRow: string | undefined | null;
+  productRow: number | undefined | null;
+  productName: string | undefined | null;
+  type: string | undefined | null;
   description: string | undefined | null;
   qty: number | undefined | null;
   rate: number | undefined | null;

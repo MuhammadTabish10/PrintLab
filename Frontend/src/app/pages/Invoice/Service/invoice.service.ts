@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from 'src/Environments/environment';
 import { Invoice } from 'src/app/Model/Invoice';
 
@@ -42,4 +42,33 @@ export class InvoiceService {
     let url = `${this.BASE_URL}/invoice/${name}`
     return this.http.get<Invoice[]>(url)
   }
+
+  // saveInvoiceAndGeneratePdf(htmlContent: string, email: string): Observable<any> {
+  //   debugger
+  //   const printData = { htmlContent, email };
+  //   return this.http.post(`${this.BASE_URL}/generate-pdf-and-send`, printData);
+  // }
+
+  saveInvoiceAndGeneratePdf(htmlContent: string, email: string): Observable<any> {
+    const printData = { htmlContent, email };
+
+    return this.http.post(`${this.BASE_URL}/generate-pdf-and-send`, printData, {
+      responseType: 'arraybuffer' as 'json', // Corrected the syntax here
+    }).pipe(
+      tap((data: ArrayBuffer | any) => {
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a link element and click it to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'print.pdf';
+        link.click();
+
+        // Clean up
+        window.URL.revokeObjectURL(url);
+      }),
+    );
+  }
+
 }

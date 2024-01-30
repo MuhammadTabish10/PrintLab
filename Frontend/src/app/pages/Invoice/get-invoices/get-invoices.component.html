@@ -25,7 +25,7 @@
             </span>
             <button
               pButton
-              label="Add"
+              label="Create"
               class="p-button-dark bg-dark float-end"
               icon="pi pi-plus"
               routerLink="/add-invoice"
@@ -57,7 +57,7 @@
               {{ invoice?.invoiceNo }}
             </td>
             <td class="text-center">
-              {{ invoice?.customer }}
+              {{ (getCustomerName(invoice?.customer) | async) || 'Loading...' }}
             </td>
             <td class="text-center">
               {{ invoice?.billingAddress }}
@@ -71,6 +71,13 @@
                 role="group"
                 aria-label="Second group"
               >
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="generatePdfAndSendToEmail(invoice?.id)"
+                >
+                  <i class="pi pi-send"></i>&nbsp;Send
+                </button>
                 <button
                   type="button"
                   class="btn order-table-btn"

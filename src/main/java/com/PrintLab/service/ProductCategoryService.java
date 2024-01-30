@@ -10,4 +10,6 @@ public interface ProductCategoryService {
     ProductCategoryDto findById(Long id);
     String deleteById(Long id);
     ProductCategoryDto updatedProductCategory(Long id, ProductCategoryDto productCategoryDto);
+
+    List<ProductCategoryDto> searchByCategory(String name);
 }

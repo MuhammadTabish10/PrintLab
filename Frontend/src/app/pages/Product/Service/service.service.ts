@@ -65,6 +65,10 @@ export class ServiceService {
     let url = `${this.BASE_URL}/product-category/${name}`;
     return this.http.get<ProductCategory[]>(url);
   }
+  searchProductSubCategoryByCategory(id: number): Observable<ProductCategory[]> {
+    let url = `${this.BASE_URL}/product-category/${id}`;
+    return this.http.get<ProductCategory[]>(url);
+  }
   searchProductServiceByName(name: string): Observable<ProductService[]> {
     let url = `${this.BASE_URL}/product-and-service/${name}`;
     return this.http.get<ProductService[]>(url);
