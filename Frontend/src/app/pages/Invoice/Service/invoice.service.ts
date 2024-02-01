@@ -13,7 +13,7 @@ export class InvoiceService {
   constructor(private http: HttpClient) { }
 
   postInvoice(obj: Invoice): Observable<Invoice> {
-    debugger
+
     let url = `${this.BASE_URL}/save-invoice`;
     return this.http.post<Invoice>(url, obj);
   }
@@ -44,7 +44,7 @@ export class InvoiceService {
   }
 
   // saveInvoiceAndGeneratePdf(htmlContent: string, email: string): Observable<any> {
-  //   debugger
+  //
   //   const printData = { htmlContent, email };
   //   return this.http.post(`${this.BASE_URL}/generate-pdf-and-send`, printData);
   // }

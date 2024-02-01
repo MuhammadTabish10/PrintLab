@@ -248,7 +248,7 @@ export class AddInvoiceComponent implements OnInit {
   submit() {
     this.updateCustomerId();
     this.updateInvoiceProductStatus();
-    debugger
+
     if (!this.invoice.sendLater && !this.idFromQueryParam) {
       this.openPrintPreview()
     }
@@ -397,7 +397,7 @@ export class AddInvoiceComponent implements OnInit {
         document.body.removeChild(link);
       },
       error => {
-        debugger
+
         this.errorHandleService.showError(error.error);
       }
     );

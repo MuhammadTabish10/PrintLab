@@ -50,7 +50,7 @@ export class ProductCategoriesComponent implements OnInit {
 
   editProductCategory(row: ProductCategory) {
     this.visible = true;
-    debugger
+
     this.productCategory.name = row.name;
     this.rowId = row.id;
     this.mode = this.rowId ? 'Update' : 'Save';
@@ -61,7 +61,7 @@ export class ProductCategoriesComponent implements OnInit {
     this.files = [];
     this.service.getAllProductCategory().pipe(takeUntil(this.destroy$)).subscribe(
       (res: ProductCategory[]) => {
-        debugger
+
         this.transFormRes(res);
         // this.productList = res.map(category => ({
         //   data: category,
@@ -75,7 +75,7 @@ export class ProductCategoriesComponent implements OnInit {
     );
   }
   transFormRes(res: ProductCategory[]) {
-    debugger
+
     for (let r of res) {
       if (r.parentProductCategory === null) {
         let obj = {
@@ -155,7 +155,7 @@ export class ProductCategoriesComponent implements OnInit {
   }
 
   submit() {
-    debugger
+
     if (!this.productCategory.isSub) {
       this.productCategory.parentProductCategory = null;
     } else {

@@ -35,7 +35,7 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
   getInvoiceList(): void {
     this.invoiceService.getAllInvoice().pipe(takeUntil(this.destroy$)).subscribe(
       (res: Invoice[]) => {
-        debugger
+
         this.invoiceList = res;
         this.invoiceList.forEach((invoice) => {
           this.getCustomerName(+invoice?.customer!);
@@ -51,7 +51,7 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
   }
 
   deleteInvoice(invoice: Invoice) {
-    debugger
+
     this.invoiceService.deleteInvoiceById(invoice.id!)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -97,7 +97,7 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
   }
 
   getCustomerName(customerId: number) {
-    debugger
+
     this.customerService.getCustomerById(customerId).subscribe(
       (res: Customer) => {
         this.customerName.push(res);

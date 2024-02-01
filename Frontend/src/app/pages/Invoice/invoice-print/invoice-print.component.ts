@@ -6,14 +6,14 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./invoice-print.component.css']
 })
 export class InvoicePrintComponent implements OnInit {
-  
+
 
   ngOnInit(): void {
-    
+
   }
 
   print() {
-    debugger
+
     window.print();
   }
 }

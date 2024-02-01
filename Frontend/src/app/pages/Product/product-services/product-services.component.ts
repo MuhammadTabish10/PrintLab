@@ -61,7 +61,7 @@ export class ProductServicesComponent {
     this.service.getAllProductService().pipe(takeUntil(this.destroy$)).subscribe(
       (res: ProductService[]) => {
         this.productList = res;
-        debugger
+
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
@@ -125,7 +125,7 @@ export class ProductServicesComponent {
   }
 
   submit() {
-    debugger
+
     // this.productService.productCategory.parentProductCategory = null;
     if (this.rowId) {
       if ('name' in this.productService.productCategory) {
@@ -184,7 +184,7 @@ export class ProductServicesComponent {
   getSubCategories(id: number) {
     this.service.getProductCategoryById(id).subscribe(
       (res: ProductCategory) => {
-        debugger
+
         if (res.parentProductCategory === null) {
           this.subCategory = null;
         }
