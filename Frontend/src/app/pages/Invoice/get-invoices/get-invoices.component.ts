@@ -15,8 +15,7 @@ import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
   styleUrls: ['./get-invoices.component.css']
 })
 export class GetInvoicesComponent implements OnInit, OnDestroy {
-  invoiceList: Invoice[] = []
-  // customerNames: { [id: number]: string | null | undefined } = {};
+  invoiceList: Invoice[] = [];
   customerName: Customer[] = [];
   private destroy$ = new Subject<void>();
 
@@ -38,19 +37,9 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
       (res: Invoice[]) => {
         debugger
         this.invoiceList = res;
-
         this.invoiceList.forEach((invoice) => {
           this.getCustomerName(+invoice?.customer!);
         })
-        // this.invoiceList.forEach((el: Invoice) => {
-        //   const dateArray = el.invoiceDate;
-        //   if (Array.isArray(dateArray)) {
-        //     let invoiceDate = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
-        //     invoiceDate.setHours(invoiceDate.getHours() + 5);
-        //     el.invoiceDate = this.datePipe.transform(invoiceDate, 'EEEE, MMMM d, yyyy, h:mm a');
-        //   }
-        // });
-
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
@@ -106,23 +95,6 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
   generatePdfAndSendToEmail(id: number) {
     this.router.navigate(['/add-invoice'], { queryParams: { id: id, send: true } });
   }
-
-  // getCustomerName(customerId: number): Observable<string> {
-  //   if (!this.customerNames[customerId]) {
-  //     return this.customerService.getCustomerById(customerId).pipe(
-  //       map((res: Customer): string => {
-  //         this.customerNames[customerId] = res.name;
-  //         return res?.name!;
-  //       }),
-  //       catchError((error) => {
-  //         // Handle error, e.g., set a default name
-  //         this.customerNames[customerId] = 'Unknown Customer';
-  //         return of('Unknown Customer');
-  //       })
-  //     );
-  //   }
-  //   return of(this.customerNames[customerId] || 'Loading...');
-  // }
 
   getCustomerName(customerId: number) {
     debugger

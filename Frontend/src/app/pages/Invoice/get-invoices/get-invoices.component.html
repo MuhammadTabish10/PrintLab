@@ -56,7 +56,7 @@
             <td class="text-center">
               {{ invoice?.invoiceNo }}
             </td>
-            <td class="text-center">
+            <td class="text-center" *ngIf="customerName[i]?.name">
               {{ customerName[i].name }}
             </td>
             <td class="text-center">
