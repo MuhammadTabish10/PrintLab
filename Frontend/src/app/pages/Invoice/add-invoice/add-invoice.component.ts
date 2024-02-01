@@ -386,7 +386,15 @@ export class AddInvoiceComponent implements OnInit {
     const email = this.invoice.customerEmail;
 
     this.invoiceService.saveInvoiceAndGeneratePdf(htmlContent, email!).subscribe(
-      res => {
+      (res: Blob) => {
+        const blob = new Blob([res], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'print.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       },
       error => {
         debugger

@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, catchError, tap } from 'rxjs';
 import { environment } from 'src/Environments/environment';
 import { Invoice } from 'src/app/Model/Invoice';
 
@@ -52,22 +52,19 @@ export class InvoiceService {
   saveInvoiceAndGeneratePdf(htmlContent: string, email: string): Observable<any> {
     const printData = { htmlContent, email };
 
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/pdf'
+    });
+
     return this.http.post(`${this.BASE_URL}/generate-pdf-and-send`, printData, {
-      responseType: 'arraybuffer' as 'json', // Corrected the syntax here
+      headers: headers,
+      responseType: 'blob'
     }).pipe(
-      tap((data: ArrayBuffer | any) => {
-        const blob = new Blob([data], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-
-        // Create a link element and click it to trigger the download
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'print.pdf';
-        link.click();
-
-        // Clean up
-        window.URL.revokeObjectURL(url);
-      }),
+      catchError(error => {
+        console.error('Error during PDF generation:', error);
+        throw error;
+      })
     );
   }
 

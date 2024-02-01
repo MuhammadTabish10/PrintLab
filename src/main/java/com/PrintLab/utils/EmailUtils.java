@@ -108,7 +108,6 @@ public class EmailUtils {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
             helper.setFrom(sender);
             helper.setTo(to);
             helper.setSubject(subject);
@@ -121,6 +120,7 @@ public class EmailUtils {
             e.printStackTrace();
             return false;
         }
+
     }
 
 }

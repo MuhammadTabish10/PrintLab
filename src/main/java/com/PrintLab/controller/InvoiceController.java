@@ -6,8 +6,6 @@ import com.PrintLab.service.InvoiceService;
 import com.PrintLab.service.PdfGenerationService;
 import com.PrintLab.utils.EmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -72,27 +70,22 @@ public class InvoiceController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<byte[]> generatePdfAndSendToEmail(@RequestBody PrintData printData) {
         try {
-
             byte[] pdfBytes = pdfGenerationService.generatePdf(printData.getHtmlContent());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("attachment", "print.pdf");
+            boolean emailSent = emailUtils.sendEmailWithAttachment(
+                    printData.getEmail(), "Print PDF", "Please find attached the print PDF.", pdfBytes, "print.pdf");
 
-            return ResponseEntity.ok().headers(headers).body(pdfBytes);
-
-
-//            boolean emailSent = emailUtils.sendEmailWithAttachment(printData.getEmail(), "Print PDF", "Please find attached the print PDF.", pdfBytes, "print.pdf");
-
-//            if (emailSent) {
-//                return ResponseEntity.ok("PDF generated successfully.");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending email.");
-//            }
+            if (emailSent) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .header("Content-Disposition", "inline; filename=print.pdf")
+                        .body(pdfBytes);
+            } else {
+                return ResponseEntity.status(500).body(new byte[0]); // Return an empty byte array on error
+            }
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating PDF or sending email.");
+            return ResponseEntity.status(500).body(new byte[0]); // Return an empty byte array on error
         }
     }
 
