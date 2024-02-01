@@ -7,6 +7,7 @@ import { SuccessMessageService } from 'src/app/services/success-message.service'
 import { Observable, Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { CustomerService } from 'src/app/services/customer.service';
 import { Customer } from 'src/app/Model/Customer';
+import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 
 @Component({
   selector: 'app-get-invoices',
@@ -15,8 +16,8 @@ import { Customer } from 'src/app/Model/Customer';
 })
 export class GetInvoicesComponent implements OnInit, OnDestroy {
   invoiceList: Invoice[] = []
-  customerNames: { [id: number]: string | null | undefined } = {};
-
+  // customerNames: { [id: number]: string | null | undefined } = {};
+  customerName: Customer[] = [];
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -38,6 +39,9 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
         debugger
         this.invoiceList = res;
 
+        this.invoiceList.forEach((invoice) => {
+          this.getCustomerName(+invoice?.customer!);
+        })
         // this.invoiceList.forEach((el: Invoice) => {
         //   const dateArray = el.invoiceDate;
         //   if (Array.isArray(dateArray)) {
@@ -88,9 +92,7 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (res: Invoice[]) => {
-
           this.invoiceList = res;
-
         },
         (error: any) => this.errorHandleService.showError(error.error.error)
       );
@@ -105,22 +107,34 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
     this.router.navigate(['/add-invoice'], { queryParams: { id: id, send: true } });
   }
 
-  getCustomerName(customerId: number): Observable<string> {
-    if (!this.customerNames[customerId]) {
-      return this.customerService.getCustomerById(customerId).pipe(
-        map((res: Customer): string => {
-          this.customerNames[customerId] = res.name;
-          return res?.name!;
-        }),
-        catchError((error) => {
-          // Handle error, e.g., set a default name
-          this.customerNames[customerId] = 'Unknown Customer';
-          return of('Unknown Customer');
-        })
-      );
-    }
-    return of(this.customerNames[customerId] || 'Loading...');
+  // getCustomerName(customerId: number): Observable<string> {
+  //   if (!this.customerNames[customerId]) {
+  //     return this.customerService.getCustomerById(customerId).pipe(
+  //       map((res: Customer): string => {
+  //         this.customerNames[customerId] = res.name;
+  //         return res?.name!;
+  //       }),
+  //       catchError((error) => {
+  //         // Handle error, e.g., set a default name
+  //         this.customerNames[customerId] = 'Unknown Customer';
+  //         return of('Unknown Customer');
+  //       })
+  //     );
+  //   }
+  //   return of(this.customerNames[customerId] || 'Loading...');
+  // }
+
+  getCustomerName(customerId: number) {
+    debugger
+    this.customerService.getCustomerById(customerId).subscribe(
+      (res: Customer) => {
+        this.customerName.push(res);
+      }, (error: BackendErrorResponse) => {
+
+      }
+    )
   }
+
 }
 
 

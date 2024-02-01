@@ -57,7 +57,7 @@
               {{ invoice?.invoiceNo }}
             </td>
             <td class="text-center">
-              {{ (getCustomerName(invoice?.customer) | async) || 'Loading...' }}
+              {{ customerName[i].name }}
             </td>
             <td class="text-center">
               {{ invoice?.billingAddress }}
