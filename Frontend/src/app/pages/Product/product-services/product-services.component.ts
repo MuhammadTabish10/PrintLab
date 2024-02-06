@@ -69,7 +69,7 @@ export class ProductServicesComponent {
 
 
   editProduct(row: ProductService) {
-    debugger
+
     this.visible = true;
     this.rowId = row.id;
     const foundProduct = this.productList.find((product: ProductService) => product.id === row.id);
@@ -177,7 +177,7 @@ export class ProductServicesComponent {
   getCategories(): void {
     this.service.getAllProductCategory().pipe(takeUntil(this.destroy$)).subscribe(
       (res: ProductCategory[]) => {
-        debugger
+
         this.categories = res;
       },
       (error: any) => this.errorHandleService.showError(error.error.error)

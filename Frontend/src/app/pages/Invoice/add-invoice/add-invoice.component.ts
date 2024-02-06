@@ -9,7 +9,7 @@ import { ServiceService } from '../../Product/Service/service.service';
 import { ProductService } from 'src/app/Model/ProductService';
 import { InvoiceService } from '../Service/invoice.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, forkJoin, takeUntil } from 'rxjs';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 
@@ -142,9 +142,8 @@ export class AddInvoiceComponent implements OnInit {
         if (this.onlySend) {
           this.setupViewForSend();
         }
-        debugger
+
         if (this.idFromQueryParam) {
-          this.getInvoiceNo();
           this.patchValuesIfNeeded(this.idFromQueryParam);
         } else {
           this.getInvoiceNo();
@@ -412,27 +411,22 @@ export class AddInvoiceComponent implements OnInit {
 
   getInvoiceNo() {
     const fieldName = "Invoice_No";
-    this.productFieldService.searchProductField(fieldName).subscribe(
-      (res: any) => {
-        debugger
-        if (this.mode === "Update") {
-          this.invoice.invoiceNo = +(res[0].productFieldValuesList[0].name);
-        } else {
-          this.getAllInvoices();
-        }
-      }, error => {
-        this.errorHandleService.showError(error.error.error);
-      });
-  }
+    const searchField$ = this.productFieldService.searchProductField(fieldName);
+    const allInvoices$ = this.invoiceService.getAllInvoice();
 
-  getAllInvoices() {
-    this.invoiceService.getAllInvoice().subscribe(
-      (res: Invoice[]) => {
-        if (res.length > 0) {
-          const lastInvoiceNo = res[res.length - 1].invoiceNo;
-          this.invoice.invoiceNo = lastInvoiceNo! + 1;
+    forkJoin([searchField$, allInvoices$]).subscribe(
+      ([searchFieldRes, allInvoicesRes]: [any, Invoice[]]) => {
+        // Handle response from searchProductField
+        if (allInvoicesRes.length === 0) {
+          this.invoice.invoiceNo = +(searchFieldRes[0].productFieldValuesList[0].name);
+        } else {
+          if (allInvoicesRes.length > 0) {
+            const lastInvoiceNo = allInvoicesRes[allInvoicesRes.length - 1].invoiceNo;
+            this.invoice.invoiceNo = lastInvoiceNo! + 1;
+          }
         }
-      }, error => {
+      },
+      error => {
         this.errorHandleService.showError(error.error.error);
       }
     );
@@ -455,3 +449,30 @@ export class AddInvoiceComponent implements OnInit {
   }
 
 }
+
+// Previous Code
+
+// getInvoiceNo() {
+//   const fieldName = "Invoice_No";
+//   this.productFieldService.searchProductField(fieldName).subscribe(
+//     (res: any) => {
+//
+//         this.invoice.invoiceNo = +(res[0].productFieldValuesList[0].name);
+//         this.getAllInvoices();
+//     }, error => {
+//       this.errorHandleService.showError(error.error.error);
+//     });
+// }
+
+// getAllInvoices() {
+//   this.invoiceService.getAllInvoice().subscribe(
+//     (res: Invoice[]) => {
+//       if (res.length > 0) {
+//         const lastInvoiceNo = res[res.length - 1].invoiceNo;
+//         this.invoice.invoiceNo = lastInvoiceNo! + 1;
+//       }
+//     }, error => {
+//       this.errorHandleService.showError(error.error.error);
+//     }
+//   );
+// }
