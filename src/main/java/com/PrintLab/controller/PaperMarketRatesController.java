@@ -140,8 +140,7 @@ public class PaperMarketRatesController
     public ResponseEntity<PaginationResponse> search(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "15", required = false) Integer pageSize,
-            @RequestBody PaperMarketRatesDto paperMarketRatesDto)
-    {
+            @RequestBody PaperMarketRatesDto paperMarketRatesDto) {
         PaginationResponse paginationResponse = marketRatesService.getPaperMarketRatesBySearchCriteria(pageNumber, pageSize, paperMarketRatesDto);
         return ResponseEntity.ok(paginationResponse);
     }

@@ -14,7 +14,6 @@
       >
         <ng-template pTemplate="caption">
           <div class="flex clearfix">
-
             <span class="p-input-icon-right ml-auto d-none">
               <i class="pi pi-search"></i>
               <input
@@ -65,18 +64,29 @@
               {{ vendor?.name }}
             </td>
             <td class="text-center">
-              {{ vendor?.productCategory.name }}
-            </td>
-            <td class="text-center">
-              <span *ngIf="vendor?.productCategory?.parentProductCategory?.name">
+              <span
+                *ngIf="vendor?.productCategory?.parentProductCategory?.name"
+              >
                 {{ vendor?.productCategory?.parentProductCategory?.name }}
               </span>
             </td>
             <td class="text-center">
-              {{ vendor?.type }}
+              {{ vendor?.productCategory.name }}
             </td>
             <td class="text-center">
-              {{ vendor?.description }}
+              {{ vendor?.type }}
+            </td>
+            <td class="text-center d-flex justify-content-center">
+              <textarea
+                name="descRow"
+                [(ngModel)]="vendor.description"
+                placeholder=" Description will Auto Filled!"
+                id="desc"
+                class="d-block"
+                cols="25"
+                rows="5"
+                readonly
+              ></textarea>
             </td>
             <td class="text-center">
               {{ vendor?.cost }}
@@ -125,7 +135,12 @@
 >
   <div class="main-container">
     <div class="order-body py-2">
-      <form class="was-validated" novalidate #addFrom="ngForm" (ngSubmit)="submit()">
+      <form
+        class="was-validated"
+        novalidate
+        #addFrom="ngForm"
+        (ngSubmit)="submit()"
+      >
         <div class="row mx-auto">
           <div class="col-12 my-3">
             <label class="add-order-label m-0">Name</label>
@@ -148,7 +163,9 @@
               optionLabel="name"
               optionValue="id"
               placeholder="Select Category"
-              [(ngModel)]="productService.productCategory.id"
+              [(ngModel)]="
+                productService.productCategory.parentProductCategory!.id
+              "
               [filter]="true"
               filterBy="name"
               (onChange)="getSubCategories($event.value)"
@@ -174,15 +191,22 @@
               </div>
             </div>
           </div>
-          <div class="col-12 my-3" *ngIf="subCategory?.parentProductCategory">
+          <div
+            class="col-12 my-3"
+            *ngIf="
+              productService?.productCategory?.parentProductCategory?.id &&
+              subCategory !== null &&
+              subCategory !== undefined
+            "
+          >
             <label class="add-order-label m-0 mb-1">Sub Category</label>
             <p-dropdown
-              [options]="[subCategory?.parentProductCategory]"
+              [options]="subCategory!"
               styleClass="w-100"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Sub Category"
-              [(ngModel)]="productService.productCategory.parentProductCategory!.id"
+              [(ngModel)]="productService.productCategory.id"
               [filter]="true"
               filterBy="name"
               [showClear]="true"
@@ -250,15 +274,12 @@
             ></textarea>
           </div>
           <div class="col-6 my-3 p-fluid">
-            <label class="add-order-label d-inline-block m-0 mb-1"
-              >Cost</label
-            >
+            <label class="add-order-label d-inline-block m-0 mb-1">Cost</label>
             <div class="flex-auto">
               <p-inputNumber
                 [(ngModel)]="productService.cost"
                 inputId="minmax"
                 [min]="0"
-                [max]="10000"
                 [format]="true"
                 mode="currency"
                 currency="PKR"
@@ -284,7 +305,7 @@
               class="btn btn-dark"
               [disabled]="!addFrom.valid"
             >
-              {{mode}}
+              {{ mode }}
             </button>
           </div>
         </div>

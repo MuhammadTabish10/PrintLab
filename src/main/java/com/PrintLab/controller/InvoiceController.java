@@ -81,11 +81,11 @@ public class InvoiceController {
                         .header("Content-Disposition", "inline; filename=print.pdf")
                         .body(pdfBytes);
             } else {
-                return ResponseEntity.status(500).body(new byte[0]); // Return an empty byte array on error
+                return ResponseEntity.status(500).body(new byte[0]);
             }
 
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new byte[0]); // Return an empty byte array on error
+            return ResponseEntity.status(500).body(new byte[0]);
         }
     }
 

@@ -30,10 +30,10 @@ public class ProductCategoryController {
         return ResponseEntity.ok(productCategoryList);
     }
 
-    @GetMapping("/product-sub-category-by/{name}")
+    @GetMapping("/product-sub-category-by/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ProductCategoryDto>> getAllSubCategoryByCategory(@PathVariable String name) {
-        List<ProductCategoryDto> productCategoryDtoList = productCategoryService.searchByCategory(name);
+    public ResponseEntity<List<ProductCategoryDto>> getAllSubCategoryByCategory(@PathVariable Long id) {
+        List<ProductCategoryDto> productCategoryDtoList = productCategoryService.searchByCategory(id);
         return ResponseEntity.ok(productCategoryDtoList);
     }
 

@@ -17,5 +17,7 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
     @Query("UPDATE ProductCategory pc SET pc.status = false WHERE pc.id = :id")
     void setStatusInactive(@Param("id") Long id);
 
-    List<ProductCategory> findByNameAndStatusIsTrue(String name);
+//    List<ProductCategory> findByNameAndStatusIsTrue(String name);
+
+    List<ProductCategory> findNameByParentProductCategoryIdAndStatusIsTrue(Long id);
 }

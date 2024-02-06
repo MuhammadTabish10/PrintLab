@@ -128,7 +128,6 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   private initializeData(): void {
-    this.getInvoiceNo();
     this.getCustomerList();
     this.getProdutList();
   }
@@ -143,9 +142,12 @@ export class AddInvoiceComponent implements OnInit {
         if (this.onlySend) {
           this.setupViewForSend();
         }
-
+        debugger
         if (this.idFromQueryParam) {
+          this.getInvoiceNo();
           this.patchValuesIfNeeded(this.idFromQueryParam);
+        } else {
+          this.getInvoiceNo();
         }
 
       },
@@ -412,8 +414,12 @@ export class AddInvoiceComponent implements OnInit {
     const fieldName = "Invoice_No";
     this.productFieldService.searchProductField(fieldName).subscribe(
       (res: any) => {
-        this.invoice.invoiceNo = Number(res[0].productFieldValuesList[0].name);
-        this.getAllInvoices();
+        debugger
+        if (this.mode === "Update") {
+          this.invoice.invoiceNo = +(res[0].productFieldValuesList[0].name);
+        } else {
+          this.getAllInvoices();
+        }
       }, error => {
         this.errorHandleService.showError(error.error.error);
       });
@@ -422,10 +428,9 @@ export class AddInvoiceComponent implements OnInit {
   getAllInvoices() {
     this.invoiceService.getAllInvoice().subscribe(
       (res: Invoice[]) => {
-        if (res.length > 0 && !this.idFromQueryParam) {
+        if (res.length > 0) {
           const lastInvoiceNo = res[res.length - 1].invoiceNo;
-          this.invoice.invoiceNo = lastInvoiceNo;
-          this.invoice.invoiceNo!++;
+          this.invoice.invoiceNo = lastInvoiceNo! + 1;
         }
       }, error => {
         this.errorHandleService.showError(error.error.error);

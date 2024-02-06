@@ -17,6 +17,7 @@ import { ProductCategory, parent } from 'src/app/Model/ProductCategory';
 export class ProductServicesComponent {
   productList: ProductService[] = [];
   categories: ProductCategory[] = [];
+  subCategories: parent[] = [];
   productService: ProductService = {
     id: undefined,
     name: undefined,
@@ -41,7 +42,7 @@ export class ProductServicesComponent {
   rowId: number | undefined | null;
   mode: string = 'Save';
   productTypes: ProductField | undefined | null;
-  subCategory: ProductCategory | null | undefined;
+  subCategory: parent[] | null | undefined;
 
   constructor(
     private service: ServiceService,
@@ -61,7 +62,6 @@ export class ProductServicesComponent {
     this.service.getAllProductService().pipe(takeUntil(this.destroy$)).subscribe(
       (res: ProductService[]) => {
         this.productList = res;
-
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
@@ -69,11 +69,13 @@ export class ProductServicesComponent {
 
 
   editProduct(row: ProductService) {
+    debugger
     this.visible = true;
     this.rowId = row.id;
     const foundProduct = this.productList.find((product: ProductService) => product.id === row.id);
     if (foundProduct) {
       this.productService = foundProduct;
+      this.getSubCategories(row?.productCategory?.parentProductCategory?.id!);
     }
     this.mode = this.rowId ? 'Update' : 'Save';
   }
@@ -127,17 +129,17 @@ export class ProductServicesComponent {
   submit() {
 
     // this.productService.productCategory.parentProductCategory = null;
-    if (this.rowId) {
-      if ('name' in this.productService.productCategory) {
-        delete this.productService.productCategory.name;
-      }
-      if ('parentProductCategory' in this.productService.productCategory) {
-        delete this.productService.productCategory.parentProductCategory;
-      }
-      if ('status' in this.productService.productCategory) {
-        delete this.productService.productCategory.status;
-      }
-    }
+    // if (this.rowId) {
+    //   if ('name' in this.productService.productCategory) {
+    //     delete this.productService.productCategory.name;
+    //   }
+    //   if ('parentProductCategory' in this.productService.productCategory) {
+    //     delete this.productService.productCategory.parentProductCategory;
+    //   }
+    //   if ('status' in this.productService.productCategory) {
+    //     delete this.productService.productCategory.status;
+    //   }
+    // }
 
     console.log(this.productService);
     const serviceToCall = !this.rowId ? this.service.postProductService(this.productService)
@@ -175,6 +177,7 @@ export class ProductServicesComponent {
   getCategories(): void {
     this.service.getAllProductCategory().pipe(takeUntil(this.destroy$)).subscribe(
       (res: ProductCategory[]) => {
+        debugger
         this.categories = res;
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
@@ -182,13 +185,13 @@ export class ProductServicesComponent {
   }
 
   getSubCategories(id: number) {
-    this.service.getProductCategoryById(id).subscribe(
-      (res: ProductCategory) => {
-
-        if (res.parentProductCategory === null) {
+    this.service.searchProductSubCategoryByCategory(id).subscribe(
+      (res: ProductCategory[]) => {
+        this.subCategory = [];
+        this.subCategory = res;
+        if (res.length <= 0) {
           this.subCategory = null;
         }
-        this.subCategory = res;
       }, error => {
 
       }

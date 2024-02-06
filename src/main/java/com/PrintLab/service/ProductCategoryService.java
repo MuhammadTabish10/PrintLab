@@ -11,5 +11,5 @@ public interface ProductCategoryService {
     String deleteById(Long id);
     ProductCategoryDto updatedProductCategory(Long id, ProductCategoryDto productCategoryDto);
 
-    List<ProductCategoryDto> searchByCategory(String name);
+    List<ProductCategoryDto> searchByCategory(Long id);
 }

@@ -89,9 +89,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
-    public List<ProductCategoryDto> searchByCategory(String name) {
-        List<ProductCategory> productCategoryList = productCategoryRepository.findByNameAndStatusIsTrue(name);
-
+    public List<ProductCategoryDto> searchByCategory(Long id) {
+        List<ProductCategory> productCategoryList = productCategoryRepository.findNameByParentProductCategoryIdAndStatusIsTrue(id);
         return productCategoryList.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());

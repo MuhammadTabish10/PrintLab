@@ -4,7 +4,7 @@
     <app-dashboard-head></app-dashboard-head>
     <form #form="ngForm" (ngSubmit)="submit()">
       <div class="main-container">
-        <div>
+        <div *ngIf="invoice?.invoiceNo">
           <h3>Invoice no. {{ invoice.invoiceNo }}</h3>
         </div>
         <div class="row mt-3 mb-1">

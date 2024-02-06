@@ -90,7 +90,7 @@ export class PaperMarketComponent implements OnInit {
         this.paperMarketArray = res.content;
         this.filterRes = res;
         this.paperMarketArray.forEach((el: any) => {
-          
+
           const dateArray = el.timeStamp;
           el.timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
           el.timeStamp = this.datePipe.transform(el.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
