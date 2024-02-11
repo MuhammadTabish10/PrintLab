@@ -19,6 +19,7 @@ export class GetLeadsComponent {
   searchResults: Lead[] = [];
   visible: boolean = false;
   leadList: Lead[] = [];
+  type: string = "New Lead";
 
   lead: Lead = {
     about: {
@@ -106,43 +107,43 @@ export class GetLeadsComponent {
 
   showModal(lead?: Lead) {
     if (lead?.id) {
+      this.type = 'Edit Lead';
       this.mode = 'Update';
       this.lead.companyName = lead.companyName;
       this.lead.contactName = lead.contactName;
     }
     this.visible = true;
     this.rowId = lead ? lead.id : null;
-    // this.searchCompanyAndContactName(lead!)
   }
 
   searchCompanyAndContactName(value: Lead) {
     this.searchResults = [];
     if (value.companyName && value.contactName) {
-    this.leadService.searchLeads(this.lead.contactName!, this.lead.companyName!).subscribe(
-      (res: Lead[]) => {
-        if (res.length > 0) {
-          this.leadSearchModal = true;
-          this.searchResults = res.map(lead => {
-            if (lead.createdAt && Array.isArray(lead.createdAt) && lead.createdAt.length === 7) {
-              const createdAtDate = new Date(lead.createdAt[0], lead.createdAt[1] - 1, lead.createdAt[2], lead.createdAt[3], lead.createdAt[4], lead.createdAt[5]);
-              const timeDiff = Date.now() - createdAtDate.getTime();
-              const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-              const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-              const timeAgo = this.formatTimeAgo(hours, minutes);
-              return { ...lead, createdAt: timeAgo };
-            } else {
-              console.error('Invalid createdAt value:', lead.createdAt);
-              return lead;
-            }
-          });
-        }else{
-          this.leadSearchModal = false;
+      this.leadService.searchLeads(this.lead.contactName!, this.lead.companyName!).subscribe(
+        (res: Lead[]) => {
+          if (res.length > 0) {
+            this.leadSearchModal = true;
+            this.searchResults = res.map(lead => {
+              if (lead.createdAt && Array.isArray(lead.createdAt) && lead.createdAt.length === 7) {
+                const createdAtDate = new Date(lead.createdAt[0], lead.createdAt[1] - 1, lead.createdAt[2], lead.createdAt[3], lead.createdAt[4], lead.createdAt[5]);
+                const timeDiff = Date.now() - createdAtDate.getTime();
+                const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const timeAgo = this.formatTimeAgo(hours, minutes);
+                return { ...lead, createdAt: timeAgo };
+              } else {
+                console.error('Invalid createdAt value:', lead.createdAt);
+                return lead;
+              }
+            });
+          } else {
+            this.leadSearchModal = false;
+          }
+        },
+        (error: BackendErrorResponse) => {
+          this.errorHandleService.showError(error.error.error);
         }
-      },
-      (error: BackendErrorResponse) => {
-        this.errorHandleService.showError(error.error.error);
-      }
-    );
+      );
     }
   }
 
@@ -160,6 +161,7 @@ export class GetLeadsComponent {
 
   closeNewLeadModal() {
     this.leadSearchModal = false;
+    this.type = 'New Lead';
     this.mode = 'Create Lead';
     this.visible = false;
     this.lead = {
