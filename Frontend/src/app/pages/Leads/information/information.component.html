@@ -19,8 +19,8 @@
             </button>
           </div>
         </div>
-        <div class="card-body">
-          <div class="row" *ngIf="addressList.length > 0">
+        <div class="card-body" *ngIf="addressList.length > 0">
+          <div class="row">
             <div class="col-12">
               <div
                 *ngFor="let getAddress of addressList; let i = index"
@@ -69,16 +69,16 @@
               </div>
             </div>
           </div>
-          <div class="row" *ngIf="addressList.length < 1">
-            <div class="col-12">
-              <button
-                type="button"
-                class="btn text-primary"
-                (click)="showAddressModal()"
-              >
-                + Add Address
-              </button>
-            </div>
+        </div>
+        <div class="card-footer" *ngIf="addressList.length < 1">
+          <div class="col-12">
+            <button
+              type="button"
+              class="btn text-primary"
+              (click)="showAddressModal()"
+            >
+              + Add Address
+            </button>
           </div>
         </div>
       </div>
@@ -189,8 +189,8 @@
             </div>
           </div>
         </div>
-        <div class="card-body">
-          <div class="row" class="mb-3" *ngIf="contactList.length > 0">
+        <div class="card-body" *ngIf="contactList.length > 0">
+          <div class="row" class="mb-3">
             <div class="col-12">
               <div
                 *ngFor="let getContact of contactList; let i = index"
@@ -232,16 +232,16 @@
               </div>
             </div>
           </div>
-          <div class="row" *ngIf="contactList.length < 1">
-            <div class="col-12">
-              <button
-                type="button"
-                class="btn text-primary"
-                (click)="showContactModal()"
-              >
-                + Add Other Contacts
-              </button>
-            </div>
+        </div>
+        <div class="card-footer" *ngIf="contactList.length < 1">
+          <div class="col-12">
+            <button
+              type="button"
+              class="btn text-primary"
+              (click)="showContactModal()"
+            >
+              + Add Other Contacts
+            </button>
           </div>
         </div>
       </div>
