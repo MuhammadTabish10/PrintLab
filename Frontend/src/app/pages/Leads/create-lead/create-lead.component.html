@@ -1,0 +1,26 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid ps-6">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="main-container">
+    <div class="mb-3">
+      <h1>{{lead?.companyName}}</h1>
+    </div>
+    <p-tabView>
+      <p-tabPanel header="Information">
+        <app-information></app-information>
+      </p-tabPanel>
+      <p-tabPanel header="Estimate">
+        <p>Estimate content here...</p>
+      </p-tabPanel>
+      <p-tabPanel header="Invoices">
+        <p>Invoices content here...</p>
+      </p-tabPanel>
+      <p-tabPanel header="Payments">
+        <p>Payments content here...</p>
+      </p-tabPanel>
+      <p-tabPanel header="Statements">
+        <p>Statements content here...</p>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

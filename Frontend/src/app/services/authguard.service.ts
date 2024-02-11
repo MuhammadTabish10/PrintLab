@@ -178,6 +178,10 @@ export class AuthguardService implements CanActivate {
       url: ['/get-invoices','/add-invoice','/print-invoice'],
       permissions: 'Invoice'
     }
+    const leadObj = {
+      url: ['/get-leads','/create-lead'],
+      permissions: 'Leads'
+    }
 
 
     return [
@@ -190,6 +194,7 @@ export class AuthguardService implements CanActivate {
       permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate,
       permissionConfiguration_Uping, permissionConfiguration_Product_Process, labourObj,
       laminationVendorObj, uvVendorObj, productCategoriesObj, productServicesObj,invoiceObj,
+      leadObj,
     ]
 
 

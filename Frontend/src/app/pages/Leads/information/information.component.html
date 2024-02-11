@@ -1,0 +1,681 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-5">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-11">
+              <h3>Address</h3>
+            </div>
+            <button
+              class="btn col-1 text-end"
+              type="button"
+              (click)="showAddressModal()"
+              *ngIf="aboutList.length > 0"
+            >
+              <!-- <div class="circle-icon"> -->
+              <i class="pi pi-plus"></i>
+              <!-- </div> -->
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row" *ngIf="addressList.length > 0">
+            <div class="col-12">
+              <div
+                *ngFor="let getAddress of addressList; let i = index"
+                class="mb-3"
+              >
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-10">
+                        <p class="mb-1">
+                          <button type="button" class="btn btn-dark">
+                            {{ getAddress.type }}
+                          </button>
+                        </p>
+                        <p class="mb-1 ms-1">{{ getAddress.address }}</p>
+                        <p class="mb-1 ms-1">{{ getAddress.city }}</p>
+                        <p class="mb-1 ms-1">{{ getAddress.state }}</p>
+                        <p class="mb-1 ms-1">{{ getAddress.postalCode }}</p>
+                        <p class="mb-1 ms-1">{{ getAddress.country }}</p>
+                      </div>
+                      <div
+                        class="col-1 d-flex align-items-center justify-content-center"
+                      >
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-dark"
+                          (click)="editAddress(getAddress)"
+                        >
+                          <i class="pi pi-pencil"></i>
+                        </button>
+                      </div>
+                      <div
+                        class="col-1 d-flex align-items-center justify-content-center"
+                      >
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-danger"
+                          (click)="deleteAddress(i)"
+                        >
+                          <i class="pi pi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="aboutList.length < 1">
+            <div class="col-12">
+              <button
+                type="button"
+                class="btn text-primary"
+                (click)="showAddressModal()"
+              >
+                + Add Address
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row my-3">
+    <div class="col-5 my-3">
+      <label class="add-order-label m-0 mb-1">Status</label>
+      <p-dropdown
+        [options]="leadAddressStatus?.productFieldValuesList"
+        styleClass="w-100"
+        optionLabel="name"
+        optionValue="name"
+        placeholder="Select Status"
+        [(ngModel)]="lead.leadStatusType"
+        [filter]="true"
+        (onChange)="submitLeadStatusType()"
+        filterBy="name"
+        [showClear]="true"
+        name="status"
+        #statusModel="ngModel"
+        [required]="true"
+        [ngClass]="{
+          'ng-dirty ng-invalid':
+            statusModel.invalid && (statusModel.dirty || statusModel.touched)
+        }"
+      >
+      </p-dropdown>
+      <div
+        *ngIf="
+          statusModel.invalid && (statusModel.dirty || statusModel.touched)
+        "
+      >
+        <div *ngIf="statusModel.errors" class="text-danger m-1">
+          Status is required.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-5">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-11">
+              <h3>About</h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body" *ngIf="aboutList.length > 0">
+          <div class="row" *ngFor="let getAbout of aboutList; let i = index">
+            <div class="col-11">
+              <div class="row">
+                <label class="add-order-label m-0 mb-1">Description:</label>
+                <p>{{ getAbout?.description }}</p>
+              </div>
+              <div class="row">
+                <div class="col-5">
+                  <label class="add-order-label m-0 mb-1 d-block"
+                    >Source:</label
+                  >
+                  <button class="btn btn-dark" type="button">
+                    {{ getAbout?.source }}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 d-flex align-items-center justify-content-center">
+              <button
+                type="button"
+                class="btn btn-sm btn-dark"
+                (click)="editAbout(getAbout)"
+              >
+                <i class="pi pi-pencil"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer" *ngIf="aboutList.length < 1">
+          <button
+            type="button"
+            class="btn text-primary"
+            (click)="showAboutModal()"
+          >
+            + Add Description And Source
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row my-5">
+    <div class="col-5">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-11">
+              <h3>Contacts</h3>
+            </div>
+            <div class="col-1">
+              <button
+                type="button"
+                class="btn btn-close-white"
+                (click)="showContactModal()"
+              >
+                <i class="pi pi-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body" *ngIf="contactList.length > 0">
+          <div
+            class="row"
+            *ngFor="let getContact of contactList; let i = index"
+            class="mb-3"
+          >
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-10 d-flex align-items-center">
+                    <div class="row">
+                      <h5 class="mb-0">{{ getContact?.name }}</h5>
+                    </div>
+                  </div>
+                  <div
+                    class="col-1 d-flex align-items-center justify-content-center"
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-dark"
+                      (click)="editContact(getContact)"
+                    >
+                      <i class="pi pi-pencil"></i>
+                    </button>
+                  </div>
+                  <div
+                    class="col-1 d-flex align-items-center justify-content-center"
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-danger"
+                      (click)="deleteContact(i)"
+                    >
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-dialog
+  header="Address"
+  [(visible)]="addressModal"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  (onHide)="closeAddressModal()"
+>
+  <form #addressForm="ngForm">
+    <div class="container">
+      <div class="row my-3">
+        <div class="col-6 my-3">
+          <label class="add-order-label m-0 mb-1">Type</label>
+          <p-dropdown
+            [options]="leadAddressTypes?.productFieldValuesList"
+            styleClass="w-100"
+            optionLabel="name"
+            optionValue="name"
+            placeholder="Select Type"
+            [(ngModel)]="address.type"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            name="type"
+            #typeModel="ngModel"
+            [required]="true"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                typeModel.invalid && (typeModel.dirty || typeModel.touched)
+            }"
+          >
+          </p-dropdown>
+          <div
+            *ngIf="typeModel.invalid && (typeModel.dirty || typeModel.touched)"
+          >
+            <div *ngIf="typeModel.errors" class="text-danger m-1">
+              Type is required.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <label class="add-order-label m-0 mb-1">Address/Address (Cont.)</label>
+        <div>
+          <textarea
+            [(ngModel)]="address.address"
+            name="address"
+            cols="43"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+      </div>
+      <div class="row my-3">
+        <div class="col-6">
+          <label class="add-order-label m-0">City</label>
+          <input
+            type="text"
+            class="order-search form-control order-form-input m-0"
+            [(ngModel)]="address.city"
+            style="border: 1px solid #ced4da"
+            placeholder="Enter City"
+            name="city"
+            required
+          />
+        </div>
+        <div class="col-6">
+          <label class="add-order-label m-0">State</label>
+          <input
+            type="text"
+            class="order-search form-control order-form-input m-0"
+            [(ngModel)]="address.state"
+            style="border: 1px solid #ced4da"
+            placeholder="Enter State"
+            name="state"
+            required
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <label class="add-order-label m-0">Postal Code</label>
+          <input
+            type="text"
+            class="order-search form-control order-form-input m-0"
+            [(ngModel)]="address.postalCode"
+            style="border: 1px solid #ced4da"
+            placeholder="Enter Postal Code"
+            name="postalCode"
+            required
+          />
+        </div>
+        <div class="col-6">
+          <label class="add-order-label m-0">Country</label>
+          <input
+            type="text"
+            class="order-search form-control order-form-input m-0"
+            [(ngModel)]="address.country"
+            style="border: 1px solid #ced4da"
+            placeholder="Enter Country"
+            name="country"
+            required
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <div class="row">
+      <div class="col-2 offset-8">
+        <button
+          class="btn btn-danger w-100"
+          type="button"
+          (click)="closeAddressModal()"
+        >
+          Cancel
+        </button>
+      </div>
+      <div class="col-2">
+        <button
+          class="btn btn-dark w-100"
+          type="submit"
+          (click)="submitAddress()"
+          [disabled]="!addressForm.valid"
+        >
+          {{ mode }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
+<p-dialog
+  header="About"
+  [(visible)]="aboutModal"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '45vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  (onHide)="closeAboutModal()"
+>
+  <form #aboutForm="ngForm" (ngSubmit)="submitAbout()">
+    <div class="container">
+      <div class="row my-3">
+        <div class="col-12">
+          <label class="add-order-label m-0 mb-1 d-block">Description</label>
+          <textarea
+            [(ngModel)]="about.description"
+            name="aboutDescription"
+            cols="81"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+      </div>
+      <div
+        class="row"
+        [ngClass]="{
+          'd-flex align-items-center':
+            sourceModel.invalid && (sourceModel.dirty || sourceModel.touched),
+          'd-flex align-items-end':
+            !sourceModel.invalid || !(sourceModel.dirty || sourceModel.touched)
+        }"
+      >
+        <div class="col-6">
+          <label class="add-order-label m-0 mb-1">Source</label>
+          <p-dropdown
+            [options]="leadAboutSource?.productFieldValuesList"
+            styleClass="w-100"
+            optionLabel="name"
+            optionValue="name"
+            placeholder="Select Source"
+            [(ngModel)]="about.source"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            name="source"
+            [appendTo]="'body'"
+            #sourceModel="ngModel"
+            [required]="true"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                sourceModel.invalid &&
+                (sourceModel.dirty || sourceModel.touched)
+            }"
+          >
+          </p-dropdown>
+          <div
+            *ngIf="
+              sourceModel.invalid && (sourceModel.dirty || sourceModel.touched)
+            "
+          >
+            <div *ngIf="sourceModel.errors" class="text-danger m-1">
+              Source is required.
+            </div>
+          </div>
+        </div>
+        <div class="col-2 offset-2">
+          <button
+            class="btn btn-danger w-100"
+            type="button"
+            (click)="closeAboutModal()"
+          >
+            Cancel
+          </button>
+        </div>
+        <div class="col-2">
+          <button
+            class="btn btn-dark w-100"
+            type="submit"
+            [disabled]="!aboutForm.valid"
+          >
+            {{ mode }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+<p-dialog
+  header="Contact"
+  [(visible)]="contactModal"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '45vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  (onHide)="closeContactModal()"
+>
+  <form #contactForm="ngForm" (ngSubmit)="submitContact()">
+    <div class="container">
+      <div class="row my-3">
+        <div class="col-12">
+          <label class="add-order-label m-0 mb-1 d-block">Name</label>
+          <input
+            type="text"
+            class="order-search form-control order-form-input m-0"
+            [(ngModel)]="contact.name"
+            style="border: 1px solid #ced4da"
+            placeholder="Enter Name"
+            name="name"
+            required
+          />
+        </div>
+      </div>
+      <div class="row my-3">
+        <div class="col-12">
+          <label class="add-order-label m-0 mb-1 d-block">Job Title</label>
+          <input
+            type="text"
+            class="order-search form-control order-form-input m-0"
+            [(ngModel)]="contact.jobTitle"
+            style="border: 1px solid #ced4da"
+            placeholder="Enter Job Title"
+            name="jobTitle"
+            required
+          />
+        </div>
+      </div>
+      <div class="row my-5">
+        <div class="col-11">
+          <h5>Contact Details</h5>
+        </div>
+        <div class="col-1">
+          <button
+            type="button"
+            class="pi pi-plus fw-bold border-0 bg-white"
+            (click)="showOptions()"
+          ></button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-group mb-3" *ngIf="selectedDetail?.landLine">
+          <input
+            type="text"
+            class="form-control bg-white w-25"
+            name="landLineNo"
+            placeholder="Enter Land Line No #"
+            [(ngModel)]="contact.landLine"
+          />
+          <input
+            type="text"
+            readonly
+            name="landLine"
+            class="form-control bg-white"
+            value="LANDLINE"
+          />
+          <button
+            type="button"
+            class="pi pi-trash text-danger input-group-text bg-white"
+            (click)="
+              selectedDetail!.landLine = undefined; contact.landLine = null
+            "
+          ></button>
+        </div>
+        <div class="input-group mb-3" *ngIf="selectedDetail?.mobile">
+          <input
+            type="text"
+            name="mobileNo"
+            class="form-control bg-white w-25"
+            placeholder="Enter Mobile No #"
+            [(ngModel)]="contact.mobile"
+          />
+          <input
+            type="text"
+            readonly
+            name="mobile"
+            class="form-control bg-white"
+            value="MOBILE"
+          />
+          <button
+            type="button"
+            class="pi pi-trash text-danger input-group-text bg-white"
+            (click)="selectedDetail!.mobile = undefined; contact.mobile = null"
+          ></button>
+        </div>
+        <div class="input-group mb-3" *ngIf="selectedDetail?.website">
+          <input
+            type="text"
+            name="websiteUrl"
+            class="form-control bg-white w-25"
+            placeholder="Enter Website Url"
+            [(ngModel)]="contact.website"
+          />
+          <input
+            type="text"
+            readonly
+            name="website"
+            class="form-control bg-white"
+            value="WEBSITE"
+          />
+          <button
+            type="button"
+            class="pi pi-trash text-danger input-group-text bg-white"
+            (click)="
+              selectedDetail!.website = undefined; contact.website = null
+            "
+          ></button>
+        </div>
+        <div class="input-group mb-3" *ngIf="selectedDetail!.email">
+          <input
+            type="text"
+            name="email"
+            class="form-control bg-white w-25"
+            placeholder="Enter Email"
+            [(ngModel)]="contact!.email"
+          />
+          <input
+            type="text"
+            readonly
+            name="emailOption"
+            class="form-control bg-white"
+            value="EMAIL"
+          />
+          <button
+            type="button"
+            class="pi pi-trash text-danger input-group-text bg-white"
+            (click)="selectedDetail!.email = undefined; contact.email = null"
+          ></button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <label class="add-order-label m-0 mb-1">Role</label>
+          <p-dropdown
+            [options]="leadContactRole?.productFieldValuesList"
+            styleClass="w-100"
+            optionLabel="name"
+            optionValue="name"
+            placeholder="Select Role"
+            [(ngModel)]="contact.role"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            name="role"
+            [appendTo]="'body'"
+            #roleModel="ngModel"
+            [required]="true"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                roleModel.invalid && (roleModel.dirty || roleModel.touched)
+            }"
+          >
+          </p-dropdown>
+          <div
+            *ngIf="roleModel.invalid && (roleModel.dirty || roleModel.touched)"
+          >
+            <div *ngIf="roleModel.errors" class="text-danger m-1">
+              Role is required.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3 d-flex justify-content-end">
+        <div class="col-2">
+          <button
+            class="btn btn-danger w-100"
+            type="button"
+            (click)="closeContactModal()"
+          >
+            Cancel
+          </button>
+        </div>
+        <div class="col-2">
+          <button class="btn btn-dark w-100" type="submit">{{ mode }}</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+<p-dialog
+  header="Details"
+  [(visible)]="options"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '25vw' }"
+  [draggable]="true"
+  [resizable]="false"
+>
+  <ng-template pTemplate="headless">
+    <div class="row">
+      <div class="col-12">
+        <p-multiSelect
+          [options]="leadContactDetails?.productFieldValuesList"
+          styleClass="w-100"
+          optionLabel="name"
+          optionValue="name"
+          (onChange)="getValue($event.value)"
+          (onClear)="resetSelectedDetail()"
+          placeholder="Select details"
+          [(ngModel)]="selectedDetails"
+          [filter]="true"
+          filterBy="name"
+          [showClear]="true"
+          display="chip"
+          name="type"
+          [appendTo]="'body'"
+          #detailModel="ngModel"
+        >
+        </p-multiSelect>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
+<p-toast></p-toast>

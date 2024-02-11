@@ -97,14 +97,14 @@ export class AddInvoiceComponent implements OnInit {
   };
 
   constructor(
+    private productFieldService: ProductDefinitionService,
     private errorHandleService: ErrorHandleService,
     private successMsg: SuccessMessageService,
     private customerService: CustomerService,
     private productService: ServiceService,
     private invoiceService: InvoiceService,
-    private router: Router,
     private route: ActivatedRoute,
-    private productFieldService: ProductDefinitionService
+    private router: Router,
   ) { }
 
   @HostListener('document:keydown', ['$event'])
@@ -416,7 +416,7 @@ export class AddInvoiceComponent implements OnInit {
 
     forkJoin([searchField$, allInvoices$]).subscribe(
       ([searchFieldRes, allInvoicesRes]: [any, Invoice[]]) => {
-        // Handle response from searchProductField
+
         if (allInvoicesRes.length === 0) {
           this.invoice.invoiceNo = +(searchFieldRes[0].productFieldValuesList[0].name);
         } else {

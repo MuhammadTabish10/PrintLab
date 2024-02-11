@@ -22,7 +22,7 @@ public class InvoiceController {
     @Autowired
     EmailUtils emailUtils;
     @Autowired
-    private PdfGenerationService pdfGenerationService; // Inject your PDF generation service
+    private PdfGenerationService pdfGenerationService;
 
     @PostMapping("/save-invoice")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

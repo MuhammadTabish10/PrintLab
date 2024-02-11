@@ -62,6 +62,8 @@ import { ProductServicesComponent } from './pages/Product/product-services/produ
 import { GetInvoicesComponent } from './pages/Invoice/get-invoices/get-invoices.component';
 import { AddInvoiceComponent } from './pages/Invoice/add-invoice/add-invoice.component';
 import { InvoicePrintComponent } from './pages/Invoice/invoice-print/invoice-print.component';
+import { GetLeadsComponent } from './pages/Leads/get-leads/get-leads.component';
+import { CreateLeadComponent } from './pages/Leads/create-lead/create-lead.component';
 
 export const routes: Routes = [
   {
@@ -370,6 +372,16 @@ export const routes: Routes = [
   {
     path: 'product-services',
     component: ProductServicesComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'get-leads',
+    component: GetLeadsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'create-lead',
+    component: CreateLeadComponent,
     canActivate: [AuthguardService]
   },
 ];

@@ -158,6 +158,15 @@
       </span>
     </li>
 
+    <li *ngIf="sessionStorageService.hasPermission('Leads')" class="mt-2">
+      <span class="sidebar-list-hover">
+        <i class="fa fa-list"></i>
+        <a class="nav-text nav-link" [routerLink]="['/get-leads']">
+          Leads
+        </a>
+      </span>
+    </li>
+
     <li
       class="sidebar-list-hover mt-2"
       *ngIf="sessionStorageService.hasPermission('Configuration')"
@@ -488,10 +497,7 @@
       </span>
     </li>
 
-    <li
-      *ngIf="sessionStorageService.hasPermission('Invoice')"
-      class="mt-2"
-    >
+    <li *ngIf="sessionStorageService.hasPermission('Invoice')" class="mt-2">
       <span class="sidebar-list-hover" *ngIf="isDropDown7Open">
         <i class="fa fa-plus"></i>
         <a class="nav-text nav-link" [routerLink]="['/get-invoices']">
@@ -499,5 +505,6 @@
         </a>
       </span>
     </li>
+
   </ul>
 </nav>

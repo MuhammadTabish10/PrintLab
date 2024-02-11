@@ -1,0 +1,243 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid ps-6">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="main-container">
+    <div>
+      <h3>Leads</h3>
+    </div>
+    <div class="card text-nowrap">
+      <p-table
+        #dt1
+        [value]="leadList"
+        dataKey="id"
+        [globalFilterFields]="['name']"
+        selectionMode="single"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex clearfix">
+            <!-- <span class="p-input-icon-right ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="search($event.target)"
+                placeholder="Search Invoice No"
+              />
+            </span> -->
+            <button
+              pButton
+              type="button"
+              label="Create Lead"
+              class="p-button-dark bg-dark float-end"
+              icon="pi pi-plus"
+              (click)="showModal()"
+            ></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="col">
+              <div class="d-flex justify-content-center">Company Name</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Contact Name</div>
+            </th>
+            <!-- <th class="col">
+              <div class="d-flex justify-content-center">Address</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Address Type</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Job Title</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">Role</div>
+            </th>
+            <th class="col">
+              <div class="d-flex justify-content-center">About</div>
+            </th> -->
+            <th class="col">
+              <div class="d-flex justify-content-center">Action</div>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-lead let-i="rowIndex">
+          <tr class="clickable-row" (click)="edit(lead.id)">
+            <td class="text-center">
+              {{ lead?.companyName }}
+            </td>
+            <td class="text-center">
+              {{ lead?.contactName }}
+            </td>
+            <!-- <td class="text-center">
+              {{ lead?.leadAddress[i+1].address }}
+            </td>
+            <td class="text-center">
+              {{ lead?.leadAddress[i].type }}
+            </td>
+            <td class="text-center">
+              {{ lead?.contact[i].jobTitle }}
+            </td>
+            <td class="text-center">
+              {{ lead?.contact[i].role }}
+            </td> -->
+            <!-- <td class="text-center d-flex justify-content-center">
+              <textarea
+                name="descRow"
+                [(ngModel)]="lead.about.description"
+                id="desc"
+                class="d-block"
+                cols="25"
+                rows="1"
+                readonly
+              ></textarea>
+            </td> -->
+            <td class="text-center">
+              <div
+                class="btn-group mr-2"
+                role="group"
+                aria-label="Second group"
+              >
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="showModal(lead); $event.stopPropagation()"
+                >
+                  <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="deleteLead(lead); $event.stopPropagation()"
+                >
+                  <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" class="text-center">No lead Found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<p-dialog
+  header="New Lead"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="closeNewLeadModal()"
+>
+  <form #leadForm="ngForm" (ngSubmit)="submit()">
+    <div class="container text-center">
+      <div class="row my-3">
+        <div class="col-6">
+          <input
+            pInputText
+            type="text"
+            class="w-100"
+            required
+            name="companyName"
+            [(ngModel)]="lead.companyName"
+            (input)="searchCompanyAndContactName(lead)"
+            placeholder="Enter Company Name"
+          />
+        </div>
+        <div class="col-6">
+          <input
+            pInputText
+            type="text"
+            name="contactName"
+            class="w-100"
+            [(ngModel)]="lead.contactName"
+            required
+            (input)="searchCompanyAndContactName(lead)"
+            placeholder="Enter Contact Name"
+          />
+        </div>
+      </div>
+      <div class="row my-3" *ngIf="leadSearchModal">
+        <h6>We found a simiral lead that already existed!</h6>
+        <p-table
+          [value]="searchResults"
+          class="p-datatable-dark"
+          selectionMode="single"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="background-color: black; color: white">Company</th>
+              <th style="background-color: black; color: white">Status</th>
+              <th style="background-color: black; color: white">Created</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-result>
+            <tr class="clickable-row" (click)="edit(result.id)">
+              <td>{{ result?.companyName }}</td>
+              <td>{{ result?.status }}</td>
+              <td>{{ result?.createdAt }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="row d-flex justify-content-end">
+        <div class="col-2">
+          <button
+            class="btn btn-danger w-100"
+            type="button"
+            (click)="closeNewLeadModal()"
+          >
+            Cancel
+          </button>
+        </div>
+        <div class="col-3">
+          <button
+            [disabled]="!leadForm.valid || leadSearchModal"
+            class="btn btn-dark w-100"
+            type="submit"
+          >
+            {{ mode }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+<!-- <p-dialog
+  header="Leads"
+  [(visible)]="leadSearchModal"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="lead.companyName"
+          (input)="searchCompanyAndContactName(lead)"
+          placeholder="Enter Company Name"
+        />
+      </div>
+      <div class="col">
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="lead.contactName"
+          (input)="searchCompanyAndContactName(lead)"
+          placeholder="Enter Contact Name"
+        />
+      </div>
+    </div>
+  </div>
+</p-dialog> -->
+<p-toast></p-toast>

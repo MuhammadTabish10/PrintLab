@@ -43,12 +43,6 @@ export class InvoiceService {
     return this.http.get<Invoice[]>(url)
   }
 
-  // saveInvoiceAndGeneratePdf(htmlContent: string, email: string): Observable<any> {
-  //
-  //   const printData = { htmlContent, email };
-  //   return this.http.post(`${this.BASE_URL}/generate-pdf-and-send`, printData);
-  // }
-
   saveInvoiceAndGeneratePdf(htmlContent: string, email: string): Observable<any> {
     const printData = { htmlContent, email };
 

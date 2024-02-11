@@ -15076,7 +15076,9 @@ input:checked + .slider:before {
 .lengthDate .p-calendar-w-btn .p-inputtext {
   width: 180% !important;
 }
-.p-inputtext.customInput  {
-  padding: 3px!important;
+.p-inputtext.customInput {
+  padding: 3px !important;
 }
-
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+  box-shadow: none !important;
+}

@@ -103,6 +103,10 @@ import { AddInvoiceComponent } from './pages/Invoice/add-invoice/add-invoice.com
 import { InvoicePrintComponent } from './pages/Invoice/invoice-print/invoice-print.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { GetLeadsComponent } from './pages/Leads/get-leads/get-leads.component';
+import { CreateLeadComponent } from './pages/Leads/create-lead/create-lead.component';
+import { TabViewModule } from 'primeng/tabview';
+import { InformationComponent } from './pages/Leads/information/information.component';
 
 @NgModule({
   declarations: [
@@ -176,6 +180,9 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
     GetInvoicesComponent,
     AddInvoiceComponent,
     InvoicePrintComponent,
+    GetLeadsComponent,
+    CreateLeadComponent,
+    InformationComponent,
   ],
   imports: [
     BrowserModule,
@@ -208,6 +215,7 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
     TreeTableModule,
     TooltipModule,
     DynamicDialogModule,
+    TabViewModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService,MessageService,ConfirmDialogModule,
     provideRouter(routes, withHashLocation()), DatePipe],
