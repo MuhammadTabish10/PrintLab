@@ -11,7 +11,7 @@
               class="btn col-1 text-end"
               type="button"
               (click)="showAddressModal()"
-              *ngIf="aboutList.length > 0"
+              *ngIf="addressList.length > 0"
             >
               <!-- <div class="circle-icon"> -->
               <i class="pi pi-plus"></i>
@@ -69,7 +69,7 @@
               </div>
             </div>
           </div>
-          <div class="row" *ngIf="aboutList.length < 1">
+          <div class="row" *ngIf="addressList.length < 1">
             <div class="col-12">
               <button
                 type="button"
@@ -182,50 +182,65 @@
                 type="button"
                 class="btn btn-close-white"
                 (click)="showContactModal()"
+                *ngIf="contactList.length > 0"
               >
                 <i class="pi pi-plus"></i>
               </button>
             </div>
           </div>
         </div>
-        <div class="card-body" *ngIf="contactList.length > 0">
-          <div
-            class="row"
-            *ngFor="let getContact of contactList; let i = index"
-            class="mb-3"
-          >
-            <div class="card">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-10 d-flex align-items-center">
+        <div class="card-body">
+          <div class="row" class="mb-3" *ngIf="contactList.length > 0">
+            <div class="col-12">
+              <div
+                *ngFor="let getContact of contactList; let i = index"
+                class="mb-3"
+              >
+                <div class="card">
+                  <div class="card-body">
                     <div class="row">
-                      <h5 class="mb-0">{{ getContact?.name }}</h5>
+                      <div class="col-10 d-flex align-items-center">
+                        <div class="row">
+                          <h5 class="mb-0">{{ getContact?.name }}</h5>
+                        </div>
+                      </div>
+                      <div
+                        class="col-1 d-flex align-items-center justify-content-center"
+                      >
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-dark"
+                          (click)="editContact(getContact)"
+                        >
+                          <i class="pi pi-pencil"></i>
+                        </button>
+                      </div>
+                      <div
+                        class="col-1 d-flex align-items-center justify-content-center"
+                      >
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-danger"
+                          (click)="deleteContact(i)"
+                        >
+                          <i class="pi pi-trash"></i>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="col-1 d-flex align-items-center justify-content-center"
-                  >
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-dark"
-                      (click)="editContact(getContact)"
-                    >
-                      <i class="pi pi-pencil"></i>
-                    </button>
-                  </div>
-                  <div
-                    class="col-1 d-flex align-items-center justify-content-center"
-                  >
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-danger"
-                      (click)="deleteContact(i)"
-                    >
-                      <i class="pi pi-trash"></i>
-                    </button>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="contactList.length < 1">
+            <div class="col-12">
+              <button
+                type="button"
+                class="btn text-primary"
+                (click)="showContactModal()"
+              >
+                + Add Other Contacts
+              </button>
             </div>
           </div>
         </div>
