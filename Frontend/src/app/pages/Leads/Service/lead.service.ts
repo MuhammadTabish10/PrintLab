@@ -1,8 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PaginatorState } from 'primeng/paginator';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/Environments/environment';
 import { Lead } from 'src/app/Model/Lead';
+import { PaginationResponse } from 'src/app/Model/PaginationResponse';
+import { DistinctResults } from '../get-leads/get-leads.component';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +21,23 @@ export class LeadService {
     return this.http.post<Lead>(url, lead);
   }
 
-  getAllLeads(): Observable<Lead[]> {
+  // getAllLeads(): Observable<Lead[]> {
+  //   let url = `${this.BASE_URL}/get-leads`;
+  //   return this.http.get<Lead[]>(url)
+  // }
+
+  getAllLeads(pageState?: PaginatorState, search?: Lead): Observable<PaginationResponse<Lead>> {
+    debugger
+    let params = new HttpParams();
+    if (pageState?.hasOwnProperty('page') && pageState?.hasOwnProperty('rows')) {
+      params = params.set('page-number', pageState?.page!);
+      params = params.set('page-size', pageState?.rows!);
+    } else {
+      params = params.set('page-number', 0);
+      params = params.set('page-size', 10);
+    }
     let url = `${this.BASE_URL}/get-leads`;
-    return this.http.get<Lead[]>(url)
-    // return of(this.dummyLeadData);
+    return this.http.post<PaginationResponse<Lead>>(url, search ? search : {}, { params });
   }
 
   deleteLeadById(id: number): Observable<Lead> {
@@ -44,61 +60,25 @@ export class LeadService {
     return this.http.put<Lead>(url, obj)
   }
 
-  searchLeads(contactName: string, companyName: string): Observable<Lead[]> {
+  // searchLeads(contactName: string, companyName: string): Observable<Lead[]> {
+  //   let params = new HttpParams();
+  //   if (contactName && companyName) {
+  //     params = params.set('contactName', contactName);
+  //     params = params.set('companyName', companyName);
+  //   }
+  //   const url = `${this.BASE_URL}/leads-by-like-search`
+  //   return this.http.get<Lead[]>(url, { params })
+  // }
+
+  searchLeads(companyName: string): Observable<Lead[]> {
     let params = new HttpParams();
-    if (contactName && companyName) {
-      params = params.set('contactName', contactName);
-      params = params.set('companyName', companyName);
-    }
-    const url = `${this.BASE_URL}/leads-by-like-search`
+    params = params.set('companyName', companyName);
+    const url = `${this.BASE_URL}/leads-by-companyName`
     return this.http.get<Lead[]>(url, { params })
   }
 
-  // private dummyLeadData: Lead[] = [
-  //   {
-  //     createdAt: "2024-01-08 17:19:05.680000",
-  //     companyName: "Quality Spaces",
-  //     contactName: "Usama Nadeem",
-  //     status: true,
-  //     id: 1,
-  //     leadAddress:
-  //     {
-  //       country: "Pakistan",
-  //       postalCode: "7104",
-  //       address: "Maymar",
-  //       type: "Business",
-  //       city: "Karachi",
-  //       status: "true",
-  //       state: "Asia",
-  //       id: 1,
-  //     }
-  //     ,
-  //     about:
-  //     {
-  //       description: "Testing with dummy data",
-  //       source: "Inbound_Call",
-  //       status: "true",
-  //       id: 1,
-  //     },
-
-  //     contact:
-  //     {
-  //       jobTitle: "Full Stack Developer",
-  //       name: "Usama Nadeem",
-  //       role: "Developer",
-  //       status: "true",
-  //       id: 1,
-  //       contactDetails:
-  //       {
-  //         email: "usamanadeem@example.com",
-  //         website: "www.example.com",
-  //         landLine: "21331232",
-  //         mobile: "32143242",
-  //         id: 1,
-  //       },
-  //     }
-
-  //   },
-  // ]
-
+  // getDistinctData(): Observable<DistinctResults> {
+  //   let url = `${this.BASE_URL}/leads/distinct-values`;
+  //   return this.http.get<DistinctResults>(url);
+  // }
 }

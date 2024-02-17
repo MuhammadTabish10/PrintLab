@@ -12,6 +12,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, forkJoin, takeUntil } from 'rxjs';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
+import { getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
+import { AuthguardService } from 'src/app/services/authguard.service';
 
 
 @Component({
@@ -31,8 +33,8 @@ export class AddInvoiceComponent implements OnInit {
   hide: boolean = false;
   idFromQueryParam: number | undefined | null;
   mode: string = 'Save';
-  balanceDue: number = 50000.00;
   onlySend: boolean = false;
+  isAdmin = false;
 
   tempCustomer: Customer = {
     id: undefined,
@@ -77,11 +79,12 @@ export class AddInvoiceComponent implements OnInit {
     sendLater: undefined,
     billingAddress: undefined,
     terms: undefined,
+    balanceDue: undefined,
     invoiceDate: undefined,
     dueDate: undefined,
     invoiceProductDtoList: [{
       id: undefined,
-      dateRow: undefined,
+      dateRow: new Date(),
       productRow: undefined,
       productName: undefined,
       type: undefined,
@@ -95,6 +98,7 @@ export class AddInvoiceComponent implements OnInit {
     statement: undefined,
     status: undefined,
   };
+  previousInvoiceNo: number | null | undefined;
 
   constructor(
     private productFieldService: ProductDefinitionService,
@@ -103,6 +107,7 @@ export class AddInvoiceComponent implements OnInit {
     private customerService: CustomerService,
     private productService: ServiceService,
     private invoiceService: InvoiceService,
+    private authService: AuthguardService,
     private route: ActivatedRoute,
     private router: Router,
   ) { }
@@ -123,8 +128,15 @@ export class AddInvoiceComponent implements OnInit {
 
 
   ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    const decodedToken = this.authService.getDecodedAccessToken(token!);
+    if (decodedToken.ROLES[0].toLowerCase() === "admin") {
+      this.isAdmin = true;
+    }
     this.initializeData();
     this.handleQueryParams();
+    this.invoice.invoiceDate = new Date();
+    this.updateDueDateMinDate();
   }
 
   private initializeData(): void {
@@ -169,7 +181,7 @@ export class AddInvoiceComponent implements OnInit {
   addRow() {
     this.invoice.invoiceProductDtoList.push({
       id: undefined,
-      dateRow: undefined,
+      dateRow: new Date(),
       productRow: undefined,
       productName: undefined,
       type: undefined,
@@ -292,10 +304,10 @@ export class AddInvoiceComponent implements OnInit {
   }
 
 
-  patchValues(id: number): void {
+  private patchValues(id: number): void {
     this.invoiceService.getInvoiceById(id).subscribe(
       (res: Invoice) => {
-
+        this.previousInvoiceNo = res.invoiceNo;
         const customer = this.customerList.find(c => c.id === res.customer as number);
         this.tempCustomer.id = customer?.id;
 
@@ -374,12 +386,17 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   calculateAmount(value: Invoice, i: number) {
-    if (this.invoice.invoiceProductDtoList![i].productRow && value.invoiceProductDtoList![i].rate) {
-      this.invoice.invoiceProductDtoList![i].amount = value.invoiceProductDtoList![i].qty! * value.invoiceProductDtoList![i].rate!;
+    this.invoice.balanceDue = 0;
+    if (value.invoiceProductDtoList![i].qty && value.invoiceProductDtoList![i].rate) {
+      value.invoiceProductDtoList![i].amount = value.invoiceProductDtoList![i].qty! * value.invoiceProductDtoList![i].rate!;
+      for (let j = 0; j < value.invoiceProductDtoList!.length; j++) {
+        this.invoice.balanceDue! += value.invoiceProductDtoList[j].amount!;
+      }
     } else {
-      this.invoice.invoiceProductDtoList![i].amount = 0;
+      value.invoiceProductDtoList![i].amount = 0;
     }
   }
+
 
   generatePdfAndSendToEmail() {
     const printPreviewElement = document.getElementById('print-preview');
@@ -416,13 +433,17 @@ export class AddInvoiceComponent implements OnInit {
 
     forkJoin([searchField$, allInvoices$]).subscribe(
       ([searchFieldRes, allInvoicesRes]: [any, Invoice[]]) => {
-
         if (allInvoicesRes.length === 0) {
           this.invoice.invoiceNo = +(searchFieldRes[0].productFieldValuesList[0].name);
         } else {
           if (allInvoicesRes.length > 0) {
             const lastInvoiceNo = allInvoicesRes[allInvoicesRes.length - 1].invoiceNo;
             this.invoice.invoiceNo = lastInvoiceNo! + 1;
+            allInvoicesRes.forEach((invoice: Invoice) => {
+              if (this.invoice.invoiceNo === invoice.invoiceNo) {
+                this.invoice.invoiceNo!++;
+              }
+            })
           }
         }
       },
@@ -446,6 +467,22 @@ export class AddInvoiceComponent implements OnInit {
 
   saveFile() {
     window.print();
+  }
+
+  searchInvoiceNumber(value: string) {
+    this.invoiceService.getAllInvoice()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (res: Invoice[]) => {
+          res.forEach((invoice: Invoice) => {
+            debugger
+            if (invoice.invoiceNo === +value && this.previousInvoiceNo !== +value) {
+              this.invoice.invoiceNo = null;
+            }
+          })
+        },
+        (error: any) => this.errorHandleService.showError(error.error.error)
+      );
   }
 
 }
@@ -475,4 +512,13 @@ export class AddInvoiceComponent implements OnInit {
 //       this.errorHandleService.showError(error.error.error);
 //     }
 //   );
+// }
+// calculateAmount(value: Invoice, i: number) {
+//   if (this.invoice.invoiceProductDtoList![i].productRow && value.invoiceProductDtoList![i].rate) {
+//     this.invoice.invoiceProductDtoList![i].amount = value.invoiceProductDtoList![i].qty! * value.invoiceProductDtoList![i].rate!;
+//       this.invoice.balanceDue! += this.invoice.invoiceProductDtoList[i].amount!;
+//   } else {
+//     this.invoice.invoiceProductDtoList![i].amount = 0;
+//     this.invoice.balanceDue = 0;
+//   }
 // }

@@ -5,7 +5,22 @@
         <div class="card-header">
           <div class="row">
             <div class="col-11">
-              <h3>Address</h3>
+              <div
+                class="col"
+                data-bs-toggle="collapse"
+                data-bs-target="#addressSection"
+                aria-expanded="false"
+                aria-controls="addressSection"
+              >
+                <h3 class="d-inline">Address</h3>
+                <i
+                  class="pi pi-arrow-down pt-2 ps-2"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#addressSection"
+                  aria-expanded="false"
+                  aria-controls="addressSection"
+                ></i>
+              </div>
             </div>
             <button
               class="btn col-1 text-end"
@@ -19,7 +34,11 @@
             </button>
           </div>
         </div>
-        <div class="card-body" *ngIf="addressList.length > 0">
+        <div
+          class="card-body collapse"
+          *ngIf="addressList.length > 0"
+          id="addressSection"
+        >
           <div class="row">
             <div class="col-12">
               <div
@@ -291,16 +310,30 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <label class="add-order-label m-0 mb-1">Address/Address (Cont.)</label>
-        <div>
-          <textarea
+      <div class="row my-3">
+        <div class="col-12">
+          <label class="add-order-label m-0">Address</label>
+          <input
+            type="text"
+            class="order-search form-control order-form-input m-0"
             [(ngModel)]="address.address"
-            name="address"
-            cols="43"
-            rows="3"
+            style="border: 1px solid #ced4da"
+            name="city"
             required
-          ></textarea>
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <label class="add-order-label m-0">Address</label>
+          <input
+            type="text"
+            class="order-search form-control order-form-input m-0"
+            [(ngModel)]="address.addressCont"
+            style="border: 1px solid #ced4da"
+            name="city"
+            required
+          />
         </div>
       </div>
       <div class="row my-3">
@@ -311,7 +344,6 @@
             class="order-search form-control order-form-input m-0"
             [(ngModel)]="address.city"
             style="border: 1px solid #ced4da"
-            placeholder="Enter City"
             name="city"
             required
           />
@@ -323,7 +355,6 @@
             class="order-search form-control order-form-input m-0"
             [(ngModel)]="address.state"
             style="border: 1px solid #ced4da"
-            placeholder="Enter State"
             name="state"
             required
           />
@@ -337,7 +368,6 @@
             class="order-search form-control order-form-input m-0"
             [(ngModel)]="address.postalCode"
             style="border: 1px solid #ced4da"
-            placeholder="Enter Postal Code"
             name="postalCode"
             required
           />
@@ -349,7 +379,6 @@
             class="order-search form-control order-form-input m-0"
             [(ngModel)]="address.country"
             style="border: 1px solid #ced4da"
-            placeholder="Enter Country"
             name="country"
             required
           />
@@ -477,6 +506,7 @@
   [draggable]="false"
   [resizable]="false"
   [closable]="true"
+  [closeOnEscape]="false"
   (onHide)="closeContactModal()"
 >
   <form #contactForm="ngForm" (ngSubmit)="submitContact()">
@@ -654,7 +684,13 @@
           </button>
         </div>
         <div class="col-2">
-          <button class="btn btn-dark w-100" type="submit">{{ mode }}</button>
+          <button
+            class="btn btn-dark w-100"
+            type="submit"
+            [disabled]="!contactForm.valid"
+          >
+            {{ mode }}
+          </button>
         </div>
       </div>
     </div>
@@ -667,6 +703,9 @@
   [style]="{ width: '25vw' }"
   [draggable]="true"
   [resizable]="false"
+  (onHide)="closeOptions()"
+  [modal]="true"
+  [dismissableMask]="true"
 >
   <ng-template pTemplate="headless">
     <div class="row">

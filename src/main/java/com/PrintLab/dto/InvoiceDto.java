@@ -20,6 +20,7 @@ public class InvoiceDto {
     private Boolean sendLater;
     private String billingAddress;
     private String terms;
+    private Double balanceDue;
     private Date invoiceDate;
     private Date dueDate;
     private List<InvoiceProductDto> invoiceProductDtoList;

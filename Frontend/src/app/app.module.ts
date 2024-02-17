@@ -65,7 +65,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
-import {ProgressBarModule} from 'primeng/progressbar';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { SliderModule } from 'primeng/slider';
 import { PaginatorModule } from 'primeng/paginator';
 import { CalendarModule } from 'primeng/calendar';
@@ -217,8 +217,8 @@ import { InformationComponent } from './pages/Leads/information/information.comp
     DynamicDialogModule,
     TabViewModule,
   ],
-  providers: [AuthInterceptorProvider, InterceptorService,MessageService,ConfirmDialogModule,
+  providers: [AuthInterceptorProvider, InterceptorService, MessageService, ConfirmDialogModule,
     provideRouter(routes, withHashLocation()), DatePipe],
   bootstrap: [AppComponent]
 })
-export class AppModule {  }
+export class AppModule { }

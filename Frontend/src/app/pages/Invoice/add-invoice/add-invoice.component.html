@@ -88,9 +88,9 @@
               readonly
             />
           </div>
-          <div class="col-5 text-end">
+          <div class="col-5 text-end" *ngIf="invoice.balanceDue">
             <h5>Balance Due</h5>
-            <h2 class="mt-1">PKR {{ balanceDue.toFixed(2) }}</h2>
+            <h2 class="mt-1">PKR {{ invoice.balanceDue.toFixed(2) }}</h2>
           </div>
         </div>
         <div class="row offset-3">
@@ -189,24 +189,23 @@
               [tableStyle]="{ 'min-width': '50rem' }"
             >
               <ng-template pTemplate="header">
-                <tr>
-                  <th>#</th>
-                  <th>Date</th>
-                  <th>Product Service</th>
-                  <th>Type</th>
-                  <th>Description</th>
-                  <th>Qty</th>
-                  <th>Rate</th>
-                  <th>Amount</th>
-                  <th>Action</th>
+                <tr class="d-flex">
+                  <th class="col">#</th>
+                  <th class="col-2">Date</th>
+                  <th class="col-2">Product Service</th>
+                  <th class="col-2">Type</th>
+                  <th class="col-2">Description</th>
+                  <th class="col-2">Qty</th>
+                  <th class="col-2">Rate</th>
+                  <th class="col-2">Amount</th>
+                  <th class="col">Action</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-row let-i="rowIndex">
-                <tr>
-                  <td>{{ i + 1 }}</td>
-                  <td>
+                <tr class="d-flex">
+                  <td class="col">{{ i + 1 }}</td>
+                  <td class="col-2">
                     <p-calendar
-                      styleClass="w-100"
                       [(ngModel)]="row.dateRow"
                       placeholder="Date"
                       class="lengthDate"
@@ -215,7 +214,7 @@
                       [appendTo]="'body'"
                     ></p-calendar>
                   </td>
-                  <td>
+                  <td class="col-2">
                     <div class="text-nowrap">
                       <p-dropdown
                         [options]="productServiceList"
@@ -250,7 +249,7 @@
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td class="col-2">
                     <input
                       type="text"
                       pInputText
@@ -260,7 +259,7 @@
                       placeholder="Type will Auto Filled!"
                     />
                   </td>
-                  <td>
+                  <td class="col-2">
                     <div>
                       <textarea
                         [name]="'desc[' + i + ']'"
@@ -270,11 +269,10 @@
                         class="d-block"
                         cols="25"
                         rows="2"
-                        readonly
                       ></textarea>
                     </div>
                   </td>
-                  <td>
+                  <td class="col-2">
                     <p-inputNumber
                       [(ngModel)]="row.qty"
                       inputId="minmaxQty"
@@ -297,20 +295,20 @@
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td class="col-2">
                     <p-inputNumber
                       [(ngModel)]="row.rate"
                       placeholder="Auto! through Product"
                       inputId="minmaxRate"
                       [min]="0"
                       [max]="10000"
+                      (onInput)="calculateAmount(invoice, i)"
                       [format]="true"
                       mode="currency"
                       currency="PKR"
                       [name]="'rate[' + i + ']'"
                       #rateModel="ngModel"
                       [required]="true"
-                      [readonly]="true"
                     >
                     </p-inputNumber>
                     <div
@@ -324,7 +322,7 @@
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td class="col-2">
                     <p-inputNumber
                       [(ngModel)]="row.amount"
                       placeholder="Auto! through rate x qty"
@@ -351,7 +349,7 @@
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td class="col">
                     <button
                       type="button"
                       [ngClass]="
@@ -364,7 +362,7 @@
                         i === 0 ? 'First invoice will be locked' : 'Delete row'
                       "
                       tooltipPosition="top"
-                      class="pointer-event border-0 bg-white"
+                      class="pointer-event border-0 bg-white px-3"
                       (click)="removeRow(i)"
                     ></button>
                   </td>
@@ -401,20 +399,20 @@
             ></textarea>
           </div>
         </div>
-        <div class="row ms-3 mt-3">
+        <div class="row ms-3 mt-3" *ngIf="isAdmin">
           <div class="col-3">
             <label class="add-order-label m-0 d-block">Invoice no</label>
             <p-inputNumber
               [(ngModel)]="invoice.invoiceNo"
               inputId="minmaxNo"
-              [min]="1001"
-              [max]="10000"
+              [min]="0"
               [useGrouping]="false"
+              (onInput)="searchInvoiceNumber($event.value)"
               placeholder=" Invoice No"
               name="invoiceNo"
               #invoiceNoModel="ngModel"
               [required]="true"
-              [readonly]="true"
+              [readonly]="isAdmin ? false : true"
             >
             </p-inputNumber>
             <div
@@ -519,104 +517,158 @@
       </div>
     </div>
   </ng-template>
-  <div class="container my-3" id="print-preview">
-    <div class="row">
-      <div class="col-6">
+  <div style="padding: 20px; width: 650px" id="print-preview">
+    <div style="display: flex">
+      <div style="flex: 1">
         <h3>PrintLab</h3>
       </div>
-      <div class="col-6 text-end">
+      <div style="text-align: right">
         <h3>Invoice</h3>
       </div>
     </div>
-    <div class="row mt-3">
+    <div style="margin-top: 20px">
       <h6>3011 8888 40</h6>
       <h6>finance@printlab.pk</h6>
       <h6>www.printlab.pk</h6>
     </div>
-    <div class="row">
-      <div class="col-5 bg-dark text-white">
-        <span>Bill To: </span>
-      </div>
+    <div>
+      <table>
+        <tr>
+          <th>
+            <div
+              style="
+                background-color: #343a40;
+                color: white;
+                padding: 5px;
+                width: 400px;
+              "
+            >
+              <span>Bill To: </span>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <td style="padding: 10px; margin-top: 20px; border: 1px solid black">
+            <h6>{{ invoice.customerEmail }},</h6>
+            <h6>{{ invoice.business }},</h6>
+            <h6>{{ invoice.billingAddress }}</h6>
+          </td>
+        </tr>
+      </table>
     </div>
-    <div class="row">
-      <div class="col-5 border border-3 py-1">
-        <h6>{{ invoice.customerEmail }},</h6>
-        <h6>{{ invoice.business }},</h6>
-        <h6>{{ invoice.billingAddress }}</h6>
-      </div>
-    </div>
-    <div class="row my-3">
-      <div class="col-8 p-0">
-        <table class="table table-dark bg-dark text-center">
-          <thead class="bg-dark">
+    <div style="margin-top: 20px">
+      <div>
+        <table style="table-layout: fixed; width: 100%">
+          <thead style="background-color: #343a40; color: white">
             <tr>
-              <th class="border p-0">Date</th>
-              <th class="border p-0">Total Due</th>
-              <th class="border p-0">Invoice #</th>
+              <th style="border: 1px solid white; padding: 3px">Date</th>
+              <th style="border: 1px solid white; padding: 3px">Total Due</th>
+              <th style="border: 1px solid white; padding: 3px">Invoice #</th>
             </tr>
           </thead>
           <tbody>
-            <tr class="bg-white text-dark">
-              <td class="border border-1 p-0">
+            <tr style="background-color: white; color: black">
+              <td style="border: 1px solid black; padding: 0">
                 {{ invoice.invoiceDate?.toLocaleDateString() }}
               </td>
-              <td class="border border-1 p-0">
-                <div class="d-flex justify-content-between">
+              <td style="border: 1px solid black; padding: 0">
+                <div style="display: flex; justify-content: space-between">
                   <span>PKR</span>
-                  <span>{{ balanceDue }}</span>
+                  <span>{{ invoice.balanceDue }}</span>
                 </div>
               </td>
-              <td class="border border-1 p-0">{{ invoice.invoiceNo }}</td>
+              <td style="border: 1px solid black; padding: 0">
+                {{ invoice.invoiceNo }}
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <div class="row">
-      <div class="col-10 p-0">
-        <table class="text-center overflow-auto">
-          <thead class="bg-dark text-white">
+    <div style="margin-top: 20px">
+      <div>
+        <table style="table-layout: fixed; width: 100%">
+          <thead style="background-color: #343a40; color: white">
             <tr>
-              <th class="border p-0">Item</th>
-              <th class="border p-0 col-2">QTY</th>
-              <th class="border p-0 col-2">Rate</th>
-              <th class="border p-0 col-3">Amount</th>
+              <th style="border: 1px solid white; padding: 3px">Item</th>
+              <th style="border: 1px solid white; padding: 3px; width: 25%">
+                QTY
+              </th>
+              <th style="border: 1px solid white; padding: 3px; width: 25%">
+                Rate
+              </th>
+              <th style="border: 1px solid white; padding: 3px; width: 25%">
+                Amount
+              </th>
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngFor="let row of invoice?.invoiceProductDtoList; let i = index">
-            <tr
-              class="bg-white text-dark"
-              *ngIf="row?.productName && row?.type"
+            <ng-container
+              *ngFor="let row of invoice?.invoiceProductDtoList; let i = index"
             >
-              <!-- ... your existing code ... -->
-              <td class="border border-1 py-0 px-5 text-nowrap">
-                {{ row?.productName }} {{ "[" + row?.type + "]" }}
+              <tr style="background-color: white; color: black">
+                <td style="border: 1px solid black; padding: 5px">
+                  {{ row?.productName }} [{{ row?.type }}]
+                </td>
+                <td style="border: 1px solid black; padding: 5px">
+                  {{ row?.qty }}
+                </td>
+                <td style="border: 1px solid black; padding: 5px">
+                  <div style="display: flex; justify-content: space-between">
+                    <span>PKR</span>
+                    <span>{{ row?.rate }}</span>
+                  </div>
+                </td>
+                <td style="border: 1px solid black; padding: 5px">
+                  {{ row?.amount }}
+                </td>
+              </tr>
+            </ng-container>
+            <tr style="background-color: white; color: black">
+              <td></td>
+              <td
+                style="
+                  border: 1px solid black;
+                  padding: 5px;
+                  text-align: center;
+                "
+                colspan="2"
+              >
+                Total
               </td>
-              <td class="border border-1 py-0 px-5">{{ row?.qty }}</td>
-              <td class="border border-1 py-0">
-                <div class="d-flex justify-content-between">
-                  <span class="justify-content-start">PKR</span>
-                  <span class="justify-content-end">{{ row?.rate }}</span>
-                </div>
+              <td style="border: 1px solid black; padding: 5px">
+                {{ calculateTotal() }}
               </td>
-              <td class="border border-1 py-0 px-5">{{ row?.amount }}</td>
             </tr>
-          </ng-container>
-            <tr class="bg-white text-dark">
+            <tr style="background-color: white; color: black">
               <td></td>
-              <td class="border border-1 py-0 px-5" colspan="2">Total</td>
-              <td class="border border-1 py-0 px-5">{{ calculateTotal() }}</td>
+              <td
+                style="
+                  border: 1px solid black;
+                  padding: 5px;
+                  text-align: center;
+                "
+                colspan="2"
+              >
+                Recieved
+              </td>
+              <td style="border: 1px solid black; padding: 5px">3000</td>
             </tr>
-            <tr class="bg-white text-dark">
+            <tr style="background-color: white; color: black">
               <td></td>
-              <td class="border border-1 py-0 px-5" colspan="2">Recieved</td>
-              <td class="border border-1 py-0 px-5">3000</td>
-            </tr>
-            <tr class="bg-white text-dark">
-              <td></td>
-              <td class="border border-1 py-0 px-5" colspan="2">Balance</td>
-              <td class="border border-1 py-0 px-5">
+              <td
+                style="
+                  border: 1px solid black;
+                  padding: 5px;
+                  text-align: center;
+                  background-color: black;
+                  color: white;
+                "
+                colspan="2"
+              >
+                Balance
+              </td>
+              <td style="border: 1px solid black; padding: 5px">
                 {{ calculateBalance() }}
               </td>
             </tr>
@@ -624,15 +676,14 @@
         </table>
       </div>
     </div>
-    <div
-      class="text-dark border border-bottom-0 border-start-0 border-end-0 mt-5 border-dark"
-    >
-      <div>
-        <span class="pi pi-arrow-right me-2"></span>
+    <hr style="color: black; margin-top: 50px" />
+    <div style="border-left: 0; border-right: 0">
+      <div style="margin-top: 10px">
+        <span>-></span>
         <span>All prices above are in Pakistani Rupee and tax exclusive</span>
       </div>
-      <div>
-        <span class="pi pi-arrow-right me-2"></span>
+      <div style="margin-top: 10px">
+        <span>-></span>
         <span>This is a computer generated invoice no signature required</span>
       </div>
     </div>

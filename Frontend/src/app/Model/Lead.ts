@@ -14,6 +14,7 @@ export interface LeadAddress {
   id: number | null | undefined;
   type: string | null | undefined;
   address: string | null | undefined;
+  addressCont: string | null | undefined;
   city: string | null | undefined;
   state: string | null | undefined;
   postalCode: string | null | undefined;

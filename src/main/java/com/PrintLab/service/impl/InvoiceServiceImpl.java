@@ -102,6 +102,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             existingInvoice.setTerms(invoice.getTerms());
             existingInvoice.setInvoiceDate(invoice.getInvoiceDate());
             existingInvoice.setDueDate(invoice.getDueDate());
+            existingInvoice.setBalanceDue(invoice.getBalanceDue());
             existingInvoice.setMessage(invoice.getMessage());
             existingInvoice.setStatement(invoice.getStatement());
             existingInvoice.setInvoiceNo(invoiceDto.getInvoiceNo());
@@ -178,6 +179,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .billingAddress(invoice.getBillingAddress())
                 .invoiceDate(invoice.getInvoiceDate())
                 .dueDate(invoice.getDueDate())
+                .balanceDue(invoice.getBalanceDue())
                 .terms(invoice.getTerms())
                 .message(invoice.getMessage())
                 .sendLater(invoice.getSendLater())
@@ -202,6 +204,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .billingAddress(invoiceDto.getBillingAddress())
                 .sendLater(invoiceDto.getSendLater())
                 .terms(invoiceDto.getTerms())
+                .balanceDue(invoiceDto.getBalanceDue())
                 .invoiceDate(invoiceDto.getInvoiceDate())
                 .dueDate(invoiceDto.getDueDate())
                 .message(invoiceDto.getMessage())

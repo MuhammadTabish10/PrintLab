@@ -9,6 +9,7 @@ export interface Invoice {
   terms: string | undefined | null;
   invoiceDate: Date | undefined | null;
   dueDate: Date | undefined | null;
+  balanceDue: number | null | undefined;
   invoiceProductDtoList: InvoiceProduct[];
   message: string | undefined | null;
   statement: string | undefined | null;

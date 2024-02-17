@@ -1,25 +1,27 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.LeadAboutDto;
-import com.PrintLab.dto.LeadAddressDto;
-import com.PrintLab.dto.LeadContactDto;
-import com.PrintLab.dto.LeadDto;
+import com.PrintLab.dto.*;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.model.Leads;
-import com.PrintLab.model.LeadsAbout;
-import com.PrintLab.model.LeadsAddress;
-import com.PrintLab.model.LeadsContact;
+import com.PrintLab.model.*;
 import com.PrintLab.repository.LeadsAddressRepository;
 import com.PrintLab.repository.LeadsContactRepository;
 import com.PrintLab.repository.LeadsRepository;
 import com.PrintLab.service.LeadService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,22 +30,27 @@ public class LeadServiceImpl implements LeadService {
     private final LeadsRepository leadsRepository;
     private final LeadsAddressRepository leadsAddressRepository;
     private final LeadsContactRepository leadsContactRepository;
+    private final EntityManager entityManager;
 
     public LeadServiceImpl(
             LeadsRepository leadsRepository,
             LeadsAddressRepository leadsAddressRepository,
-            LeadsContactRepository leadsContactRepository
-    ) {
+            LeadsContactRepository leadsContactRepository,
+            EntityManager entityManager) {
         this.leadsRepository = leadsRepository;
         this.leadsAddressRepository = leadsAddressRepository;
         this.leadsContactRepository = leadsContactRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
     public LeadDto save(LeadDto leadDto) {
         Leads leads = toEntity(leadDto);
         leads.setStatus(true);
-        leads.setCreatedAt(LocalDateTime.now());
+        leads.setLeadStatusType("NEW_LEAD");
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
+        leads.setCreatedAt(timeStampUtc);
         Leads savedLead = saveLeads(leads);
         saveLeadAddress(savedLead);
         saveLeadsContact(savedLead);
@@ -75,14 +82,15 @@ public class LeadServiceImpl implements LeadService {
     }
 
 
-    @Override
-    public List<LeadDto> findAll() {
-        List<Leads> leadsList = leadsRepository.findAllByStatusIsTrue();
-
-        return leadsList.stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<LeadDto> findAll() {
+//        List<Leads> leadsList = leadsRepository.findAllByStatusIsTrue();
+//
+//        return leadsList.stream()
+//                .map(this::toDto)
+//                .sorted(Comparator.comparing(LeadDto::getCreatedAt).reversed())
+//                .collect(Collectors.toList());
+//    }
 
     @Override
     public LeadDto findById(Long id) {
@@ -198,12 +206,97 @@ public class LeadServiceImpl implements LeadService {
         }
     }
 
+    @Override
+    public Map<String, String> findAllDistinctValues() {
+        return leadsRepository.findAllDistinctValues();
+    }
+
 
     @Override
     public List<LeadDto> searchByContactNameAndCompanyName(String contactName, String companyName) {
         List<Leads> leadsList = leadsRepository.
                 findLeadsByContactNameContainingAndCompanyNameContainingAndStatusIsTrue(
                         contactName,
+                        companyName
+                );
+
+        return leadsList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PaginationResponse getAllPaginatedLeads(Integer pageNumber, Integer pageSize, LeadDto searchCriteria) {
+        Pageable page = PageRequest.of(pageNumber, pageSize);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Leads> cq = criteriaBuilder.createQuery(Leads.class);
+        Root<Leads> leadsRoot = cq.from(Leads.class);
+
+        List<Predicate> predicates = buildPredicates(criteriaBuilder, leadsRoot, searchCriteria);
+
+        cq.where(predicates.toArray(new Predicate[0]));
+        TypedQuery<Leads> query = entityManager.createQuery(cq);
+
+        int firstResult = pageNumber * pageSize;
+        query.setFirstResult(firstResult);
+        query.setMaxResults(pageSize);
+
+        List<Leads> resultList = query.getResultList();
+
+        Long totalElements = countTotalElements(criteriaBuilder, searchCriteria);
+
+        List<LeadDto> dtoList = mapToDto(resultList);
+
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(dtoList);
+        paginationResponse.setPageNumber(pageNumber);
+        paginationResponse.setPageSize(pageSize);
+        paginationResponse.setTotalElements(totalElements.intValue());
+        paginationResponse.setTotalPages((int) Math.ceil((double) totalElements / pageSize));
+        paginationResponse.setLastPage(pageNumber >= (Math.ceil((double) totalElements / pageSize) - 1));
+
+        return paginationResponse;
+    }
+
+    private List<LeadDto> mapToDto(List<Leads> leadsList) {
+        return leadsList.stream()
+                .map(this::toDto)
+                .sorted(Comparator.comparing(LeadDto::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+
+    private Long countTotalElements(CriteriaBuilder criteriaBuilder, LeadDto searchCriteria) {
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Leads> root = countQuery.from(Leads.class);
+        countQuery.select(criteriaBuilder.count(root));
+
+        List<Predicate> predicates = buildPredicates(criteriaBuilder, root, searchCriteria);
+        countQuery.where(predicates.toArray(new Predicate[0]));
+
+        return entityManager.createQuery(countQuery).getSingleResult();
+    }
+
+
+    private List<Predicate> buildPredicates(CriteriaBuilder criteriaBuilder, Root<Leads> leadsRoot, LeadDto searchCriteria) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (searchCriteria.getCompanyName() != null && !searchCriteria.getCompanyName().isEmpty()) {
+            predicates.add(criteriaBuilder.like(leadsRoot.get("companyName"), "%" + searchCriteria.getCompanyName() + "%"));
+        }
+
+        if (searchCriteria.getLeadStatusType() != null && !searchCriteria.getLeadStatusType().isEmpty()) {
+            predicates.add(criteriaBuilder.like(leadsRoot.get("leadStatusType"), "%" + searchCriteria.getLeadStatusType() + "%"));
+        }
+
+        predicates.add(criteriaBuilder.isTrue(leadsRoot.get("status")));
+
+        return predicates;
+    }
+
+    @Override
+    public List<LeadDto> searchByCompanyName(String companyName) {
+        List<Leads> leadsList = leadsRepository.
+                findLeadsByCompanyNameContainingAndStatusIsTrue(
                         companyName
                 );
 

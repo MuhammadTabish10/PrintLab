@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { Lead, LeadAbout, LeadAddress, LeadContact, LeadContactDetails } from 'src/app/Model/Lead';
 import { ProductField } from 'src/app/Model/ProductField';
 import { LeadService } from '../Service/lead.service';
@@ -8,6 +8,7 @@ import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-information',
@@ -41,6 +42,7 @@ export class InformationComponent implements OnInit {
       source: undefined,
     },
     leadAddress: [{
+      addressCont: undefined,
       postalCode: undefined,
       address: undefined,
       country: undefined,
@@ -68,6 +70,7 @@ export class InformationComponent implements OnInit {
   };
 
   address: LeadAddress = {
+    addressCont: undefined,
     postalCode: undefined,
     address: undefined,
     country: undefined,
@@ -120,7 +123,6 @@ export class InformationComponent implements OnInit {
         if (this.idFromQueryParam) {
           this.patchValues(this.idFromQueryParam);
         }
-
       },
       (error) => {
         this.errorHandleService.showError(error.error.error);
@@ -130,7 +132,7 @@ export class InformationComponent implements OnInit {
 
   private initializeProductFieldData(): void {
     this.getLeadContactDetails("LEAD_CONTACT_DETAILS");
-    this.getLeadAddressStatus("LEAD_ADDRESS_STATUS");
+    this.getLeadAddressStatus("LEAD_STATUS_TYPE");
     this.getLeadAddressTypes("LEAD_ADDRESS_TYPES");
     this.getLeadContactRole("LEAD_CONTACT_ROLES");
     this.getLeadAboutSource("LEAD_ABOUT_SOURCE");
@@ -260,6 +262,7 @@ export class InformationComponent implements OnInit {
     this.mode = "Save";
     this.addressModal = false;
     this.address = {
+      addressCont: undefined,
       postalCode: undefined,
       address: undefined,
       country: undefined,
@@ -296,6 +299,10 @@ export class InformationComponent implements OnInit {
       mobile: undefined,
       email: undefined,
     }
+  }
+  closeOptions(): void {
+    this.options = false;
+    this.selectedDetails = [];
   }
 
   submitAddress(): void {
@@ -344,7 +351,7 @@ export class InformationComponent implements OnInit {
   }
 
   private handleLeadUpdateSuccess(res: Lead, field: string): void {
-    const successMsg = `${field} in Lead ${this.lead.contactName} is successfully ${this.mode}d.`;
+    const successMsg = `${field} in Lead ${this.lead.companyName} is successfully ${this.mode}d.`;
     this.patchValues(this.idFromQueryParam!);
     this.successMsg.showSuccess(successMsg);
     this.addressModal = false;
@@ -417,6 +424,7 @@ export class InformationComponent implements OnInit {
       this.lead.contact = this.lead.contact.filter(contact => !!contact.role);
     }
   }
+
 }
 
 

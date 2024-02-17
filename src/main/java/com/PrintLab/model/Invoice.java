@@ -18,12 +18,14 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private Long invoiceNo;
     private Long customer;
     private String customerEmail;
     private String business;
     private Boolean sendLater;
     private String billingAddress;
+    private Double balanceDue;
     private String terms;
     private Date invoiceDate;
     private Date dueDate;

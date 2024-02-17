@@ -15073,9 +15073,9 @@ input:checked + .slider:before {
 .red-subheader .p-card .p-card-subtitle {
   color: #c95c57;
 }
-.lengthDate .p-calendar-w-btn .p-inputtext {
+/* .lengthDate .p-calendar-w-btn .p-inputtext {
   width: 180% !important;
-}
+} */
 .p-inputtext.customInput {
   padding: 3px !important;
 }

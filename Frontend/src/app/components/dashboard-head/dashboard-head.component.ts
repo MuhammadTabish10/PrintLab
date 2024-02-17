@@ -2,22 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { UserService } from 'src/app/services/user.service';
-
 @Component({
   selector: 'app-dashboard-head',
   templateUrl: './dashboard-head.component.html',
   styleUrls: ['./dashboard-head.component.css']
 })
 export class DashboardHeadComponent implements OnInit {
-
+  numOfOnlineUser: number | null | undefined;
   userName: string | undefined | null;
   role: string | undefined | null;
 
   constructor(
     private router: Router,
     private authService: AuthguardService,
-    private userService: UserService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
