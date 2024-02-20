@@ -76,14 +76,13 @@ public class InvoiceController {
                     printData.getEmail(), "Print PDF", "Please find attached the print PDF.", pdfBytes, "print.pdf");
 
             if (emailSent) {
-                return ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_PDF)
-                        .header("Content-Disposition", "inline; filename=print.pdf")
-                        .body(pdfBytes);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header("Content-Disposition", "inline; filename=print.pdf")
+                    .body(pdfBytes);
             } else {
                 return ResponseEntity.status(500).body(new byte[0]);
             }
-
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new byte[0]);
         }
