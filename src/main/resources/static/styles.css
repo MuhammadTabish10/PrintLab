@@ -1,0 +1,208 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0%;
+  box-sizing: border-box;
+}
+
+.info {
+  position: relative;
+  width: 700px;
+  margin: auto;
+  gap: 10px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 15px;
+  z-index: 1000;
+}
+
+.img {
+  position: relative;
+  height: 130px;
+}
+.img .img1 {
+  height: auto;
+  width: 200px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.img2 {
+  height: 150px;
+  width: 150px;
+  position: absolute;
+  right: 0;
+  top: -9px;
+  z-index: 1000;
+}
+
+.content {
+  position: relative;
+  height: 274px;
+}
+
+.content p {
+  position: absolute;
+  left: 39px;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.content .p1 {
+  top: 29px;
+}
+
+.content .p12 {
+  top: 54px;
+}
+
+.content .p2 {
+  top: 79px;
+}
+
+.content .p4 {
+  top: 141px;
+}
+
+.content .p42 {
+  top: 166px;
+}
+
+.content .p5 {
+  top: 191px;
+}
+
+.content .p6 {
+  top: 216px;
+}
+
+.content .h31 {
+  position: absolute;
+  top: 10px;
+  left: 39px;
+  font-weight: bold;
+  font-size: 18px;
+}
+.content .h32 {
+  position: absolute;
+  top: 122px;
+  left: 39px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.img-3 {
+  position: absolute;
+  right: 32px;
+  height: 150%;
+  width: 8%;
+  top: -57px;
+}
+
+.barcode-num {
+  position: absolute;
+  right: -46px;
+  top: 41px;
+  transform: rotate(270deg) !important;
+}
+
+.footer {
+  margin-top: 20px;
+  position: relative;
+  padding: 10px 0;
+  height: 200px;
+}
+.para {
+  position: absolute;
+  left: 13px;
+  top: 15px;
+}
+.b1 {
+  font-weight: bold;
+  margin-left: 26px;
+  margin: 0 0 8px 26px;
+  font-size: 18px;
+  margin: 0 0 8px 26px;
+}
+.b2,
+.b3,
+.b4 {
+  font-weight: bold;
+  font-size: 18px;
+  margin-left: 26px;
+  margin: 0 0 8px 26px;
+}
+
+.footer .code {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.code-service {
+   margin-left: 48px;
+    font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    font-size: 21px;
+    min-width:180px;
+}
+
+.heading {
+   padding: 16px 24px;
+   background-color: #000000;
+   color: white;
+   margin: -10px 24px 0 0;
+   z-index: 12000;
+   min-width: 116px;
+   text-align:center;
+}
+
+
+.footer .code .request-type {
+  margin-left: 40px;
+  font-weight: bold;
+  margin-top: 9px;
+  font-size: 21px;
+}
+
+.footer-img {
+  position: relative;
+  height: 200px;
+}
+
+.img-4 {
+  position: absolute;
+  top: 18px;
+  left: -250px;
+  height: 48%;
+  width: 170%;
+}
+
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50ch; /* or set the desired width */
+}
+
+
+  .unique-num {
+    position: absolute;
+    top: -35px;
+    left: 220px;
+    font-size:30px;
+    font-weight: bold;
+    z-index: 1001;
+  }
+
+.duty-tax {
+  position: absolute;
+  bottom: -20px;
+  left: 40px;
+  font-size:21px;
+  font-weight: 700;
+  z-index: 1001;
+}

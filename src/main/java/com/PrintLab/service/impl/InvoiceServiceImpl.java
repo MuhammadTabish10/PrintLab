@@ -8,9 +8,17 @@ import com.PrintLab.model.InvoiceProduct;
 import com.PrintLab.repository.InvoiceProductRepository;
 import com.PrintLab.repository.InvoiceRepository;
 import com.PrintLab.service.InvoiceService;
+import com.PrintLab.service.PdfGenerationService;
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfCopy;
+import com.lowagie.text.pdf.PdfReader;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
 
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +30,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final InvoiceProductRepository invoiceProductRepository;
+    private final PdfGenerationService pdfGenerationService;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, InvoiceProductRepository invoiceProductRepository) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, InvoiceProductRepository invoiceProductRepository, PdfGenerationService pdfGenerationService) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceProductRepository = invoiceProductRepository;
+        this.pdfGenerationService = pdfGenerationService;
     }
 
 
@@ -153,7 +163,45 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    @Override
+    public byte[] downloadInvoicePdf(String fileName, Long id) {
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Invoice not found for id => %d", id)));
 
+        Model model = new ExtendedModelMap();
+        model.addAttribute("id", id);
+        model.addAttribute("invoiceNo", invoice.getInvoiceNo());
+        model.addAttribute("customer", invoice.getCustomer());
+        model.addAttribute("customerEmail", invoice.getCustomerEmail());
+        model.addAttribute("business", invoice.getBusiness());
+        model.addAttribute("sendLater", invoice.getSendLater());
+        model.addAttribute("billingAddress", invoice.getBillingAddress());
+        model.addAttribute("balanceDue", invoice.getBalanceDue());
+        model.addAttribute("terms", invoice.getTerms());
+        model.addAttribute("invoiceDate", invoice.getInvoiceDate());
+        model.addAttribute("dueDate", invoice.getDueDate());
+        model.addAttribute("message", invoice.getMessage());
+        model.addAttribute("statement", invoice.getStatement());
+        model.addAttribute("status", invoice.getStatus());
+
+        try (ByteArrayOutputStream mergedOutputStream = new ByteArrayOutputStream()) {
+            Document document = new Document();
+            PdfCopy copy = new PdfCopy(document, mergedOutputStream);
+            document.open();
+
+                byte[] individualPdf = pdfGenerationService.generatePdf("Invoice", model, id);
+
+                PdfReader reader = new PdfReader(new ByteArrayInputStream(individualPdf));
+                for (int pageNum = 1; pageNum <= reader.getNumberOfPages(); pageNum++) {
+                    copy.addPage(copy.getImportedPage(reader, pageNum));
+                }
+
+            document.close();
+            return mergedOutputStream.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error merging PDFs: " + e.getMessage(), e);
+        }
+    }
 
 
     public InvoiceDto toDto(Invoice invoice) {

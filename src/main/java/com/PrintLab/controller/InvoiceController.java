@@ -6,6 +6,8 @@ import com.PrintLab.service.InvoiceService;
 import com.PrintLab.service.PdfGenerationService;
 import com.PrintLab.utils.EmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,26 +68,38 @@ public class InvoiceController {
         return ResponseEntity.ok(updatedInvoice);
     }
 
-    @PostMapping("/generate-pdf-and-send")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<byte[]> generatePdfAndSendToEmail(@RequestBody PrintData printData) {
-        try {
-            byte[] pdfBytes = pdfGenerationService.generatePdf(printData.getHtmlContent());
+//    @PostMapping("/generate-pdf-and-send")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<byte[]> generatePdfAndSendToEmail(@RequestBody PrintData printData) {
+//        try {
+//            byte[] pdfBytes = pdfGenerationService.generatePdf(printData.getHtmlContent());
+//
+//            boolean emailSent = emailUtils.sendEmailWithAttachment(
+//                    printData.getEmail(), "Print PDF", "Please find attached the print PDF.", pdfBytes, "print.pdf");
+//
+//            if (emailSent) {
+//            return ResponseEntity.ok()
+//                    .contentType(MediaType.APPLICATION_PDF)
+//                    .header("Content-Disposition", "inline; filename=print.pdf")
+//                    .body(pdfBytes);
+//            } else {
+//                return ResponseEntity.status(500).body(new byte[0]);
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).body(new byte[0]);
+//        }
+//    }
 
-            boolean emailSent = emailUtils.sendEmailWithAttachment(
-                    printData.getEmail(), "Print PDF", "Please find attached the print PDF.", pdfBytes, "print.pdf");
+    @GetMapping("/invoice/pdf/{file-name}/{invoiceId}")
+    public ResponseEntity<byte[]> getInvoicePdf(@PathVariable(name = "file-name") String fileName,
+                                            @PathVariable(name = "invoiceId") Long invoiceId) {
+        byte[] pdf = invoiceService.downloadInvoicePdf(fileName, invoiceId);
 
-            if (emailSent) {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .header("Content-Disposition", "inline; filename=print.pdf")
-                    .body(pdfBytes);
-            } else {
-                return ResponseEntity.status(500).body(new byte[0]);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new byte[0]);
-        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", fileName + ".pdf");
+
+        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
     }
 
 }

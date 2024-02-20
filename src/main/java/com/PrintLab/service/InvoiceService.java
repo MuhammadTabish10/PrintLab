@@ -16,4 +16,6 @@ public interface InvoiceService {
     void deleteById(Long id);
 
     InvoiceDto updateInvoice(Long id, InvoiceDto invoiceDto);
+
+    byte[] downloadInvoicePdf(String fileName, Long id);
 }
