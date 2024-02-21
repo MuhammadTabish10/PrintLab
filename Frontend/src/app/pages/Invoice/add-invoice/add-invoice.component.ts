@@ -259,6 +259,7 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   submit() {
+    debugger
     this.updateCustomerId();
     this.updateInvoiceProductStatus();
 
@@ -399,11 +400,10 @@ export class AddInvoiceComponent implements OnInit {
 
 
   generatePdfAndSendToEmail() {
-    const printPreviewElement = document.getElementById('print-preview');
-    const htmlContent = printPreviewElement!.innerHTML;
+    const fileName = 'Invoice.pdf';
     const email = this.invoice.customerEmail;
 
-    this.invoiceService.saveInvoiceAndGeneratePdf(htmlContent, email!).subscribe(
+    this.invoiceService.saveInvoiceAndGeneratePdf(fileName, email!,this.idFromQueryParam!).subscribe(
       (res: Blob) => {
         const blob = new Blob([res], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);

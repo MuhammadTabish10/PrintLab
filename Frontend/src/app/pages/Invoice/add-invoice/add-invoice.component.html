@@ -520,7 +520,11 @@
   <div style="padding: 20px; width: 650px" id="print-preview">
     <div style="display: flex">
       <div style="flex: 1; margin-top: 15px">
-        <img src="../../../../assets/images/Screenshot 2024-02-20 181500.png" alt="" width="25%">
+        <img
+          src="../../../../assets/images/Screenshot 2024-02-20 181500.png"
+          alt=""
+          width="25%"
+        />
       </div>
       <div style="text-align: right">
         <h1>Invoice</h1>
@@ -531,41 +535,41 @@
       <h6>finance@printlab.pk</h6>
       <h6>www.printlab.pk</h6>
     </div>
-    <div style="margin-top: 50px;">
-      <table>
+    <div style="margin-top: 50px">
+      <table style="border-collapse: collapse">
         <tr>
-          <th>
-            <div
-              style="
-                background-color: #343a40;
-                color: white;
-                padding: 5px;
-                width: 400px;
-              "
-            >
-              <span>Bill To: </span>
-            </div>
+          <th
+            style="
+              background-color: #343a40;
+              color: white;
+              border: 1px solid black;
+            "
+            class="p-2"
+          >
+            <span>Bill To: </span>
           </th>
         </tr>
         <tr>
-          <td style="padding: 10px;border: 1px solid black">
-            <h6>{{ invoice.customerEmail }},</h6>
-            <h6>{{ invoice.business }},</h6>
-            <h6>{{ invoice.billingAddress }}</h6>
+          <td class="px-2" style="border: 1px solid black">
+            <h6 class="mb-1">{{ invoice.customerEmail }},</h6>
+            <h6 class="mb-1">{{ invoice.business }},</h6>
+            <h6 class="mb-1">{{ invoice.billingAddress }}</h6>
           </td>
         </tr>
       </table>
     </div>
-    <div style="margin-top: 50px;">
+    <div style="margin-top: 50px">
       <div>
-        <table style="table-layout: fixed; width: 100%">
+        <table
+          style="table-layout: fixed; width: 75%; border-collapse: collapse"
+        >
           <thead
             style="background-color: #343a40; color: white; text-align: center"
           >
             <tr>
-              <th style="border: 1px solid white; padding: 3px">Date</th>
-              <th style="border: 1px solid white; padding: 3px">Total Due</th>
-              <th style="border: 1px solid white; padding: 3px">Invoice #</th>
+              <th style="border: 1px solid black; padding: 3px">Date</th>
+              <th style="border: 1px solid black; padding: 3px">Total Due</th>
+              <th style="border: 1px solid black; padding: 3px">Invoice #</th>
             </tr>
           </thead>
           <tbody>
@@ -591,19 +595,19 @@
     </div>
     <div style="margin-top: 20px">
       <div>
-        <table style="width: 100%">
+        <table style="width: 100%; border-collapse: collapse">
           <thead
             style="background-color: #343a40; color: white; text-align: center"
           >
             <tr>
-              <th style="border: 1px solid white; padding: 3px">Item</th>
-              <th style="border: 1px solid white; padding: 3px; width: 25%">
+              <th style="border: 1px solid black; padding: 3px">Item</th>
+              <th style="border: 1px solid black; padding: 3px; width: 25%">
                 QTY
               </th>
-              <th style="border: 1px solid white; padding: 3px; width: 25%">
+              <th style="border: 1px solid black; padding: 3px; width: 25%">
                 Rate
               </th>
-              <th style="border: 1px solid white; padding: 3px; width: 25%">
+              <th style="border: 1px solid black; padding: 3px; width: 25%">
                 Amount
               </th>
             </tr>
@@ -702,8 +706,16 @@
         </table>
       </div>
     </div>
-    <div style="margin-top: 150px; border-top: 1px solid black"></div>
-    <div style="border-left: 0; border-right: 0; margin-left: 10px">
+
+    <div
+      style="
+        margin-top: 155px;
+        border-top: 3px solid black;
+        border-left: 0;
+        border-right: 0;
+        margin-left: 10px;
+      "
+    >
       <div>
         <span>-></span>
         <span>All prices above are in Pakistani Rupee and tax exclusive</span>

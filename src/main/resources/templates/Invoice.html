@@ -55,4 +55,144 @@
 <!--    </div>-->
 <!--</div>-->
 <!--</body>-->
+<body>
+<div style="padding: 15px; width: 650px">
+    <div style="overflow: hidden;">
+        <div style="float: left; margin-top: 15px; width: 25%;">
+            <img th:src="@{classpath:/static/images/logo.png}" alt="PrintLab" style="width: 75%;padding-top:17px"/>
+        </div>
+        <div style="float: right; text-align: right; width: 55%;">
+            <h1>Invoice</h1>
+        </div>
+    </div>
+    <div style="margin-top: 20px">
+        <h6>3011 8888 40</h6>
+        <h6>finance@printlab.pk</h6>
+        <h6>www.printlab.pk</h6>
+    </div>
+    <div style="margin-top: 20px;">
+        <table style="width: 50%; border-collapse: collapse; border: 1px solid black; display: flex; flex-wrap: wrap;">
+            <tr>
+                <th style="padding: 10px; background-color: #343a40; color: white; width: 400px; border: 1px solid black;">
+                    <span>Bill To: </span>
+                </th>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px; border: 1px solid black;">
+                    <h6 style="padding:0;margin:0;margin-bottom:5px" th:text="${customerEmail}"></h6>
+                    <h6 style="padding:0;margin:0;margin-bottom:5px"  th:text="${business}"></h6>
+                    <h6 style="padding:0;margin:0;margin-bottom:5px"  th:text="${billingAddress}"></h6>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="margin-top: 50px;">
+        <table style="width: 75%; border-collapse: collapse;display: flex; flex-wrap: wrap;">
+            <thead style="background-color: #343a40; color: white; text-align: center;">
+            <tr>
+                <th style="border: 1px solid black; padding: 3px;">Date</th>
+                <th style="border: 1px solid black; padding: 3px;">Total Due</th>
+                <th style="border: 1px solid black; padding: 3px;">Invoice #</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr style="background-color: white; color: black;">
+                <td style="border: 1px solid black; padding: 5px;"
+                    th:text="${#dates.format(invoiceDate, 'dd/MM/yyyy')}"></td>
+                <td style="border: 1px solid black; padding: 5px;">
+                    <div style="overflow: hidden;">
+                        <div style="float: left;">PKR</div>
+                        <div style="float: right;"><span th:text="${balanceDue}"></span></div>
+                    </div>
+
+                </td>
+                <td style="border: 1px solid black; padding: 5px; text-align: center;" th:text="${invoiceNo}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="background-color: #343a40; color: white; text-align: center;">
+                <tr>
+                    <th style="border: 1px solid black; padding: 3px;">Item</th>
+                    <th style="border: 1px solid black; padding: 3px; width: 25%;">QTY</th>
+                    <th style="border: 1px solid black; padding: 3px; width: 25%;">Rate</th>
+                    <th style="border: 1px solid black; padding: 3px; width: 25%;">Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row, i : ${invoiceProductDtoList}" style="background-color: white; color: black;">
+                    <td style="border: 1px solid black; padding: 5px; white-space: nowrap;">
+                        <span th:text="${row.productName + '[' + row.type + ']' }"></span>
+                    </td>
+                    <td style="border: 1px solid black; padding: 5px; text-align:center;" th:text="${row.qty}"></td>
+                    <td style="border: 1px solid black; padding: 5px;">
+                        <div style="overflow: hidden;">
+                            <div style="float: left;">PKR</div>
+                            <div style="float: right;"><span th:text="${row.rate}"></span></div>
+                        </div>
+                    </td>
+                    <td style="border: 1px solid black; padding: 5px;">
+                        <div style="overflow: hidden;">
+                            <div style="float: left;">PKR</div>
+                            <div style="float: right;"><span th:text="${row.amount}"></span></div>
+                        </div>
+
+                    </td>
+                </tr>
+                <tr style="background-color: white; color: black;">
+                    <td></td>
+                    <td style="border: 1px solid black; padding: 5px; text-align: center;" colspan="2">Total</td>
+                    <td style="border: 1px solid black; padding: 5px;">
+                        <div style="overflow: hidden;">
+                            <div style="float: left;">PKR</div>
+                            <div style="float: right;"><span th:text="${total}"></span></div>
+                        </div>
+
+                    </td>
+                </tr>
+                <tr style="background-color: white; color: black;">
+                    <td></td>
+                    <td style="border: 1px solid black; padding: 5px; text-align: center;" colspan="2">Received</td>
+                    <td style="border: 1px solid black; padding: 5px;">
+                        <div style="overflow: hidden;">
+                            <div style="float: left;">PKR</div>
+                            <div style="float: right;"><span>3000</span></div>
+                        </div>
+
+                    </td>
+                </tr>
+                <tr style="background-color: white; color: black;">
+                    <td></td>
+                    <td style="border: 1px solid black; padding: 5px; text-align: center; background-color: black; color: white;"
+                        colspan="2">Balance
+                    </td>
+                    <td style="border: 1px solid black; padding: 5px;">
+                        <div style="overflow: hidden;">
+                            <div style="float: left;">PKR</div>
+                            <div style="float: right;"><span th:text="${balance}"></span></div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div style="margin-top: 155px; border-top: 3px solid black;border-left: 0; border-right: 0; margin-left: 10px">
+        <div>
+            <span>-></span>
+            <span>All prices above are in Pakistani Rupee and tax exclusive</span>
+        </div>
+        <div>
+            <span>-></span>
+            <span>This is a computer generated invoice no signature required</span>
+        </div>
+    </div>
+</div>
+</body>
 </html>

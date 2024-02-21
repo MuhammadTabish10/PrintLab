@@ -43,17 +43,17 @@ export class InvoiceService {
     return this.http.get<Invoice[]>(url)
   }
 
-  saveInvoiceAndGeneratePdf(htmlContent: string, email: string): Observable<any> {
-    const printData = { htmlContent, email };
+  saveInvoiceAndGeneratePdf(fileName: string, email: string, id: number): Observable<any> {
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/pdf'
     });
 
-    return this.http.post(`${this.BASE_URL}/generate-pdf-and-send`, printData, {
+    return this.http.get(`${this.BASE_URL}/invoice/pdf/${fileName}/${id}`, {
       headers: headers,
-      responseType: 'blob'
+      params: { email: email },
+      responseType: 'blob',
     }).pipe(
       catchError(error => {
         console.error('Error during PDF generation:', error);

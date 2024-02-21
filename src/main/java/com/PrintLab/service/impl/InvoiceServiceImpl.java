@@ -142,6 +142,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     InvoiceProduct existingPrValue = existingValue.get();
                     existingPrValue.setDateRow(newValue.getDateRow());
                     existingPrValue.setProductRow(newValue.getProductRow());
+                    existingPrValue.setProductName(newValue.getProductName());
                     existingPrValue.setType(newValue.getType());
                     existingPrValue.setDescription(newValue.getDescription());
                     existingPrValue.setQty(newValue.getQty());
@@ -168,14 +169,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Invoice not found for id => %d", id)));
 
+        double receivedAmount = 3000.00;
         Model model = new ExtendedModelMap();
+        double total = calculateTotal(invoice);
+        double balance = calculateBalance(invoice, receivedAmount);
         model.addAttribute("id", id);
         model.addAttribute("invoiceNo", invoice.getInvoiceNo());
         model.addAttribute("customer", invoice.getCustomer());
         model.addAttribute("customerEmail", invoice.getCustomerEmail());
         model.addAttribute("business", invoice.getBusiness());
-        model.addAttribute("sendLater", invoice.getSendLater());
         model.addAttribute("billingAddress", invoice.getBillingAddress());
+        model.addAttribute("sendLater", invoice.getSendLater());
         model.addAttribute("balanceDue", invoice.getBalanceDue());
         model.addAttribute("terms", invoice.getTerms());
         model.addAttribute("invoiceDate", invoice.getInvoiceDate());
@@ -183,6 +187,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         model.addAttribute("message", invoice.getMessage());
         model.addAttribute("statement", invoice.getStatement());
         model.addAttribute("status", invoice.getStatus());
+        model.addAttribute("invoiceProductDtoList",invoice.getInvoiceProduct());
+        model.addAttribute("total", total);
+        model.addAttribute("balance", balance);
 
         try (ByteArrayOutputStream mergedOutputStream = new ByteArrayOutputStream()) {
             Document document = new Document();
@@ -203,6 +210,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    public double calculateTotal(Invoice invoice) {
+        if (invoice != null && invoice.getInvoiceProduct() != null) {
+            return invoice.getInvoiceProduct().stream()
+                    .mapToDouble(InvoiceProduct::getAmount)
+                    .sum();
+        }
+        return 0;
+    }
+
+    public double calculateBalance(Invoice invoice, double receivedAmount) {
+        return receivedAmount - calculateTotal(invoice);
+    }
 
     public InvoiceDto toDto(Invoice invoice) {
         List<InvoiceProductDto> invoiceProductDtoList = invoice.getInvoiceProduct().stream()
@@ -210,6 +229,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                         ipl.getId(),
                         ipl.getDateRow(),
                         ipl.getProductRow(),
+                        ipl.getProductName(),
                         ipl.getType(),
                         ipl.getDescription(),
                         ipl.getQty(),
@@ -267,6 +287,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .id(dto.getId())
                 .dateRow(dto.getDateRow())
                 .productRow(dto.getProductRow())
+                .productName(dto.getProductName())
                 .type(dto.getType())
                 .description(dto.getDescription())
                 .qty(dto.getQty())

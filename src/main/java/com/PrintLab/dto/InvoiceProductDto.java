@@ -15,6 +15,7 @@ public class InvoiceProductDto {
     private Long id;
     private Date dateRow;
     private Long productRow;
+    private String productName;
     private String type;
     private String description;
     private Integer qty;

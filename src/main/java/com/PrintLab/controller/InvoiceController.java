@@ -1,7 +1,6 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.InvoiceDto;
-import com.PrintLab.dto.PrintData;
 import com.PrintLab.service.InvoiceService;
 import com.PrintLab.service.PdfGenerationService;
 import com.PrintLab.utils.EmailUtils;
@@ -90,16 +89,31 @@ public class InvoiceController {
 //        }
 //    }
 
-    @GetMapping("/invoice/pdf/{file-name}/{invoiceId}")
-    public ResponseEntity<byte[]> getInvoicePdf(@PathVariable(name = "file-name") String fileName,
-                                            @PathVariable(name = "invoiceId") Long invoiceId) {
-        byte[] pdf = invoiceService.downloadInvoicePdf(fileName, invoiceId);
+    @GetMapping("/invoice/pdf/{fileName}/{invoiceId}")
+    public ResponseEntity<byte[]> getInvoicePdf(
+            @PathVariable("fileName") String fileName,
+            @PathVariable("invoiceId") Long invoiceId,
+            @RequestParam("email") String email
+    ) {
+        try {
+            byte[] pdf = invoiceService.downloadInvoicePdf(fileName, invoiceId);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", fileName + ".pdf");
+            boolean emailSent = emailUtils.sendEmailWithAttachment(
+                    email, "Invoice PDF", "Please find attached the invoice PDF.", pdf, fileName + ".pdf");
 
-        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
+            if (emailSent) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_PDF);
+                headers.setContentDispositionFormData("attachment", fileName + ".pdf");
+
+                return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new byte[0]);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new byte[0]);
+        }
     }
+
 
 }
