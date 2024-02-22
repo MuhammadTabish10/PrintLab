@@ -1,5 +1,6 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.util.List;
 public class InvoiceDto {
     private Long id;
     private Long invoiceNo;
-    private Long customer;
+    private Customer customer;
     private String customerEmail;
     private String business;
     private Boolean sendLater;

@@ -35,11 +35,11 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
   getInvoiceList(): void {
     this.invoiceService.getAllInvoice().pipe(takeUntil(this.destroy$)).subscribe(
       (res: Invoice[]) => {
-
+        debugger
         this.invoiceList = res;
-        this.invoiceList.forEach((invoice) => {
-          this.getCustomerName(+invoice?.customer!);
-        })
+        // this.invoiceList.forEach((invoice) => {
+        //   this.getCustomerName(+invoice?.customer!);
+        // })
       },
       (error: any) => this.errorHandleService.showError(error.error.error)
     );
@@ -96,16 +96,15 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
     this.router.navigate(['/add-invoice'], { queryParams: { id: id, send: true } });
   }
 
-  getCustomerName(customerId: number) {
+  // getCustomerName(customerId: number) {
+  //   this.customerService.getCustomerById(customerId).subscribe(
+  //     (res: Customer) => {
+  //       this.customerName.push(res);
+  //     }, (error: BackendErrorResponse) => {
 
-    this.customerService.getCustomerById(customerId).subscribe(
-      (res: Customer) => {
-        this.customerName.push(res);
-      }, (error: BackendErrorResponse) => {
-
-      }
-    )
-  }
+  //     }
+  //   )
+  // }
 
 }
 

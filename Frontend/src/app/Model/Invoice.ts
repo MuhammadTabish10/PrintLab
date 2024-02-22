@@ -1,7 +1,9 @@
+import { Customer } from "./Customer";
+
 export interface Invoice {
   id: number | undefined | null;
   invoiceNo: number | undefined | null;
-  customer: number | undefined | null | string;
+  customer: Customer;
   customerEmail: string | undefined | null;
   business: string | undefined | null;
   sendLater: boolean | undefined | null;

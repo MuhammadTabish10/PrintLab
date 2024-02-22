@@ -20,7 +20,9 @@ public class Invoice {
     private Long id;
     @Column(unique = true)
     private Long invoiceNo;
-    private Long customer;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
     private String customerEmail;
     private String business;
     private Boolean sendLater;

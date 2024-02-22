@@ -5,6 +5,7 @@ import com.PrintLab.dto.InvoiceProductDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Invoice;
 import com.PrintLab.model.InvoiceProduct;
+import com.PrintLab.repository.CustomerRepository;
 import com.PrintLab.repository.InvoiceProductRepository;
 import com.PrintLab.repository.InvoiceRepository;
 import com.PrintLab.service.InvoiceService;
@@ -31,11 +32,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final InvoiceProductRepository invoiceProductRepository;
     private final PdfGenerationService pdfGenerationService;
+    private final CustomerRepository customerRepository;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, InvoiceProductRepository invoiceProductRepository, PdfGenerationService pdfGenerationService) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, InvoiceProductRepository invoiceProductRepository, PdfGenerationService pdfGenerationService, CustomerRepository customerRepository) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceProductRepository = invoiceProductRepository;
         this.pdfGenerationService = pdfGenerationService;
+        this.customerRepository = customerRepository;
     }
 
 
@@ -104,7 +107,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (optionalInvoice.isPresent()) {
             Invoice existingInvoice = optionalInvoice.get();
 
-            existingInvoice.setCustomer(invoice.getCustomer());
+            existingInvoice.setCustomer(customerRepository.findById(invoice.getCustomer().getId())
+                    .orElseThrow(() -> new RecordNotFoundException("Customer not found")));
             existingInvoice.setCustomerEmail(invoice.getCustomerEmail());
             existingInvoice.setBusiness(invoice.getBusiness());
             existingInvoice.setSendLater(invoice.getSendLater());
@@ -187,7 +191,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         model.addAttribute("message", invoice.getMessage());
         model.addAttribute("statement", invoice.getStatement());
         model.addAttribute("status", invoice.getStatus());
-        model.addAttribute("invoiceProductDtoList",invoice.getInvoiceProduct());
+        model.addAttribute("invoiceProductDtoList", invoice.getInvoiceProduct());
         model.addAttribute("total", total);
         model.addAttribute("balance", balance);
 
@@ -196,12 +200,12 @@ public class InvoiceServiceImpl implements InvoiceService {
             PdfCopy copy = new PdfCopy(document, mergedOutputStream);
             document.open();
 
-                byte[] individualPdf = pdfGenerationService.generatePdf("Invoice", model, id);
+            byte[] individualPdf = pdfGenerationService.generatePdf("Invoice", model, id);
 
-                PdfReader reader = new PdfReader(new ByteArrayInputStream(individualPdf));
-                for (int pageNum = 1; pageNum <= reader.getNumberOfPages(); pageNum++) {
-                    copy.addPage(copy.getImportedPage(reader, pageNum));
-                }
+            PdfReader reader = new PdfReader(new ByteArrayInputStream(individualPdf));
+            for (int pageNum = 1; pageNum <= reader.getNumberOfPages(); pageNum++) {
+                copy.addPage(copy.getImportedPage(reader, pageNum));
+            }
 
             document.close();
             return mergedOutputStream.toByteArray();
@@ -241,7 +245,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         return InvoiceDto.builder()
                 .id(invoice.getId())
-                .customer(invoice.getCustomer())
+                .customer(
+                        customerRepository.findById(invoice.getCustomer().getId())
+                                .orElseThrow(() -> new RecordNotFoundException("Customer not found"))
+                )
                 .customerEmail(invoice.getCustomerEmail())
                 .business(invoice.getBusiness())
                 .billingAddress(invoice.getBillingAddress())
@@ -266,7 +273,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         return Invoice.builder()
                 .id(invoiceDto.getId())
-                .customer(invoiceDto.getCustomer())
+                .customer(customerRepository.findById(invoiceDto.getCustomer().getId())
+                        .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .customerEmail(invoiceDto.getCustomerEmail())
                 .business(invoiceDto.getBusiness())
                 .billingAddress(invoiceDto.getBillingAddress())

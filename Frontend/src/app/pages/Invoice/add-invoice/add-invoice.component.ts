@@ -73,7 +73,39 @@ export class AddInvoiceComponent implements OnInit {
   invoice: Invoice = {
     id: undefined,
     invoiceNo: undefined,
-    customer: undefined,
+    customer: {
+      id: undefined,
+    title: undefined,
+    name: undefined,
+    middleName: undefined,
+    lastName: undefined,
+    email: undefined,
+    phoneNo: undefined,
+    mobileNo: undefined,
+    website: undefined,
+    createdAt: undefined,
+    businessName: undefined,
+    subCustomer: false,
+    billParentCustomer: false,
+    parentCustomerId: undefined,
+    billingStreetAddress: undefined,
+    billingCity: undefined,
+    billingProvince: undefined,
+    billingPostalCode: undefined,
+    billingCountry: undefined,
+    sameAsBilling: false,
+    shippingStreetAddress: undefined,
+    shippingCity: undefined,
+    shippingProvince: undefined,
+    shippingPostalCode: undefined,
+    shippingCountry: undefined,
+    openingBalance: undefined,
+    asOf: undefined,
+    primaryPaymentMethod: undefined,
+    terms: undefined,
+    tax: undefined,
+    status: undefined,
+    },
     customerEmail: undefined,
     business: undefined,
     sendLater: undefined,
@@ -260,7 +292,7 @@ export class AddInvoiceComponent implements OnInit {
 
   submit() {
     debugger
-    this.updateCustomerId();
+    // this.updateCustomerId();
     this.updateInvoiceProductStatus();
 
     if (!this.invoice.sendLater && !this.idFromQueryParam) {
@@ -289,14 +321,14 @@ export class AddInvoiceComponent implements OnInit {
     );
   }
 
-  private updateCustomerId(): void {
-    if (this.idFromQueryParam) {
-      const customerObj = this.customerList.find((c) => c.id === this.tempCustomer.id);
-      this.invoice.customer = customerObj?.id;
-    } else {
-      this.invoice.customer = this.tempCustomer?.id;
-    }
-  }
+  // private updateCustomerId(): void {
+  //   if (this.idFromQueryParam) {
+  //     const customerObj = this.customerList.find((c) => c.id === this.tempCustomer.id);
+  //     this.invoice.customer = { id: customerObj?.id };
+  //   } else {
+  //     this.invoice.customer = { id: this.tempCustomer?.id };
+  //   }
+  // }
 
   private updateInvoiceProductStatus(): void {
     this.invoice.invoiceProductDtoList.forEach((invoice: InvoiceProduct) => {
@@ -308,9 +340,11 @@ export class AddInvoiceComponent implements OnInit {
   private patchValues(id: number): void {
     this.invoiceService.getInvoiceById(id).subscribe(
       (res: Invoice) => {
+
         this.previousInvoiceNo = res.invoiceNo;
-        const customer = this.customerList.find(c => c.id === res.customer as number);
-        this.tempCustomer.id = customer?.id;
+        debugger
+        // const customer = this.customerList.find(c => c.id === res.customer?.id);
+        // this.tempCustomer.id = customer?.id;
 
         this.parseDateFields(res);
 
@@ -403,7 +437,7 @@ export class AddInvoiceComponent implements OnInit {
     const fileName = 'Invoice.pdf';
     const email = this.invoice.customerEmail;
 
-    this.invoiceService.saveInvoiceAndGeneratePdf(fileName, email!,this.idFromQueryParam!).subscribe(
+    this.invoiceService.saveInvoiceAndGeneratePdf(fileName, email!, this.idFromQueryParam!).subscribe(
       (res: Blob) => {
         const blob = new Blob([res], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
