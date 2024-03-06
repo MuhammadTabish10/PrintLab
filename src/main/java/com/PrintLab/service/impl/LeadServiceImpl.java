@@ -235,6 +235,7 @@ public class LeadServiceImpl implements LeadService {
         List<Predicate> predicates = buildPredicates(criteriaBuilder, leadsRoot, searchCriteria);
 
         cq.where(predicates.toArray(new Predicate[0]));
+        cq.orderBy(criteriaBuilder.desc(leadsRoot.get("id")));
         TypedQuery<Leads> query = entityManager.createQuery(cq);
 
         int firstResult = pageNumber * pageSize;

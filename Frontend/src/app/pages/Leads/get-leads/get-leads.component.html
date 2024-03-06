@@ -1,10 +1,11 @@
 <app-sidebar></app-sidebar>
 <div class="container-fluid ps-6">
   <app-dashboard-head></app-dashboard-head>
-  <div class="main-container">
-    <div class="row">
+  <div class="ps-0">
+    <div class="row mb-5">
       <div class="col-11">
-        <h3>Leads</h3>
+        <h4>Leads</h4>
+        <p class="page-intro">Whole data about your business here</p>
       </div>
       <!-- <div class="col-1 text-end">
         <button
@@ -16,6 +17,16 @@
         ></button>
       </div> -->
     </div>
+    <div class="ps-3 mb-5">
+      <input
+        type="text"
+        placeholder="Search by Company Name"
+        [(ngModel)]="lead.companyName"
+        class="order-search form-control"
+        (input)="getLeadList(undefined, lead)"
+      />
+    </div>
+
     <div class="card text-nowrap">
       <p-table
         #dt1
@@ -26,23 +37,12 @@
       >
         <ng-template pTemplate="caption">
           <div class="row">
-            <div class="col-10">
-              <span class="p-input-icon-right ml-auto">
-                <i class="pi pi-search"></i>
-                <input
-                  pInputText
-                  type="text"
-                  [(ngModel)]="lead.companyName"
-                  placeholder="Search Company"
-                  (input)="getLeadList(undefined, lead)"
-                />
-              </span>
-            </div>
+            <div class="col-10"></div>
             <div class="col-2 text-end">
               <button
                 pButton
                 type="button"
-                label="Create Lead"
+                label="New"
                 class="p-button-dark bg-dark"
                 icon="pi pi-plus"
                 (click)="showModal()"
@@ -94,20 +94,9 @@
                 </p-columnFilter>
               </div>
             </th>
-            <!--<th class="col">
-              <div class="d-flex justify-content-center">Address Type</div>
+            <th class="text-end pe-5 col">
+              <span class="pe-4"> Action </span>
             </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Job Title</div>
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Role</div>
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">About</div>
-            </th>
-            -->
-            <th class="col text-start">Action</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-lead let-i="rowIndex">
@@ -129,7 +118,13 @@
                 [queryParams]="{ id: lead.id }"
                 (click)="$event.stopPropagation()"
               >
-                {{ lead?.contactName }}
+                {{
+                  lead?.contact[0]?.name != null
+                    ? lead.contact[0]?.name + "+" + (lead?.contact?.length - 1)
+                    : lead.contact[1]?.name != null
+                    ? lead.contact[1]?.name + "+" + (lead?.contact?.length - 2)
+                    : ""
+                }}
               </a>
             </td>
             <td class="text-start">
@@ -142,27 +137,7 @@
                 {{ lead?.leadStatusType }}
               </a>
             </td>
-            <!-- <td class="text-center">
-              {{ lead?.leadAddress[i].type }}
-            </td>
-            <td class="text-center">
-              {{ lead?.contact[i].jobTitle }}
-            </td>
-            <td class="text-center">
-              {{ lead?.contact[i].role }}
-            </td> -->
-            <!-- <td class="text-center d-flex justify-content-center">
-              <textarea
-                name="descRow"
-                [(ngModel)]="lead.about.description"
-                id="desc"
-                class="d-block"
-                cols="25"
-                rows="1"
-                readonly
-              ></textarea>
-            </td> -->
-            <td class="text-start">
+            <td class="text-end">
               <div
                 class="btn-group mr-2"
                 role="group"
@@ -222,33 +197,37 @@
     <div class="container text-center">
       <div class="row my-3">
         <div class="col-6">
+          <label class="add-order-label d-flex justify-content-start ms-0 mb-1"
+            >Company</label
+          >
           <input
             pInputText
             type="text"
             class="w-100"
             required
             name="companyName"
-            (input)="getLeadList(undefined, lead)"
-            [(ngModel)]="lead.companyName"
-            placeholder="Enter Company Name"
+            (input)="getLeadListForInnerBox(lead!)"
+            [(ngModel)]="companyName"
           />
         </div>
         <div class="col-6">
+          <label class="add-order-label d-flex justify-content-start ms-0 mb-1"
+            >Contact</label
+          >
           <input
             pInputText
             type="text"
             name="contactName"
             class="w-100"
-            [(ngModel)]="lead.contactName"
+            [(ngModel)]="lead.contact[0].name"
             required
-            placeholder="Enter Contact Name"
           />
         </div>
       </div>
       <div class="row my-3" *ngIf="leadSearchModal">
-        <h6>We found a simiral lead that already existed!</h6>
+        <h6>We've identified a matching lead that already exists!</h6>
         <p-table
-          [value]="paginatedLeads?.content!"
+          [value]="searchResults"
           class="p-datatable-dark"
           selectionMode="single"
         >

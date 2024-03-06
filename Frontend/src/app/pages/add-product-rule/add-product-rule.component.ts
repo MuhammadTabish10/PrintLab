@@ -100,12 +100,26 @@ export class AddProductRuleComponent implements OnInit {
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add';
       } else {
-        this.productRuleService.getProductRuleById(this.idFromQueryParam).subscribe((res: any) => {
+        this.productRuleService.getProductRuleById(this.idFromQueryParam!).subscribe((res: any) => {
           this.productName = res?.title;
-          this.category = this.categoryArray?.productFieldValuesList.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
-          this.onCategoryChange(this.category)
-          this.sideValue = this.sideOptions?.productFieldValuesList.find((option: any) => option.name === res?.printSide)
-          this.onChangeSide(this.sideValue)
+          if (this.categoryArray && this.sideOptions) {
+            this.category = this.categoryArray?.productFieldValuesList?.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
+            this.sideValue = this.sideOptions?.productFieldValuesList?.find((option: any) => option.name === res?.printSide)
+            if (this.category) {
+              this.onCategoryChange(this.category);
+            } else {
+              this.category = this.categoryArray?.productFieldValuesList?.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
+              return
+            }
+            if (this.sideValue) {
+              this.onChangeSide(this.sideValue)
+            } else {
+              this.sideValue = this.sideOptions?.productFieldValuesList?.find((option: any) => option.name === res?.printSide)
+              return
+            }
+          } else {
+            window.location.reload();
+          }
           this.buttonName = 'Update';
           const observables = [];
           let sizeArray = JSON.parse(res?.size);
@@ -153,7 +167,9 @@ export class AddProductRuleComponent implements OnInit {
                   const matchingUppingArray = uppingArray?.filter((uppingItem: { id: number }) => {
                     return sizeArray.some((sizeItem: { id: number }) => sizeItem.id === uppingItem.id);
                   });
-                  this.upping = matchingUppingArray;
+                  if (matchingUppingArray.length > 0) {
+                    this.upping = matchingUppingArray;
+                  }
                 });
                 return of(null);
               })

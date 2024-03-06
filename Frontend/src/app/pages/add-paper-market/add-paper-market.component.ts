@@ -146,7 +146,9 @@ export class AddPaperMarketComponent implements OnInit {
       }
     });
 
-    this.timeStampValue = this.formatDate(this.rateToUpdate.timeStamp);
+    if (this.rateToUpdate.timeStamp) {
+      this.timeStampValue = this.formatDate(this.rateToUpdate.timeStamp);
+    }
     this.madeInValue = this.rateToUpdate.madeIn;
     this.lengthValue = this.rateToUpdate.length;
     this.widthValue = this.rateToUpdate.width;
@@ -219,9 +221,9 @@ export class AddPaperMarketComponent implements OnInit {
 
   getBrands(paperValue: string) {
 
-    if(this.extractedPaperStock.length > 0 ){
-     let paper = this.extractedPaperStock.find(p=> p.name === paperValue)
-     this.extractedBrands = paper.brands
+    if (this.extractedPaperStock.length > 0) {
+      let paper = this.extractedPaperStock.find(p => p.name === paperValue)
+      this.extractedBrands = paper.brands
     }
   }
 

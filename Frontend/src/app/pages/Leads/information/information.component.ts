@@ -120,6 +120,9 @@ export class InformationComponent implements OnInit {
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(
       (param) => {
         this.idFromQueryParam = +param['id'] || null;
+        if (param['contact']) {
+          this.contactModal = param['contact']
+        }
         if (this.idFromQueryParam) {
           this.patchValues(this.idFromQueryParam);
         }
@@ -152,8 +155,10 @@ export class InformationComponent implements OnInit {
         }
         res.contact?.forEach((contact: LeadContact) => {
           if (contact.role) {
-
             this.contactList.push(contact!);
+          }
+          if (this.contactModal) {
+            this.contact.name = contact.name
           }
         });
       }, (error: BackendErrorResponse) => {

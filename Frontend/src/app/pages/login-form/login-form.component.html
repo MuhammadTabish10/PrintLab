@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <div
-      class="col-8 bg-dark d-flex justify-content-center align-items-center"
+      class="col-8 bg-black d-flex justify-content-center align-items-center"
       style="height: 100vh"
     >
       <img
@@ -12,7 +12,8 @@
     </div>
     <div class="col-4 d-flex justify-content-center align-items-center">
       <form class="p-4 w-100">
-        <h2 class="mb-4 text-center">Login</h2>
+        <h2 class="text-start mb-1">Login</h2>
+        <h4 class="mb-4 text-start fw-light">engine.printlab</h4>
         <div class="mb-3">
           <label class="form-label">Email</label>
           <input
@@ -49,11 +50,10 @@
             </span>
           </div>
         </div>
-        <div class="text-center">
+        <div class="text-start">
           <button
             type="submit"
             (click)="addUser()"
-            [ngClass]="{ 'btn-outline-warning': 'text-dark' }"
             class="col-12 btn btn-dark w-25"
           >
             Login

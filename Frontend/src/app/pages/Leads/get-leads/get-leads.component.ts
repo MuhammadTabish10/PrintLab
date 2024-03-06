@@ -1,6 +1,6 @@
 import { PaginationResponse } from './../../../Model/PaginationResponse';
 import { Component } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, combineAll, takeUntil } from 'rxjs';
 import { Lead } from 'src/app/Model/Lead';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
@@ -24,6 +24,7 @@ export class GetLeadsComponent {
   private destroy$ = new Subject<void>();
   leadSearchModal: boolean = false;
   searchResults: Lead[] = [];
+  companyName: string | undefined | null;
   visible: boolean = false;
   paginatedLeads: PaginationResponse<Lead> | undefined | null;
   type: string = "New Lead";
@@ -112,6 +113,38 @@ export class GetLeadsComponent {
 
   }
 
+  getLeadListForInnerBox(lead?: Lead): void {
+    if (lead?.createdAt) {
+      lead.createdAt = null;
+    }
+    this.leadService.searchLeads(this.companyName!).pipe(takeUntil(this.destroy$)).subscribe(
+      (res: Lead[]) => {
+        this.searchResults = res;
+        if (res.length > 0) {
+          this.leadSearchModal = true;
+          this.searchResults = res.map((lead: Lead) => {
+            if (lead.createdAt && Array.isArray(lead.createdAt) && lead.createdAt.length === 7) {
+              const createdAtDate = new Date(lead.createdAt[0], lead.createdAt[1] - 1, lead.createdAt[2], lead.createdAt[3], lead.createdAt[4], lead.createdAt[5]);
+              const timeDiff = Date.now() - createdAtDate.getTime();
+              const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+              const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+              const timeAgo = this.formatTimeAgo(hours, minutes);
+              return { ...lead, createdAt: timeAgo };
+            } else {
+              console.error('Invalid createdAt value:', lead.createdAt);
+              return lead;
+            }
+          });
+        } else {
+          this.leadSearchModal = false;
+          this.searchResults = [];
+        }
+      },
+      (error: BackendErrorResponse) => this.errorHandleService.showError(error.error.error)
+    );
+
+  }
+
 
   edit(id: number) {
     this.router.navigate(['/create-lead'], { queryParams: { id: id } });
@@ -139,12 +172,20 @@ export class GetLeadsComponent {
   }
 
   showModal(lead?: Lead) {
+    debugger
     if (lead?.id) {
       this.type = 'Edit Lead';
       this.mode = 'Update';
-      this.lead.companyName = lead.companyName;
-      this.lead.contactName = lead.contactName;
-      this.getLeadList(undefined, lead);
+      this.companyName = lead.companyName;
+      debugger
+      if (lead.contact[0]?.name != null) {
+        this.lead.contact[0].name = lead.contact[0].name;
+      } else if (lead.contact[1]?.name != null) {
+        this.lead.contact[0].name = lead.contact[1].name;
+      } {
+
+      }
+      this.getLeadListForInnerBox(lead);
     } else {
       this.leadSearchModal = false;
     }
@@ -179,6 +220,7 @@ export class GetLeadsComponent {
 
 
   closeNewLeadModal() {
+    this.companyName = null;
     this.leadSearchModal = false;
     this.type = 'New Lead';
     this.mode = 'Create Lead';
@@ -219,7 +261,8 @@ export class GetLeadsComponent {
     this.getLeadList(undefined, undefined);
   }
   submit() {
-
+    debugger
+    this.lead.companyName = this.companyName
     const serviceToCall = this.rowId
       ? this.leadService.updateLead(this.rowId, this.lead)
       : this.leadService.postLead(this.lead);
@@ -227,11 +270,11 @@ export class GetLeadsComponent {
     serviceToCall.subscribe(
       (res: Lead) => {
 
-        const successMsg = `Lead: ${this.lead.contactName} is successfully Created.`;
+        const successMsg = `Lead: ${this.lead.contact[0]?.name} is successfully Created.`;
         this.successMsgService.showSuccess(successMsg);
         this.visible = false;
         setTimeout(() => {
-          this.router.navigate(['/create-lead'], { queryParams: { id: res.id } });
+          this.router.navigate(['/create-lead'], { queryParams: { id: res.id, contact: true } });
         }, 2000);
       },
       (error: BackendErrorResponse) => {
@@ -256,12 +299,12 @@ export class GetLeadsComponent {
 // previous Code
 // searchCompanyAndContactName(value: Lead) {
 //   this.searchResults = [];
-//   
+//
 //   if (value.companyName) {
 //     this.leadService.searchLeads(this.lead.companyName!).subscribe(
 //       (res: Lead[]) => {
 //         if (res.length > 0) {
-//           
+//
 //           this.leadSearchModal = true;
 //           this.paginatedLeads = res;
 //           this.searchResults = res.map(lead => {

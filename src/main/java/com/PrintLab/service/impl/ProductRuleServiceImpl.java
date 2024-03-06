@@ -147,6 +147,12 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                 }
             }
 
+//            I Put this for also removing from db!
+            for (ProductRulePaperStock valueToRemove : valuesToRemove) {
+                existingPrpsValues.remove(valueToRemove);
+                productRulePaperStockRepository.delete(valueToRemove);
+            }
+
             // Remove items found in valuesToRemove from existingPrpsValues
             existingPrpsValues.removeAll(valuesToRemove);
 

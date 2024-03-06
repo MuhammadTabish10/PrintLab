@@ -27,7 +27,6 @@ export class LeadService {
   // }
 
   getAllLeads(pageState?: PaginatorState, search?: Lead): Observable<PaginationResponse<Lead>> {
-    debugger
     let params = new HttpParams();
     if (pageState?.hasOwnProperty('page') && pageState?.hasOwnProperty('rows')) {
       params = params.set('page-number', pageState?.page!);
