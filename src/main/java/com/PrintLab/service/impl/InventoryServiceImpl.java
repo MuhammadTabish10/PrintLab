@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -125,6 +128,8 @@ public class InventoryServiceImpl implements InventoryService {
             Inventory inventory = optionalInventory.get();
             String gsmListJson = inventory.getAvailableGsm();
             String sizeListJson = inventory.getAvailableSizes();
+            ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+            LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
 
             // Parse the JSON strings into Java objects
             List<Integer> gsmValues = extractGsmValues(gsmListJson);
@@ -158,6 +163,7 @@ public class InventoryServiceImpl implements InventoryService {
                         paperMarketRates.setRatePkr(inventory.getRate() * kg);
 
                         paperMarketRates.setRecordType("auto");
+                        paperMarketRates.setTimeStamp(timeStampUtc);
                         paperMarketRates.setBrand(inventory.getBrandName());
                         paperMarketRates.setMadeIn(inventory.getMadeIn());
                         paperMarketRates.setQty(inventory.getQty());
@@ -189,6 +195,7 @@ public class InventoryServiceImpl implements InventoryService {
                         paperMarketRates.setStatus(inventory.getStatus());
                         paperMarketRates.setVerified(true);
                         paperMarketRates.setRecordType("auto");
+                        paperMarketRates.setTimeStamp(timeStampUtc);
                         paperMarketRates.setGSM(gsm);
                         paperMarketRates.setDimension(dimension);
 

@@ -99,6 +99,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
         Root<PaperMarketRates> paperMarketRatesRoot = cq.from(PaperMarketRates.class);
 
         List<Predicate> predicates = new ArrayList<>();
+        cq.orderBy(criteriaBuilder.desc(paperMarketRatesRoot.get("id")));
 
         if (searchCriteria.getTimeStamp() != null) {
             LocalDateTime userEnteredDateTime = searchCriteria.getTimeStamp();

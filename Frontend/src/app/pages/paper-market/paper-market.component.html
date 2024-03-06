@@ -593,7 +593,7 @@
         [totalRecords]="filterRes?.totalElements"
         (onPageChange)="getFilteredAndPaginatedData($event)"
         currentPageReportTemplate="Showing {{
-          filterRes?.pageNumber * filterRes?.pageSize
+          filterRes?.pageNumber * filterRes?.pageSize + 1
         }} to {{ (filterRes?.pageNumber + 1) * filterRes?.pageSize }} of {{
           filterRes?.totalElements
         }} entries"
