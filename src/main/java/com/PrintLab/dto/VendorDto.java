@@ -1,9 +1,6 @@
 package com.PrintLab.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,4 +22,7 @@ public class VendorDto
     private Boolean status;
 
     private List<VendorProcessDto> vendorProcessList;
+
+    @ToString.Exclude
+    private List<BusinessUnitProcessDto> businessUnitProcess;
 }

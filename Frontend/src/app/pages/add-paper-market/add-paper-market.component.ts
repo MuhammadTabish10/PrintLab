@@ -28,7 +28,7 @@ export class AddPaperMarketComponent implements OnInit {
   widthValue!: number;
   brandValue: any;
   madeInValue: string = '';
-  kgValue: string = '';
+  kgValue: number | undefined | null;
   dimensionValue: string = '';
   qtyValue: number | undefined;
   rateValue: number | undefined;
@@ -234,6 +234,7 @@ export class AddPaperMarketComponent implements OnInit {
   dimension() {
 
     this.lengthValue != undefined && this.widthValue != undefined ? this.dimensionValue = this.lengthValue + '" x ' + this.widthValue + '"' : this.dimensionValue = ''
+    this.calculateKg();
   }
 
   removeSpacesFromDimensionValue() {
@@ -247,6 +248,19 @@ export class AddPaperMarketComponent implements OnInit {
 
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+
+  calculateKg() {
+    debugger
+    if (this.lengthValue && this.widthValue && this.gsmValue) {
+      if (this.qtyValue === 500) {
+        this.kgValue = (this.lengthValue * this.widthValue * +this.gsmValue) / 3100;
+        this.kgValue.toFixed(2);
+      } else if (this.qtyValue === 100) {
+        this.kgValue = (this.lengthValue * this.widthValue * +this.gsmValue) / 15500;
+        this.kgValue.toFixed(2);
+      }
+    }
   }
 
 }

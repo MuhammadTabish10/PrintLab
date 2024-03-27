@@ -1,0 +1,239 @@
+<app-sidebar></app-sidebar>
+<div class="container-fluid ps-6">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="ps-0">
+    <div>
+      <h4>Business Unit & Processes</h4>
+      <p class="page-intro">Whole data about your business here</p>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-dark" (click)="showModal()">
+        <i class="pi pi-plus fs-6"></i>
+        Category
+      </button>
+    </div>
+    <div class="container-fluid px-0 mt-5">
+      <div class="card flex justify-content-center">
+        <p-accordion [multiple]="true" [activeIndex]="openTabIndex">
+          <p-accordionTab
+            *ngFor="let category of categoryList; let i = index"
+            [selected]="i === openTabIndex"
+            (onOpen)="openTabIndex = i"
+            (onClose)="openTabIndex = null"
+          >
+            <ng-template pTemplate="header">
+              <span class="ms-3 badge"
+                ><p-badge
+                  [value]="category.processList?.length?.toString()"
+                  [style]="{ 'background-color': 'black' }"
+                ></p-badge
+              ></span>
+              <span
+                class="font-bold white-space-nowrap text-nowrap"
+                [ngClass]="{
+                  'p-accordion p-accordion-header:not(p-disabled)p-highlight p-accordion-header-link':
+                    i === openTabIndex
+                }"
+              >
+                {{ category?.name }}
+              </span>
+
+              <div class="d-flex justify-content-end align-items-center w-100">
+                <span
+                  class="pi pi-plus me-3"
+                  (click)="showModal(undefined, category)"
+                ></span>
+                <span
+                  class="pi pi-file-edit me-3"
+                  (click)="showModal(undefined, category, category.id!)"
+                ></span>
+                <span
+                  *ngIf="category.processList?.length! === 0"
+                  class="pi pi-trash"
+                  (click)="deleteCategory(category.id!)"
+                ></span>
+              </div>
+            </ng-template>
+            <div class="card">
+              <p-table
+                [value]="category.processList!"
+                [columns]="cols"
+                [reorderableColumns]="true"
+                [tableStyle]="{ 'min-width': '50rem' }"
+              >
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th style="width: 3rem"></th>
+                    <th
+                      class="col-3"
+                      *ngFor="let col of columns"
+                      pReorderableColumn
+                    >
+                      {{ col.header }}
+                    </th>
+                    <!-- Add Actions column header -->
+                    <th class="col-3 text-end" style="padding-right: 4.5rem">
+                      Actions
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template
+                  pTemplate="body"
+                  let-rowData
+                  let-columns="columns"
+                  let-index="rowIndex"
+                >
+                  <tr [pReorderableRow]="index">
+                    <td>
+                      <span class="pi pi-bars" pReorderableRowHandle></span>
+                    </td>
+                    <td *ngFor="let col of columns">
+                      <!-- Your existing column content here -->
+                      <!-- Example for vendors column -->
+                      <ng-container *ngIf="col.field === 'vendors'">
+                        <span *ngFor="let vendor of rowData[col.field]">
+                          {{ vendor.name }}
+                          <br />
+                        </span>
+                      </ng-container>
+                      <!-- If the column is not 'vendors', display the regular data -->
+                      <ng-container *ngIf="col.field !== 'vendors'">
+                        {{ rowData[col.field] }}
+                      </ng-container>
+                    </td>
+                    <!-- Actions column -->
+                    <td class="text-end">
+                      <div
+                        class="btn-group mr-2"
+                        role="group"
+                        aria-label="Second group"
+                      >
+                        <button
+                          type="button"
+                          class="btn order-table-btn"
+                          (click)="showModal(rowData, category)"
+                        >
+                          <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                        </button>
+                        <button
+                          type="button"
+                          class="btn order-table-btn"
+                          (click)="deleteProcessAndItsVendors(rowData.id)"
+                        >
+                          <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast [hideTransitionOptions]="'2000ms'" (onClose)="onToastClose()">
+</p-toast>
+
+<p-dialog
+  [header]="heading"
+  position="top"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '25vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="clear()"
+  [dismissableMask]="true"
+  [modal]="true"
+>
+  <form #businessForm="ngForm" (ngSubmit)="submit()">
+    <div class="row mx-auto my-3">
+      <div class="col-12" *ngIf="mode === 'Category'">
+        <label class="d-block add-order-label m-0">Name</label>
+        <input
+          pInputText
+          [(ngModel)]="name"
+          name="category"
+          class="w-100"
+          required
+        />
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0 fw-bolder">{{
+            category.name
+          }}</label>
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Name</label>
+          <input
+            pInputText
+            [(ngModel)]="selectedProcess.process"
+            name="branch"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Vendor</label>
+          <p-multiSelect
+            [options]="vendorList"
+            styleClass="w-100"
+            optionLabel="name"
+            display="chip"
+            [(ngModel)]="selectedVendors"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            [appendTo]="'body'"
+            name="vendor"
+            #vendor="ngModel"
+            [required]="true"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                vendor.invalid && (vendor.dirty || vendor.touched)
+            }"
+          >
+          </p-multiSelect>
+          <div *ngIf="vendor.invalid && (vendor.dirty || vendor.touched)">
+            <div *ngIf="vendor.errors" class="text-danger m-1">
+              Vendor is required.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="add-order-label m-0">Billable</label>
+          <div class="form-check form-switch form-switch-lg">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="flexSwitchCheckChecked"
+              name="impositionValueChecked"
+              [(ngModel)]="selectedProcess.billable"
+              [ngClass]="{ 'bg-green': selectedProcess.billable }"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end me-3">
+      <button
+        class="btn btn-dark"
+        type="submit"
+        [disabled]="!businessForm.valid"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+</p-dialog>

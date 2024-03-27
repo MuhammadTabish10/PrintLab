@@ -35,7 +35,7 @@ public class VendorServiceImpl implements VendorService {
     @Transactional
     @Override
     public VendorDto save(VendorDto vendorDto) {
-        Vendor vendor = toEntity(vendorDto);
+        Vendor vendor = toVEntity(vendorDto);
         vendor.setStatus(true);
         Vendor createdVendor = vendorRepository.save(vendor);
 
@@ -141,7 +141,7 @@ public class VendorServiceImpl implements VendorService {
     @Override
     @Transactional
     public VendorDto updateVendor(Long id, VendorDto vendorDto) {
-        Vendor vendor = toEntity(vendorDto);
+        Vendor vendor = toVEntity(vendorDto);
         Optional<Vendor> optionalVendor = vendorRepository.findById(id);
         int count = 0;
 
@@ -255,7 +255,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
 
-    public Vendor toEntity(VendorDto vendorDto) {
+    public Vendor toVEntity(VendorDto vendorDto) {
         Vendor vendor = Vendor.builder()
                 .id(vendorDto.getId())
                 .name(vendorDto.getName())

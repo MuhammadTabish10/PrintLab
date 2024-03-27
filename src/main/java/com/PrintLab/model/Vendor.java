@@ -1,9 +1,7 @@
 package com.PrintLab.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -16,8 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "vendor")
-public class Vendor
-{
+public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,5 +32,13 @@ public class Vendor
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
     private List<VendorProcess> vendorProcessList;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "vendor_business_unit_process",
+            joinColumns = @JoinColumn(name = "vendor_id"),
+            inverseJoinColumns = @JoinColumn(name = "business_unit_process_id")
+    )
+    private List<BusinessUnitProcess> businessUnitProcesses;
 
 }

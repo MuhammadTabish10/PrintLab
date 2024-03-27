@@ -232,6 +232,23 @@
 
     <li
       class="settingOptions mt-2"
+      *ngIf="sessionStorageService.hasPermission('Configuration_Uping')"
+    >
+      <span>
+        <a
+          class="sidebar-list-hover-settings"
+          *ngIf="isDropDown3Open == true"
+          class="sidebar-list-hover-settings nav-link"
+          [routerLink]="['/uping-view']"
+        >
+          <i class="fa fa-hand-pointer fa-2x"></i>
+          <span class="nav-text">View Uping</span>
+        </a>
+      </span>
+    </li>
+
+    <li
+      class="settingOptions mt-2"
       *ngIf="sessionStorageService.hasPermission('Configuration_Inventory')"
     >
       <span>

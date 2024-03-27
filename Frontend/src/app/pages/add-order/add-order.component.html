@@ -30,112 +30,116 @@
 
           <div class="main-container">
             <div class="order-body py-2 px-3">
-              <div *ngIf="paperStock" class="my-3">
-                <label class="add-order-label m-0">PaperStock</label>
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="paperStock"
-                  optionLabel="customerFriendlyName"
-                  [(ngModel)]="paperStockItem"
-                  (onChange)="gsmFields($event.value)"
-                  [placeholder]="
-                    paperStock.length !== 1
-                      ? placeholderText.paper
-                      : paperStock[0].paperStock
-                  "
-                ></p-dropdown>
-              </div>
-              <div *ngIf="categoryArray" class="my-3">
-                <label class="add-order-label m-0">Category</label>
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="categoryArray"
-                  optionLabel="name"
-                  [(ngModel)]="category"
-                  [placeholder]="
-                    categoryArray.length !== 1
-                      ? placeholderText.category
-                      : categoryArray[0].name
-                  "
-                ></p-dropdown>
-              </div>
-              <div *ngIf="size" class="my-3">
-                <label class="add-order-label m-0">Size</label>
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="size"
-                  optionLabel="label"
-                  [(ngModel)]="sizeValue"
-                  [placeholder]="
-                    size.length !== 1 ? placeholderText.size : size[0].label
-                  "
-                ></p-dropdown>
-              </div>
-              <div *ngIf="quantity" class="my-3">
-                <label class="add-order-label m-0">Quantity</label>
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="quantity"
-                  optionLabel="name"
-                  [(ngModel)]="qtyValue"
-                  [placeholder]="
-                    quantity.length !== 1
-                      ? placeholderText.quantity
-                      : quantity[0].name
-                  "
-                ></p-dropdown>
-              </div>
-              <div *ngIf="printSide" class="my-3">
-                <label class="add-order-label m-0">Print Side</label>
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="printSide"
-                  (onChange)="jobColorOptions($event.value)"
-                  optionLabel="name"
-                  [(ngModel)]="sideOptionValue"
-                  [placeholder]="
-                    printSide.length !== 1 ? placeholderText : printSide[0].name
-                  "
-                ></p-dropdown>
-              </div>
-              <div *ngIf="jobFront" class="my-3">
-                <label class="add-order-label m-0">Job Color Front</label>
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="jobFront"
-                  optionLabel="name"
-                  [(ngModel)]="jobFrontValue"
-                  [placeholder]="
-                    jobFront.length !== 1
-                      ? placeholderText.frontColor
-                      : jobFront[0].name
-                  "
-                ></p-dropdown>
-              </div>
-              <div *ngIf="!isJobColorBackHidden && jobColorBack" class="my-3">
-                <label class="add-order-label m-0">Job Color Back</label>
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="jobColorBack"
-                  optionLabel="name"
-                  [(ngModel)]="jobBackValue"
-                  [placeholder]="
-                    jobColorBack.length !== 1
-                      ? placeholderText.backColor
-                      : jobColorBack[0].name
-                  "
-                ></p-dropdown>
-              </div>
-              <div class="mb-3" *ngIf="foundGsm">
-                <label class="add-order-label m-0"
-                  >GSM FOR {{ dynamicFields }}</label
-                >
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="optionsGsm"
-                  optionLabel="name"
-                  [(ngModel)]="selectedGsm"
-                ></p-dropdown>
+              <div [ngClass]="{'d-none': paperStock?.length === 1}">
+                <div *ngIf="paperStock" class="my-3">
+                  <label class="add-order-label m-0">PaperStock</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="paperStock"
+                    optionLabel="customerFriendlyName"
+                    [(ngModel)]="paperStockItem"
+                    (onChange)="gsmFields($event.value)"
+                    [placeholder]="
+                      paperStock.length !== 1
+                        ? placeholderText.paper
+                        : paperStock[0].paperStock
+                    "
+                  ></p-dropdown>
+                </div>
+                <div *ngIf="categoryArray" class="my-3">
+                  <label class="add-order-label m-0">Category</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="categoryArray"
+                    optionLabel="name"
+                    [(ngModel)]="category"
+                    [placeholder]="
+                      categoryArray.length !== 1
+                        ? placeholderText.category
+                        : categoryArray[0].name
+                    "
+                  ></p-dropdown>
+                </div>
+                <div *ngIf="size" class="my-3">
+                  <label class="add-order-label m-0">Size</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="size"
+                    optionLabel="label"
+                    [(ngModel)]="sizeValue"
+                    [placeholder]="
+                      size.length !== 1 ? placeholderText.size : size[0].label
+                    "
+                  ></p-dropdown>
+                </div>
+                <div *ngIf="quantity" class="my-3">
+                  <label class="add-order-label m-0">Quantity</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="quantity"
+                    optionLabel="name"
+                    [(ngModel)]="qtyValue"
+                    [placeholder]="
+                      quantity.length !== 1
+                        ? placeholderText.quantity
+                        : quantity[0].name
+                    "
+                  ></p-dropdown>
+                </div>
+                <div *ngIf="printSide" class="my-3">
+                  <label class="add-order-label m-0">Print Side</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="printSide"
+                    (onChange)="jobColorOptions($event.value)"
+                    optionLabel="name"
+                    [(ngModel)]="sideOptionValue"
+                    [placeholder]="
+                      printSide.length !== 1
+                        ? placeholderText
+                        : printSide[0].name
+                    "
+                  ></p-dropdown>
+                </div>
+                <div *ngIf="jobFront" class="my-3">
+                  <label class="add-order-label m-0">Job Color Front</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="jobFront"
+                    optionLabel="name"
+                    [(ngModel)]="jobFrontValue"
+                    [placeholder]="
+                      jobFront.length !== 1
+                        ? placeholderText.frontColor
+                        : jobFront[0].name
+                    "
+                  ></p-dropdown>
+                </div>
+                <div *ngIf="!isJobColorBackHidden && jobColorBack" class="my-3">
+                  <label class="add-order-label m-0">Job Color Back</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="jobColorBack"
+                    optionLabel="name"
+                    [(ngModel)]="jobBackValue"
+                    [placeholder]="
+                      jobColorBack.length !== 1
+                        ? placeholderText.backColor
+                        : jobColorBack[0].name
+                    "
+                  ></p-dropdown>
+                </div>
+                <div class="mb-3" *ngIf="foundGsm">
+                  <label class="add-order-label m-0"
+                    >GSM FOR {{ dynamicFields }}</label
+                  >
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="optionsGsm"
+                    optionLabel="name"
+                    [(ngModel)]="selectedGsm"
+                  ></p-dropdown>
+                </div>
               </div>
               <button
                 type="submit"
@@ -238,7 +242,7 @@
                 Side: {{ sideOptionValue?.name }}
               </h6>
               <h6 class="fw-normal" *ngIf="jobFrontValue?.name">
-                FronColor: {{ jobFrontValue?.name }}
+                FrontColor: {{ jobFrontValue?.name }}
               </h6>
               <h6 class="fw-normal" *ngIf="jobBackValue?.name">
                 BackColor: {{ jobBackValue?.name }}

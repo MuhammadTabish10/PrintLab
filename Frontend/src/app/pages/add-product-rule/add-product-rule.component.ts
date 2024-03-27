@@ -63,6 +63,8 @@ export class AddProductRuleComponent implements OnInit {
   disabled: boolean = false;
   userFriendlyName: any;
   result: boolean = false;
+  selectedCategories: string[] = [];
+  selectedSizes: { category: string, size: string }[] = [];
 
   constructor(
     private productRuleService: ProductRuleService,
@@ -103,9 +105,12 @@ export class AddProductRuleComponent implements OnInit {
         this.productRuleService.getProductRuleById(this.idFromQueryParam!).subscribe((res: any) => {
           this.productName = res?.title;
           if (this.categoryArray && this.sideOptions) {
-            this.category = this.categoryArray?.productFieldValuesList?.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
+            const parsedCategories = JSON.parse(res?.category);
+            debugger
+            this.category = parsedCategories
             this.sideValue = this.sideOptions?.productFieldValuesList?.find((option: any) => option.name === res?.printSide)
             if (this.category) {
+              debugger
               this.onCategoryChange(this.category);
             } else {
               this.category = this.categoryArray?.productFieldValuesList?.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
@@ -572,7 +577,7 @@ export class AddProductRuleComponent implements OnInit {
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
     const commonPayload = {
       title: this.productName,
-      category: this.category.name,
+      category: JSON.stringify(this.category),
       size: JSON.stringify(this.upping),
       quantity: JSON.stringify(this.qty.map((qtys: any) => qtys.name)),
       printSide: this.sideValue.name,
@@ -669,15 +674,42 @@ export class AddProductRuleComponent implements OnInit {
     this.impositionValue = value;
   }
 
-  onCategoryChange(value: any) {
+  // onCategoryChange(value: any) {
+  //   this.upping = null;
+  //   this.getUpping.getUping().subscribe(
+  //     (response: any) => {
+  //       this.uppingArray = response.filter((el: any) => el.category.toLowerCase() === value.name.toLowerCase());
+  //       this.uppingArray = this.uppingArray.map((el: any) => ({
+  //         ...el,
+  //         label: `[${el.productSize}], [Inch: ${el.inch}], [Mm: ${el.mm}]`
+  //       }));
+  //       this.uppingArraySubject.next(this.uppingArray);
+  //     },
+  //     (error: any) => {
+  //       console.log(error);
+  //     }
+  //   );
+  // }
+
+  onCategoryChange(value: any[]) {
+    debugger;
     this.upping = null;
     this.getUpping.getUping().subscribe(
       (response: any) => {
-        this.uppingArray = response.filter((el: any) => el.category.toLowerCase() === value.name.toLowerCase());
-        this.uppingArray = this.uppingArray.map((el: any) => ({
-          ...el,
-          label: `[${el.productSize}], [Inch: ${el.inch}], [Mm: ${el.mm}]`
-        }));
+        debugger
+        this.uppingArray = []; // Clear the array before populating it
+
+        // Map the `name` property of each object in the `value` array
+        this.selectedCategories = value.map((item) => item?.name?.toLowerCase()).filter(Boolean);
+
+        // Filter the response based on the category names
+        this.uppingArray = response.filter((el: any) => this.selectedCategories.includes(el.category.toLowerCase()))
+          .map((el: any) => ({
+            ...el,
+            label: `[${el.productSize}], [Inch: ${el.inch}], [Mm: ${el.mm}]`,
+            show: `${el.productSize} - ${el.l1} x ${el.l2} in`
+          }));
+
         this.uppingArraySubject.next(this.uppingArray);
       },
       (error: any) => {
@@ -685,6 +717,7 @@ export class AddProductRuleComponent implements OnInit {
       }
     );
   }
+
 
   toggleEnabledDisabled(i: any, value: any) {
     if (value.length === 0) {
@@ -698,9 +731,14 @@ export class AddProductRuleComponent implements OnInit {
     if (value.length === 0) {
       this.upping = null;
     } else {
-      this.upping = value
+      this.selectedSizes = value.map((item: any) => ({
+        category: item.category, // Assuming item.category represents the category
+        size: item.show // Assuming item.show represents the size
+      }));
+      this.upping = value;
     }
   }
+
 
   onQtyChange(value: any) {
     this.plates = null;
@@ -748,6 +786,23 @@ export class AddProductRuleComponent implements OnInit {
   showSuccess(success: string) {
     this.messageService.add({ severity: 'success', summary: 'Success', detail: success });
   }
+
+  getSizesForCategory(category: string): string[] {
+    if (this.upping && this.upping.length > 0) {
+      debugger
+      if (this.selectedSizes.length <= 0) {
+        this.onUpingChange(this.upping);
+      }
+      const sizes = this.selectedSizes
+        .filter(item => item.category.toLowerCase() === category.toLowerCase())
+        .map(item => item.size);
+
+      return sizes.length > 0 ? sizes : ['No sizes found'];
+    } else {
+      return [];
+    }
+  }
+
 
 }
 export interface Container {

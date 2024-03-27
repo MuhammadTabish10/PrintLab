@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Customer } from "src/app/Model/Customer";
 import { DatePipe } from '@angular/common';
+import { AuthguardService } from 'src/app/services/authguard.service';
 
 @Component({
   selector: 'app-customer',
@@ -21,15 +22,19 @@ export class CustomerComponent implements OnInit, OnDestroy {
   search: string = '';
 
   private destroy$ = new Subject<void>();
+  email: string | undefined | null;
+  viewOption: boolean = false;
 
   constructor(
     private customerService: CustomerService,
     private router: Router,
     private messageService: MessageService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private authGuardSerivce: AuthguardService,
   ) { }
 
   ngOnInit(): void {
+    this.decodeTokken();
     this.getCustomers();
   }
 
@@ -39,6 +44,8 @@ export class CustomerComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (res: Customer[]) => {
+          this.viewOption = this.doesMatchLeadOwner(res, this.email);
+          debugger
           this.customersArray = res;
           this.customersArray.forEach((el: any) => {
             const dateArray = el.createdAt;
@@ -53,6 +60,10 @@ export class CustomerComponent implements OnInit, OnDestroy {
 
   editCustomer(id: number | undefined | null) {
     this.router.navigate(['/addCustomer'], { queryParams: { id: id!.toString() } });
+  }
+
+  viewCustomer(id: number | undefined | null) {
+    this.router.navigate(['/viewCustomer'], { queryParams: { id: id!.toString() } });
   }
 
   deleteCustomer(id: number | undefined | null) {
@@ -89,6 +100,20 @@ export class CustomerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private decodeTokken(): void {
+    const token = localStorage.getItem('token');
+    const decodedToken = this.authGuardSerivce.getDecodedAccessToken(token!);
+
+    if (decodedToken) {
+      this.email = decodedToken.sub;
+
+    }
+  }
+
+  private doesMatchLeadOwner(customers: Customer[], email: string | undefined | null): boolean {
+    return customers.some(c => c.leadOwner === email);
   }
 }
 

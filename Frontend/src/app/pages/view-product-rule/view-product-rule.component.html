@@ -26,7 +26,12 @@
       <div class="row justify-content-evenly mx-auto">
         <div class="col">
           <label class="add-order-label m-0">Category :</label>
-          <div>{{ product.category }}</div>
+          <!-- <div>{{ product.category }}</div> -->
+          <div *ngIf="categoryList && categoryList.length > 0">
+            <ng-container *ngFor="let category of categoryList; let i = index">
+              {{ i + 1 }}: {{ category }}<br />
+            </ng-container>
+          </div>
         </div>
 
         <div class="col">
@@ -37,7 +42,6 @@
             </ng-container>
           </div>
         </div>
-
       </div>
     </div>
 

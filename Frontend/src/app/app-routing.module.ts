@@ -64,6 +64,11 @@ import { AddInvoiceComponent } from './pages/Invoice/add-invoice/add-invoice.com
 import { InvoicePrintComponent } from './pages/Invoice/invoice-print/invoice-print.component';
 import { GetLeadsComponent } from './pages/Leads/get-leads/get-leads.component';
 import { CreateLeadComponent } from './pages/Leads/create-lead/create-lead.component';
+import { ViewUpingComponent } from './pages/view-uping/view-uping.component';
+import { BusinessUnitAndProcessesComponent } from './pages/business-unit-and-processes/business-unit-and-processes.component';
+import { ViewCustomerComponent } from './pages/view-customer/view-customer.component';
+import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component';
+import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.component';
 
 export const routes: Routes = [
   {
@@ -382,6 +387,31 @@ export const routes: Routes = [
   {
     path: 'create-lead',
     component: CreateLeadComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'uping-view',
+    component: ViewUpingComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'business-unit',
+    component: BusinessUnitAndProcessesComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'viewCustomer',
+    component: ViewCustomerComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'creating-job',
+    component: CreateJobComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'job-requests',
+    component: JobRequestsComponent,
     canActivate: [AuthguardService]
   },
 ];

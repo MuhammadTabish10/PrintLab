@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/Environments/environment';
 import { Customer } from "../Model/Customer";
+import { Business } from '../Model/Business';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,31 @@ export class CustomerService {
   searchCustomer(name: any) {
     let url = `${this._url}/customers/${name}`
     return this.http.get(url)
+  }
+
+  // Business
+
+  getAllBusinesses(): Observable<Business[]> {
+    return this.http.get<Business[]>(this._url.concat('/businesses'));
+  }
+
+  getBusinessById(id: number): Observable<Business> {
+    return this.http.get<Business>(`${this._url.concat('/businesses')}/${id}`);
+  }
+
+  createBusiness(business: Business): Observable<Business> {
+    return this.http.post<Business>(this._url.concat('/businesses'), business);
+  }
+
+  updateBusiness(id: number, business: Business): Observable<Business> {
+    return this.http.put<Business>(`${this._url.concat('/businesses')}/${id}`, business);
+  }
+
+  deleteBusiness(id: number): Observable<void> {
+    return this.http.delete<void>(`${this._url.concat('/businesses')}/${id}`);
+  }
+
+  deleteBranchById(id: number): Observable<void> {
+    return this.http.delete<void>(`${this._url.concat('/businesses/branch')}/${id}`);
   }
 }

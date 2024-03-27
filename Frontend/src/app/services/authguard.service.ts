@@ -74,7 +74,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'User'
     }
     const customerObj = {
-      url: ['/customers', '/addCustomer'],
+      url: ['/customers', '/addCustomer', '/viewCustomer'],
       permissions: 'Customers'
     }
 
@@ -147,7 +147,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'Configuration_Paper_Market_Rate'
     }
     const permissionConfiguration_Uping = {
-      url: ['/uping', '/addUping'],
+      url: ['/uping', '/addUping', '/uping-view'],
       permissions: 'Configuration_Uping'
     }
     const permissionConfiguration_Product_Process = {
@@ -175,12 +175,20 @@ export class AuthguardService implements CanActivate {
       permissions: 'ProductServices'
     }
     const invoiceObj = {
-      url: ['/get-invoices','/add-invoice','/print-invoice'],
+      url: ['/get-invoices', '/add-invoice', '/print-invoice'],
       permissions: 'Invoice'
     }
     const leadObj = {
-      url: ['/get-leads','/create-lead'],
+      url: ['/get-leads', '/create-lead'],
       permissions: 'Leads'
+    }
+    const businessUnitObj = {
+      url: ['/business-unit'],
+      permissions: 'BusinessUnit'
+    }
+    const Jobs = {
+      url: ['/creating-job', '/create'],
+      permissions: 'Job'
     }
 
 
@@ -193,8 +201,8 @@ export class AuthguardService implements CanActivate {
       permissionConfiguration_CTP, permissionConfiguration_Paper_Size,
       permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate,
       permissionConfiguration_Uping, permissionConfiguration_Product_Process, labourObj,
-      laminationVendorObj, uvVendorObj, productCategoriesObj, productServicesObj,invoiceObj,
-      leadObj,
+      laminationVendorObj, uvVendorObj, productCategoriesObj, productServicesObj, invoiceObj,
+      leadObj, businessUnitObj, Jobs
     ]
 
 

@@ -5,9 +5,7 @@
       <div class="row py-2 mx-auto">
         <div class="col-md-9">
           <div class="form-group mb-3">
-            <label class="form-label fs-4"
-              >Product</label
-            >
+            <label class="form-label fs-4">Product</label>
             <input
               autocomplete="on"
               (focusout)="onFocusOutEvent($event.target)"
@@ -43,7 +41,7 @@
       <div class="row justify-content-evenly mx-auto">
         <div class="col">
           <label class="add-order-label m-0">Category</label>
-          <p-dropdown
+          <p-multiSelect
             styleClass="w-100"
             [options]="categoryArray?.productFieldValuesList"
             optionLabel="name"
@@ -52,7 +50,8 @@
             [(ngModel)]="category"
             [required]="true"
             placeholder="Select category"
-          ></p-dropdown>
+            display="chip"
+          ></p-multiSelect>
           <div *ngIf="category" class="text-success ps-2">{{ valid }}</div>
           <div *ngIf="!category" class="text-danger ps-2">{{ invalid }}</div>
         </div>
@@ -72,6 +71,33 @@
           ></p-multiSelect>
           <div *ngIf="upping" class="text-success ps-2">{{ valid }}</div>
           <div *ngIf="!upping" class="text-danger ps-2">{{ invalid }}</div>
+        </div>
+      </div>
+      <div class="row justify-content-evenly mx-auto my-1">
+        <div *ngIf="selectedCategories.length > 0" class="mb-3">
+          <label class="add-order-label m-0"
+            >Selected Categories and Sizes:</label
+          >
+          <!-- Display categories and sizes -->
+          <div class="row">
+            <ng-container *ngFor="let selectedCategory of selectedCategories">
+              <div class="col-lg-4 mb-3">
+                <div class="card">
+                  <div class="card-header">
+                    {{ selectedCategory.toUpperCase() }}
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li
+                      class="list-group-item"
+                      *ngFor="let size of getSizesForCategory(selectedCategory)"
+                    >
+                      {{ size }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </ng-container>
+          </div>
         </div>
       </div>
     </div>

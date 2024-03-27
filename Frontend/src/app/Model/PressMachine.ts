@@ -23,4 +23,5 @@ export interface PaperSize {
   id: number | null | undefined;
   label: string | null | undefined;
   status: string | null | undefined;
+  pressMachineSize: PressMachineSizeList[];
 }

@@ -107,7 +107,19 @@ import { GetLeadsComponent } from './pages/Leads/get-leads/get-leads.component';
 import { CreateLeadComponent } from './pages/Leads/create-lead/create-lead.component';
 import { TabViewModule } from 'primeng/tabview';
 import { InformationComponent } from './pages/Leads/information/information.component';
-
+import { ViewUpingComponent } from './pages/view-uping/view-uping.component';
+import { BusinessUnitAndProcessesComponent } from './pages/business-unit-and-processes/business-unit-and-processes.component';
+import { AccordionModule } from 'primeng/accordion';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { BadgeModule } from 'primeng/badge';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { EditorModule } from 'primeng/editor';
+import { InputMaskModule } from 'primeng/inputmask';
+import { ViewCustomerComponent } from './pages/view-customer/view-customer.component';
+import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component';
+import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.component';
+import { PickListModule } from 'primeng/picklist';
+import { StepperModule } from 'primeng/stepper';
 @NgModule({
   declarations: [
     AppComponent,
@@ -183,6 +195,11 @@ import { InformationComponent } from './pages/Leads/information/information.comp
     GetLeadsComponent,
     CreateLeadComponent,
     InformationComponent,
+    ViewUpingComponent,
+    BusinessUnitAndProcessesComponent,
+    ViewCustomerComponent,
+    CreateJobComponent,
+    JobRequestsComponent,
   ],
   imports: [
     BrowserModule,
@@ -216,6 +233,14 @@ import { InformationComponent } from './pages/Leads/information/information.comp
     TooltipModule,
     DynamicDialogModule,
     TabViewModule,
+    AccordionModule,
+    InputSwitchModule,
+    BadgeModule,
+    InputTextareaModule,
+    EditorModule,
+    InputMaskModule,
+    PickListModule,
+    StepperModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService, MessageService, ConfirmDialogModule,
     provideRouter(routes, withHashLocation()), DatePipe],

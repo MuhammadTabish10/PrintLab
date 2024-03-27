@@ -12,7 +12,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, forkJoin, takeUntil } from 'rxjs';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
-import { getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 import { AuthguardService } from 'src/app/services/authguard.service';
 
 
@@ -38,36 +37,23 @@ export class AddInvoiceComponent implements OnInit {
 
   tempCustomer: Customer = {
     id: undefined,
-    title: undefined,
     name: undefined,
-    middleName: undefined,
-    lastName: undefined,
     email: undefined,
-    phoneNo: undefined,
+    whatsApp: undefined,
     mobileNo: undefined,
-    website: undefined,
+    since: undefined,
+    clientPreferred: [],
+    leadOwner: undefined,
+    clientStatus: undefined,
     createdAt: undefined,
-    businessName: undefined,
-    subCustomer: false,
-    billParentCustomer: false,
-    parentCustomerId: undefined,
-    billingStreetAddress: undefined,
-    billingCity: undefined,
-    billingProvince: undefined,
-    billingPostalCode: undefined,
-    billingCountry: undefined,
-    sameAsBilling: false,
-    shippingStreetAddress: undefined,
-    shippingCity: undefined,
-    shippingProvince: undefined,
-    shippingPostalCode: undefined,
-    shippingCountry: undefined,
-    openingBalance: undefined,
-    asOf: undefined,
+    customerBusinessName: [],
+    notes: undefined,
     primaryPaymentMethod: undefined,
     terms: undefined,
     tax: undefined,
     status: undefined,
+    statusId: undefined,
+    showLead: undefined
   }
 
   invoice: Invoice = {
@@ -75,36 +61,23 @@ export class AddInvoiceComponent implements OnInit {
     invoiceNo: undefined,
     customer: {
       id: undefined,
-    title: undefined,
-    name: undefined,
-    middleName: undefined,
-    lastName: undefined,
-    email: undefined,
-    phoneNo: undefined,
-    mobileNo: undefined,
-    website: undefined,
-    createdAt: undefined,
-    businessName: undefined,
-    subCustomer: false,
-    billParentCustomer: false,
-    parentCustomerId: undefined,
-    billingStreetAddress: undefined,
-    billingCity: undefined,
-    billingProvince: undefined,
-    billingPostalCode: undefined,
-    billingCountry: undefined,
-    sameAsBilling: false,
-    shippingStreetAddress: undefined,
-    shippingCity: undefined,
-    shippingProvince: undefined,
-    shippingPostalCode: undefined,
-    shippingCountry: undefined,
-    openingBalance: undefined,
-    asOf: undefined,
-    primaryPaymentMethod: undefined,
-    terms: undefined,
-    tax: undefined,
-    status: undefined,
+      name: undefined,
+      since: undefined,
+      leadOwner: undefined,
+      clientStatus: undefined,
+      email: undefined,
+      whatsApp: undefined,
+      mobileNo: undefined,
+      createdAt: undefined,
+      clientPreferred: [],
+      notes: undefined,
+      primaryPaymentMethod: undefined,
+      terms: undefined,
+      tax: undefined,
+      status: undefined,
+      statusId: undefined,
+      showLead: undefined,
+      customerBusinessName: [],
     },
     customerEmail: undefined,
     business: undefined,
@@ -274,9 +247,9 @@ export class AddInvoiceComponent implements OnInit {
 
   private updateInvoiceDetails(customer?: Customer) {
     this.invoice.customerEmail = customer?.email;
-    this.invoice.billingAddress = customer?.billingStreetAddress;
+    this.invoice.billingAddress = customer?.notes;
     this.invoice.terms = customer?.terms;
-    this.invoice.business = customer?.businessName;
+    // this.invoice.business = customer?.customerBusinessName?.businessName;
   }
 
   getProdutList() {

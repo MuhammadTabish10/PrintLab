@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -19,34 +21,24 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
     private String name;
-    private String middleName;
-    private String lastName;
     private String email;
-    private String phoneNo;
-    private String website;
-    @CreationTimestamp
-    private LocalDate createdAt;
-    private String businessName;
-    private boolean isSubCustomer;
-    private boolean billParentCustomer;
-    private Long parentCustomerId;
-    private String billingStreetAddress;
-    private String billingCity;
-    private String billingProvince;
-    private String billingPostalCode;
-    private String billingCountry;
-    private boolean sameAsBilling;
-    private String shippingStreetAddress;
-    private String shippingCity;
-    private String shippingProvince;
-    private String shippingPostalCode;
-    private String shippingCountry;
-    private String openingBalance;
-    private LocalDate asOf;
+    private String whatsApp;
+    private String mobileNo;
+    private String statusId;
+    private Date since;
+    private String leadOwner;
+    private boolean clientStatus;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Business> customerBusinessName;
+    private String clientPreferred;
+    @Column(columnDefinition = "TEXT")
     private String primaryPaymentMethod;
     private String terms;
     private String tax;
+    private String notes;
     private String status;
+    private boolean showLead;
+    @CreationTimestamp
+    private LocalDate createdAt;
 }

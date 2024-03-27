@@ -8,200 +8,125 @@
     </div>
 
     <div class="order-body py-2 px-3">
-      <form
-        class="was-validated"
-        novalidate
-        #customerForm="ngForm"
-        (ngSubmit)="addCustomer()"
-      >
+      <form class="was-validated" novalidate #customerForm="ngForm">
+        <p-accordion [multiple]="true">
+          <p-accordionTab>
+            <ng-template pTemplate="header">
+              <span class="font-bold white-space-nowrap text-nowrap py-15">
+                Client Information
+              </span>
+            </ng-template>
+            <div>
+              <div class="row mx-auto">
+                <div class="col-md-3 my-3">
+                  <label class="add-order-label m-0">Name</label>
+                  <input
+                    type="text"
+                    class="order-search form-control order-form-input m-0"
+                    [(ngModel)]="customer.name"
+                    style="border: 1px solid #ced4da"
+                    name="name"
+                    required
+                  />
+                </div>
+                <div class="col-md-3 my-3">
+                  <label class="add-order-label m-0">Email</label>
+                  <input
+                    type="email"
+                    class="order-search form-control order-form-input m-0"
+                    [(ngModel)]="customer.email"
+                    style="border: 1px solid #ced4da"
+                    name="email"
+                  />
+                  <div class="text-danger pt-2" *ngIf="error !== 'Valid'">
+                    {{ error }}
+                  </div>
+                  <div class="text-success pt-2" *ngIf="error === 'Valid'">
+                    {{ error }}
+                  </div>
+                </div>
+                <div class="col-md-3 my-3">
+                  <label class="add-order-label m-0">Whats App</label>
+                  <input
+                    type="number"
+                    class="order-search form-control order-form-input m-0"
+                    [(ngModel)]="customer.whatsApp"
+                    style="border: 1px solid #ced4da"
+                    name="whatsApp"
+                    min="0"
+                    required
+                  />
+                </div>
+                <div class="col-md-3 my-3">
+                  <label class="add-order-label m-0">Phone</label>
+                  <input
+                    type="number"
+                    class="order-search form-control order-form-input m-0"
+                    [(ngModel)]="customer.mobileNo"
+                    min="0"
+                    style="border: 1px solid #ced4da"
+                    name="phone"
+                  />
+                </div>
+                <div class="col-md-3 my-3">
+                  <label class="add-order-label m-0">Id</label>
+                  <input
+                    type="text"
+                    class="order-search form-control order-form-input m-0"
+                    [(ngModel)]="customer.statusId"
+                    style="border: 1px solid #ced4da"
+                    placeholder="Enter Website Name"
+                    name="id"
+                    required
+                  />
+                </div>
 
-          <!-- Name And Contact Collapse Section -->
+                <div class="col-md-3 my-3">
+                  <label class="add-order-label m-0 d-block">Since</label>
+                  <p-calendar
+                    name="since"
+                    [(ngModel)]="customer.since"
+                    [style]="{ width: '100%' }"
+                    [showIcon]="true"
+                  ></p-calendar>
+                </div>
 
-          <div class="row mx-auto bg-dark text-white border-bottom">
-            <div
-              class="col"
-              data-bs-toggle="collapse"
-              data-bs-target="#nameSection"
-              aria-expanded="false"
-              aria-controls="nameSection"
-            >
-              <h2>Name and Contact</h2>
-            </div>
-            <div class="col text-end">
-              <i
-                class="pi pi-arrow-down pt-2"
-                style="font-size: 1.5rem"
-                data-bs-toggle="collapse"
-                data-bs-target="#nameSection"
-                aria-expanded="false"
-                aria-controls="nameSection"
-              ></i>
-            </div>
-          </div>
-
-          <!-- Name And Contact Collapse Content -->
-          <div class="container-fluid collapse card my-1 show" id="nameSection">
-            <div class="row mx-auto">
-              <div class="col-3 my-3">
-                <label class="add-order-label m-0">Title</label>
-                <input
-                  type="text"
-                  class="order-search form-control order-form-input m-0"
-                  [(ngModel)]="customer.title"
-                  style="border: 1px solid #ced4da"
-                  placeholder="Enter Title"
-                  name="title"
-                  required
-                />
-              </div>
-              <div class="col-3 my-3">
-                <label class="add-order-label m-0">Name</label>
-                <input
-                  type="text"
-                  class="order-search form-control order-form-input m-0"
-                  [(ngModel)]="customer.name"
-                  style="border: 1px solid #ced4da"
-                  placeholder="Enter Name"
-                  name="name"
-                  required
-                />
-              </div>
-              <div class="col-3 my-3">
-                <label class="add-order-label m-0">Middle Name</label>
-                <input
-                  type="text"
-                  class="order-search form-control order-form-input m-0"
-                  [(ngModel)]="customer.middleName"
-                  style="border: 1px solid #ced4da"
-                  placeholder="Enter Middle Name"
-                  name="mName"
-                  required
-                />
-              </div>
-              <div class="col-3 my-3">
-                <label class="add-order-label m-0">Last Name</label>
-                <input
-                  type="text"
-                  class="order-search form-control order-form-input m-0"
-                  [(ngModel)]="customer.lastName"
-                  style="border: 1px solid #ced4da"
-                  placeholder="Enter Last Name"
-                  name="lName"
-                  required
-                />
-              </div>
-              <!-- <div class="row mx-auto px-0"> -->
-              <div class="col my-3">
-                <label class="add-order-label m-0">Company Name</label>
-                <input
-                  type="text"
-                  class="order-search form-control order-form-input m-0 w-100"
-                  [(ngModel)]="customer.businessName"
-                  style="border: 1px solid #ced4da"
-                  placeholder="Enter Company Name"
-                  name="companyName"
-                  required
-                />
-              </div>
-              <div class="col my-3">
-                <label class="add-order-label m-0">Email</label>
-                <input
-                  type="text"
-                  class="order-search form-control order-form-input m-0"
-                  [(ngModel)]="customer.email"
-                  style="border: 1px solid #ced4da"
-                  placeholder="Enter Email"
-                  name="email"
-                  required
-                />
-              </div>
-              <div class="col my-3">
-                <label class="add-order-label m-0">Phone Number</label>
-                <input
-                  type="text"
-                  class="order-search form-control order-form-input m-0"
-                  [(ngModel)]="customer.phoneNo"
-                  style="border: 1px solid #ced4da"
-                  placeholder="Enter Phone Number"
-                  name="phoneNo"
-                  required
-                />
-              </div>
-              <div class="col my-3">
-                <label class="add-order-label m-0">Mobile Number</label>
-                <input
-                  type="text"
-                  class="order-search form-control order-form-input m-0"
-                  [(ngModel)]="customer.mobileNo"
-                  style="border: 1px solid #ced4da"
-                  placeholder="Enter Phone Number"
-                  name="phoneNo"
-                  required
-                />
-              </div>
-              <div class="col my-3">
-                <label class="add-order-label m-0">Website</label>
-                <input
-                  type="text"
-                  class="order-search form-control order-form-input m-0"
-                  [(ngModel)]="customer.website"
-                  style="border: 1px solid #ced4da"
-                  placeholder="Enter Website Name"
-                  name="wName"
-                  required
-                />
-              </div>
-              <!-- </div> -->
-
-              <div class="my-3">
-                <p-checkbox
-                  [binary]="true"
-                  inputId="binaryCustomer"
-                  label="Is a sub-customer"
-                  name="subCustomer"
-                  (click)="clear()"
-                  [(ngModel)]="customer.subCustomer"
-                ></p-checkbox>
-              </div>
-
-              <div class="col-3 my-3" *ngIf="customer.subCustomer">
-                <label class="add-order-label m-0">Parent Customer</label>
-                <!-- <div *ngIf="idFromQueryParam">
-                    <p-dropdown
-                      styleClass="w-100"
-                      [options]="customerArray"
-                      optionLabel="name"
-                      name="pCustomer"
-                      (ngModelChange)="parentCustomer($event)"
-                      [(ngModel)]="customer.parentCustomerId"
-                    ></p-dropdown>
-                  </div> -->
-                <!-- <div *ngIf="!idFromQueryParam"> -->
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="customerArray"
-                  optionLabel="name"
-                  name="pCustomer"
-                  [(ngModel)]="selectedParent"
-                ></p-dropdown>
-                <!-- </div> -->
-              </div>
-              <div class="my-3" *ngIf="customer.subCustomer">
-                <p-checkbox
-                  [binary]="true"
-                  inputId="binaryBill"
-                  label="Bill parent customer"
-                  name="billParentCustomer"
-                  [(ngModel)]="customer.billParentCustomer"
-                ></p-checkbox>
+                <div class="col-md-3 my-3">
+                  <label class="add-order-label m-0">Lead Owner</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="userList"
+                    optionLabel="name"
+                    optionValue="email"
+                    name="leadOwner"
+                    [(ngModel)]="customer.leadOwner"
+                  ></p-dropdown>
+                </div>
+                <div
+                  class="col-md-3 my-3 mt-4"
+                  *ngIf="
+                    customer.clientStatus !== undefined &&
+                    customer.clientStatus !== null
+                  "
+                >
+                  <label class="add-order-label m-0">Active</label>
+                  <div class="form-check form-switch form-switch-lg">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="flexSwitchCheckChecked"
+                      name="impositionValueChecked"
+                      [(ngModel)]="customer.clientStatus"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
-
+          </p-accordionTab>
+        </p-accordion>
         <!-- Address Collapse Section -->
 
-        <div class="row mx-auto bg-dark text-white border-bottom">
+        <!-- <div class="row mx-auto bg-dark text-white border-bottom">
           <div
             class="col"
             data-bs-toggle="collapse"
@@ -221,10 +146,14 @@
               aria-controls="addressSection"
             ></i>
           </div>
-        </div>
+        </div> -->
 
         <!-- Address Collapse Content -->
-        <div class="container-fluid collapse card my-1 show" id="addressSection">
+
+        <!-- <div
+          class="container-fluid collapse card my-1 show"
+          id="addressSection"
+        >
           <div class="row">
             <div class="col-12">
               <h2>Billing Address</h2>
@@ -361,138 +290,243 @@
               />
             </div>
           </div>
-        </div>
-
-        <!-- Balance Collapse Section -->
-        <div class="row mx-auto bg-dark text-white border-bottom">
-          <div
-            class="col"
-            data-bs-toggle="collapse"
-            data-bs-target="#balanceSection"
-            aria-expanded="false"
-            aria-controls="balanceSection"
-          >
-            <h2>Balance</h2>
-          </div>
-          <div class="col text-end">
-            <i
-              class="pi pi-arrow-down pt-2"
-              style="font-size: 1.5rem"
-              data-bs-toggle="collapse"
-              data-bs-target="#balanceSection"
-              aria-expanded="false"
-              aria-controls="balanceSection"
-            ></i>
-          </div>
-        </div>
-
-        <!-- Balance Collapse content -->
-        <div class="container-fluid collapse card my-1 show" id="balanceSection">
-          <div class="row">
-            <div class="col-3 my-3">
-              <label class="add-order-label m-0">Opening Balance</label>
-              <input
-                type="number"
-                class="order-search form-control order-form-input m-0"
-                [(ngModel)]="customer.openingBalance"
-                style="border: 1px solid #ced4da"
-                placeholder="Enter Opening Balance"
-                name="openingBalance"
-                required
-              />
+        </div> -->
+        <p-accordion
+          [multiple]="true"
+          *ngIf="customer.name && customer.statusId"
+        >
+          <p-accordionTab>
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-dark" type="button" (click)="showModal()">
+                <i class="pi pi-plus fs-6"></i>
+                Business
+              </button>
             </div>
-            <div class="col-3 my-3">
-              <label class="add-order-label m-0">As Of</label>
-              <div class="mt-2">
-                <p-calendar
-                  [(ngModel)]="customer.asOf"
-                  [showIcon]="true"
-                  [style]="{ height: '45px' }"
-                  name="asOf"
-                ></p-calendar>
+
+            <div>
+              <p-accordion [multiple]="true">
+                <p-accordionTab
+                  *ngFor="let business of businessList; let i = index"
+                  [selected]="i === openTabIndex"
+                  (onOpen)="openTabIndex = i"
+                  (onClose)="openTabIndex = null"
+                >
+                  <ng-template pTemplate="header">
+                    <span class="ms-3 badge">
+                      <p-badge
+                        [value]="
+                          business.businessBranchList?.length?.toString()
+                        "
+                        [style]="{ 'background-color': 'black' }"
+                      ></p-badge>
+                    </span>
+
+                    <span
+                      class="font-bold white-space-nowrap text-nowrap"
+                      [ngClass]="{
+                        'p-accordion p-accordion-header:not(p-disabled)p-highlight p-accordion-header-link':
+                          i === openTabIndex
+                      }"
+                    >
+                      {{ business?.businessName }}
+                    </span>
+
+                    <div
+                      class="d-flex justify-content-end align-items-center w-100"
+                    >
+                      <span
+                        class="pi pi-plus me-3"
+                        (click)="showModal(undefined, business)"
+                      ></span>
+                      <span
+                        class="pi pi-file-edit me-3"
+                        (click)="showModal(undefined, business, business.id!)"
+                      ></span>
+                      <span
+                        *ngIf="business.businessBranchList?.length === 0"
+                        class="pi pi-trash"
+                        (click)="deleteBusiness(i)"
+                      ></span>
+                    </div>
+                  </ng-template>
+                  <div class="card" *ngIf="business.businessBranchList">
+                    <p-table
+                      *ngIf="business.businessBranchList.length > 0"
+                      [value]="business.businessBranchList"
+                      [columns]="cols"
+                      [reorderableColumns]="true"
+                      [tableStyle]="{ 'min-width': '50rem' }"
+                    >
+                      <ng-template pTemplate="header" let-columns>
+                        <tr>
+                          <th style="width: 3rem"></th>
+                          <th
+                            class="col-2"
+                            *ngFor="let col of columns"
+                            pReorderableColumn
+                          >
+                            {{ col.header }}
+                          </th>
+                          <!-- Add Actions column header -->
+                          <th
+                            class="col-3 text-end"
+                            style="padding-right: 4.5rem"
+                          >
+                            Actions
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template
+                        pTemplate="body"
+                        let-rowData
+                        let-columns="columns"
+                        let-index="rowIndex"
+                      >
+                        <tr [pReorderableRow]="index">
+                          <td>
+                            <span
+                              class="pi pi-bars"
+                              pReorderableRowHandle
+                            ></span>
+                          </td>
+                          <td *ngFor="let col of columns">
+                            <ng-container>
+                              {{ rowData[col.field] }}
+                            </ng-container>
+                          </td>
+                          <!-- Actions column -->
+                          <td class="text-end">
+                            <div
+                              class="btn-group mr-2"
+                              role="group"
+                              aria-label="Second group"
+                            >
+                              <button
+                                type="button"
+                                class="btn order-table-btn"
+                                (click)="showModal(rowData, business)"
+                              >
+                                <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                              </button>
+                              <button
+                                type="button"
+                                class="btn order-table-btn"
+                                (click)="deleteBranchById(rowData.id)"
+                              >
+                                <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </p-accordionTab>
+              </p-accordion>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+        <!-- Payment And Taxtation content -->
+
+        <p-accordion [multiple]="true">
+          <p-accordionTab>
+            <ng-template pTemplate="header">
+              <span class="font-bold white-space-nowrap text-nowrap py-15">
+                Payment and taxtation
+              </span>
+            </ng-template>
+            <div>
+              <div class="row">
+                <div class="col-3 my-3">
+                  <label class="add-order-label m-0">Client Prefered</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="productField[0]?.productFieldValuesList"
+                    optionLabel="name"
+                    optionValue="name"
+                    name="clientPrefered"
+                    [(ngModel)]="customer.clientPreferred"
+                  ></p-dropdown>
+                </div>
+                <div class="col-3 my-3">
+                  <label class="add-order-label m-0"
+                    >Allowed Payment Method</label
+                  >
+                  <p-multiSelect
+                    styleClass="w-100"
+                    [options]="productField[0]?.productFieldValuesList"
+                    optionLabel="name"
+                    optionValue="name"
+                    display="chip"
+                    name="primaryPaymentMethod"
+                    [(ngModel)]="customer.primaryPaymentMethod"
+                  ></p-multiSelect>
+                </div>
+                <div class="col-3 my-3">
+                  <label class="add-order-label m-0">Terms</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="term[0]?.productFieldValuesList"
+                    optionLabel="name"
+                    optionValue="name"
+                    name="terms"
+                    [(ngModel)]="customer.terms"
+                  ></p-dropdown>
+                </div>
+                <div class="col-3 my-3">
+                  <label class="add-order-label m-0">Tax</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="tax[0]?.productFieldValuesList"
+                    optionLabel="name"
+                    optionValue="name"
+                    name="tax"
+                    [(ngModel)]="customer.tax"
+                  ></p-dropdown>
+                </div>
               </div>
             </div>
+          </p-accordionTab>
+        </p-accordion>
+
+        <p-accordion [multiple]="true">
+          <p-accordionTab>
+            <ng-template pTemplate="header">
+              <span class="font-bold white-space-nowrap text-nowrap py-15">
+                Notes / LeadOwner
+              </span>
+            </ng-template>
+            <div class="card">
+              <p-editor
+                [(ngModel)]="customer.notes"
+                [style]="{ height: '320px' }"
+                name="notes"
+              ></p-editor>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+
+        <div
+          class="col-12 text-end my-4 d-flex justify-content-end"
+          *ngIf="customer.showLead !== undefined && customer.showLead !== null"
+        >
+          <label class="add-order-label m-0 me-2">Share with lead owner</label>
+          <div class="form-check form-switch form-switch-lg">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="flexSwitchCheckChecked2"
+              name="impositionValueChecked2"
+              [(ngModel)]="customer.showLead"
+            />
           </div>
         </div>
-
-        <!-- Payments And Taxation Section-->
-        <div class="row mx-auto bg-dark text-white border-bottom">
-          <div
-            class="col"
-            data-bs-toggle="collapse"
-            data-bs-target="#paymentSection"
-            aria-expanded="false"
-            aria-controls="paymentSection"
-          >
-            <h2>Payment And Taxtation</h2>
-          </div>
-          <div class="col text-end">
-            <i
-              class="pi pi-arrow-down pt-2"
-              style="font-size: 1.5rem"
-              data-bs-toggle="collapse"
-              data-bs-target="#paymentSection"
-              aria-expanded="false"
-              aria-controls="paymentSection"
-            ></i>
-          </div>
-        </div>
-
-        <!-- Payment And Taxtation content -->
-        <div class="collapse container-fluid card my-1 show" id="paymentSection">
-          <div class="row">
-            <div class="col-3 my-3">
-              <label class="add-order-label m-0">Primary Payment Method</label>
-              <p-dropdown
-                styleClass="w-100"
-                [options]="productField[0]?.productFieldValuesList"
-                optionLabel="name"
-                optionValue="name"
-                name="paymentMethod"
-                [(ngModel)]="customer.primaryPaymentMethod"
-              ></p-dropdown>
-            </div>
-            <div class="col-3 my-3">
-              <label class="add-order-label m-0">Terms</label>
-              <p-dropdown
-                styleClass="w-100"
-                [options]="term[0]?.productFieldValuesList"
-                optionLabel="name"
-                optionValue="name"
-                name="terms"
-                [(ngModel)]="customer.terms"
-              ></p-dropdown>
-            </div>
-            <div class="col-3 my-3">
-              <label class="add-order-label m-0">Tax</label>
-              <p-dropdown
-                styleClass="w-100"
-                [options]="tax[0]?.productFieldValuesList"
-                optionLabel="name"
-                optionValue="name"
-                name="tax"
-                [(ngModel)]="customer.tax"
-              ></p-dropdown>
-            </div>
-          </div>
-        </div>
-
-        <!-- <div class="col-6 my-3">
-              <label class="add-order-label m-0">Status</label><br />
-              <label class="switch mt-2">
-                <input
-                  type="checkbox"
-                  [checked]="statusFlag"
-                  (click)="getStatusValue()"
-                />
-                <span class="slider round"></span>
-              </label>
-            </div> -->
-        <div class="col-12 text-end my-4">
+        <div class="col-12 text-end my-4 d-flex justify-content-end">
           <button
-            type="submit"
-            class="btn btn-dark px-4"
+            type="button"
+            class="btn btn-dark px-4 ms-auto"
             [disabled]="!customerForm.valid"
+            (click)="addCustomer()"
           >
             {{ buttonName }}
           </button>
@@ -502,3 +536,108 @@
   </div>
 </div>
 <p-toast></p-toast>
+<p-dialog
+  [header]="heading"
+  position="top"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '25vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onModalClose()"
+  [dismissableMask]="true"
+  [modal]="true"
+>
+  <form #businessForm="ngForm" (ngSubmit)="addToList()">
+    <div class="row mx-auto my-3">
+      <div class="col-12" *ngIf="mode === 'Business'">
+        <label class="d-block add-order-label m-0"
+          >This business will be associated with {{ customer.name }}.</label
+        >
+        <label class="d-block add-order-label m-0">Name</label>
+        <input
+          pInputText
+          [(ngModel)]="name"
+          name="category"
+          class="w-100"
+          required
+        />
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0 fw-bolder"
+            >This branch will be added to {{ business.businessName }}</label
+          >
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Name</label>
+          <input
+            pInputText
+            [(ngModel)]="branch.branchName"
+            name="branch"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Address</label>
+          <textarea
+            rows="3"
+            required
+            cols="30"
+            class="w-100"
+            name="address"
+            pInputTextarea
+            [autoResize]="true"
+            [(ngModel)]="branch.address"
+          ></textarea>
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">City</label>
+          <input
+            [(ngModel)]="branch.city"
+            pInputText
+            name="city"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Point of contact</label>
+          <input
+            [(ngModel)]="branch.pointOfContact"
+            pInputText
+            name="pointOfContact"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Phone</label>
+          <input
+            [(ngModel)]="branch.phoneNumber"
+            pInputText
+            name="phoneNumber"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end me-3">
+      <button class="btn btn-dark" type="submit">Save</button>
+    </div>
+  </form>
+</p-dialog>

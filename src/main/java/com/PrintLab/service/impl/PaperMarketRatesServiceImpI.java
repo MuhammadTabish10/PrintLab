@@ -28,8 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
-{
+public class PaperMarketRatesServiceImpI implements PaperMarketRatesService {
     private final PaperMarketRatesRepository paperMarketRatesRepository;
     private final VendorRepository vendorRepository;
     private final EntityManager entityManager;
@@ -57,7 +56,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     @Override
     public PaginationResponse getAllPaginatedPaperMarketRates(Integer pageNumber, Integer pageSize) {
 
-        Pageable page = PageRequest.of(pageNumber,pageSize);
+        Pageable page = PageRequest.of(pageNumber, pageSize);
         Page<PaperMarketRates> pagePaperMarketRates = paperMarketRatesRepository.findAll(page);
         List<PaperMarketRates> paperMarketRatesList = pagePaperMarketRates.getContent();
 
@@ -93,7 +92,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     @Override
     public PaginationResponse getPaperMarketRatesBySearchCriteria(Integer pageNumber, Integer pageSize, PaperMarketRatesDto searchCriteria) {
 
-        Pageable page = PageRequest.of(pageNumber,pageSize);
+        Pageable page = PageRequest.of(pageNumber, pageSize);
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PaperMarketRates> cq = criteriaBuilder.createQuery(PaperMarketRates.class);
         Root<PaperMarketRates> paperMarketRatesRoot = cq.from(PaperMarketRates.class);
@@ -212,7 +211,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 
     @Override
     public Set<String> findDistinctMadeInByPaperStockAndBrand(String paperStock, String brand) {
-        return paperMarketRatesRepository.findDistinctMadeInByPaperStockAndBrand(paperStock,brand);
+        return paperMarketRatesRepository.findDistinctMadeInByPaperStockAndBrand(paperStock, brand);
     }
 
     @Override
@@ -234,12 +233,12 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
 
     @Override
     public Set<String> findGsmByPaperStockAndBrandAndMadeInAndDimensionAndVendor(String paperStock, String brand, String madeIn, String dimension, Vendor vendor) {
-        return paperMarketRatesRepository.findDistinctGsmByPaperStockAndBrandAndMadeInAndDimensionAndVendor(paperStock, brand, madeIn, dimension,vendor.getId());
+        return paperMarketRatesRepository.findDistinctGsmByPaperStockAndBrandAndMadeInAndDimensionAndVendor(paperStock, brand, madeIn, dimension, vendor.getId());
     }
 
     @Override
     public List<PaperMarketRatesDto> findPaperMarketRateByEveryColumn(String paperStock, Long vendorId, String brand, String madeIn, String dimension, List<Integer> gsm) {
-        List<PaperMarketRates> paperMarketRatesList = paperMarketRatesRepository.findPaperMarketRateByEveryColumn(paperStock,vendorId,brand,madeIn,dimension,gsm);
+        List<PaperMarketRates> paperMarketRatesList = paperMarketRatesRepository.findPaperMarketRateByEveryColumn(paperStock, vendorId, brand, madeIn, dimension, gsm);
         List<PaperMarketRatesDto> paperMarketRatesDtoList = new ArrayList<>();
 
         if (paperMarketRatesList == null) {
@@ -269,10 +268,9 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     @Override
     public List<Integer> getDistinctGSMForPaperStock(String paperStock) {
         Optional<List<Integer>> optionalGsmList = Optional.ofNullable(paperMarketRatesRepository.findDistinctGSMByPaperStock(paperStock));
-        if(optionalGsmList.isPresent()){
+        if (optionalGsmList.isPresent()) {
             return optionalGsmList.get();
-        }
-        else{
+        } else {
             throw new RecordNotFoundException("PaperStock not found at: " + paperStock);
         }
     }
@@ -280,11 +278,10 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     @Override
     public PaperMarketRatesDto findByPaperStock(String paperStock) {
         Optional<PaperMarketRates> paperMarketRates = Optional.ofNullable(paperMarketRatesRepository.findByPaperStock(paperStock));
-        if(paperMarketRates.isPresent()){
+        if (paperMarketRates.isPresent()) {
             PaperMarketRates pmr = paperMarketRates.get();
             return toDto(pmr);
-        }
-        else {
+        } else {
             throw new RecordNotFoundException(String.format("Paper Market Rate not found at => %s", paperStock));
         }
     }
@@ -306,11 +303,10 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     public PaperMarketRatesDto findById(Long id) {
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);
 
-        if(optionalPaperMarketRates.isPresent()) {
+        if (optionalPaperMarketRates.isPresent()) {
             PaperMarketRates paperMarketRates = optionalPaperMarketRates.get();
             return toDto(paperMarketRates);
-        }
-        else {
+        } else {
             throw new RecordNotFoundException(String.format("Paper Market Rate not found for id => %d", id));
         }
     }
@@ -320,11 +316,10 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     public String deleteById(Long id) {
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);
 
-        if(optionalPaperMarketRates.isPresent()) {
+        if (optionalPaperMarketRates.isPresent()) {
             PaperMarketRates paperMarketRates = optionalPaperMarketRates.get();
             paperMarketRatesRepository.deleteById(id);
-        }
-        else{
+        } else {
             throw new RecordNotFoundException(String.format("Paper Market Rate not found for id => %d", id));
         }
         return null;
@@ -335,7 +330,7 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
     public PaperMarketRatesDto updatePaperMarketRates(Long id, PaperMarketRatesDto paperMarketRatesDto) {
         PaperMarketRates paperMarketRates = toEntity(paperMarketRatesDto);
         Optional<PaperMarketRates> optionalPaperMarketRates = paperMarketRatesRepository.findById(id);
-        if(optionalPaperMarketRates.isPresent()){
+        if (optionalPaperMarketRates.isPresent()) {
             PaperMarketRates existingPmr = optionalPaperMarketRates.get();
 
             // Round off both ratePkr values to 1 decimal place
@@ -367,14 +362,13 @@ public class PaperMarketRatesServiceImpI implements PaperMarketRatesService
             existingPmr.setVendor(vendorRepository.findById(paperMarketRates.getVendor())
                     .orElseThrow(() -> new RecordNotFoundException("Vendor not found")).getId());
 
-            if(paperMarketRates.getRecordType() == null){
+            if (paperMarketRates.getRecordType() == null) {
                 existingPmr.setRecordType("manual");
             }
 
             PaperMarketRates updatedPmr = paperMarketRatesRepository.save(existingPmr);
             return toDto(updatedPmr);
-        }
-        else {
+        } else {
             throw new RecordNotFoundException(String.format("Paper Market Rate not found for id => %d", id));
         }
     }
