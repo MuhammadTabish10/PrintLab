@@ -73,4 +73,11 @@ export class ServiceService {
     let url = `${this.BASE_URL}/product-and-service/${name}`;
     return this.http.get<ProductService[]>(url);
   }
+
+  searchProductServiceNameByCategory(categoryId: number): Observable<ProductService[]> {
+    let url = `${this.BASE_URL}/category/${categoryId}`;
+    return this.http.get<ProductService[]>(url);
+  }
+
+
 }

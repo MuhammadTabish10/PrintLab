@@ -1,0 +1,25 @@
+::ng-deep .p-multiselect .p-multiselect-label {
+  padding: 0.55rem 0.75rem !important;
+}
+.col-lg-1 ::ng-deep .p-inputnumber-input{
+  flex: 0 0 auto;
+  width: 8.33333333%;
+}
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.image-item {
+  max-width: 100%; /* Set maximum width to ensure responsiveness */
+  max-height: 200px; /* Set maximum height to limit image size */
+  width: auto; /* Maintain aspect ratio */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+::ng-deep .p-button{
+  background-color: black!important;
+}

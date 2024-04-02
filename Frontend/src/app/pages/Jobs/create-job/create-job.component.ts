@@ -7,39 +7,107 @@ import { CustomerService } from 'src/app/services/customer.service';
 import { Customer } from 'src/app/Model/Customer';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/Model/User';
+import { ProductionJob } from 'src/app/Model/ProductionJob';
+import { JobService } from '../Service/job.service';
+import { Business, BusinessBranch } from 'src/app/Model/Business';
+import { TreeNode } from 'primeng/api';
+import { ServiceService } from '../../Product/Service/service.service';
+import { ProductService } from 'src/app/Model/ProductService';
+import { ProductCategory } from 'src/app/Model/ProductCategory';
+import { SuccessMessageService } from 'src/app/services/success-message.service';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ImageViewerComponent } from '../image-viewer/image-viewer.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+
+
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 
 @Component({
   selector: 'app-create-job',
   templateUrl: './create-job.component.html',
-  styleUrls: ['./create-job.component.css']
+  styleUrls: ['./create-job.component.css'],
+  providers: [MatDialog]
 })
 export class CreateJobComponent implements OnInit {
 
+  ref: DynamicDialogRef | undefined;
   categoryList: BusinessUnit[] = [];
   sourceProducts: BusinessUnitProcessDto[] = [];
   targetProducts: BusinessUnitProcessDto[] = [];
   processCategory: BusinessUnit[] = [];
   customerList: Customer[] = [];
   productionUserList: User[] = [];
+  businessList: Business[] = [];
+  branchList: BusinessBranch[] = [];
+  selectedBusinesses: Business[] = [];
+  selectedBranches: BusinessBranch[] = [];
+  productCategoryList: TreeNode<ProductCategory>[] = [];
+  job: ProductionJob = {
+    id: undefined,
+    client: undefined,
+    businessCategory: undefined,
+    productionUser: undefined,
+    processList: [],
+    jobId: undefined,
+    productCategory: undefined,
+    productName: undefined,
+    description: undefined,
+    qty: undefined,
+    rate: undefined,
+    amount: undefined,
+    linkedInvoice: undefined,
+    privateNotes: undefined,
+    orderTrackingNotes: undefined,
+    productionNotes: undefined,
+    proof: undefined,
+    ctpFileName: undefined,
+    locationOfFile: undefined,
+    sentOn: undefined,
+    designPackageFile: undefined,
+    locationOfDesignFile: undefined,
+    jobStartDate: undefined,
+    productionStartDate: undefined,
+    productionEndDate: undefined,
+    packingAndQADate: undefined,
+    deliveryDate: undefined,
+    sendTo: undefined,
+    expiryDate: undefined,
+    processedDetailList: []
+  }
+  uploadedFiles: any[] = [];
+
+  idFromQueryParam: number | null | undefined;
+  productAndServiceList: ProductService[] = [];
+  imageObjects: { objectURL: { changingThisBreaksApplicationSecurity: string } }[] = [];
 
   constructor(
     private businessUnitService: BusinessUnitService,
+    private successService: SuccessMessageService,
     private errorService: ErrorHandleService,
+    private productionJobService: JobService,
     private customerService: CustomerService,
-    private userService: UserService
+    private productService: ServiceService,
+    private userService: UserService,
+    private dialog: MatDialog,
+    private router: Router
   ) { }
   ngOnInit(): void {
     this.getCategoryList();
     this.getCustomerList();
+    this.getProductList();
     this.getUserList();
   }
-
 
   private getCategoryList(): void {
     this.businessUnitService.getBusinessUnits().subscribe(
       (res: BusinessUnit[]) => {
         this.categoryList = res;
-        debugger
+
       }, (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
       }
@@ -47,14 +115,14 @@ export class CreateJobComponent implements OnInit {
   }
 
   onCategoryChange(category: string): void {
-    debugger
+
     this.businessUnitService.processListByCategoryName(category).subscribe(
       (res: BusinessUnit[]) => {
         this.processCategory = res;
         res.forEach((element: BusinessUnit) => {
           this.sourceProducts = element.processList!;
         })
-        debugger
+
       }, (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
       }
@@ -73,7 +141,7 @@ export class CreateJobComponent implements OnInit {
     this.userService.getUsers().subscribe(
       (res: User[]) => {
         this.productionUserList = this.hasProductionRole(res);
-        debugger;
+        ;
       },
       (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
@@ -83,6 +151,181 @@ export class CreateJobComponent implements OnInit {
   hasProductionRole(res: User[]): User[] {
     return res.filter(user => {
       return user.roles?.some(role => role.name === 'ROLE_PRODUCTION');
+    });
+  }
+
+  submit(): void {
+    this.job.processList = this.targetProducts;
+    if (this.job.productCategory.label) {
+      this.job.productCategory = this.job.productCategory.label
+    }
+    // Assuming uploadedFiles is an array of File objects
+    this.job.proof = this.uploadedFiles.map(file => {
+      return { id: null, fileData: file.objectURL.changingThisBreaksApplicationSecurity };
+    });
+    this.selectedBusinesses.forEach(business => {
+      business.businessBranchList = this.selectedBranches;
+    })
+    this.job.businessName = this.selectedBusinesses;
+    const serviceToCall = this.job.id ? this.productionJobService.updateProductionJob(this.idFromQueryParam!, this.job) : this.productionJobService.postProductionJob(this.job);
+    serviceToCall.subscribe((res: ProductionJob) => {
+      this.successService.showSuccess("Job created successfully");
+      setTimeout(() => {
+        this.router.navigate(['/get-jobs']);
+      }, 2000);
+    }, (error: BackendErrorResponse) => {
+      this.errorService.showError(error.error.error);
+    })
+  }
+
+  getBusinessList(id: number): void {
+    this.selectedBranches = [];
+    this.selectedBusinesses = [];
+    const selectedCustomer = this.customerList.find(customer => customer.id === id);
+    if (!selectedCustomer) {
+      return;
+    }
+
+    this.customerService.getCustomerById(selectedCustomer.id)
+      .subscribe(
+        (res: Customer) => {
+          this.businessList = res.customerBusinessName;
+          this.businessList.forEach(business => {
+            this.branchList = business.businessBranchList || [];
+
+          });
+        },
+        (error: BackendErrorResponse) => {
+          this.errorService.showError(error.error.error);
+        }
+      );
+  }
+
+  private getProductList(): void {
+    this.productService.getAllProductCategory().subscribe(
+      (res: ProductCategory[]) => {
+        // Build the category tree structure using fetched data
+        this.productCategoryList = this.buildCategoryTree(res);
+      },
+      (err: BackendErrorResponse) => {
+        this.errorService.showError(err.error.error);
+      }
+    );
+  }
+
+  // Function to transform a single product category into a TreeNode object
+  private transformCategory(category: ProductCategory): TreeNode<ProductCategory> {
+    // Generate key for the category, use 'root' if no ID is present
+    const categoryKey = category.id ? category.id.toString() : 'root';
+
+    // Create a TreeNode object for the category
+    const treeNode: TreeNode<ProductCategory> = {
+      key: categoryKey,
+      label: category.name || '',
+      data: category,
+      children: []
+    };
+
+    return treeNode; // Return the created TreeNode
+  }
+
+  // Recursion function to build the category tree structure
+  private buildCategoryTree(categories: ProductCategory[], parentId?: number): TreeNode<ProductCategory>[] {
+
+    const parentCategories = categories.filter(category => category.parentProductCategory?.id === parentId);
+
+    return parentCategories.map(parent => {
+
+      const treeNode = this.transformCategory(parent);
+
+      // Recursively build children for the parent category
+      treeNode.children = this.buildCategoryTree(categories, parent?.id!);
+
+      return treeNode; // Return the TreeNode for the parent category
+    });
+  }
+
+  getProductNameList(productCategory: TreeNode<ProductCategory>): void {
+    this.productAndServiceList = [];
+    if (productCategory && productCategory.children && productCategory.children.length > 0) {
+      return;
+    }
+    this.productService.searchProductServiceNameByCategory(+productCategory?.key!).subscribe(res => {
+      this.productAndServiceList = res;
+    });
+  }
+
+  calculateAmount(value: ProductionJob) {
+
+    if (value.qty && value.rate) {
+      value.amount = value.qty * value.rate;
+    } else {
+      value.amount = 0;
+    }
+  }
+
+  AutoFillOthers(product: ProductionJob): void {
+
+    const selectedProduct = this.productAndServiceList.find(p => p.name === product.productName);
+    if (selectedProduct) {
+      this.getDataForOtherFields(selectedProduct);
+    } else {
+      this.emptyAutoFilledFields(product);
+    }
+  }
+
+  getDataForOtherFields(selectedProduct: ProductService) {
+
+    this.job.description = selectedProduct.description;
+    this.job.rate = selectedProduct.cost;
+  }
+
+  emptyAutoFilledFields(product: ProductionJob) {
+    product.description = null;
+    product.rate = null;
+  }
+
+  onUpload(event: UploadEvent) {
+    for (let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    debugger
+    // Convert FileList to an array and then map over it to extract objectURLs
+    const filesArray = Array.from(this.uploadedFiles);
+    this.imageObjects = filesArray.map((file: any) => ({ objectURL: file.objectURL }));
+  }
+
+
+
+
+  openImage(imageUrl: string): void {
+    this.dialog.open(ImageViewerComponent, {
+      data: { imageUrl }
+    });
+  }
+  onRemove(event: any) {
+    const index = this.uploadedFiles.indexOf(event.file);
+    const indexImg = this.imageObjects.findIndex(img => img.objectURL === event.file.objectURL);
+
+    if (index !== -1) {
+      this.uploadedFiles.splice(index, 1);
+    }
+
+    if (indexImg !== -1) {
+      this.imageObjects.splice(indexImg, 1);
+    }
+  }
+
+  onClear(event: any) {
+    this.uploadedFiles = [];
+    this.imageObjects = [];
+  }
+
+  copyText(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      console.log('Text copied successfully');
+    }).catch((error) => {
+      console.error('Could not copy text: ', error);
     });
   }
 

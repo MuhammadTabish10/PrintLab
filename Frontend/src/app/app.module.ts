@@ -102,7 +102,6 @@ import { GetInvoicesComponent } from './pages/Invoice/get-invoices/get-invoices.
 import { AddInvoiceComponent } from './pages/Invoice/add-invoice/add-invoice.component';
 import { InvoicePrintComponent } from './pages/Invoice/invoice-print/invoice-print.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { GetLeadsComponent } from './pages/Leads/get-leads/get-leads.component';
 import { CreateLeadComponent } from './pages/Leads/create-lead/create-lead.component';
 import { TabViewModule } from 'primeng/tabview';
@@ -119,7 +118,11 @@ import { ViewCustomerComponent } from './pages/view-customer/view-customer.compo
 import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component';
 import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.component';
 import { PickListModule } from 'primeng/picklist';
-import { StepperModule } from 'primeng/stepper';
+import { ImageViewerComponent } from './pages/Jobs/image-viewer/image-viewer.component';
+import { MatDialogModule } from '@angular/material/dialog'; // Import MatDialogModule
+import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule
+import { StepsModule } from 'primeng/steps';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -200,6 +203,7 @@ import { StepperModule } from 'primeng/stepper';
     ViewCustomerComponent,
     CreateJobComponent,
     JobRequestsComponent,
+    ImageViewerComponent,
   ],
   imports: [
     BrowserModule,
@@ -231,7 +235,6 @@ import { StepperModule } from 'primeng/stepper';
     TimelineModule,
     TreeTableModule,
     TooltipModule,
-    DynamicDialogModule,
     TabViewModule,
     AccordionModule,
     InputSwitchModule,
@@ -240,7 +243,9 @@ import { StepperModule } from 'primeng/stepper';
     EditorModule,
     InputMaskModule,
     PickListModule,
-    StepperModule,
+    MatDialogModule,
+    MatIconModule,
+    StepsModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService, MessageService, ConfirmDialogModule,
     provideRouter(routes, withHashLocation()), DatePipe],

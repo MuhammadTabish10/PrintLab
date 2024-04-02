@@ -1,6 +1,7 @@
 import { ProductCategory } from "./ProductCategory";
 
 export interface ProductService{
+  [x: string]: any;
   id: number | undefined | null;
   name: string | undefined | null;
   productCategory: ProductCategory;

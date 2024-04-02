@@ -1,0 +1,17 @@
+.form-switch-lg input[type="checkbox"] {
+  width: 55px;
+  height: 25px;
+}
+
+/* Style for disabled checkbox */
+.form-switch-lg input[type="checkbox"]:checked {
+  background-color: green; /* Apply green background for checked state */
+}
+
+.form-switch-lg input[type="checkbox"] {
+  background-color: white; /* Apply default background color for unchecked state */
+}
+
+::ng-deep .p-steps .p-steps-item .p-menuitem-link:not(.p-disabled):focus {
+  box-shadow: none;
+}

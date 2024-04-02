@@ -51,4 +51,9 @@ public class ProductAndServiceController {
         ProductAndServiceDto updatedProductAndServiceDto = productAndServiceService.updateProductAndService(id, productAndServiceDto);
         return ResponseEntity.ok(updatedProductAndServiceDto);
     }
+
+    @GetMapping("/category/{categoryId}")
+    public List<ProductAndServiceDto> getProductAndServiceByCategory(@PathVariable Long categoryId) {
+        return productAndServiceService.getProductAndServiceByCategory(categoryId);
+    }
 }

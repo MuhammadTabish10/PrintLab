@@ -1,5 +1,6 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.ProductionJob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class BusinessDto {
     private String businessName;
     private List<BusinessBranchDto> businessBranchList;
     private CustomerDto customer;
+    private List<ProductionJob> productionJobs;
 }

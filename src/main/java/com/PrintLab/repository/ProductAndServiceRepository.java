@@ -1,6 +1,7 @@
 package com.PrintLab.repository;
 
 import com.PrintLab.model.ProductAndService;
+import com.PrintLab.model.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,6 @@ public interface ProductAndServiceRepository extends JpaRepository<ProductAndSer
     @Modifying
     @Query("UPDATE ProductAndService ps SET ps.status = false WHERE ps.id = :id")
     void setStatusInactive(@Param("id") Long id);
+
+    List<ProductAndService> findByProductCategoryAndStatusIsTrue(ProductCategory category);
 }

@@ -1,8 +1,10 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.ProductAndServiceDto;
+import com.PrintLab.dto.ProductServiceDTO;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.ProductAndService;
+import com.PrintLab.model.ProductCategory;
 import com.PrintLab.repository.ProductAndServiceRepository;
 import com.PrintLab.repository.ProductCategoryRepository;
 import com.PrintLab.service.ProductAndServiceService;
@@ -10,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductAndServiceImpl implements ProductAndServiceService {
@@ -46,7 +50,6 @@ public class ProductAndServiceImpl implements ProductAndServiceService {
 
         return toDto(productAndServiceRepository.save(productAndService));
     }
-
 
 
     @Override
@@ -106,6 +109,30 @@ public class ProductAndServiceImpl implements ProductAndServiceService {
             throw new RecordNotFoundException(String.format("Product and Service not found for id => %d", id));
         }
     }
+
+    @Override
+    public List<ProductAndServiceDto> getProductAndServiceByCategory(Long categoryId) {
+        ProductCategory category = productCategoryRepository.findById(categoryId).orElse(null);
+
+        if (category != null) {
+            List<ProductAndService> productAndServices = productAndServiceRepository.findByProductCategoryAndStatusIsTrue(category);
+
+            return productAndServices.stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+
+    private ProductServiceDTO toSpecifyDto(ProductAndService productAndService) {
+        return ProductServiceDTO.builder()
+                .serviceName(productAndService.getName())
+                .productName(productAndService.getProductCategory().getName())
+                .build();
+    }
+
 
     public ProductAndServiceDto toDto(ProductAndService productAndService) {
         return ProductAndServiceDto.builder()

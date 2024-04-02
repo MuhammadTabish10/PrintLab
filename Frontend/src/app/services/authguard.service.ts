@@ -187,7 +187,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'BusinessUnit'
     }
     const Jobs = {
-      url: ['/creating-job', '/create'],
+      url: ['/creating-job', '/job-requests'],
       permissions: 'Job'
     }
 

@@ -23,4 +23,7 @@ public class Business {
     @JsonIgnore
     @ToString.Exclude
     private Customer customer;
+    @ManyToMany(mappedBy = "businesses")
+    @JsonIgnore
+    private List<ProductionJob> productionJobs;
 }

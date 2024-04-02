@@ -47,14 +47,14 @@ public class BusinessAndBranchMapper {
                 .build();
     }
 
-    public BusinessBranch toBusinessBranchEntity(BusinessBranchDto businessBranchDto) {
-        return BusinessBranch.builder()
-                .id(businessBranchDto.getId())
-                .address(businessBranchDto.getAddress())
-                .city(businessBranchDto.getCity())
-                .pointOfContact(businessBranchDto.getPointOfContact())
-                .phoneNumber(businessBranchDto.getPhoneNumber())
-                .build();
-    }
+//    public BusinessBranch toBusinessBranchEntity(BusinessBranchDto businessBranchDto) {
+//        return BusinessBranch.builder()
+//                .id(businessBranchDto.getId())
+//                .address(businessBranchDto.getAddress())
+//                .city(businessBranchDto.getCity())
+//                .pointOfContact(businessBranchDto.getPointOfContact())
+//                .phoneNumber(businessBranchDto.getPhoneNumber())
+//                .build();
+//    }
 
 }

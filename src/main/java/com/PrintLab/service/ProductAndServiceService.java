@@ -10,4 +10,6 @@ public interface ProductAndServiceService {
     ProductAndServiceDto findById(Long id);
     String deleteById(Long id);
     ProductAndServiceDto updateProductAndService(Long id, ProductAndServiceDto productAndServiceDto);
+
+    List<ProductAndServiceDto> getProductAndServiceByCategory(Long categoryId);
 }
