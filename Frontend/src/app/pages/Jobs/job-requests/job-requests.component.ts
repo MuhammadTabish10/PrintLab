@@ -11,6 +11,8 @@ import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { DatePipe } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-job-requests',
@@ -18,6 +20,8 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./job-requests.component.css']
 })
 export class JobRequestsComponent implements OnInit {
+
+  private destroy$ = new Subject<void>();
 
   openTabIndex: number | number[] | null | undefined;
 
@@ -44,8 +48,10 @@ export class JobRequestsComponent implements OnInit {
   ]
   // disableCheck: boolean = false;
   processedJobList: JobProcessedDetails[] = [];
+  idFromQueryParam: number | null | undefined;
   constructor(
     private datePipe: DatePipe,
+    private route: ActivatedRoute,
     private jobService: JobService,
     private authGuardSerivce: AuthguardService,
     private errorHandleService: ErrorHandleService,
@@ -61,11 +67,16 @@ export class JobRequestsComponent implements OnInit {
   paymentActive: boolean = false;
   confirmationActive: boolean = false;
   ngOnInit() {
-    this.getProcessList().then(() => {
-      this.handleRoles();
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(param => {
+      this.idFromQueryParam = +param['id'] || null;
     });
-    if (this.overviewActive) {
-      this.getUpdatedTimeLine();
+    if (this.idFromQueryParam) {
+      this.getProcessList(this.idFromQueryParam).then(() => {
+        this.handleRoles();
+      });
+      if (this.overviewActive) {
+        this.getUpdatedTimeLine(this.idFromQueryParam);
+      }
     }
     this.items = [
       {
@@ -73,7 +84,7 @@ export class JobRequestsComponent implements OnInit {
         command: (event: any) => this.toggleTab('overview')
       },
       {
-        label: 'JOB Processed',
+        label: 'Processed',
         command: (event: any) => this.toggleTab('jobProcessed')
       },
       {
@@ -81,7 +92,7 @@ export class JobRequestsComponent implements OnInit {
         command: (event: any) => this.toggleTab('payment')
       },
       {
-        label: 'Confirmation',
+        label: 'Confirm',
         command: (event: any) => this.toggleTab('confirmation')
       }
     ];
@@ -91,20 +102,20 @@ export class JobRequestsComponent implements OnInit {
     this.overviewActive = tabName === 'overview';
     this.jobProcessedActive = tabName === 'jobProcessed';
     this.paymentActive = tabName === 'payment';
-    this.confirmationActive = tabName === 'confirmation';
-    if (this.overviewActive) {
-      this.getUpdatedTimeLine();
-    }else{
+    this.confirmationActive = tabName === 'confirm';
+    if (this.overviewActive && this.idFromQueryParam) {
+      this.getUpdatedTimeLine(this.idFromQueryParam);
+    } else {
       this.events = [];
     }
   }
 
-  private async getProcessList() {
+  private async getProcessList(id: number) {
     return new Promise<void>((resolve, reject) => {
-      this.jobService.getProductionJobById(19).subscribe(
+      this.jobService.getProductionJobById(id).subscribe(
         (res: ProductionJob) => {
           this.jobById = res;
-          debugger
+
           if (this.jobById.processList && this.jobById.processedDetailList.length === 0) {
             this.jobById.processedDetailList = [];
             for (let i = 0; i < this.jobById.processList.length; i++) {
@@ -148,7 +159,7 @@ export class JobRequestsComponent implements OnInit {
   }
 
   // onNextTabClick(obj: any) {
-  //   debugger
+  //
   //   // const keys = Object.keys(obj);
   //   // const allKeysExist = keys.every(key => obj[key] !== undefined);
 
@@ -184,12 +195,12 @@ export class JobRequestsComponent implements OnInit {
       const filteredList = this.filterProcessDetailList(this.jobById.processedDetailList);
       if (filteredList.length > 0) {
         this.jobById.processedDetailList = filteredList;
-        this.jobService.updateProductionJob(19, this.jobById).subscribe(
+        this.jobService.updateProductionJob(this.idFromQueryParam!, this.jobById).subscribe(
           (res: ProductionJob) => {
             this.handleRoles();
-            this.getProcessList();
+            this.getProcessList(this.idFromQueryParam!);
             if (this.overviewActive) {
-              this.getUpdatedTimeLine();
+              this.getUpdatedTimeLine(this.idFromQueryParam!);
             }
             this.successMsgService.showSuccess(`Job ${category.process!} processed successfully`);
           },
@@ -219,17 +230,17 @@ export class JobRequestsComponent implements OnInit {
   }
 
   private handleRoles() {
-    debugger
+
     const role = this.decodeToken();
-    if (role == 'ADMIN' && this.jobById?.processedDetailList && this.jobById?.processedDetailList?.length > 0) {
+    if (role !== 'ADMIN' && this.jobById?.processedDetailList && this.jobById?.processedDetailList?.length > 0) {
       // this.disableCheck = true;
       this.disabledTabs = this.jobById?.processedDetailList?.map(process => !!process.jobProcessed) || [];
     }
   }
-  private getUpdatedTimeLine() {
-    this.jobService.getProcessedJobDetailsByProductionId(19).subscribe((res: JobProcessedDetails[]) => {
+  private getUpdatedTimeLine(id: number) {
+    this.jobService.getProcessedJobDetailsByProductionId(id).subscribe((res: JobProcessedDetails[]) => {
       this.processedJobList = res;
-      debugger
+
       this.events = [];
 
       this.processedJobList.forEach(job => {
@@ -257,7 +268,7 @@ export class JobRequestsComponent implements OnInit {
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
 
     // Format the Date object using DatePipe
-    debugger
+
     return this.datePipe.transform(date, 'EEEE, MMMM d, yyyy, h:mm a');
   }
 

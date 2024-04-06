@@ -264,7 +264,7 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   submit() {
-    debugger
+    
     // this.updateCustomerId();
     this.updateInvoiceProductStatus();
 
@@ -315,7 +315,7 @@ export class AddInvoiceComponent implements OnInit {
       (res: Invoice) => {
 
         this.previousInvoiceNo = res.invoiceNo;
-        debugger
+        
         // const customer = this.customerList.find(c => c.id === res.customer?.id);
         // this.tempCustomer.id = customer?.id;
 
@@ -482,7 +482,7 @@ export class AddInvoiceComponent implements OnInit {
       .subscribe(
         (res: Invoice[]) => {
           res.forEach((invoice: Invoice) => {
-            debugger
+            
             if (invoice.invoiceNo === +value && this.previousInvoiceNo !== +value) {
               this.invoice.invoiceNo = null;
             }

@@ -1,0 +1,120 @@
+<app-sidebar></app-sidebar>
+<div class="body-position ps-4 ps-lg-0">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="main-container ms-lg-1">
+    <div>
+      <h4>Jobs</h4>
+      <p class="page-intro">Whole data about your business here</p>
+    </div>
+
+    <div class="order-body card">
+      <p-table
+        #dt1
+        [value]="jobList"
+        dataKey="id"
+        [globalFilterFields]="['name']"
+        class="table"
+      >
+        <ng-template pTemplate="caption">
+          <div class="d-flex justify-content-end mb-3">
+            <button
+              pButton
+              label="Add"
+              class="p-button p-button-dark bg-dark"
+              icon="pi pi-plus"
+              routerLink="/creating-job"
+            ></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="text-center">Job id</th>
+            <th class="text-center">Product name</th>
+            <th class="text-center">Category</th>
+            <th class="text-center">Business unit category</th>
+            <th class="text-center">Productioner</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-job let-i="rowIndex">
+          <tr>
+            <td class="text-center">{{ job?.jobId }}</td>
+            <td class="text-center">{{ job?.productName }}</td>
+            <td class="text-center">{{ job?.productCategory }}</td>
+            <td class="text-center">{{ job?.businessCategory }}</td>
+            <td class="text-center">{{ job?.productionUser }}</td>
+            <td class="text-center">
+              <div class="btn-group" role="group" aria-label="Second group">
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  [routerLink]="['/creating-job']"
+                  [queryParams]="{ id: job?.id }"
+                >
+                  <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  [routerLink]="['/job-requests']"
+                  [queryParams]="{ id: job?.id }"
+                >
+                  <i class="pi pi-play"></i> Process job
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="showDialog(job)"
+                >
+                  <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="text-center">No Job Found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>
+<p-dialog
+  header="Delete permission"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="row mt-4">
+    <p>Are you sure you want to delete this job? {{ job.productCategory }}</p>
+  </div>
+  <div class="row justify-content-end mt-4">
+    <!-- Aligning buttons to the right -->
+    <div class="col-auto">
+      <!-- Setting buttons to take minimum space -->
+      <button
+        pButton
+        label="No"
+        icon="pi pi-times"
+        class="p-button p-button-secondary"
+        (click)="visible = false"
+      ></button>
+    </div>
+    <div class="col-auto">
+      <!-- Setting buttons to take minimum space -->
+      <button
+        pButton
+        icon="pi pi-check"
+        label="Yes"
+        class="p-button p-button-danger"
+        (click)="deleteJob(job.id!)"
+      ></button>
+    </div>
+  </div>
+</p-dialog>

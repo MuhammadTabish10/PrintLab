@@ -35,7 +35,7 @@ export class GetInvoicesComponent implements OnInit, OnDestroy {
   getInvoiceList(): void {
     this.invoiceService.getAllInvoice().pipe(takeUntil(this.destroy$)).subscribe(
       (res: Invoice[]) => {
-        debugger
+        
         this.invoiceList = res;
         // this.invoiceList.forEach((invoice) => {
         //   this.getCustomerName(+invoice?.customer!);

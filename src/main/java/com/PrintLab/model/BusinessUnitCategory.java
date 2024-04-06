@@ -1,5 +1,6 @@
 package com.PrintLab.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,5 +22,6 @@ public class BusinessUnitCategory {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<BusinessUnitProcess> processList;
 }

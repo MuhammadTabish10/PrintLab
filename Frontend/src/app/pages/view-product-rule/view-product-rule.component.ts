@@ -61,7 +61,7 @@ export class ViewProductRuleComponent implements OnInit {
           for (const size of sizeArray) {
             this.paperSize.push(size.label);
           }
-          debugger
+          
           for (const category of categoryArry) {
             this.categoryList.push(category.name);
           }

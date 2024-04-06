@@ -442,12 +442,12 @@ export class InformationComponent implements OnInit {
 //     if (findIndex !== -1) {
 //       this.lead.contact.splice(findIndex, 1, this.contact);
 //     }
-//     debugger
+//     
 //   }
 //   if (!this.deleteFlag && this.mode !== "Update") {
 //     this.lead.contact.push(this.contact);
 //   }
-//   debugger
+//   
 //   this.leadService.updateLead(this.idFromQueryParam!, this.lead)
 //     .subscribe(
 //       (res: Lead) => {
@@ -472,16 +472,16 @@ export class InformationComponent implements OnInit {
 //     if (findIndex !== -1) {
 //       this.lead.leadAddress.splice(findIndex, 1, this.address);
 //     }
-//     debugger
+//     
 //   }
 //   if (!this.deleteFlag && this.mode !== "Update") {
 //     this.lead.leadAddress.push(this.address);
 //   }
-//   debugger
+//   
 //   this.leadService.updateLead(this.idFromQueryParam!, this.lead)
 //     .subscribe(
 //       (res: Lead) => {
-//         debugger
+//         
 //         this.deleteFlag = false;
 //         this.addressModal = false;
 //         this.contactList = [];
@@ -521,7 +521,7 @@ export class InformationComponent implements OnInit {
 //     );
 // }
 // deleteAddress(index: number) {
-//   debugger
+//   
 //   this.deleteFlag = true;
 //   this.lead.leadAddress
 //     .filter(address => !address.type)
@@ -531,14 +531,14 @@ export class InformationComponent implements OnInit {
 //         this.lead.leadAddress.splice(index, 1);
 //       }
 //     });
-//   debugger
+//   
 //   this.lead.leadAddress.splice(index, 1)
 //   this.submitAddress();
 // }
 // deleteAbout(index: number) {
 //   this.deleteFlag = true;
 //   this.lead.leadAddress.splice(index, 1);
-//   debugger
+//   
 //   this.submitAbout();
 // }
 // deleteContact(index: number) {
@@ -551,7 +551,7 @@ export class InformationComponent implements OnInit {
 //         this.lead.contact.splice(index, 1);
 //       }
 //     });
-//   debugger
+//   
 //   this.lead.contact.splice(index, 1)
 //   this.submitContact();
 // }

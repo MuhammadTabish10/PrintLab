@@ -69,6 +69,7 @@ import { BusinessUnitAndProcessesComponent } from './pages/business-unit-and-pro
 import { ViewCustomerComponent } from './pages/view-customer/view-customer.component';
 import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component';
 import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.component';
+import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
 
 export const routes: Routes = [
   {
@@ -412,6 +413,11 @@ export const routes: Routes = [
   {
     path: 'job-requests',
     component: JobRequestsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'all-jobs',
+    component: GetAllJobsComponent,
     canActivate: [AuthguardService]
   },
 ];

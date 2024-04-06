@@ -64,7 +64,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
   private getCategoryList(): void {
     this.businessService.getBusinessUnits().subscribe(
       (res: BusinessUnit[]) => {
-        debugger
+        
         this.categoryList = res;
 
         this.cols = [
@@ -89,7 +89,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
     if (this.selectedProcess.process) {
       this.category.processList?.push(this.selectedProcess);
     }
-    debugger
+    
     const serviceToCall = this.category.id
       ? this.businessService.putBusinessUnit(this.category.id!, this.category)
       : this.businessService.postBusinessUnit(this.category);
@@ -102,7 +102,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
         this.visible = false;
         this.mode = 'Category';
         this.heading = 'Category';
-        debugger
+        
         const indexOfUpdatedCategory = this.categoryList.findIndex(category => category.id === this.category.id);
         this.openTabIndex = [indexOfUpdatedCategory];
         this.category = {
@@ -120,7 +120,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
         this.getCategoryList();
       },
       (error: BackendErrorResponse) => {
-        debugger
+        
         this.onToastClose();
         this.errorHandleService.showError(error.error.error);
       }
@@ -129,7 +129,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
 
 
   deleteProcessAndItsVendors(categoryId: number): void {
-    debugger
+    
     this.businessService.deleteProcess(+categoryId).subscribe(
       () => {
         this.getCategoryList();
@@ -160,14 +160,14 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
       this.mode = 'Update';
       this.heading = 'Process';
       if (process) {
-        debugger
+        
         this.selectedProcess.id = process.id;
         this.selectedProcess.process = process.process;
         this.selectedProcess.billable = process.billable;
         this.selectedVendors = process.vendors!;
       }
     } if (id) {
-      debugger
+      
       this.name = category?.name;
       this.mode = 'Category';
       this.heading = 'Category';
@@ -204,7 +204,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
   // onBlur(category?: string) {
   //   this.businessService.getBusinessUnitByName(category?.trim()).subscribe((result: Boolean) => {
   //     if (result === true) {
-  //       debugger
+  //       
   //       const error = { error: { error: "A similar category already exists." } }
   //       this.restrict = true;
   //       this.onToastClose();
@@ -214,7 +214,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
   //       this.restrict = false;
   //     }
   //   }, err => {
-  //     debugger
+  //     
   //     err
   //   });
   // }
@@ -225,7 +225,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
   // editCategory(category: BusinessUnit) {
   //   this.businessService.putBusinessUnit(category?.id!, category).subscribe(
   //     (res: BusinessUnit) => {
-  //       debugger
+  //       
   //     }, (err: BackendErrorResponse) => {
   //       this.errorHandleService.showError(err.error.error);
   //     });

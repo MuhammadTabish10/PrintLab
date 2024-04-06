@@ -122,6 +122,7 @@ import { ImageViewerComponent } from './pages/Jobs/image-viewer/image-viewer.com
 import { MatDialogModule } from '@angular/material/dialog'; // Import MatDialogModule
 import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule
 import { StepsModule } from 'primeng/steps';
+import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
 
 @NgModule({
   declarations: [
@@ -204,6 +205,7 @@ import { StepsModule } from 'primeng/steps';
     CreateJobComponent,
     JobRequestsComponent,
     ImageViewerComponent,
+    GetAllJobsComponent,
   ],
   imports: [
     BrowserModule,

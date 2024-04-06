@@ -19,6 +19,8 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ImageViewerComponent } from '../image-viewer/image-viewer.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { VendorService } from 'src/app/services/vendor.service';
+import { Vendor } from 'src/app/Model/Vendor';
 
 
 
@@ -84,6 +86,7 @@ export class CreateJobComponent implements OnInit {
   idFromQueryParam: number | null | undefined;
   productAndServiceList: ProductService[] = [];
   imageObjects: { objectURL: { changingThisBreaksApplicationSecurity: string } }[] = [];
+  groupVendorList: any[] = [];
 
   constructor(
     private businessUnitService: BusinessUnitService,
@@ -92,6 +95,7 @@ export class CreateJobComponent implements OnInit {
     private productionJobService: JobService,
     private customerService: CustomerService,
     private productService: ServiceService,
+    private vendorService: VendorService,
     private userService: UserService,
     private dialog: MatDialog,
     private router: Router
@@ -101,6 +105,7 @@ export class CreateJobComponent implements OnInit {
     this.getCustomerList();
     this.getProductList();
     this.getUserList();
+    this.getAllVendors();
   }
 
   private getCategoryList(): void {
@@ -115,7 +120,6 @@ export class CreateJobComponent implements OnInit {
   }
 
   onCategoryChange(category: string): void {
-
     this.businessUnitService.processListByCategoryName(category).subscribe(
       (res: BusinessUnit[]) => {
         this.processCategory = res;
@@ -171,7 +175,7 @@ export class CreateJobComponent implements OnInit {
     serviceToCall.subscribe((res: ProductionJob) => {
       this.successService.showSuccess("Job created successfully");
       setTimeout(() => {
-        this.router.navigate(['/get-jobs']);
+        this.router.navigate(['/all-jobs']);
       }, 2000);
     }, (error: BackendErrorResponse) => {
       this.errorService.showError(error.error.error);
@@ -289,7 +293,7 @@ export class CreateJobComponent implements OnInit {
     for (let file of event.files) {
       this.uploadedFiles.push(file);
     }
-    debugger
+
     // Convert FileList to an array and then map over it to extract objectURLs
     const filesArray = Array.from(this.uploadedFiles);
     this.imageObjects = filesArray.map((file: any) => ({ objectURL: file.objectURL }));
@@ -328,5 +332,31 @@ export class CreateJobComponent implements OnInit {
       console.error('Could not copy text: ', error);
     });
   }
+  private getAllVendors(): void {
+    this.vendorService.getVendor().subscribe(
+      (res: any) => {
+        // Map vendors to groupVendorList
+        this.groupVendorList = [
+          {
+            label: 'Vendors',
+            items: res.map((vendor: any) => ({ label: vendor.name }))
+          }
+        ];
+
+        // Add productionUserList to groupVendorList
+        this.groupVendorList.push({
+          label: 'Production Users',
+          items: this.productionUserList.map((user: any) => ({
+            label: user.name,
+            value: user.name
+          }))
+        });
+      },
+      (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      }
+    );
+  }
+
 
 }

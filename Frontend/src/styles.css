@@ -15120,7 +15120,17 @@ input:checked + .slider:before {
   color: #ffffff;
 } */
 
+.p-steps .p-steps-item .p-menuitem-link .p-steps-number:hover{
+  cursor: pointer !important;
+}
+
+/* Media query for small screens (e.g., smartphones) */
+@media only screen and (max-width: 600px) {
+  .p-timeline-event {
+    justify-content:flex-end;
+  }
+}
 
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */

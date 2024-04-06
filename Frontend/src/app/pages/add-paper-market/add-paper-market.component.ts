@@ -251,7 +251,7 @@ export class AddPaperMarketComponent implements OnInit {
   }
 
   calculateKg() {
-    debugger
+    
     if (this.lengthValue && this.widthValue && this.gsmValue) {
       if (this.qtyValue === 500) {
         this.kgValue = (this.lengthValue * this.widthValue * +this.gsmValue) / 3100;

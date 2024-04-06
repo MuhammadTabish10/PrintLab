@@ -45,7 +45,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
       .subscribe(
         (res: Customer[]) => {
           this.viewOption = this.doesMatchLeadOwner(res, this.email);
-          debugger
+          
           this.customersArray = res;
           this.customersArray.forEach((el: any) => {
             const dateArray = el.createdAt;

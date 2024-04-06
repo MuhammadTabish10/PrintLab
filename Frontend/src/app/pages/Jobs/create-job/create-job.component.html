@@ -488,7 +488,7 @@
                     [required]="true"
                     optionLabel="name"
                     optionValue="name"
-                    (onChange)="onCategoryChange($event.value)"
+                    (ngModelChange)="onCategoryChange($event)"
                     name="category"
                   ></p-dropdown>
                 </div>
@@ -628,13 +628,25 @@
                   <label class="add-order-label m-0">Send to:</label>
                   <p-dropdown
                     styleClass="w-100"
-                    [options]="productionUserList"
+                    [group]="true"
+                    [options]="groupVendorList"
                     [required]="true"
                     [(ngModel)]="job.sendTo"
-                    optionLabel="name"
-                    optionValue="name"
+                    optionLabel="label"
+                    optionValue="value"
                     name="sendTo"
-                  ></p-dropdown>
+                  >
+                    <ng-template let-group pTemplate="group">
+                      <div class="flex align-items-center">
+                        <img
+                          src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                          [class]="'mr-2 flag flag-' + group.value"
+                          style="width: 20px"
+                        />
+                        <span>{{ group.label }}</span>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
                 </div>
                 <div class="col-lg-4">
                   <label class="add-order-label m-0">Assigned to:</label>

@@ -118,7 +118,7 @@ export class AddCustomerComponent implements OnInit {
     // const formattedDate = this.datePipe.transform(this.customer.asOf, 'yyyy-MM-dd');
     // this.customer.asOf = formattedDate;
     this.customer.customerBusinessName = this.businessList;
-    debugger
+    
     this.customer.primaryPaymentMethod = JSON.stringify(this.customer.primaryPaymentMethod);
     const validated = this.validateEmail(this.customer.email)
     if (validated) {
@@ -170,7 +170,7 @@ export class AddCustomerComponent implements OnInit {
       this.customerService.getCustomerById(this.idFromQueryParam).subscribe(
         (res: Customer) => {
           this.customer = res;
-          debugger
+          
           if (this.customer.primaryPaymentMethod && typeof this.customer.primaryPaymentMethod === 'string') {
             try {
               const parsedArray = JSON.parse(this.customer.primaryPaymentMethod);
@@ -193,7 +193,7 @@ export class AddCustomerComponent implements OnInit {
             { field: 'pointOfContact', header: 'Point Of Contact' },
             { field: 'phoneNumber', header: 'Contact' },
           ];
-          debugger
+          
         }, error => {
           this.showError(error.error.error);
         });
@@ -285,7 +285,7 @@ export class AddCustomerComponent implements OnInit {
 
   deleteBranchById(id: number): void {
     this.businessList.forEach(business => {
-      debugger
+      
       const branchIndexToRemove = business.businessBranchList?.findIndex(branch => branch.id === id);
       if (branchIndexToRemove !== undefined && branchIndexToRemove !== -1) {
         business.businessBranchList?.splice(branchIndexToRemove, 1);
@@ -293,7 +293,7 @@ export class AddCustomerComponent implements OnInit {
     });
   }
   deleteBusiness(id: number): void {
-    debugger
+    
     const index = this.businessList.findIndex(business => business.id === id);
     if (index) {
       this.businessList?.splice(index, 1);
@@ -301,7 +301,7 @@ export class AddCustomerComponent implements OnInit {
   }
 
   addToList(): void {
-    debugger
+    
     if (this.mode === 'Business' && this.name) {
       // Find the highest existing id
       let maxId = 0;
@@ -402,7 +402,7 @@ export class AddCustomerComponent implements OnInit {
   private getUserList() {
     this.userService.getUsers().subscribe((users: User[]) => {
       this.userList = users.filter(user => this.hasUserRole(user, 'ROLE_USER'));
-      debugger;
+      
     }, (error: BackendErrorResponse) => {
       this.showError(error.error.error);
     });

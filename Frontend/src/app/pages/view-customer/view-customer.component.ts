@@ -106,7 +106,7 @@ export class ViewCustomerComponent implements OnInit {
             console.error('Error parsing primaryPaymentMethod:', e);
           }
         }
-        debugger
+        
         this.businessList = this.customer.customerBusinessName;
         this.cols = [
           { field: 'branchName', header: 'Name' },
@@ -115,7 +115,7 @@ export class ViewCustomerComponent implements OnInit {
           { field: 'pointOfContact', header: 'Point Of Contact' },
           { field: 'phoneNumber', header: 'Contact' },
         ];
-        debugger
+        
       }, error => {
         this.showError(error.error.error);
       });

@@ -106,11 +106,11 @@ export class AddProductRuleComponent implements OnInit {
           this.productName = res?.title;
           if (this.categoryArray && this.sideOptions) {
             const parsedCategories = JSON.parse(res?.category);
-            debugger
+            
             this.category = parsedCategories
             this.sideValue = this.sideOptions?.productFieldValuesList?.find((option: any) => option.name === res?.printSide)
             if (this.category) {
-              debugger
+              
               this.onCategoryChange(this.category);
             } else {
               this.category = this.categoryArray?.productFieldValuesList?.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
@@ -692,11 +692,11 @@ export class AddProductRuleComponent implements OnInit {
   // }
 
   onCategoryChange(value: any[]) {
-    debugger;
+    
     this.upping = null;
     this.getUpping.getUping().subscribe(
       (response: any) => {
-        debugger
+        
         this.uppingArray = []; // Clear the array before populating it
 
         // Map the `name` property of each object in the `value` array
@@ -789,7 +789,7 @@ export class AddProductRuleComponent implements OnInit {
 
   getSizesForCategory(category: string): string[] {
     if (this.upping && this.upping.length > 0) {
-      debugger
+      
       if (this.selectedSizes.length <= 0) {
         this.onUpingChange(this.upping);
       }

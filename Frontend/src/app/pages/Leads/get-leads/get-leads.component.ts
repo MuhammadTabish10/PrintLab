@@ -172,12 +172,12 @@ export class GetLeadsComponent {
   }
 
   showModal(lead?: Lead) {
-    debugger
+    
     if (lead?.id) {
       this.type = 'Edit Lead';
       this.mode = 'Update';
       this.companyName = lead.companyName;
-      debugger
+      
       if (lead.contact[0]?.name != null) {
         this.lead.contact[0].name = lead.contact[0].name;
       } else if (lead.contact[1]?.name != null) {
@@ -261,7 +261,7 @@ export class GetLeadsComponent {
     this.getLeadList(undefined, undefined);
   }
   submit() {
-    debugger
+    
     this.lead.companyName = this.companyName
     const serviceToCall = this.rowId
       ? this.leadService.updateLead(this.rowId, this.lead)
