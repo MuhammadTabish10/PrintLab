@@ -104,7 +104,7 @@
                 [required]="true"
                 name="role"
                 #role="ngModel"
-                [(ngModel)]="user.roles![0]"
+                [(ngModel)]="user.roles[0]"
                 optionLabel="name"
                 [filter]="true"
                 filterBy="name"
@@ -113,7 +113,7 @@
               >
                 <ng-template pTemplate="selectedItem">
                   <div class="flex align-items-center gap-2" *ngIf="user">
-                    <div>{{ user.roles![0].name }}</div>
+                    <div>{{ user.roles[0].name }}</div>
                   </div>
                 </ng-template>
                 <ng-template let-roles pTemplate="item">

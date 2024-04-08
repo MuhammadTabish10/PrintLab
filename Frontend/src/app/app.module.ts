@@ -119,8 +119,8 @@ import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component
 import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.component';
 import { PickListModule } from 'primeng/picklist';
 import { ImageViewerComponent } from './pages/Jobs/image-viewer/image-viewer.component';
-import { MatDialogModule } from '@angular/material/dialog'; // Import MatDialogModule
-import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { StepsModule } from 'primeng/steps';
 import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
 

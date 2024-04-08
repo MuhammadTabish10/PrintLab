@@ -6,7 +6,7 @@ export interface User {
   password: string | null | undefined;
   phone: string | null | undefined;
   cnic: string | null | undefined;
-  roles: Roles[] | null | undefined;
+  roles: Roles[];
   status: boolean | null | undefined;
 }
 

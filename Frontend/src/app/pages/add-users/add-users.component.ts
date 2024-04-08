@@ -28,8 +28,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
     status: undefined
   };
   roles: Roles[] = [];
-
-
+  selectedRole: string | undefined | null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -65,7 +64,6 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   addUser() {
-
     const request = this.idFromQueryParam
       ? this.userService.updateUser(this.idFromQueryParam, this.user)
       : this.userService.addUser(this.user);

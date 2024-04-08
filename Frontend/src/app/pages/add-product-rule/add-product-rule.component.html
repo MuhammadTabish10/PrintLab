@@ -79,7 +79,7 @@
             >Selected Categories and Sizes:</label
           >
           <!-- Display categories and sizes -->
-          <div class="row">
+          <div class="row" *ngIf="selectedCategories.length > 0">
             <ng-container *ngFor="let selectedCategory of selectedCategories">
               <div class="col-lg-4 mb-3">
                 <div class="card">
