@@ -43,7 +43,7 @@ export class CreateJobComponent implements OnInit {
   targetProducts: BusinessUnitProcessDto[] = [];
   processCategory: BusinessUnit[] = [];
   customerList: Customer[] = [];
-  productionUserList: User[] = [];
+  productionUserList: User[] | undefined = [];
   businessList: Business[] = [];
   branchList: BusinessBranch[] = [];
   selectedBusinesses: Business[] = [];
@@ -145,7 +145,6 @@ export class CreateJobComponent implements OnInit {
     this.userService.getUsers().subscribe(
       (res: User[]) => {
         this.productionUserList = this.hasProductionRole(res);
-        ;
       },
       (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
@@ -332,31 +331,55 @@ export class CreateJobComponent implements OnInit {
       console.error('Could not copy text: ', error);
     });
   }
+  // private getAllVendors(): void {
+  //   this.vendorService.getVendor().subscribe(
+  //     (res: any) => {
+  //       // Map vendors to groupVendorList
+  //       this.groupVendorList = [
+  //         {
+  //           label: 'Vendors',
+  //           items: res.map((vendor: any) => ({ label: vendor.name }))
+  //         }
+  //       ];
+
+  //       // Add productionUserList to groupVendorList
+  //       this.groupVendorList.push({
+  //         label: 'Production Users',
+  //         items: this.productionUserList.map((user: any) => ({
+  //           label: user.name,
+  //           value: user.name
+  //         }))
+  //       });
+  //     },
+  //     (error: BackendErrorResponse) => {
+  //       this.errorService.showError(error.error.error);
+  //     }
+  //   );
+  // }
+
+
   private getAllVendors(): void {
+    this.groupVendorList = [];
     this.vendorService.getVendor().subscribe(
       (res: any) => {
-        // Map vendors to groupVendorList
-        this.groupVendorList = [
-          {
-            label: 'Vendors',
-            items: res.map((vendor: any) => ({ label: vendor.name }))
-          }
-        ];
-
-        // Add productionUserList to groupVendorList
-        this.groupVendorList.push({
-          label: 'Production Users',
-          items: this.productionUserList.map((user: any) => ({
-            label: user.name,
-            value: user.name
-          }))
-        });
+        const vendors = res.map((vendor: Vendor) => ({ label: vendor.name }));
+        this.groupVendorList.push({ label: 'Vendors', items: vendors });
       },
       (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
+      },
+      () => {
+        // This code block executes after both success and error callbacks
+        // Add productionUserList to groupVendorList
+        if (this.productionUserList && this.productionUserList.length > 0) {
+          const productionUsers = this.productionUserList.map((user: User) => ({
+            label: user.name,
+            value: user.name
+          }));
+          this.groupVendorList.push({ label: 'Production Users', items: productionUsers });
+        }
       }
     );
   }
-
 
 }
