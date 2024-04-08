@@ -54,11 +54,28 @@
         </a>
       </span>
     </li>
+    <li
+      *ngIf="sessionStorageService.hasPermission('BusinessUnit')"
+      class="mt-2"
+    >
+      <span class="sidebar-list-hover">
+        <i class="fa fa-list fa-2x"></i>
+        <a class="nav-text nav-link" [routerLink]="['/business-unit']">
+          Business unit
+        </a>
+      </span>
+    </li>
 
     <li *ngIf="sessionStorageService.hasPermission('Orders')" class="mt-2">
       <span class="sidebar-list-hover">
         <i class="fa fa-shopping-cart fa-2x"></i>
         <a class="nav-text nav-link" [routerLink]="['/orders']"> Orders </a>
+      </span>
+    </li>
+    <li *ngIf="sessionStorageService.hasPermission('Job')" class="mt-2">
+      <span class="sidebar-list-hover">
+        <i class="fa fa-wrench"></i>
+        <a class="nav-text nav-link" [routerLink]="['/all-jobs']"> Jobs </a>
       </span>
     </li>
 
@@ -161,9 +178,7 @@
     <li *ngIf="sessionStorageService.hasPermission('Leads')" class="mt-2">
       <span class="sidebar-list-hover">
         <i class="fa fa-list"></i>
-        <a class="nav-text nav-link" [routerLink]="['/get-leads']">
-          Leads
-        </a>
+        <a class="nav-text nav-link" [routerLink]="['/get-leads']"> Leads </a>
       </span>
     </li>
 
@@ -522,6 +537,5 @@
         </a>
       </span>
     </li>
-
   </ul>
 </nav>
