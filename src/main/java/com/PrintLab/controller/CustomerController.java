@@ -1,4 +1,5 @@
 package com.PrintLab.controller;
+
 import com.PrintLab.dto.CustomerDto;
 import com.PrintLab.model.Customer;
 import com.PrintLab.service.CustomerService;
@@ -6,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -21,21 +23,23 @@ public class CustomerController {
         CustomerDto savedCustomer = customerService.save(customerDto);
         return ResponseEntity.ok(savedCustomer);
     }
+
     @GetMapping("/customer")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<CustomerDto>> findAll(){
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
+    public ResponseEntity<List<CustomerDto>> findAll() {
         List<CustomerDto> customer = customerService.findAll();
         return ResponseEntity.ok(customer);
     }
+
     @GetMapping("/customer/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
     public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id) {
         CustomerDto customerDto = customerService.findById(id);
         return ResponseEntity.ok(customerDto);
     }
 
     @GetMapping("/customers/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
     public ResponseEntity<List<CustomerDto>> getAllCustomersByName(@PathVariable String name) {
         List<CustomerDto> customerDtoList = customerService.searchByName(name);
         return ResponseEntity.ok(customerDtoList);

@@ -89,6 +89,7 @@
                   type="button"
                   class="btn order-table-btn"
                   (click)="editCustomer(customer?.id)"
+                  [disabled]="!buttonOption"
                 >
                   <i class="fa-solid fa-pen"></i>&nbsp;Edit
                 </button>
@@ -96,6 +97,7 @@
                   type="button"
                   class="btn order-table-btn"
                   (click)="deleteCustomer(customer?.id)"
+                  [disabled]="!buttonOption"
                 >
                   <i class="fa-solid fa-trash"></i>&nbsp;Delete
                 </button>
@@ -103,7 +105,6 @@
                   type="button"
                   class="btn order-table-btn"
                   (click)="viewCustomer(customer?.id)"
-                  [disabled]="viewOption"
                 >
                   <i class="fa-solid fa-hand-pointer"></i>&nbsp;View
                 </button>

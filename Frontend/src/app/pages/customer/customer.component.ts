@@ -23,7 +23,8 @@ export class CustomerComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
   email: string | undefined | null;
-  viewOption: boolean = false;
+  role: string | undefined | null;
+  buttonOption: boolean = true;
 
   constructor(
     private customerService: CustomerService,
@@ -39,25 +40,30 @@ export class CustomerComponent implements OnInit, OnDestroy {
   }
 
   getCustomers(): void {
-
     this.customerService.getCustomer()
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (res: Customer[]) => {
-          this.viewOption = this.doesMatchLeadOwner(res, this.email);
-          
-          this.customersArray = res;
+          debugger
+          if (this.role !== "ADMIN") {
+            this.customersArray = res.filter(customer => {
+              return this.doesMatchLeadOwner(customer);
+            });
+            this.buttonOption = false;
+          } else {
+            this.customersArray = res;
+          }
           this.customersArray.forEach((el: any) => {
             const dateArray = el.createdAt;
             const [year, month, day] = dateArray;
             el.createdAt = this.datePipe.transform(new Date(year, month - 1, day), 'EEEE, MMMM d, yyyy');
           });
+
           this.tableData = this.customersArray.length === 0;
         },
         (error: any) => this.showError(error)
       );
   }
-
   editCustomer(id: number | undefined | null) {
     this.router.navigate(['/addCustomer'], { queryParams: { id: id!.toString() } });
   }
@@ -108,13 +114,14 @@ export class CustomerComponent implements OnInit, OnDestroy {
 
     if (decodedToken) {
       this.email = decodedToken.sub;
-
+      this.role = decodedToken.ROLES[0];
     }
   }
 
-  private doesMatchLeadOwner(customers: Customer[], email: string | undefined | null): boolean {
-    return customers.some(c => c.leadOwner === email);
+  private doesMatchLeadOwner(customer: Customer): boolean {
+    return customer.leadOwner === this.email && customer.leadOwner !== null && customer.showLead!;
   }
+
 }
 
 

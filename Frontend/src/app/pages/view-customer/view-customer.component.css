@@ -32,3 +32,7 @@
   font-size: 0.9rem;
   white-space: nowrap; /* Prevent line breaks within chips */
 }
+
+::ng-deep .custom-editor .ql-toolbar {
+  display: none;
+}

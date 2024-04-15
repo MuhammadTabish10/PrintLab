@@ -17,7 +17,7 @@
             <div>
               <div class="row mx-auto">
                 <div class="col-md-3 my-3">
-                  <label class="add-order-label m-0 fw-bolder">Name:</label>
+                  <label class="add-order-label m-0 fw-bolder">Name</label>
                   <!-- <input
                     type="text"
                     class="order-search form-control order-form-input m-0"
@@ -30,7 +30,7 @@
                   <h6>{{ customer.name }}</h6>
                 </div>
                 <div class="col-md-3 my-3">
-                  <label class="add-order-label m-0 fw-bolder">Email:</label>
+                  <label class="add-order-label m-0 fw-bolder">Email</label>
                   <!-- <input
                     type="email"
                     class="order-search form-control order-form-input m-0"
@@ -39,33 +39,35 @@
                     name="email"
                     readonly
                   /> -->
-                  <h5>{{ customer.email }}</h5>
+                  <h6>{{ customer.email }}</h6>
                 </div>
                 <div class="col-md-3 my-3">
-                  <label class="add-order-label m-0">Whats App</label>
-                  <input
+                  <label class="add-order-label m-0 fw-bolder">Whats App</label>
+                  <!-- <input
                     type="text"
                     class="order-search form-control order-form-input m-0"
                     [(ngModel)]="customer.whatsApp"
                     style="border: 1px solid #ced4da"
                     name="whatsApp"
                     readonly
-                  />
+                  /> -->
+                  <h6>{{ customer.whatsApp }}</h6>
                 </div>
                 <div class="col-md-3 my-3">
-                  <label class="add-order-label m-0">Phone</label>
-                  <input
+                  <label class="add-order-label m-0 fw-bolder">Phone</label>
+                  <!-- <input
                     type="text"
                     class="order-search form-control order-form-input m-0"
                     [(ngModel)]="customer.mobileNo"
                     style="border: 1px solid #ced4da"
                     name="phone"
                     readonly
-                  />
+                  /> -->
+                  <h6>{{ customer.mobileNo }}</h6>
                 </div>
                 <div class="col-md-3 my-3">
-                  <label class="add-order-label m-0">Id</label>
-                  <input
+                  <label class="add-order-label m-0 fw-bolder">Id</label>
+                  <!-- <input
                     type="text"
                     class="order-search form-control order-form-input m-0"
                     [(ngModel)]="customer.statusId"
@@ -73,18 +75,22 @@
                     placeholder="Enter Website Name"
                     name="id"
                     readonly
-                  />
+                  /> -->
+                  <h6>{{ customer.statusId }}</h6>
                 </div>
 
                 <div class="col-md-3 my-3">
-                  <label class="add-order-label m-0 d-block">Since</label>
-                  <p-calendar
+                  <label class="add-order-label m-0 d-block fw-bolder"
+                    >Since</label
+                  >
+                  <!-- <p-calendar
                     name="since"
                     [(ngModel)]="customer.since"
                     [style]="{ width: '100%' }"
                     [showIcon]="true"
                     readonly
-                  ></p-calendar>
+                  ></p-calendar> -->
+                  <h6>{{ customer.since | date }}</h6>
                 </div>
 
                 <!-- <div class="col-md-3 my-3">
@@ -105,8 +111,8 @@
                     customer.clientStatus !== null
                   "
                 >
-                  <label class="add-order-label m-0">Active</label>
-                  <div class="form-check form-switch form-switch-lg">
+                  <label class="add-order-label m-0 fw-bolder">Active</label>
+                  <!-- <div class="form-check form-switch form-switch-lg">
                     <input
                       class="form-check-input"
                       type="checkbox"
@@ -115,7 +121,8 @@
                       [(ngModel)]="customer.clientStatus"
                       disabled
                     />
-                  </div>
+                  </div> -->
+                  <h6>{{ customer.clientStatus }}</h6>
                 </div>
               </div>
             </div>
@@ -164,8 +171,8 @@
                     <div
                       class="d-flex justify-content-end align-items-center w-100"
                     >
-                      <span class="pi pi-plus me-3"></span>
-                      <span class="pi pi-file-edit me-3"></span>
+                      <span class="pi pi-plus me-3 opacity-25"></span>
+                      <span class="pi pi-file-edit me-3 opacity-25"></span>
                       <span
                         *ngIf="business.businessBranchList?.length === 0"
                         class="pi pi-trash"
@@ -259,14 +266,17 @@
             <div>
               <div class="row">
                 <div class="col-3 my-3">
-                  <label class="add-order-label m-0">Client Preferred</label>
-                  <input
+                  <label class="add-order-label m-0 fw-bolder"
+                    >Client Preferred</label
+                  >
+                  <!-- <input
                     class="order-search form-control order-form-input m-0"
                     [(ngModel)]="customer.clientPreferred"
                     style="border: 1px solid #ced4da"
                     name="clientPreferred"
                     readonly
-                  />
+                  /> -->
+                  <h6>{{ customer.clientPreferred }}</h6>
                 </div>
 
                 <div
@@ -283,24 +293,26 @@
                 </div>
 
                 <div class="col-3 my-3">
-                  <label class="add-order-label m-0">Terms</label>
-                  <input
+                  <label class="add-order-label m-0 fw-bolder">Terms</label>
+                  <!-- <input
                     class="order-search form-control order-form-input m-0"
                     [(ngModel)]="customer.terms"
                     style="border: 1px solid #ced4da"
                     name="terms"
                     readonly
-                  />
+                  /> -->
+                  <h6>{{ customer.terms }}</h6>
                 </div>
                 <div class="col-3 my-3">
-                  <label class="add-order-label m-0">Tax</label>
-                  <input
+                  <label class="add-order-label m-0 fw-bolder">Tax</label>
+                  <!-- <input
                     class="order-search form-control order-form-input m-0"
                     [(ngModel)]="customer.tax"
                     style="border: 1px solid #ced4da"
                     name="tax"
                     readonly
-                  />
+                  /> -->
+                  <h6>{{ customer.tax }}</h6>
                 </div>
               </div>
             </div>
@@ -320,6 +332,7 @@
                 [style]="{ height: '320px' }"
                 name="notes"
                 [readonly]="true"
+                class="custom-editor"
               ></p-editor>
             </div>
           </p-accordionTab>
@@ -344,10 +357,9 @@
           <button
             type="button"
             class="btn btn-dark px-4 ms-auto"
-            [disabled]="!customerForm.valid"
-            disabled
+            routerLink="/customers"
           >
-            {{ buttonName }}
+            {{ "Back" }}
           </button>
         </div>
       </form>
