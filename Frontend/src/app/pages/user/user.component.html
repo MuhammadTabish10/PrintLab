@@ -30,7 +30,7 @@
           <th class="text-center">Email</th>
           <th class="text-center">Name</th>
           <th class="text-center">Phone Number</th>
-          <th class="text-center">Cnic Number</th>
+          <th class="text-center">Role</th>
           <th class="text-center">Action</th>
         </tr>
       </ng-template>
@@ -40,7 +40,9 @@
           <td class="text-center">{{ user?.email }}</td>
           <td class="text-center">{{ user?.name }}</td>
           <td class="text-center">{{ user?.phone }}</td>
-          <td class="text-center">{{ user?.cnic }}</td>
+          <td class="text-center">
+            {{ user?.roles[0] ? user?.roles[0].name : "No role assigned" }}
+          </td>
           <td class="text-center">
             <div class="btn-group" role="group" aria-label="Second group">
               <button

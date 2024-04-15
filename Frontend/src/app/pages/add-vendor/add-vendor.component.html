@@ -1,126 +1,123 @@
 <app-sidebar></app-sidebar>
-<div class="body-position">
-  <app-dashboard-head></app-dashboard-head>
+<form #form="ngForm">
+  <div class="body-position">
+    <app-dashboard-head></app-dashboard-head>
 
-  <div class="main-container">
-    <div>
-      <h4>{{ buttonName }} Vendor</h4>
-    </div>
+    <div class="main-container">
+      <div>
+        <h4>{{ buttonName }} Vendor</h4>
+      </div>
 
-    <div class="order-body py-2">
-      <div class="container">
-        <div class="row">
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Business Name</label>
-            <input
-              type="text"
-              class="order-search form-control order-form-input m-0"
-              [(ngModel)]="nameValue"
-              style="border: 1px solid #ced4da"
-              placeholder="Enter Name"
-              name="name"
-              required
-            />
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Point of Contact</label>
-            <input
-              type="text"
-              class="order-search form-control order-form-input m-0"
-              [(ngModel)]="contactNameValue"
-              style="border: 1px solid #ced4da"
-              placeholder="Enter Contact Name"
-              name="contactNameValue"
-              required
-            />
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Phone</label>
-            <input
-              type="number"
-              class="order-search form-control order-form-input m-0"
-              [(ngModel)]="contactNumberValue"
-              style="border: 1px solid #ced4da"
-              placeholder="Enter Contact Number"
-              name="number"
-              required
-            />
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Email</label>
-            <input
-              type="text"
-              class="order-search form-control order-form-input m-0"
-              [(ngModel)]="emailValue"
-              style="border: 1px solid #ced4da"
-              placeholder="Enter Address"
-              name="addressValue"
-              required
-            />
-          </div>
-          <div class="col-6 my-3">
-            <label class="add-order-label m-0">Address</label>
-            <input
-              type="text"
-              class="order-search form-control order-form-input m-0"
-              [(ngModel)]="addressValue"
-              style="border: 1px solid #ced4da"
-              placeholder="Enter Address"
-              name="addressValue"
-              required
-            />
-          </div>
-          <div class="col-12 my-3">
-            <label class="add-order-label m-0">Notes</label>
-            <textarea
-              class="order-search form-control order-form-input m-0"
-              [(ngModel)]="notesValue"
-              style="border: 1px solid #ced4da"
-              placeholder="Enter Notes"
-              rows="7"
-              name="notes"
-              required
-            ></textarea>
+      <div class="order-body py-2">
+        <div class="container">
+          <div class="row">
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Business Name</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="nameValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Name"
+                name="name"
+                required
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Point of Contact</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="contactNameValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Contact Name"
+                name="contactNameValue"
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Phone</label>
+              <input
+                type="number"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="contactNumberValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Contact Number"
+                name="number"
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Email</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="emailValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Address"
+                name="addressValue"
+              />
+            </div>
+            <div class="col-6 my-3">
+              <label class="add-order-label m-0">Address</label>
+              <input
+                type="text"
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="addressValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Address"
+                name="addressValue"
+                required
+              />
+            </div>
+            <div class="col-12 my-3">
+              <label class="add-order-label m-0">Notes</label>
+              <textarea
+                class="order-search form-control order-form-input m-0"
+                [(ngModel)]="notesValue"
+                style="border: 1px solid #ced4da"
+                placeholder="Enter Notes"
+                rows="7"
+                name="notes"
+              ></textarea>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="main-container">
-    <div class="d-flex justify-content-between">
-      <h4>Vendor Process</h4>
-      <button
-        type="submit"
-        class="btn order-table-btn btn-search-panel py-2 px-3"
-        (click)="generateElement()"
+    <div class="main-container">
+      <div class="d-flex justify-content-between">
+        <h4>Vendor Process</h4>
+        <button
+          type="button"
+          class="btn order-table-btn btn-search-panel py-2 px-3"
+          (click)="generateElement()"
+        >
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+
+      <div
+        class="order-body py-2 my-2"
+        *ngFor="let element of vendorProcess; let i = index"
       >
-        <i class="fa-solid fa-plus"></i>
-      </button>
-    </div>
-
-    <div
-      class="order-body py-2 my-2"
-      *ngFor="let element of vendorProcess; let i = index"
-    >
-      <div class="container">
-        <div class="row">
-          <div class="col-11 my-2">
-            <label class="add-order-label d-inline-block m-0">Process</label
-            ><br />
-            <p-dropdown
-              styleClass="w-100"
-              optionLabel="name"
-              [options]="productProcessArray"
-              (onChange)="addSize($event.value, i)"
-              [placeholder]="
-                buttonName == 'Add' ? 'Select Process' : placeHolder[i]
-              "
-              name="material"
-            >
-            </p-dropdown>
-          </div>
-          <!-- <div class="col-4 my-2">
+        <div class="container">
+          <div class="row">
+            <div class="col-11 my-2">
+              <label class="add-order-label d-inline-block m-0">Process</label
+              ><br />
+              <p-dropdown
+                styleClass="w-100"
+                optionLabel="name"
+                [options]="productProcessArray"
+                (onChange)="addSize($event.value, i)"
+                [placeholder]="
+                  buttonName == 'Add' ? 'Select Process' : placeHolder[i]
+                "
+                name="material"
+              >
+              </p-dropdown>
+            </div>
+            <!-- <div class="col-4 my-2">
             <label class="add-order-label d-inline-block m-0"
               >Material Type</label
             ><br />
@@ -161,30 +158,32 @@
               required
             ></textarea>
           </div> -->
-          <div class="col-1 align-self-lg-end">
-            <button
-              type="submit"
-              class="btn order-table-btn btn-search-panel"
-              (click)="removeElement(i)"
-            >
-              <i class="fa-solid fa-trash"></i>
-            </button>
+            <div class="col-1 align-self-lg-end">
+              <button
+                type="button"
+                class="btn order-table-btn btn-search-panel"
+                (click)="removeElement(i)"
+              >
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="order-body mt-5 py-3">
-      <div class="text-end">
-        <button
-          type="submit"
-          class="btn order-table-btn btn-search-panel"
-          (click)="addVendor()"
-        >
-          {{ buttonName }}
-        </button>
+      <div class="order-body mt-5 py-3">
+        <div class="text-end">
+          <button
+            type="submit"
+            class="btn order-table-btn btn-search-panel"
+            (click)="addVendor()"
+            [disabled]="!form.valid"
+          >
+            {{ buttonName }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</form>
 <p-toast></p-toast>

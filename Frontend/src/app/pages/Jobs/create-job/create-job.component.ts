@@ -182,6 +182,7 @@ export class CreateJobComponent implements OnInit {
   }
 
   getBusinessList(id: number): void {
+    this.branchList = [];
     this.selectedBranches = [];
     this.selectedBusinesses = [];
     const selectedCustomer = this.customerList.find(customer => customer.id === id);
@@ -193,15 +194,33 @@ export class CreateJobComponent implements OnInit {
       .subscribe(
         (res: Customer) => {
           this.businessList = res.customerBusinessName;
-          this.businessList.forEach(business => {
-            this.branchList = business.businessBranchList || [];
-
-          });
+          debugger
+          // this.businessList.forEach(business => {
+          //   if (business.businessBranchList && business.businessBranchList?.length > 0) {
+          //     this.branchList = business.businessBranchList;
+          //   }
+          // });
         },
         (error: BackendErrorResponse) => {
           this.errorService.showError(error.error.error);
         }
       );
+  }
+
+  getBrancheList(selectedBusiness: Business[]): void {
+    this.branchList = [];
+    this.selectedBranches = [];
+    if (selectedBusiness.length === 0) {
+      return;
+    }
+
+    selectedBusiness.forEach((business: Business) => {
+      if (business.businessBranchList && business.businessBranchList.length > 0) {
+        business.businessBranchList.forEach((branch: BusinessBranch) => {
+          this.branchList.push(branch);
+        });
+      }
+    });
   }
 
   private getProductList(): void {
@@ -249,7 +268,12 @@ export class CreateJobComponent implements OnInit {
   }
 
   getProductNameList(productCategory: TreeNode<ProductCategory>): void {
+    this.job.productName = null;
     this.productAndServiceList = [];
+    this.job.description = null;
+    this.job.qty = null;
+    this.job.rate = null;
+    this.job.amount = null;
     if (productCategory && productCategory.children && productCategory.children.length > 0) {
       return;
     }
@@ -360,24 +384,26 @@ export class CreateJobComponent implements OnInit {
 
   private getAllVendors(): void {
     this.groupVendorList = [];
+
+    // Fetch vendors from vendorService
     this.vendorService.getVendor().subscribe(
       (res: any) => {
-        const vendors = res.map((vendor: Vendor) => ({ label: vendor.name }));
+        // Map vendors to groupVendorList under 'Vendors' group
+        const vendors = res.map((vendor: any) => ({ label: vendor.name, value: vendor.id }));
         this.groupVendorList.push({ label: 'Vendors', items: vendors });
-      },
-      (error: BackendErrorResponse) => {
-        this.errorService.showError(error.error.error);
-      },
-      () => {
-        // This code block executes after both success and error callbacks
-        // Add productionUserList to groupVendorList
+
+        // Check if productionUserList exists and is not empty
         if (this.productionUserList && this.productionUserList.length > 0) {
-          const productionUsers = this.productionUserList.map((user: User) => ({
+          // Map production users to groupVendorList under 'Production Users' group
+          const productionUsers = this.productionUserList.map((user: any) => ({
             label: user.name,
-            value: user.name
+            value: user.id
           }));
           this.groupVendorList.push({ label: 'Production Users', items: productionUsers });
         }
+      },
+      (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
       }
     );
   }

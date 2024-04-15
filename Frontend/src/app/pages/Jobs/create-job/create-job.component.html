@@ -53,6 +53,7 @@
                   optionLabel="businessName"
                   display="chip"
                   name="busineses"
+                  (ngModelChange)="getBrancheList($event)"
                   placeholder="Select Item"
                   [(ngModel)]="selectedBusinesses"
                 ></p-multiSelect>
@@ -81,7 +82,7 @@
             </ng-template>
 
             <div class="row">
-              <div class="col-lg-2 col">
+              <div class="col-lg-2 col-md-3 col-sm-6">
                 <label class="add-order-label m-0 d-block">Category</label>
                 <p-treeSelect
                   class="md:w-20rem w-100"
@@ -93,7 +94,7 @@
                   placeholder="Select Item"
                 ></p-treeSelect>
               </div>
-              <div class="col-lg-2 col">
+              <div class="col-lg-2 col-md-3 col-sm-6">
                 <label class="add-order-label m-0">Product Name</label>
                 <p-dropdown
                   styleClass="w-100"
@@ -105,18 +106,18 @@
                   name="productName"
                 ></p-dropdown>
               </div>
-              <div class="col-lg-2 col">
+              <div class="col-lg-2 col-md-3 col-sm-6">
                 <label class="add-order-label m-0 d-block">Description</label>
                 <textarea
                   rows="1"
-                  cols="30"
+                  cols="25"
                   pInputTextarea
                   name="description"
                   [autoResize]="true"
                   [(ngModel)]="job.description"
                 ></textarea>
               </div>
-              <div class="col-lg col">
+              <div class="col-lg-2 col-md-3 col-sm-6">
                 <label class="add-order-label m-0 d-block">Quantity</label>
                 <p-inputNumber
                   [(ngModel)]="job.qty"
@@ -126,7 +127,6 @@
                   (onInput)="calculateAmount(job)"
                   name="qty"
                   #qtyModel="ngModel"
-                  placeholder="Type qty"
                   [required]="true"
                 ></p-inputNumber>
                 <div
@@ -139,7 +139,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg col">
+              <div class="col-lg-2 col-md-3 col-sm-6">
                 <label class="add-order-label m-0 d-block">Rate</label>
                 <p-inputNumber
                   [(ngModel)]="job.rate"
@@ -163,7 +163,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-2 col">
+              <div class="col-lg-2 col-md-3 col-sm-6">
                 <label class="add-order-label m-0">Amount</label>
                 <p-inputNumber
                   [(ngModel)]="job.amount"
@@ -188,7 +188,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-2 col">
+              <div class="col-lg-2 col-md-3 col-sm-6">
                 <label class="add-order-label m-0 d-block">Link invoice</label>
                 <input
                   pInputText
