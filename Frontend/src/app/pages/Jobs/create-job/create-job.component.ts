@@ -401,6 +401,7 @@ export class CreateJobComponent implements OnInit {
           }));
           this.groupVendorList.push({ label: 'Production Users', items: productionUsers });
         }
+        debugger
       },
       (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);

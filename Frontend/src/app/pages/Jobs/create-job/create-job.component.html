@@ -625,17 +625,18 @@
             <div>
               <div class="row">
                 <div class="col-lg-4">
-                  <label class="add-order-label m-0">Send to:</label>
+                  <label class="add-order-label m-0 d-block">Send to:</label>
                   <p-dropdown
                     styleClass="w-100"
-                    [group]="true"
                     [options]="groupVendorList"
-                    [required]="true"
                     [(ngModel)]="job.sendTo"
-                    optionLabel="label"
-                    optionValue="value"
-                    name="sendTo"
+                    [group]="true"
                   >
+                    <ng-template let-group pTemplate="group">
+                      <div class="flex align-items-center">
+                        <span>{{ group.label }}</span>
+                      </div>
+                    </ng-template>
                   </p-dropdown>
                 </div>
 
