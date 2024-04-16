@@ -691,7 +691,7 @@ export class AddProductRuleComponent implements OnInit {
   //   );
   // }
 
-  onCategoryChange(value: any) {
+  onCategoryChange(event: any) {
     debugger
     this.upping = null;
     this.getUpping.getUping().subscribe(
@@ -700,7 +700,7 @@ export class AddProductRuleComponent implements OnInit {
         this.uppingArray = []; // Clear the array before populating it
 
         // Map the `name` property of each object in the `value` array
-        this.selectedCategories = value.map((item: any) => item?.name?.toLowerCase()).filter(Boolean);
+        this.selectedCategories = event.value.map((item: any) => item?.name?.toLowerCase()).filter(Boolean);
 
         // Filter the response based on the category names
         this.uppingArray = response.filter((el: any) => this.selectedCategories.includes(el.category.toLowerCase()))
