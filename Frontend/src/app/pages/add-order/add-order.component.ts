@@ -193,15 +193,18 @@ export class AddOrderComponent implements OnInit {
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
     this.paperStock = title.productRulePaperStockList ? title.productRulePaperStockList : null;
+    debugger
     if (typeof title.category === 'string') {
-      const categories = title.category.split(',').map((category: string) => ({ name: category.trim() }));
-      this.categoryArray = categories;
+      const categories = JSON.parse(title.category)
+      const name = categories.map((item: any) => ({ name: item.name }));
+      this.categoryArray = name;
     } else {
       this.categoryArray = null;
     }
     if (this.categoryArray.length === 1) {
-
       this.category = this.categoryArray[0];
+    }else{
+      this.category = this.categoryArray;
     }
 
     const parsedSize = title.size ? JSON.parse(title.size) : null;

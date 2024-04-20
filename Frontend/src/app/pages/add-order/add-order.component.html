@@ -30,7 +30,19 @@
 
           <div class="main-container">
             <div class="order-body py-2 px-3">
-              <div [ngClass]="{'d-none': paperStock?.length === 1}">
+              <div
+                [ngClass]="{
+                  'd-none':
+                    paperStock?.length === 1 &&
+                    categoryArray?.length === 1 &&
+                    size?.length === 1 &&
+                    gsms?.length === 1 &&
+                    jobFront?.length === 1 &&
+                    jobColorBack?.length === 1 &&
+                    printSide?.length === 1 &&
+                    quantity?.length === 1
+                }"
+              >
                 <div *ngIf="paperStock" class="my-3">
                   <label class="add-order-label m-0">PaperStock</label>
                   <p-dropdown

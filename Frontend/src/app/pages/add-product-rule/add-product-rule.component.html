@@ -46,7 +46,7 @@
             [options]="categoryArray?.productFieldValuesList"
             optionLabel="name"
             name="category"
-            (onChange)="onCategoryChange($event)"
+            (onChange)="onCategoryChange($event.value)"
             [(ngModel)]="category"
             [required]="true"
             placeholder="Select category"
