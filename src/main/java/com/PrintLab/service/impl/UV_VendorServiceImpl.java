@@ -15,6 +15,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 @Service
 public class UV_VendorServiceImpl implements UV_VendorService {
 
@@ -26,6 +27,7 @@ public class UV_VendorServiceImpl implements UV_VendorService {
         this.uvVendorRepository = uvVendorRepository;
         this.helperUtils = helperUtils;
     }
+
     @Override
     public UV_VendorDto save(UV_VendorDto uvVendorDto) {
         User user = helperUtils.getCurrentUser();
@@ -83,6 +85,7 @@ public class UV_VendorServiceImpl implements UV_VendorService {
             existedVendor.setName(uvVendor.getName());
             existedVendor.setType(uvVendor.getType());
             existedVendor.setRate(uvVendor.getRate());
+            existedVendor.setVendorStatus(uvVendor.getVendorStatus());
             existedVendor.setStatus(true);
             UV_Vendor updatedVendor = uvVendorRepository.save(existedVendor);
             return toDto(updatedVendor);
@@ -99,6 +102,7 @@ public class UV_VendorServiceImpl implements UV_VendorService {
                 .createdBy(uvVendorDto.getCreatedBy())
                 .type(uvVendorDto.getType())
                 .rate(uvVendorDto.getRate())
+                .vendorStatus(uvVendorDto.getVendorStatus())
                 .status(uvVendorDto.isStatus())
                 .build();
     }
@@ -111,6 +115,7 @@ public class UV_VendorServiceImpl implements UV_VendorService {
                 .createdBy(uvVendor.getCreatedBy())
                 .type(uvVendor.getType())
                 .rate(uvVendor.getRate())
+                .vendorStatus(uvVendor.getVendorStatus())
                 .status(uvVendor.isStatus())
                 .build();
     }

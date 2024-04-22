@@ -93,6 +93,7 @@ public class BindingLabourImpl implements BindingLabourService {
             existedLabour.setCategory(bindingLabour.getCategory());
             existedLabour.setSize(bindingLabour.getSize());
             existedLabour.setRate(bindingLabour.getRate());
+            existedLabour.setVendorStatus(bindingLabour.getVendorStatus());
             existedLabour.setStatus(true);
             BindingLabour updatedLabour = bindingLabourRepository.save(existedLabour);
             return toDto(updatedLabour);
@@ -111,6 +112,7 @@ public class BindingLabourImpl implements BindingLabourService {
                 .category(bindingLabourDto.getCategory())
                 .size(bindingLabourDto.getSize())
                 .rate(bindingLabourDto.getRate())
+                .vendorStatus(bindingLabourDto.getVendorStatus())
                 .status(bindingLabourDto.isStatus())
                 .build();
     }
@@ -125,6 +127,7 @@ public class BindingLabourImpl implements BindingLabourService {
                 .category(bindingLabour.getCategory())
                 .size(bindingLabour.getSize())
                 .rate(bindingLabour.getRate())
+                .vendorStatus(bindingLabour.getVendorStatus())
                 .status(bindingLabour.isStatus())
                 .build();
     }

@@ -27,6 +27,7 @@ public class BindingLabour {
     private String category;
     private String size;
     private Double rate;
+    private String vendorStatus;
 
     private boolean status;
 }

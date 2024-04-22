@@ -7,6 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
+import { AuthguardService } from 'src/app/services/authguard.service';
 
 @Component({
   selector: 'app-get-binding-labours',
@@ -17,16 +18,20 @@ export class GetBindingLaboursComponent implements OnInit, OnDestroy {
   bindingLabourList: BindingLabour[] = [];
 
   private destroy$ = new Subject<void>();
+  role: string | undefined | null;
+  hideActions: boolean = false;
 
   constructor(
-    private labourService: LabourService,
-    private errorHandleService: ErrorHandleService,
-    private router: Router,
     private successMsgService: SuccessMessageService,
+    private errorHandleService: ErrorHandleService,
+    private authGuardSerivce: AuthguardService,
+    private labourService: LabourService,
     private datePipe: DatePipe,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
+    this.decodeTokken()
     this.getBindingLabours();
   }
 
@@ -98,4 +103,15 @@ export class GetBindingLaboursComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  private decodeTokken(): void {
+    const token = localStorage.getItem('token');
+    const decodedToken = this.authGuardSerivce.getDecodedAccessToken(token!);
+
+    if (decodedToken) {
+      this.role = decodedToken.ROLES[0];
+    }
+    if (this.role === "PRODUCTION") {
+      this.hideActions = true;
+    }
+  }
 }

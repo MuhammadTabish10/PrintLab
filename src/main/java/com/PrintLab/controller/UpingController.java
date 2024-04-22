@@ -103,7 +103,7 @@ public class UpingController
     }
 
     @GetMapping("/product-sizes/name/{category}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<UpingDto>> getUppingByCategory(@PathVariable String category) {
         List<UpingDto> upingDtoList = upingService.findByCategory(category);
         return ResponseEntity.ok(upingDtoList);

@@ -48,7 +48,7 @@ public class ProductFieldController {
     }
 
     @GetMapping("/names/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductFieldDto>> getAllProductFieldsByName(@PathVariable String name) {
         List<ProductFieldDto> productProcessDtoList = productFieldService.searchByName(name);
         return ResponseEntity.ok(productProcessDtoList);

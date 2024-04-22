@@ -6,6 +6,7 @@ import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { Router } from '@angular/router';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { DatePipe } from '@angular/common';
+import { AuthguardService } from 'src/app/services/authguard.service';
 
 @Component({
   selector: 'app-lamination-vendors',
@@ -16,16 +17,20 @@ export class LaminationVendorsComponent {
   laminationVendorList: LaminationVendor[] = [];
 
   private destroy$ = new Subject<void>();
+  role: string | undefined | null;
+  hideActions: boolean = false;
 
   constructor(
-    private labourService: LabourService,
-    private errorHandleService: ErrorHandleService,
-    private router: Router,
     private successMsgService: SuccessMessageService,
+    private errorHandleService: ErrorHandleService,
+    private authGuardSerivce: AuthguardService,
+    private labourService: LabourService,
     private datePipe: DatePipe,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
+    this.decodeTokken()
     this.getLaminationVendors();
   }
 
@@ -102,5 +107,16 @@ export class LaminationVendorsComponent {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  private decodeTokken(): void {
+    const token = localStorage.getItem('token');
+    const decodedToken = this.authGuardSerivce.getDecodedAccessToken(token!);
+
+    if (decodedToken) {
+      this.role = decodedToken.ROLES[0];
+    }
+    if (this.role === "PRODUCTION") {
+      this.hideActions = true;
+    }
   }
 }

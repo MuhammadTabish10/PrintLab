@@ -16,13 +16,13 @@ public class LaminationVendorController {
     LaminationVendorService laminationVendorService;
 
     @PostMapping("/lamination-vendor")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<LaminationVendorDto> saveVendor(@RequestBody LaminationVendorDto laminationVendorDto) {
         LaminationVendorDto savedVendor = laminationVendorService.save(laminationVendorDto);
         return ResponseEntity.ok(savedVendor);
     }
     @GetMapping("/lamination-vendor")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<LaminationVendorDto>> findAll(){
         List<LaminationVendorDto> bindingLabourDtoList = laminationVendorService.findAll();
         return ResponseEntity.ok(bindingLabourDtoList);
@@ -35,7 +35,7 @@ public class LaminationVendorController {
     }
 
     @GetMapping("/lamination-vendors/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<LaminationVendorDto>> getAllVendorsByName(@PathVariable String name) {
         List<LaminationVendorDto> laminationVendorDtoList = laminationVendorService.searchByName(name);
         return ResponseEntity.ok(laminationVendorDtoList);

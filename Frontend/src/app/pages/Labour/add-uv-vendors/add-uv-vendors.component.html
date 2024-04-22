@@ -107,6 +107,39 @@
                 </div>
               </div>
             </div>
+            <div class="col-6 my-3" *ngIf="!hideStatus">
+              <label class="add-order-label d-inline-block m-0 mb-1"
+                >Status</label
+              >
+              <p-dropdown
+                [options]="statusList"
+                styleClass="w-100"
+                optionLabel="name"
+                optionValue="name"
+                [(ngModel)]="uV_Vendor.vendorStatus"
+                name="vendorStatus"
+                [filter]="true"
+                filterBy="name"
+                #vendorStatus="ngModel"
+                [required]="true"
+                [ngClass]="{
+                  'ng-dirty ng-invalid':
+                    vendorStatus.invalid &&
+                    (vendorStatus.dirty || vendorStatus.touched)
+                }"
+              >
+              </p-dropdown>
+              <div
+                *ngIf="
+                  vendorStatus.invalid &&
+                  (vendorStatus.dirty || vendorStatus.touched)
+                "
+              >
+                <div *ngIf="vendorStatus.errors" class="text-danger m-1">
+                  Status is required.
+                </div>
+              </div>
+            </div>
             <div class="col my-3 d-flex align-items-end justify-content-end">
               <button
                 type="submit"

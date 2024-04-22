@@ -314,13 +314,23 @@ export class CreateJobComponent implements OnInit {
 
   onUpload(event: UploadEvent) {
     for (let file of event.files) {
-      this.uploadedFiles.push(file);
+      // Check if the file already exists in uploadedFiles array
+      if (!this.isFileAlreadyUploaded(file)) {
+        debugger
+        this.uploadedFiles.push(file);
+      }
     }
 
     // Convert FileList to an array and then map over it to extract objectURLs
     const filesArray = Array.from(this.uploadedFiles);
     this.imageObjects = filesArray.map((file: any) => ({ objectURL: file.objectURL }));
   }
+
+  isFileAlreadyUploaded(newFile: any): boolean {
+    // Check if newFile exists in uploadedFiles array based on name
+    return this.uploadedFiles.some((file: any) => file.name === newFile.name);
+  }
+
 
 
 
@@ -401,7 +411,6 @@ export class CreateJobComponent implements OnInit {
           }));
           this.groupVendorList.push({ label: 'Production Users', items: productionUsers });
         }
-        debugger
       },
       (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);

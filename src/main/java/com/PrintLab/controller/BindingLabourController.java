@@ -18,13 +18,13 @@ public class BindingLabourController {
     BindingLabourService bindingLabourService;
 
     @PostMapping("/binding-labour")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<BindingLabourDto> saveLabour(@RequestBody BindingLabourDto bindingLabourDto) {
         BindingLabourDto savedLabour = bindingLabourService.save(bindingLabourDto);
         return ResponseEntity.ok(savedLabour);
     }
     @GetMapping("/binding-labour")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<BindingLabourDto>> findAll(){
         List<BindingLabourDto> bindingLabourDtoList = bindingLabourService.findAll();
         return ResponseEntity.ok(bindingLabourDtoList);
@@ -37,7 +37,7 @@ public class BindingLabourController {
     }
 
     @GetMapping("/binding-labours/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<BindingLabourDto>> getAllLaboursByName(@PathVariable String name) {
         List<BindingLabourDto> bindingLabourDtoList = bindingLabourService.searchByName(name);
         return ResponseEntity.ok(bindingLabourDtoList);
