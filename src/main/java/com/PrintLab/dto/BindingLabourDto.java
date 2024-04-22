@@ -21,4 +21,5 @@ public class BindingLabourDto {
     private String size;
     private Double rate;
     private boolean status;
+    private String vendorStatus;
 }

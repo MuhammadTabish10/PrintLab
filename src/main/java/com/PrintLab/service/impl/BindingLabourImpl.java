@@ -37,6 +37,7 @@ public class BindingLabourImpl implements BindingLabourService {
         bindingLabourDto.setTimeStamp(timeStampUtc);
         bindingLabourDto.setCreatedBy(user.getName());
         bindingLabourDto.setStatus(true);
+        bindingLabourDto.setVendorStatus(bindingLabourDto.getVendorStatus());
         BindingLabour saved = bindingLabourRepository.save(toEntity(bindingLabourDto));
         return toDto(saved);
     }
@@ -112,6 +113,7 @@ public class BindingLabourImpl implements BindingLabourService {
                 .size(bindingLabourDto.getSize())
                 .rate(bindingLabourDto.getRate())
                 .status(bindingLabourDto.isStatus())
+                .vendorStatus(bindingLabourDto.getVendorStatus())
                 .build();
     }
 
@@ -126,6 +128,7 @@ public class BindingLabourImpl implements BindingLabourService {
                 .size(bindingLabour.getSize())
                 .rate(bindingLabour.getRate())
                 .status(bindingLabour.isStatus())
+                .vendorStatus(bindingLabour.getVendorStatus())
                 .build();
     }
 

@@ -29,4 +29,5 @@ public class BindingLabour {
     private Double rate;
 
     private boolean status;
+    private String vendorStatus;
 }
