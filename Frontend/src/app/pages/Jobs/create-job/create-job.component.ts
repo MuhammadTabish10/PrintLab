@@ -194,7 +194,7 @@ export class CreateJobComponent implements OnInit {
       .subscribe(
         (res: Customer) => {
           this.businessList = res.customerBusinessName;
-          debugger
+
           // this.businessList.forEach(business => {
           //   if (business.businessBranchList && business.businessBranchList?.length > 0) {
           //     this.branchList = business.businessBranchList;
@@ -316,7 +316,7 @@ export class CreateJobComponent implements OnInit {
     for (let file of event.files) {
       // Check if the file already exists in uploadedFiles array
       if (!this.isFileAlreadyUploaded(file)) {
-        debugger
+        
         this.uploadedFiles.push(file);
       }
     }
@@ -330,9 +330,6 @@ export class CreateJobComponent implements OnInit {
     // Check if newFile exists in uploadedFiles array based on name
     return this.uploadedFiles.some((file: any) => file.name === newFile.name);
   }
-
-
-
 
 
   openImage(imageUrl: string): void {
