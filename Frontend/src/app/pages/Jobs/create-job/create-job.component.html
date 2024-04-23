@@ -289,10 +289,7 @@
               <div class="image-container">
                 <ng-container *ngFor="let imageObject of imageObjects">
                   <img
-                    [src]="
-                      imageObject.objectURL
-                        .changingThisBreaksApplicationSecurity
-                    "
+                    [src]="imageObject.objectURL"
                     alt="Image"
                     class="image-item border border-5 border-dark"
                     (click)="
@@ -632,6 +629,7 @@
                     optionLabel="label"
                     optionValue="label"
                     [group]="true"
+                    name="sendTo"
                   >
                     <ng-template let-group pTemplate="group">
                       <div class="flex align-items-center">

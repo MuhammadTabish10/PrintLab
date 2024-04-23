@@ -25,6 +25,7 @@ public class UV_Vendor {
     private String createdBy;
     private String type;
     private Double rate;
+    private String vendorStatus;
     private boolean status;
 
 }

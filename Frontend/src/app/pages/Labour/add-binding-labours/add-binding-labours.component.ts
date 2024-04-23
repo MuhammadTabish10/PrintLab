@@ -10,6 +10,7 @@ import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { VendorService } from 'src/app/services/vendor.service';
 import { UpingService } from 'src/app/services/uping.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
+import { AuthguardService } from 'src/app/services/authguard.service';
 
 @Component({
   selector: 'app-add-binding-labours',
@@ -34,26 +35,37 @@ export class AddBindingLaboursComponent {
     size: undefined,
     rate: undefined,
     status: undefined,
+    vendorStatus: undefined
   };
+
+  statusList: { name: string | undefined }[] = [
+    { name: "Approved" },
+    { name: "Disapproved" },
+    { name: "Pending" },
+  ];
 
   private destroy$ = new Subject<void>();
   private uppingArraySubject = new Subject<any[]>();
   uppingArray$: Observable<any[]> = this.uppingArraySubject.asObservable();
+  role: string | undefined | null;
+  hideStatus: boolean = false;
 
   constructor(
-    private route: ActivatedRoute,
-    private errorHandlingService: ErrorHandleService,
-    private vendorService: VendorService,
-    private labourService: LabourService,
-    private successService: SuccessMessageService,
-    private router: Router,
     private productFieldService: ProductDefinitionService,
+    private errorHandlingService: ErrorHandleService,
+    private successService: SuccessMessageService,
+    private authGuardSerivce: AuthguardService,
+    private labourService: LabourService,
+    private vendorService: VendorService,
     private upingService: UpingService,
+    private route: ActivatedRoute,
     private datePipe: DatePipe,
+    private router: Router,
   ) { }
 
 
   ngOnInit(): void {
+    this.decodeTokken();
     this.getBindingLabours();
     this.getBindingType();
     this.getSizeCategory();
@@ -111,6 +123,7 @@ export class AddBindingLaboursComponent {
     );
   }
   submit() {
+    this.bindingLabour.vendorStatus = !this.bindingLabour.vendorStatus ? "Pending" : this.bindingLabour.vendorStatus;
     const serviceToCall = !this.idFromQueryParam ? this.labourService.postBindingLabour(this.bindingLabour)
       : this.labourService.updateBindingLabour(this.idFromQueryParam, this.bindingLabour);
 
@@ -144,4 +157,15 @@ export class AddBindingLaboursComponent {
       });
   }
 
+  private decodeTokken(): void {
+    const token = localStorage.getItem('token');
+    const decodedToken = this.authGuardSerivce.getDecodedAccessToken(token!);
+
+    if (decodedToken) {
+      this.role = decodedToken.ROLES[0];
+    }
+    if (this.role === "PRODUCTION") {
+      this.hideStatus = true;
+    }
+  }
 }

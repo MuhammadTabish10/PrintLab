@@ -7,5 +7,6 @@ export interface BindingLabour {
   category: string | null | undefined;
   size: string | null | undefined;
   rate: number | null | undefined;
+  vendorStatus: string | null | undefined;
   status: boolean | null | undefined;
 }

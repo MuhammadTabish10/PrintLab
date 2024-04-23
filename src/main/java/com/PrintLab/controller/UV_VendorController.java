@@ -17,13 +17,13 @@ public class UV_VendorController {
     UV_VendorService uvVendorService;
 
     @PostMapping("/uv-vendor")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<UV_VendorDto> saveVendor(@RequestBody UV_VendorDto uvVendorDto) {
         UV_VendorDto savedVendor = uvVendorService.save(uvVendorDto);
         return ResponseEntity.ok(savedVendor);
     }
     @GetMapping("/uv-vendor")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<UV_VendorDto>> findAll(){
         List<UV_VendorDto> uvVendorDtoList = uvVendorService.findAll();
         return ResponseEntity.ok(uvVendorDtoList);
@@ -36,7 +36,7 @@ public class UV_VendorController {
     }
 
     @GetMapping("/uv-vendors/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<UV_VendorDto>> getAllVendorsByName(@PathVariable String name) {
         List<UV_VendorDto> uvVendorDtoList = uvVendorService.searchByName(name);
         return ResponseEntity.ok(uvVendorDtoList);

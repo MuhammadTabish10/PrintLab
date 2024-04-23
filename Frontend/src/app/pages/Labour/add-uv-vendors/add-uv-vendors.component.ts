@@ -9,6 +9,7 @@ import { LabourService } from '../service/labour.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { DatePipe } from '@angular/common';
+import { AuthguardService } from 'src/app/services/authguard.service';
 
 @Component({
   selector: 'app-add-uv-vendors',
@@ -29,9 +30,18 @@ export class AddUvVendorsComponent {
     type: undefined,
     rate: undefined,
     status: undefined,
+    vendorStatus: undefined
   };
 
+  statusList: { name: string | undefined }[] = [
+    { name: "Approved" },
+    { name: "Disapproved" },
+    { name: "Pending" },
+  ];
+
   private destroy$ = new Subject<void>();
+  role: string | null | undefined;
+  hideStatus: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,10 +52,12 @@ export class AddUvVendorsComponent {
     private router: Router,
     private productFieldService: ProductDefinitionService,
     private datePipe: DatePipe,
+    private authGuardSerivce: AuthguardService
   ) { }
 
 
   ngOnInit(): void {
+    this.decodeTokken();
     this.getUvVendors();
     this.getUvType();
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(param => {
@@ -80,6 +92,7 @@ export class AddUvVendorsComponent {
   }
 
   submit() {
+    this.uV_Vendor.vendorStatus = !this.uV_Vendor.vendorStatus ? "Pending" : this.uV_Vendor.vendorStatus;
     const serviceToCall = !this.idFromQueryParam ? this.labourService.postUvVendor(this.uV_Vendor)
       : this.labourService.updateUvVendor(this.idFromQueryParam, this.uV_Vendor);
 
@@ -107,5 +120,17 @@ export class AddUvVendorsComponent {
       }, error => {
         this.errorHandlingService.showError(error.error.error);
       });
+  }
+
+  private decodeTokken(): void {
+    const token = localStorage.getItem('token');
+    const decodedToken = this.authGuardSerivce.getDecodedAccessToken(token!);
+
+    if (decodedToken) {
+      this.role = decodedToken.ROLES[0];
+    }
+    if (this.role === "PRODUCTION") {
+      this.hideStatus = true;
+    }
   }
 }

@@ -6,5 +6,6 @@ export interface LaminationVendor {
   process: string | null | undefined;
   type: string | null | undefined;
   rate: number | null | undefined;
+  vendorStatus:string | null | undefined;
   status: boolean | null | undefined;
 }

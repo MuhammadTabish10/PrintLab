@@ -56,6 +56,9 @@
               <div class="d-flex justify-content-center">Rate</div>
             </th>
             <th class="col">
+              <div class="d-flex justify-content-center">Status</div>
+            </th>
+            <th class="col" *ngIf="!hideActions">
               <div class="d-flex justify-content-center">Action</div>
             </th>
           </tr>
@@ -84,6 +87,9 @@
               {{ labour?.rate }}
             </td>
             <td class="text-center">
+              {{ labour?.vendorStatus }}
+            </td>
+            <td class="text-center" *ngIf="!hideActions">
               <div
                 class="btn-group mr-2"
                 role="group"

@@ -80,7 +80,7 @@ public class VendorController {
     }
 
     @GetMapping("/{process}/product-process-name")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<VendorDto>> getVendorByProductProcess(@PathVariable String process) {
         List<VendorDto> vendorDtoList = vendorService.getVendorByProcess(process);
         return ResponseEntity.ok(vendorDtoList);

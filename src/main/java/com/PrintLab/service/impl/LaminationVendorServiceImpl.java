@@ -85,6 +85,7 @@ public class LaminationVendorServiceImpl implements LaminationVendorService {
             existedVendor.setProcess(laminationVendor.getProcess());
             existedVendor.setType(laminationVendor.getType());
             existedVendor.setRate(laminationVendor.getRate());
+            existedVendor.setVendorStatus(laminationVendor.getVendorStatus());
             existedVendor.setStatus(true);
             LaminationVendor updatedVendor = laminationVendorRepository.save(existedVendor);
             return toDto(updatedVendor);
@@ -102,6 +103,7 @@ public class LaminationVendorServiceImpl implements LaminationVendorService {
                 .process(laminationVendorDto.getProcess())
                 .type(laminationVendorDto.getType())
                 .rate(laminationVendorDto.getRate())
+                .vendorStatus(laminationVendorDto.getVendorStatus())
                 .status(laminationVendorDto.isStatus())
                 .build();
     }
@@ -115,6 +117,7 @@ public class LaminationVendorServiceImpl implements LaminationVendorService {
                 .process(laminationVendor.getProcess())
                 .type(laminationVendor.getType())
                 .rate(laminationVendor.getRate())
+                .vendorStatus(laminationVendor.getVendorStatus())
                 .status(laminationVendor.isStatus())
                 .build();
     }

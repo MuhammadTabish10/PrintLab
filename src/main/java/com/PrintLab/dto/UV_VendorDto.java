@@ -18,6 +18,7 @@ public class UV_VendorDto {
     private String createdBy;
     private String type;
     private Double rate;
+    private String vendorStatus;
     private boolean status;
 
 }

@@ -9,6 +9,7 @@ import { LabourService } from '../service/labour.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { DatePipe } from '@angular/common';
+import { AuthguardService } from 'src/app/services/authguard.service';
 
 @Component({
   selector: 'app-add-lamination-vendors',
@@ -31,9 +32,18 @@ export class AddLaminationVendorsComponent {
     type: undefined,
     rate: undefined,
     status: undefined,
+    vendorStatus: undefined
   };
 
+  statusList: { name: string | undefined }[] = [
+    { name: "Approved" },
+    { name: "Disapproved" },
+    { name: "Pending" },
+  ];
+
   private destroy$ = new Subject<void>();
+  role: string | undefined | null;
+  hideStatus: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,12 +52,14 @@ export class AddLaminationVendorsComponent {
     private labourService: LabourService,
     private successService: SuccessMessageService,
     private router: Router,
+    private authGuardSerivce: AuthguardService,
     private productFieldService: ProductDefinitionService,
     private datePipe: DatePipe,
   ) { }
 
 
   ngOnInit(): void {
+    this.decodeTokken();
     this.getLaminationVendors();
     this.getProcessTypes();
     this.getLaminationType();
@@ -92,6 +104,7 @@ export class AddLaminationVendorsComponent {
   }
 
   submit() {
+    this.laminationVendor.vendorStatus = !this.laminationVendor.vendorStatus ? "Pending" : this.laminationVendor.vendorStatus;
     const serviceToCall = !this.idFromQueryParam ? this.labourService.postLaminationVendor(this.laminationVendor)
       : this.labourService.updateLaminationVendor(this.idFromQueryParam, this.laminationVendor);
 
@@ -121,4 +134,15 @@ export class AddLaminationVendorsComponent {
       });
   }
 
+  private decodeTokken(): void {
+    const token = localStorage.getItem('token');
+    const decodedToken = this.authGuardSerivce.getDecodedAccessToken(token!);
+
+    if (decodedToken) {
+      this.role = decodedToken.ROLES[0];
+    }
+    if (this.role === "PRODUCTION") {
+      this.hideStatus = true;
+    }
+  }
 }

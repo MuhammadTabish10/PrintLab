@@ -18,6 +18,7 @@ public class LaminationVendorDto {
     private String process;
     private String type;
     private Double rate;
+    private String vendorStatus;
     private boolean status;
 
 }
