@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
+import { User } from 'src/app/Model/User';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { UserService } from 'src/app/services/user.service';
 @Component({
@@ -11,6 +13,8 @@ export class DashboardHeadComponent implements OnInit {
   numOfOnlineUser: number | null | undefined;
   userName: string | undefined | null;
   role: string | undefined | null;
+  menuItems!: MenuItem[];
+  currentUserDetail: any;
 
   constructor(
     private router: Router,
@@ -19,6 +23,7 @@ export class DashboardHeadComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getUserDetails();
     const token = localStorage.getItem('token');
     const decodedToken = this.authService.getDecodedAccessToken(token!);
     this.userName = decodedToken.sub;
@@ -32,4 +37,7 @@ export class DashboardHeadComponent implements OnInit {
     }
   }
 
+  getUserDetails() {
+    this.currentUserDetail = JSON.parse(this.authService.token).userDetails
+  }
 }

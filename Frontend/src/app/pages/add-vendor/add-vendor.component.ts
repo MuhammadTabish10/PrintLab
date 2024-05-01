@@ -53,7 +53,7 @@ export class AddVendorComponent implements OnInit {
           this.addressValue = this.vendorToUpdate.address
           this.notesValue = this.vendorToUpdate.notes
           this.vendorToUpdate.vendorProcessList.forEach((el: any) => {
-            debugger
+
             this.vendorProcessId.push(el.id)
             this.selectedVendorProcess.push(el.productProcess)
             this.materialProcess.push(el.materialType)
@@ -170,7 +170,7 @@ export class AddVendorComponent implements OnInit {
 
   getproductProcess() {
     this.productProcessService.getProductProcess().subscribe(res => {
-      debugger
+
       this.productProcessArray = res
       this.maxLength = this.productProcessArray.length
     }, error => {

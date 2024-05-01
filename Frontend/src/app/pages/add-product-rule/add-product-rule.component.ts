@@ -692,7 +692,7 @@ export class AddProductRuleComponent implements OnInit {
   // }
 
   onCategoryChange(event: any) {
-    debugger
+
     this.upping = null;
     this.getUpping.getUping().subscribe(
       (response: any) => {

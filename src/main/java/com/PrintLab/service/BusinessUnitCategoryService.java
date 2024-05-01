@@ -13,8 +13,8 @@ public interface BusinessUnitCategoryService {
 
     BusinessUnitCategoryDto updateCategory(Long categoryId, BusinessUnitCategoryDto categoryDto);
 
-    void deleteCategory(Long categoryId);
-    void deleteProcess(Long processId);
+    String deleteCategory(Long categoryId);
+    String deleteProcess(Long processId);
 
     Boolean getCategoryByName(String name);
 

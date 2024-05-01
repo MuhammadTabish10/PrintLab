@@ -38,9 +38,10 @@ export class LoginFormComponent implements OnInit {
       email: this.userNamevalue,
       password: this.passwordValue
     }
+
     this.loginService.post(obj).subscribe(res => {
-      this.token = res;
-      localStorage.setItem("token", this.token.jwt);
+      debugger
+      localStorage.setItem("token", JSON.stringify(res));
       localStorage.setItem("isLoggedIn", "true");
       this.router.navigateByUrl('/dashboard');
     }, error => {

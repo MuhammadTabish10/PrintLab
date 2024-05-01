@@ -18,6 +18,7 @@ public class InvoiceProduct {
     private Long productRow;
     private String productName;
     private String type;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private Integer qty;
     private Double rate;

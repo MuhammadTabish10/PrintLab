@@ -12,7 +12,7 @@ export class InterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.loaderService.showLoader();
     this.authService.token ? req = req.clone({
-      headers: req.headers.set('authorization', `Bearer ${this.authService.token}`)
+      headers: req.headers.set('authorization', `Bearer ${JSON.parse(this.authService.token).jwt}`)
     }) : null
     return next.handle(req).pipe(finalize(() => {
       this.loaderService.hideLoader();

@@ -1,0 +1,40 @@
+<app-dashboard-head></app-dashboard-head>
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-6">
+      <h3 *ngIf="idFromQueryParam" class="m-0">
+        {{ "PL-O-" + idFromQueryParam }}
+      </h3>
+      <h6 class="mb-3 mt-0 d-inline">ORDER ID</h6>
+      <button
+        class="pi pi-copy fs-4 border-0 bg-white"
+        (click)="copyIdToClipboard(idFromQueryParam?.toString()!)"
+      ></button>
+    </div>
+    <div class="col-6 text-end">
+      <p-tag
+        [value]="
+          orderById.status === 'New / Unassigned' ? 'NEW' : orderById.status
+        "
+        [style]="{ 'background-color': 'black' }"
+      ></p-tag>
+      <label class="add-order-label d-block pt-2">{{
+        orderById.timeStamp
+      }}</label>
+    </div>
+  </div>
+</div>
+<div class="card mt-3">
+  <p-tabView>
+    <p-tabPanel header="OVERVIEW">
+      <app-order-over-view></app-order-over-view>
+    </p-tabPanel>
+    <p-tabPanel header="DESIGN">
+      <app-order-design></app-order-design>
+    </p-tabPanel>
+    <p-tabPanel header="PRE PRODUCTION"> </p-tabPanel>
+    <p-tabPanel header="PRODUCTION"> </p-tabPanel>
+    <p-tabPanel header="PACKING & QA"> </p-tabPanel>
+    <p-tabPanel header="DELIVERY"> </p-tabPanel>
+  </p-tabView>
+</div>

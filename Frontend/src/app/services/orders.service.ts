@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/comm
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { User } from '../Model/User';
 
 @Injectable({
   providedIn: 'root'
@@ -33,13 +34,14 @@ export class OrdersService {
     return this.http.get(url);
   }
 
-  saveAssignedUser(userId: number, role: string, orderId: number) {
+  saveAssignedUser(userId: number, role: string, orderId: number, logedInUser: number) {
     const url = `${this._url}/order/assignUser`;
 
     const params = {
+      orderId: orderId,
       userId: userId,
       role: role,
-      orderId: orderId
+      logedInUser: logedInUser
     };
 
     return this.http.post(url, null, { params });

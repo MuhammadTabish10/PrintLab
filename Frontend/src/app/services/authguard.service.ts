@@ -15,7 +15,7 @@ export class AuthguardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    const jwtToken = localStorage.getItem('token');
+    const jwtToken = JSON.parse(localStorage.getItem("token")!).jwt;
     if (jwtToken) {
 
       const decodedToken = this.getDecodedAccessToken(jwtToken);
@@ -79,7 +79,7 @@ export class AuthguardService implements CanActivate {
     }
 
     const orderObj = {
-      url: ['/orders', '/addOrder', '/viewOrder'],
+      url: ['/orders', '/addOrder', '/viewOrder',"/order-overview"],
       permissions: 'Orders'
     }
     const orderProcessObj = {

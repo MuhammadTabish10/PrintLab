@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,7 +30,7 @@ public class OrderDto
     private Boolean providedDesign;
     private String url;
     private Long productRule;
-    private Boolean status;
+    private String status;
     private Boolean ctpProcess;
     private Boolean pressMachineProcess;
     private Boolean paperMarketProcess;
@@ -36,5 +38,7 @@ public class OrderDto
     private User production;
     private User plateSetter;
     private Boolean isRejected;
+    private LocalDateTime timeStamp;
+    private User assignedBy;
     private Customer customer;
 }

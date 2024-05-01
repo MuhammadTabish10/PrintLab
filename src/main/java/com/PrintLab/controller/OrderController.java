@@ -25,14 +25,14 @@ public class OrderController {
     }
 
     @GetMapping("/order")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
     public ResponseEntity<List<OrderDto>> getAllOrders() {
         List<OrderDto> orderList = orderService.getAll();
         return ResponseEntity.ok(orderList);
     }
 
     @GetMapping("/order/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
     public ResponseEntity<OrderDto> getOrderById(@PathVariable Long id) {
         OrderDto orderDto = orderService.findById(id);
         return ResponseEntity.ok(orderDto);
@@ -88,9 +88,11 @@ public class OrderController {
     public ResponseEntity<OrderDto> assignUserToOrder(
             @RequestParam Long orderId,
             @RequestParam Long userId,
-            @RequestParam String role) {
+            @RequestParam String role,
+            @RequestParam Long logedInUser
+    ) {
 
-        OrderDto assignedUser = orderService.assignOrderToUser(orderId, userId, role);
+        OrderDto assignedUser = orderService.assignOrderToUser(orderId, userId, role, logedInUser);
         return ResponseEntity.ok(assignedUser);
     }
 

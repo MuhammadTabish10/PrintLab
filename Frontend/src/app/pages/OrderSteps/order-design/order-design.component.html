@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-4">
+      <h3>
+        {{ idFromQueryParam }}
+        <button
+          class="pi pi-copy fs-4 border-0 bg-white"
+          (click)="copyIdToClipboard(idFromQueryParam?.toString()!)"
+        ></button>
+      </h3>
+      <label class="add-order-label m-0">Collaboration ID</label>
+    </div>
+    <div class="col-4">
+      <ng-container *ngIf="!orderById.designer">
+        <label class="add-order-label m-0 d-block">Designer:</label>
+        <p-dropdown
+          styleClass="w-50"
+          [(ngModel)]="selectedDesigner"
+          [options]="designerRoleList"
+          optionLabel="name"
+          optionValue="id"
+          name="designer"
+        ></p-dropdown>
+      </ng-container>
+      <ng-container *ngIf="!orderById.designer">
+        <button
+          class="btn btn-dark d-block w-50 rounded-0"
+          (click)="confirm1($event)"
+        >
+          Assign
+        </button>
+      </ng-container>
+
+      <ng-container
+        *ngIf="
+          currentUserDetail.authorities[0].authority !== 'ROLE_DESIGNER' &&
+          orderById.designer
+        "
+      >
+        <h3>Designer</h3>
+        <h4>{{ orderById.designer.name }}</h4>
+      </ng-container>
+
+      <ng-container
+        *ngIf="currentUserDetail.authorities[0].authority === 'ROLE_DESIGNER'"
+      >
+        <h3>Brief</h3>
+        <h4>{{ orderById.assignedBy.name }}</h4>
+      </ng-container>
+    </div>
+    <div class="col-4 text-end">
+      <p-tag
+        [value]="orderById.status"
+        [style]="{ 'background-color': 'black' }"
+      ></p-tag>
+      <!-- <label class="add-order-label m-0 bg-dark text-white p-2">{{}}</label> -->
+      <label class="add-order-label m-0 d-block">{{
+        orderById.timeStamp
+      }}</label>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

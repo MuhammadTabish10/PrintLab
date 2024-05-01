@@ -17,7 +17,7 @@ export class SidebarComponent {
   isDropDown6Open: boolean = false;
   isDropDown7Open: boolean = false;
   isDropDown8Open: boolean = false;
-
+  sidebarVisible: boolean = false;
 
   constructor(public sessionStorageService: SessionStorageService) {
   }

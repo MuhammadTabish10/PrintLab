@@ -1,5 +1,4 @@
-<app-sidebar></app-sidebar>
-<div class="container-fluid ps-6">
+<div class="container-fluid">
   <app-dashboard-head></app-dashboard-head>
   <div class="container-fluid mt-5">
     <div class="row">
@@ -47,8 +46,12 @@
             No record found
           </td>
         </tr>
-        <tr *ngFor="let order of ordersArray" class="order-table-row-hover"
-        [ngClass]="{'highlighted': order?.id === idFromQueryParam }">
+        <tr
+          *ngFor="let order of ordersArray"
+          class="order-table-row-hover"
+          (click)="onRowClick($event, order.id)"
+          [ngClass]="{ highlighted: order?.id === idFromQueryParam }"
+        >
           <th scope="row" class="tracking-id">{{ order?.id }}</th>
           <td>{{ order?.customer?.name }}</td>
           <td>{{ order?.product }}</td>
@@ -149,7 +152,14 @@
     <div class="d-flex justify-content-end me-3">
       <button
         class="btn btn-dark"
-        (click)="saveOrder(selectedUser, selectedRole, selectedOrderId)"
+        (click)="
+          saveOrder(
+            selectedUser,
+            selectedRole,
+            selectedOrderId,
+            currentUserDetail
+          )
+        "
       >
         Save
       </button>

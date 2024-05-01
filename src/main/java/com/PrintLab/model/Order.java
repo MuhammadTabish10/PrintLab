@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -21,6 +22,7 @@ public class Order
 
     private String product;
     private String paper;
+    @Column(columnDefinition = "TEXT")
     private String size;
     private String category;
     private Double gsm;
@@ -33,11 +35,14 @@ public class Order
     private Boolean providedDesign;
     private String url;
     private Long productRule;
-    private Boolean status;
+    private String status;
     private Boolean ctpProcess;
     private Boolean pressMachineProcess;
     private Boolean paperMarketProcess;
     private Boolean isRejected;
+    private LocalDateTime timeStamp;
+    @ManyToOne()
+    private User assignedBy;
 
     @ManyToOne()
     @JoinColumn(name = "customer_id")

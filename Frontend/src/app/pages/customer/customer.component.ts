@@ -44,7 +44,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (res: Customer[]) => {
-          debugger
+
           if (this.role !== "ADMIN") {
             this.customersArray = res.filter(customer => {
               return this.doesMatchLeadOwner(customer);

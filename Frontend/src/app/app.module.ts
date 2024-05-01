@@ -49,7 +49,7 @@ import { DatePipe } from '@angular/common';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app-routing.module';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DashboardCardsComponent } from './components/dashboard-cards/dashboard-cards.component';
 import { CardModule } from 'primeng/card';
 import { DashboardChartComponent } from './components/dashboard-chart/dashboard-chart.component';
@@ -82,7 +82,6 @@ import { OrderProcessComponent } from './pages/order-process/order-process.compo
 import { TransactionsComponent } from './pages/transactions/transactions.component';
 import { TransactionRecordComponent } from './pages/transaction-record/transaction-record.component';
 import { PetyCashComponent } from './pages/pety-cash/pety-cash.component';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { VendorSettlementComponent } from './pages/vendor-settlement/vendor-settlement.component';
 import { AllPettyCashRecordsComponent } from './pages/all-petty-cash-records/all-petty-cash-records.component';
 import { AllSettlementsComponent } from './pages/all-settlements/all-settlements.component';
@@ -123,7 +122,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { StepsModule } from 'primeng/steps';
 import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
-
+import { MenubarModule } from 'primeng/menubar';
+import { SidebarModule } from 'primeng/sidebar';
+import { OrderOverViewComponent } from './pages/OrderSteps/order-over-view/order-over-view.component';
+import { OrderDesignComponent } from './pages/OrderSteps/order-design/order-design.component';
+import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 @NgModule({
   declarations: [
     AppComponent,
@@ -206,6 +210,9 @@ import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.comp
     JobRequestsComponent,
     ImageViewerComponent,
     GetAllJobsComponent,
+    OrderStepsComponent,
+    OrderOverViewComponent,
+    OrderDesignComponent,
   ],
   imports: [
     BrowserModule,
@@ -232,7 +239,6 @@ import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.comp
     DividerModule,
     PasswordModule,
     TreeSelectModule,
-    ConfirmDialogModule,
     CheckboxModule,
     TimelineModule,
     TreeTableModule,
@@ -248,8 +254,11 @@ import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.comp
     MatDialogModule,
     MatIconModule,
     StepsModule,
+    MenubarModule,
+    SidebarModule,
+    ConfirmDialogModule,
   ],
-  providers: [AuthInterceptorProvider, InterceptorService, MessageService, ConfirmDialogModule,
+  providers: [AuthInterceptorProvider, InterceptorService, MessageService, ConfirmationService,
     provideRouter(routes, withHashLocation()), DatePipe],
   bootstrap: [AppComponent]
 })

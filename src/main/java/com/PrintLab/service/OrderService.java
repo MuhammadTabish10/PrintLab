@@ -18,7 +18,7 @@ public interface OrderService {
 
     OrderDto updateOrder(Long id, OrderDto orderDto);
 
-    OrderDto assignOrderToUser(Long orderId, Long userId, String role);
+    OrderDto assignOrderToUser(Long orderId, Long userId, String role, Long logedInUser);
 
     List<Order> getAssignedOrdersForLoggedInUser();
 

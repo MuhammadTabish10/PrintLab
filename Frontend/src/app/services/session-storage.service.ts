@@ -10,7 +10,7 @@ export class SessionStorageService {
 
   constructor(private authGuardSerivce: AuthguardService) {
 
-    const token = localStorage.getItem('token');
+    const token = JSON.parse(localStorage.getItem("token")!).jwt;
     const decodedToken = authGuardSerivce.getDecodedAccessToken(token!);
 
     if (decodedToken) {

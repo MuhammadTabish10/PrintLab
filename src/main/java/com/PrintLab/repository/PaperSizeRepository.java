@@ -21,4 +21,6 @@ public interface PaperSizeRepository extends JpaRepository<PaperSize,Long> {
     @Transactional
     @Query("UPDATE PaperSize ps SET ps.status = 'inActive' WHERE ps.id = :id")
     void setStatusInactive(@Param("id") Long id);
+
+    PaperSize findByLabelAndStatus(String label, String status);
 }

@@ -2,6 +2,8 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { environment } from 'src/Environments/environment';
+import { Business, BusinessBranch } from 'src/app/Model/Business';
+import { Customer } from 'src/app/Model/Customer';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
@@ -16,8 +18,10 @@ export class AddOrderComponent implements OnInit {
 
   productArray: any = []
   productName: any = ''
-  customersArray: any = []
+  customersArray: Customer[] = []
   selectedCustomer: any = {}
+  selectedBusiness: any = {}
+  selectedLocation: any = {}
   customerDesign: string = 'Customer will provide the design'
   printLabDesign: string = 'Design by PrintLab'
   totalAmount: any
@@ -66,6 +70,8 @@ export class AddOrderComponent implements OnInit {
     backColor: 'Select Back Color',
   };
   productRuleId: number = 0;
+  businessList: Business[] = [];
+  branchList: BusinessBranch[] = [];
 
   constructor(private orderService: OrdersService, private router: Router,
     private productService: ProductRuleService, private route: ActivatedRoute,
@@ -193,7 +199,7 @@ export class AddOrderComponent implements OnInit {
     this.productName = title.title;
     this.machineId = title.pressMachine.id;
     this.paperStock = title.productRulePaperStockList ? title.productRulePaperStockList : null;
-    debugger
+
     if (typeof title.category === 'string') {
       const categories = JSON.parse(title.category)
       const name = categories.map((item: any) => ({ name: item.name }));
@@ -203,7 +209,7 @@ export class AddOrderComponent implements OnInit {
     }
     if (this.categoryArray.length === 1) {
       this.category = this.categoryArray[0];
-    }else{
+    } else {
       this.category = this.categoryArray;
     }
 
@@ -293,13 +299,24 @@ export class AddOrderComponent implements OnInit {
   }
 
   getCustomers() {
-    this.customerService.getCustomer().subscribe(res => {
-      this.customersArray = res
-    }, error => {
-      this.showError(error);
-      this.visible = true;
-    })
+    this.customerService.getCustomer().subscribe(
+      (res: Customer[]) => {
+        this.customersArray = res;
+        this.businessList = this.customersArray.flatMap((customer: Customer) =>
+          customer.customerBusinessName
+        );
+        this.branchList = this.businessList.flatMap((customer: Business) =>
+          customer.businessBranchList!
+        );
+        console.log(this.branchList);
+      }, error => {
+        this.showError(error);
+        this.visible = true;
+      }
+    );
   }
+
+
 
   uploadFile(event: any) {
     const fileList: FileList = event.target.files;

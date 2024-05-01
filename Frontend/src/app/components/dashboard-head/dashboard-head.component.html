@@ -1,19 +1,32 @@
-<div class="clearfix me-1">
-  <nav class="navbar navbar-light float-end my-0 py-1">
-    <div class="container-fluid ps-0 pe-0">
-      <form class="input-group">
-        <div class="p-inputgroup">
+<div class="topbar">
+  <p-menubar [model]="menuItems">
+    <ng-template pTemplate="start">
+      <div class="topbar">
+        <div class="d-flex">
+          <app-sidebar></app-sidebar>
           <div class="user-info">
-            <!-- <i>{{ numOfOnlineUser }}</i> -->
-            <i class="pi pi-user"> {{ userName }} </i>
-            <span class="role">{{ role }}</span>
+            <img
+              src="../../../assets/images/profile.jpg"
+              alt="User Logo"
+              class="user-logo"
+            />
+            <div>
+              <h6 class="m-0">User: {{ currentUserDetail.username }}</h6>
+              <h6 class="m-0">
+                Role: {{ currentUserDetail.authorities[0].authority }}
+              </h6>
+            </div>
           </div>
-          <button class="bg-dark text-white" (click)="logout()">
-            <span class="d-none d-lg-inline-block">Log-out</span
-            ><i class="fa-solid fa-arrow-right-from-bracket ps-2"></i>
-          </button>
         </div>
-      </form>
-    </div>
-  </nav>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="end">
+      <div class="topbar-right">
+        <button class="btn btn-dark" (click)="logout()">
+          Logout <i class="pi pi-power-off"></i>
+        </button>
+      </div>
+    </ng-template>
+  </p-menubar>
 </div>

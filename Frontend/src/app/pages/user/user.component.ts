@@ -35,7 +35,7 @@ export class UserComponent {
       .subscribe(
         (res: User[]) => {
           this.userArray = res;
-          debugger
+
           this.userArray.forEach((el: User) => {
             const dateArray = el.createdAt;
             if (Array.isArray(dateArray)) {

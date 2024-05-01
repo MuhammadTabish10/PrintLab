@@ -4,3 +4,10 @@
 .hover:hover {
   color:black !important;
 }
+li{
+  margin-bottom:2rem;
+}
+::ng-deep.p-sidebar{
+  background-color:black;
+  color:white
+}

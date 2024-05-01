@@ -15,6 +15,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +64,10 @@ public class OrderServiceImpl implements OrderService {
             orderDto.setQuantity(1000.0);
         }
 
-        orderDto.setStatus(true);
+        orderDto.setStatus("New / Unassigned");
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
+        orderDto.setTimeStamp(timeStampUtc);
         orderDto.setCtpProcess(false);
         orderDto.setPressMachineProcess(false);
         orderDto.setPaperMarketProcess(false);
@@ -71,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getAll() {
-        List<Order> orderList = orderRepository.findAllInDesOrderByIdAndStatus();
+        List<Order> orderList = orderRepository.findAllByOrderByIdDesc();
         List<OrderDto> orderDtoList = new ArrayList<>();
 
         for (Order order : orderList) {
@@ -150,9 +156,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto assignOrderToUser(Long orderId, Long userId, String role) {
+    public OrderDto assignOrderToUser(Long orderId, Long userId, String role, Long loggedInUserId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + userId));
+        User loggedInUser = userRepository.findById(loggedInUserId)
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + userId));
+
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
@@ -167,6 +176,11 @@ public class OrderServiceImpl implements OrderService {
             order.setPlateSetter(user);
             emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
         }
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
+        order.setTimeStamp(timeStampUtc);
+        order.setStatus("Connected");
+        order.setAssignedBy(loggedInUser);
         orderRepository.save(order);
         return toDto(order);
     }
@@ -249,6 +263,8 @@ public class OrderServiceImpl implements OrderService {
                 .designer(order.getDesigner())
                 .plateSetter(order.getPlateSetter())
                 .status(order.getStatus())
+                .timeStamp(order.getTimeStamp())
+                .assignedBy(order.getAssignedBy())
                 .productRule(order.getProductRule())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
@@ -275,7 +291,9 @@ public class OrderServiceImpl implements OrderService {
                 .designer(orderDto.getDesigner())
                 .plateSetter(orderDto.getPlateSetter())
                 .status(orderDto.getStatus())
+                .timeStamp(orderDto.getTimeStamp())
                 .productRule(orderDto.getProductRule())
+                .assignedBy(orderDto.getAssignedBy())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .build();

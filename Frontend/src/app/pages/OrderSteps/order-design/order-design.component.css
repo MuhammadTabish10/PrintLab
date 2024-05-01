@@ -1,0 +1,8 @@
+::ng-deep.p-dialog .p-dialog-header {
+  border-bottom: 0 none;
+  background: #ffffff;
+  color: #343a40;
+  padding: 0.7rem;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+}

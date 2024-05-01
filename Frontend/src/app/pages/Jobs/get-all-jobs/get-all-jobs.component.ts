@@ -57,7 +57,7 @@ export class GetAllJobsComponent implements OnInit {
     this.jobsService.getAllProductionJobs().subscribe(
       (res: ProductionJob[]) => {
         this.jobList = res;
-        debugger
+
       }, (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
       }

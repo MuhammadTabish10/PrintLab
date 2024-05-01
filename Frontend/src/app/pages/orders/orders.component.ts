@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrdersService } from 'src/app/services/orders.service';
 import { MessageService } from 'primeng/api';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+import { AuthguardService } from 'src/app/services/authguard.service';
 
 export interface Roles {
   name?: string;
@@ -35,11 +36,13 @@ export class OrdersComponent implements OnInit {
   processOptions: boolean = false;
   orderId: number = 0;
   idFromQueryParam: number | undefined | null;
+  currentUserDetail: any = {};
 
 
   constructor(
     private orderService: OrdersService,
     private router: Router,
+    private authService: AuthguardService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -48,6 +51,7 @@ export class OrdersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOrders()
+    this.getUserDetails();
     this.cdr.detectChanges();
 
     this.roleArray = [
@@ -131,9 +135,8 @@ export class OrdersComponent implements OnInit {
     this.visible = true;
     this.selectedOrderId = getById;
   }
-  saveOrder(user?: any, role?: any, orderId?: number) {
-
-    this.orderService.saveAssignedUser(user?.id, role?.name, orderId ? orderId : 0).subscribe(
+  saveOrder(user?: any, role?: any, orderId?: number, logedInUser?: any) {
+    this.orderService.saveAssignedUser(user?.id, role?.name, orderId ? orderId : 0, logedInUser?.userId).subscribe(
       (res: any) => {
         this.plzSelect = false;
         this.visible = false;
@@ -160,7 +163,24 @@ export class OrdersComponent implements OnInit {
   //   this.router.navigate(['/orderProcessPaperMarket'], { queryParams: { id: this.orderId } });
   // }
 
+  onRowClick(event: MouseEvent, orderId: number): void {
+    // Check if the click occurred on a button
+    debugger
+    const isButton = (event.target as HTMLElement).tagName === 'BUTTON' ||
+      (event.target as HTMLElement).tagName === 'SMALL' ||
+      (event.target as HTMLElement).tagName === 'I';
+
+    if (!isButton) {
+      // If the click didn't occur on a button, navigate to order overview
+      this.router.navigate(['/order-overview'], { queryParams: { id: orderId } });
+    }
+  }
+
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+
+  getUserDetails() {
+    this.currentUserDetail = JSON.parse(this.authService.token).userDetails
   }
 }

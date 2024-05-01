@@ -55,16 +55,16 @@ public class BusinessUnitCategoryController {
     }
 
     // DELETE
-    @DeleteMapping("/process/{categoryId}")
-    public ResponseEntity<Void> deleteProcess(@PathVariable Long categoryId) {
-        categoryService.deleteProcess(categoryId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/process/{processId}")
+    public ResponseEntity<String> deleteProcess(@PathVariable Long processId) {
+        String message = categoryService.deleteProcess(processId);
+        return ResponseEntity.ok().body(message);
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
-        categoryService.deleteCategory(categoryId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
+        String message = categoryService.deleteCategory(categoryId);
+        return ResponseEntity.ok().body(message);
     }
 
     @GetMapping("/categories/{name}")

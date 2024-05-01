@@ -3,6 +3,7 @@ package com.PrintLab.service.impl;
 import com.PrintLab.Mapper.BusinessUnitCategoryMapper;
 import com.PrintLab.dto.BusinessUnitCategoryDto;
 import com.PrintLab.dto.BusinessUnitProcessDto;
+import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.BusinessUnitCategory;
 import com.PrintLab.model.BusinessUnitProcess;
 import com.PrintLab.repository.BusinessUnitCategoryRepository;
@@ -253,14 +254,33 @@ public class BusinessUnitCategoryImpl implements BusinessUnitCategoryService {
 
 
     @Override
-    public void deleteCategory(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
+    public String deleteCategory(Long categoryId) {
+        // Check if the category exists
+        if (categoryRepository.existsById(categoryId)) {
+            categoryRepository.deleteById(categoryId);
+            return "Category deleted successfully";
+        } else {
+            throw new RecordNotFoundException(String.format("Category not found with id: " + categoryId));
+        }
     }
 
+
+    //    @Override
+//    public void deleteProcess(Long processId) {
+//        processRepository.deleteById(processId);
+//    }
     @Override
-    public void deleteProcess(Long processId) {
-        processRepository.deleteById(processId);
+    public String deleteProcess(Long processId) {
+        Optional<BusinessUnitProcess> optionalProcess = processRepository.findById(processId);
+        // Check if the process exists
+        if (optionalProcess.isPresent()) {
+            processRepository.deleteById(processId);
+            return "Process deleted successfully";
+        } else {
+            throw new RecordNotFoundException(String.format("Process not found with id: " + processId));
+        }
     }
+
 
     @Override
     public Boolean getCategoryByName(String name) {
