@@ -4,9 +4,11 @@ import com.PrintLab.dto.UserDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Role;
 import com.PrintLab.model.User;
+import com.PrintLab.model.UserSession;
 import com.PrintLab.repository.RoleRepository;
 import com.PrintLab.repository.UserRepository;
 import com.PrintLab.service.UserService;
+import com.PrintLab.service.UserSessionService;
 import com.PrintLab.utils.EmailUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,14 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
     private final EmailUtils emailUtils;
+    private final UserSessionService userSessionService;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, EmailUtils emailUtils) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, EmailUtils emailUtils, UserSessionService userSessionService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
         this.emailUtils = emailUtils;
+        this.userSessionService = userSessionService;
     }
 
     @Override
@@ -127,6 +131,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public List<UserDto> getLoggedInUsersDetails() {
+        List<UserDto> loggedInUsers = new ArrayList<>();
+        List<UserSession> activeSessions = userSessionService.getAllActiveSessions();
+
+        for (UserSession session : activeSessions) {
+            // Retrieve user details using session information
+            UserDto userDto = findById(session.getUserId());
+            loggedInUsers.add(userDto);
+        }
+
+        return loggedInUsers;
+    }
     public UserDto toDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
