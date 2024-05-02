@@ -15,7 +15,7 @@ export class DashboardHeadComponent implements OnInit {
   role: string | undefined | null;
   menuItems!: MenuItem[];
   currentUserDetail: any;
-
+  isCustomerSupport: boolean = false;
   constructor(
     private router: Router,
     private authService: AuthguardService,
@@ -28,6 +28,31 @@ export class DashboardHeadComponent implements OnInit {
     const decodedToken = this.authService.getDecodedAccessToken(token!);
     this.userName = decodedToken.sub;
     this.role = decodedToken.ROLES[0];
+    if (this.isCustomerSupport) {
+      this.menuItems = [
+        {
+          label: 'Dashboard',
+          icon: 'pi pi-home',
+          routerLink: '/dashboard'
+        },
+        {
+          label: 'Orders',
+          icon: 'pi pi-shopping-cart',
+          items: [
+            {
+              label: 'New',
+              icon: 'pi pi-cart-plus',
+              routerLink: '/addOrder',
+            },
+            {
+              label: 'OrderList',
+              icon: 'pi pi-shopping-cart',
+              routerLink: '/orders'
+            }
+          ]
+        }
+      ];
+    }
   }
 
   logout() {
@@ -39,5 +64,6 @@ export class DashboardHeadComponent implements OnInit {
 
   getUserDetails() {
     this.currentUserDetail = JSON.parse(this.authService.token).userDetails
+    this.isCustomerSupport = this.currentUserDetail.authorities[0].authority === "ROLE_CUSTOMER_SUPPORT";
   }
 }

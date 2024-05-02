@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { environment } from 'src/Environments/environment';
 import { Business, BusinessBranch } from 'src/app/Model/Business';
 import { Customer } from 'src/app/Model/Customer';
+import { AuthguardService } from 'src/app/services/authguard.service';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
@@ -72,14 +73,18 @@ export class AddOrderComponent implements OnInit {
   productRuleId: number = 0;
   businessList: Business[] = [];
   branchList: BusinessBranch[] = [];
+  currentUserDetail: any;
 
   constructor(private orderService: OrdersService, private router: Router,
     private productService: ProductRuleService, private route: ActivatedRoute,
     private customerService: CustomerService, private messageService: MessageService,
-    private cdr: ChangeDetectorRef) { }
+    private authService:AuthguardService,
+    private cdr: ChangeDetectorRef,
+  ) { }
 
   ngOnInit(): void {
     this.getCustomers()
+    this.getUserDetails();
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
@@ -157,7 +162,7 @@ export class AddOrderComponent implements OnInit {
         jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null,
         customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
       }
-      this.orderService.addOrder(obj).subscribe(res => {
+      this.orderService.addOrder(obj,this.currentUserDetail.userId).subscribe(res => {
         this.router.navigateByUrl('/orders')
       }, error => {
         this.showError(error);
@@ -305,8 +310,8 @@ export class AddOrderComponent implements OnInit {
         this.businessList = this.customersArray.flatMap((customer: Customer) =>
           customer.customerBusinessName
         );
-        this.branchList = this.businessList.flatMap((customer: Business) =>
-          customer.businessBranchList!
+        this.branchList = this.businessList.flatMap((business: Business) =>
+          business.businessBranchList!
         );
         console.log(this.branchList);
       }, error => {
@@ -449,5 +454,11 @@ export class AddOrderComponent implements OnInit {
 
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+
+  getUserDetails() {
+    this.currentUserDetail = JSON.parse(this.authService.token).userDetails
+    console.log(this.currentUserDetail);
+
   }
 }

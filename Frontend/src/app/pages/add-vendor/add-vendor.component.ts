@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { User } from 'src/app/Model/User';
 import { ProductProcessService } from 'src/app/services/product-process.service';
+import { UserService } from 'src/app/services/user.service';
 import { VendorService } from 'src/app/services/vendor.service';
 
 @Component({
@@ -23,6 +25,7 @@ export class AddVendorComponent implements OnInit {
   idFromQueryParam!: number
   vendorToUpdate: any = []
   productProcessArray: any = []
+  productionUserList: User[] = []
   placeHolder: any = []
   vendorProcess: any = []
   maxLength!: number
@@ -30,14 +33,18 @@ export class AddVendorComponent implements OnInit {
   rateProcess: any = []
   notesProcess: any = []
   selectedVendorProcess: any = []
+  selectedUsers: User[] = []
   vendorProcessId: any = []
   elementGenerated: boolean = false;
   constructor(private vendorService: VendorService,
-     private productProcessService: ProductProcessService,
-      private route: ActivatedRoute, private router: Router,private messageService: MessageService) { }
+    private productProcessService: ProductProcessService,
+    private route: ActivatedRoute, private router: Router, private messageService: MessageService,
+    private userService: UserService,
+  ) { }
 
   ngOnInit(): void {
     this.getproductProcess()
+    this.getUserList();
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       if (Number.isNaN(this.idFromQueryParam)) {
@@ -51,6 +58,9 @@ export class AddVendorComponent implements OnInit {
           this.contactNameValue = this.vendorToUpdate.contactName
           this.contactNumberValue = this.vendorToUpdate.contactNumber
           this.addressValue = this.vendorToUpdate.address
+          this.selectedUsers = this.productionUserList.filter(user => {
+            return this.vendorToUpdate.productionUserList.some((vendorUser: User) => vendorUser.id === user.id);
+          });
           this.notesValue = this.vendorToUpdate.notes
           this.vendorToUpdate.vendorProcessList.forEach((el: any) => {
 
@@ -131,9 +141,12 @@ export class AddVendorComponent implements OnInit {
         contactName: this.contactNameValue,
         contactNumber: this.contactNumberValue,
         address: this.addressValue,
+        productionUserList: this.selectedUsers,
         notes: this.notesValue,
         vendorProcessList: this.selectedVendorProcess
       }
+      console.log(obj);
+
       this.vendorService.postVendor(obj).subscribe(() => {
         this.router.navigateByUrl('/vendor')
       }, error => {
@@ -156,6 +169,7 @@ export class AddVendorComponent implements OnInit {
         contactName: this.contactNameValue,
         contactNumber: this.contactNumberValue,
         address: this.addressValue,
+        productionUserList: this.selectedUsers,
         notes: this.notesValue,
         vendorProcessList: this.selectedVendorProcess
       }
@@ -178,7 +192,22 @@ export class AddVendorComponent implements OnInit {
       this.visible = true;
     })
   }
-  showError(error:any) {
+  showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+  getUserList(): void {
+    this.userService.getUsers()
+      .subscribe(
+        (res: User[]) => {
+          this.productionUserList = this.filterUsersByRole(res);
+        },
+        (error) => {
+          this.showError(error.error.error);
+        }
+      );
+  }
+
+  private filterUsersByRole(users: User[]): User[] {
+    return users.filter((user) => user.roles.some((userRole) => userRole.name === "ROLE_PRODUCTION"));
   }
 }

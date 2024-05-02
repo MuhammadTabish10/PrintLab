@@ -1,12 +1,15 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.dto.UserDto;
 import com.PrintLab.dto.VendorDto;
 import com.PrintLab.dto.VendorProcessDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.ProductProcess;
+import com.PrintLab.model.User;
 import com.PrintLab.model.Vendor;
 import com.PrintLab.model.VendorProcess;
 import com.PrintLab.repository.ProductProcessRepository;
+import com.PrintLab.repository.UserRepository;
 import com.PrintLab.repository.VendorProcessRepository;
 import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.VendorService;
@@ -23,12 +26,14 @@ public class VendorServiceImpl implements VendorService {
     private final VendorProcessRepository vendorProcessRepository;
     private final ProductProcessRepository productProcessRepository;
     private final ProductProcessServiceImpl productProcessService;
+    private final UserRepository userRepository;
 
-    public VendorServiceImpl(VendorRepository vendorRepository, VendorProcessRepository vendorProcessRepository, ProductProcessRepository productProcessRepository, ProductProcessServiceImpl productProcessService) {
+    public VendorServiceImpl(VendorRepository vendorRepository, VendorProcessRepository vendorProcessRepository, ProductProcessRepository productProcessRepository, ProductProcessServiceImpl productProcessService, UserRepository userRepository) {
         this.vendorRepository = vendorRepository;
         this.vendorProcessRepository = vendorProcessRepository;
         this.productProcessRepository = productProcessRepository;
         this.productProcessService = productProcessService;
+        this.userRepository = userRepository;
     }
 
 
@@ -39,6 +44,13 @@ public class VendorServiceImpl implements VendorService {
         vendor.setStatus(true);
         Vendor createdVendor = vendorRepository.save(vendor);
 
+        List<User> productionUserList = vendor.getProductionUserList();
+        if (productionUserList != null && !productionUserList.isEmpty()) {
+            for (User user : productionUserList) {
+                user.setVendor(createdVendor);
+            }
+        }
+
         List<VendorProcess> vendorProcessList = vendor.getVendorProcessList();
         if (vendorProcessList != null && !vendorProcessList.isEmpty()) {
             for (VendorProcess vendorProcess : vendorProcessList) {
@@ -48,11 +60,11 @@ public class VendorServiceImpl implements VendorService {
                 vendorProcessRepository.save(vendorProcess);
             }
             createdVendor.setVendorProcessList(vendorProcessList);
-            vendorRepository.save(createdVendor);
         }
 
         return toDto(createdVendor);
     }
+
 
     @Override
     public List<VendorDto> getAll() {
@@ -179,6 +191,21 @@ public class VendorServiceImpl implements VendorService {
                 existingVpValues.addAll(newValuesToAdd);
             }
 
+            // Update production user list
+            List<User> existingUsers = existingVendor.getProductionUserList();
+            List<User> newUsers = vendor.getProductionUserList();
+
+            for (User user : existingUsers) {
+                if (!newUsers.contains(user)) {
+                    user.setVendor(null); // Disassociate the user from the vendor
+                }
+            }
+
+            // Update vendor for each user in the new list
+            for (User user : newUsers) {
+                user.setVendor(existingVendor);
+            }
+
             Vendor updatedVendor = vendorRepository.save(existingVendor);
             return toDto(updatedVendor);
 
@@ -240,6 +267,19 @@ public class VendorServiceImpl implements VendorService {
             vendorProcessDto.add(dto);
         }
 
+        List<UserDto> productionUserDtoList = new ArrayList<>();
+        for (User user : vendor.getProductionUserList()) {
+            UserDto userDto = UserDto.builder()
+                    .id(user.getId())
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .phone(user.getPhone())
+                    .cnic(user.getCnic())
+                    // Map other user properties as needed
+                    .build();
+            productionUserDtoList.add(userDto);
+        }
+
         return VendorDto.builder()
                 .id(vendor.getId())
                 .name(vendor.getName())
@@ -248,6 +288,7 @@ public class VendorServiceImpl implements VendorService {
                 .contactName(vendor.getContactName())
                 .contactNumber(vendor.getContactNumber())
                 .address(vendor.getAddress())
+                .productionUserList(productionUserDtoList)
                 .notes(vendor.getNotes())
                 .status(vendor.getStatus())
                 .vendorProcessList(vendorProcessDto)
@@ -285,8 +326,17 @@ public class VendorServiceImpl implements VendorService {
 
             vendorProcessList.add(vendorProcess);
         }
-
         vendor.setVendorProcessList(vendorProcessList);
+        // Map production user list
+        List<User> productionUserList = new ArrayList<>();
+        for (UserDto userDto : vendorDto.getProductionUserList()) {
+            User user = userRepository.findById(userDto.getId())
+                    .orElseThrow(() -> new RecordNotFoundException(String.format("User not found for id => %d", userDto.getId())));
+            productionUserList.add(user);
+        }
+
+        vendor.setProductionUserList(productionUserList);
+
         return vendor;
     }
 }

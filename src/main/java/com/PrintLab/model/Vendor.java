@@ -33,6 +33,9 @@ public class Vendor {
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
     private List<VendorProcess> vendorProcessList;
 
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
+    private List<User> productionUserList;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "vendor_business_unit_process",

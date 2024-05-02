@@ -40,7 +40,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto save(OrderDto orderDto) {
+    public OrderDto save(OrderDto orderDto,Long loggedInUserId) {
+        User loggedInUser = userRepository.findById(loggedInUserId)
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
         if (orderDto.getSideOptionValue() == null) {
             orderDto.setSideOptionValue("SINGLE_SIDED");
         }
@@ -65,6 +67,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderDto.setStatus("New / Unassigned");
+        orderDto.setCreatedBy(loggedInUser);
         ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
         LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
         orderDto.setTimeStamp(timeStampUtc);
@@ -160,8 +163,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + userId));
         User loggedInUser = userRepository.findById(loggedInUserId)
-                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + userId));
-
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
@@ -266,6 +268,7 @@ public class OrderServiceImpl implements OrderService {
                 .timeStamp(order.getTimeStamp())
                 .assignedBy(order.getAssignedBy())
                 .productRule(order.getProductRule())
+                .createdBy(order.getCreatedBy())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .build();
@@ -294,6 +297,7 @@ public class OrderServiceImpl implements OrderService {
                 .timeStamp(orderDto.getTimeStamp())
                 .productRule(orderDto.getProductRule())
                 .assignedBy(orderDto.getAssignedBy())
+                .createdBy(orderDto.getCreatedBy())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .build();

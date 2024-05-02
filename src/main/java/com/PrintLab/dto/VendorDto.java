@@ -23,6 +23,8 @@ public class VendorDto
 
     private List<VendorProcessDto> vendorProcessList;
 
+    private List<UserDto> productionUserList;
+
     @ToString.Exclude
     private List<BusinessUnitProcessDto> businessUnitProcess;
 }

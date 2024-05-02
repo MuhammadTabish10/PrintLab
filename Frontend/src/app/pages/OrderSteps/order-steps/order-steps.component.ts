@@ -13,16 +13,18 @@ export class OrderStepsComponent implements OnInit {
 
   orderById: any = {};
   idFromQueryParam: number | undefined | null;
+  orderIdWithPrefix: string | undefined | null;
 
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
-    private datePipe:DatePipe,
+    private datePipe: DatePipe,
   ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.idFromQueryParam = +params['id'];
+      this.orderIdWithPrefix = "PL-O-" + this.idFromQueryParam.toString();
       if (this.idFromQueryParam) {
         this.getOrderById(this.idFromQueryParam);
       }

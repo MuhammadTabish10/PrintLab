@@ -6,7 +6,7 @@ import com.PrintLab.model.Order;
 import java.util.List;
 
 public interface OrderService {
-    OrderDto save(OrderDto orderDto);
+    OrderDto save(OrderDto orderDto,Long loggedInUserId);
 
     List<OrderDto> getAll();
 

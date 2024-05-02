@@ -30,7 +30,7 @@ public class ProductRuleController {
     }
 
     @GetMapping("/product-rule")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<List<ProductRuleDto>> getAllProductRule() {
         List<ProductRuleDto> productRuleDtoList = productRuleService.getAllProductRule();
         return ResponseEntity.ok(productRuleDtoList);

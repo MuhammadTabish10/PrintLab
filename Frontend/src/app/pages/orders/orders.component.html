@@ -31,13 +31,18 @@
       <thead>
         <tr>
           <th scope="col" class="col-1">ID</th>
+          <th scope="col" class="col-3">Created By</th>
           <th scope="col" class="col-3">Customer Name</th>
           <th scope="col" class="col-3">Product Name</th>
           <th scope="col" class="col-2">Price</th>
           <th scope="col" class="col-2">Assign Designer</th>
-          <th scope="col" class="col-2">Assign Production</th>
-          <th scope="col" class="col-2">Assign Plate Setter</th>
-          <th scope="col" class="col-3">Action</th>
+          <th scope="col" class="col-2" *ngIf="buttonOption">
+            Assign Production
+          </th>
+          <th scope="col" class="col-2" *ngIf="buttonOption">
+            Assign Plate Setter
+          </th>
+          <th scope="col" class="col-3" *ngIf="buttonOption">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -53,6 +58,7 @@
           [ngClass]="{ highlighted: order?.id === idFromQueryParam }"
         >
           <th scope="row" class="tracking-id">{{ order?.id }}</th>
+          <td>{{ order?.createdBy?.name }}</td>
           <td>{{ order?.customer?.name }}</td>
           <td>{{ order?.product }}</td>
           <td>Rs. {{ order?.price }}</td>
@@ -65,7 +71,7 @@
           <td>
             {{ order?.plateSetter?.email }}
           </td>
-          <td class="order-table-btns-container">
+          <td class="order-table-btns-container" *ngIf="buttonOption">
             <div class="btn-group mr-2" role="group" aria-label="Second group">
               <button
                 type="button"

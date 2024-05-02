@@ -25,21 +25,21 @@ public class CustomerController {
     }
 
     @GetMapping("/customer")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<List<CustomerDto>> findAll() {
         List<CustomerDto> customer = customerService.findAll();
         return ResponseEntity.ok(customer);
     }
 
     @GetMapping("/customer/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id) {
         CustomerDto customerDto = customerService.findById(id);
         return ResponseEntity.ok(customerDto);
     }
 
     @GetMapping("/customers/{name}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<List<CustomerDto>> getAllCustomersByName(@PathVariable String name) {
         List<CustomerDto> customerDtoList = customerService.searchByName(name);
         return ResponseEntity.ok(customerDtoList);

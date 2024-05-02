@@ -19,20 +19,20 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) {
-        return ResponseEntity.ok(orderService.save(orderDto));
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto, @RequestParam Long loggedInUser) {
+        return ResponseEntity.ok(orderService.save(orderDto,loggedInUser));
     }
 
     @GetMapping("/order")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<List<OrderDto>> getAllOrders() {
         List<OrderDto> orderList = orderService.getAll();
         return ResponseEntity.ok(orderList);
     }
 
     @GetMapping("/order/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<OrderDto> getOrderById(@PathVariable Long id) {
         OrderDto orderDto = orderService.findById(id);
         return ResponseEntity.ok(orderDto);
@@ -84,15 +84,15 @@ public class OrderController {
     }
 
     @PostMapping("/order/assignUser")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<OrderDto> assignUserToOrder(
             @RequestParam Long orderId,
             @RequestParam Long userId,
             @RequestParam String role,
-            @RequestParam Long logedInUser
+            @RequestParam Long loggedInUser
     ) {
 
-        OrderDto assignedUser = orderService.assignOrderToUser(orderId, userId, role, logedInUser);
+        OrderDto assignedUser = orderService.assignOrderToUser(orderId, userId, role, loggedInUser);
         return ResponseEntity.ok(assignedUser);
     }
 

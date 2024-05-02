@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { AuthguardService } from 'src/app/services/authguard.service';
+import { User } from 'src/app/Model/User';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-get-binding-labours',
@@ -20,18 +22,21 @@ export class GetBindingLaboursComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   role: string | undefined | null;
   hideActions: boolean = false;
+  currentUserDetail: any;
 
   constructor(
     private successMsgService: SuccessMessageService,
     private errorHandleService: ErrorHandleService,
     private authGuardSerivce: AuthguardService,
     private labourService: LabourService,
+    private userService: UserService,
     private datePipe: DatePipe,
     private router: Router,
   ) { }
 
   ngOnInit(): void {
     this.decodeTokken()
+    this.getUserDetails();
     this.getBindingLabours();
   }
 
@@ -39,7 +44,6 @@ export class GetBindingLaboursComponent implements OnInit, OnDestroy {
     this.labourService.getAllBindingLabours().pipe(takeUntil(this.destroy$)).subscribe(
       (res: BindingLabour[]) => {
         this.bindingLabourList = res;
-
         this.bindingLabourList.forEach((el: BindingLabour) => {
           const dateArray = el.timeStamp;
           if (Array.isArray(dateArray)) {
@@ -113,5 +117,26 @@ export class GetBindingLaboursComponent implements OnInit, OnDestroy {
     if (this.role === "PRODUCTION") {
       this.hideActions = true;
     }
+  }
+
+  private doesLogedInProductionUser(productionVendors: User): void {
+    debugger
+  }
+
+
+
+  private getUserDetails(): void {
+    this.currentUserDetail = JSON.parse(this.authGuardSerivce.token).userDetails;
+    this.role = this.currentUserDetail.authorities[0].authority;
+    this.getUserById(this.currentUserDetail.userId)
+  }
+
+  getUserById(id: number): void {
+    this.userService.getUserById(id).subscribe(
+      (res: User) => {
+        this.doesLogedInProductionUser(res);
+      },
+      (error: any) => this.errorHandleService.showError(error.error.error)
+    );
   }
 }

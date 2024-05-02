@@ -21,6 +21,7 @@ export class OrderDesignComponent implements OnInit {
   designerRoleList: User[] = [];
   visible: boolean = false;
   currentUserDetail: any = {};
+  roleIsDesigner: boolean = false;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -47,11 +48,9 @@ export class OrderDesignComponent implements OnInit {
     this.orderService.getOrderById(id).subscribe(
       (data) => {
         this.orderById = data;
+        debugger
         this.orderById.timeStamp = new Date(this.orderById.timeStamp[0], this.orderById.timeStamp[1] - 1, this.orderById.timeStamp[2], this.orderById.timeStamp[3], this.orderById.timeStamp[4]);
         this.orderById.timeStamp = this.datePipe.transform(this.orderById.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
-        console.log(this.orderById);
-        console.log(this.orderById.timeStamp);
-
       },
       (error) => {
         console.error('Error fetching order:', error);
@@ -75,7 +74,6 @@ export class OrderDesignComponent implements OnInit {
         this.designerRoleList = data.filter((user: User) =>
           user.roles.some(role => role.name?.toUpperCase() === 'ROLE_DESIGNER')
         );
-        console.log(this.designerRoleList);
       },
       (error) => {
         console.error('Error fetching roles:', error);
@@ -107,6 +105,7 @@ export class OrderDesignComponent implements OnInit {
       rejectButtonStyleClass: "p-button-text",
       accept: () => {
         this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted' });
+        debugger
         this.saveOrder(this.selectedDesigner, 'ROLE_DESIGNER', this.idFromQueryParam, this.currentUserDetail?.userId)
       },
       reject: () => {
@@ -116,7 +115,6 @@ export class OrderDesignComponent implements OnInit {
   }
   getUserDetails() {
     this.currentUserDetail = JSON.parse(this.authService.token).userDetails
-    console.log(this.currentUserDetail);
-
+    this.roleIsDesigner = this.currentUserDetail.authorities[0].authority === 'ROLE_DESIGNER'
   }
 }

@@ -40,7 +40,9 @@ export class OrderOverViewComponent implements OnInit {
 
   parseSize(sizeString: string): any {
     debugger
-    this.parsedSize = JSON.parse(sizeString);
+    const parsedSize = JSON.parse(sizeString);
+    const [width, height] = parsedSize.inch.split('x').map((value: any) => value.trim());
+    this.parsedSize = width + " x " + height
     return this.parsedSize;
   }
 }

@@ -18,10 +18,9 @@ export class OrdersService {
     return this.http.post(url, obj)
   }
 
-  addOrder(order: any) {
-
+  addOrder(order: any, createdBy: number) {
     let url = `${this._url}/order`
-    return this.http.post(url, order)
+    return this.http.post(url, order, { params: { loggedInUser: createdBy } })
   }
 
   getOrders() {
@@ -41,7 +40,7 @@ export class OrdersService {
       orderId: orderId,
       userId: userId,
       role: role,
-      logedInUser: logedInUser
+      loggedInUser: logedInUser
     };
 
     return this.http.post(url, null, { params });

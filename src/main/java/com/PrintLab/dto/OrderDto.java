@@ -39,6 +39,7 @@ public class OrderDto
     private User plateSetter;
     private Boolean isRejected;
     private LocalDateTime timeStamp;
+    private User createdBy;
     private User assignedBy;
     private Customer customer;
 }

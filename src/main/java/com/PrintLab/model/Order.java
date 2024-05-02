@@ -45,6 +45,9 @@ public class Order
     private User assignedBy;
 
     @ManyToOne()
+    private User createdBy;
+
+    @ManyToOne()
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

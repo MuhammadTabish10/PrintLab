@@ -3,6 +3,8 @@ import { PaperMarketService } from 'src/app/services/paper-market.service';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { AuthguardService } from 'src/app/services/authguard.service';
+import { User } from 'src/app/Model/User';
 
 
 @Component({
@@ -36,17 +38,22 @@ export class PaperMarketComponent implements OnInit {
   searchFromQueryParam: any;
   rateFilter: number | undefined;
   fullObj: any = {};
+  currentUserDetail: any = {};
+  role: string | null | undefined;
 
 
   constructor(private paperMarketService: PaperMarketService,
     private router: Router,
     private datePipe: DatePipe,
     private messageService: MessageService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private authService: AuthguardService,
+  ) { }
 
   ngOnInit(): void {
     this.getFilteredAndPaginatedData();
     this.getDistinctData();
+    this.getUserDetails();
   }
 
   clear(): void {
@@ -87,8 +94,24 @@ export class PaperMarketComponent implements OnInit {
 
     this.paperMarketService.getFilteredAndPaginatedData(page, this.fullObj).subscribe(
       (res: any) => {
-        this.paperMarketArray = res.content;
-        this.filterRes = res;
+        if (this.role !== 'ROLE_ADMIN') {
+          // Filter the content array based on the logged-in production users
+          this.paperMarketArray = this.doesLogedInProductionUser(res.content);
+          // Construct the filterRes object based on the filtered content
+          const pagination = {
+            lastPage: false,
+            pageNumber: 0, // Assuming it's the first page after filtering
+            pageSize: res.pageSize, // Same as the original page size
+            totalElements: this.paperMarketArray.length, // Total filtered elements
+            totalPages: Math.ceil(this.paperMarketArray.length / res.pageSize) // Calculate total pages based on filtered content
+          };
+          this.filterRes = pagination;
+          console.log(this.filterRes);
+        } else {
+          // For admin users, directly assign the original response object to filterRes
+          this.paperMarketArray = res.content;
+          this.filterRes = res;
+        }
         this.paperMarketArray.forEach((el: any) => {
           const dateArray = el.timeStamp;
           el.timeStamp = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
@@ -214,5 +237,26 @@ export class PaperMarketComponent implements OnInit {
   }
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
+  }
+
+  private doesLogedInProductionUser(paperMarket: any[]): any[] {
+    return paperMarket.filter(item => {
+      // Check if the vendor has a productionUserList
+      if (item.vendor && item.vendor.productionUserList) {
+        // Check if the current user's ID is present in the vendor's productionUserList
+        return item.vendor.productionUserList.some((user: User) => {
+          return user.id === this.currentUserDetail.userId;
+        });
+      }
+      // If vendor or productionUserList is not present, exclude the item
+      return false;
+    });
+  }
+
+
+
+  private getUserDetails(): void {
+    this.currentUserDetail = JSON.parse(this.authService.token).userDetails;
+    this.role = this.currentUserDetail.authorities[0].authority;
   }
 }

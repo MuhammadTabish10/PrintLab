@@ -37,6 +37,8 @@ export class OrdersComponent implements OnInit {
   orderId: number = 0;
   idFromQueryParam: number | undefined | null;
   currentUserDetail: any = {};
+  role: string | undefined | null;
+  buttonOption: boolean = true;
 
 
   constructor(
@@ -67,15 +69,26 @@ export class OrdersComponent implements OnInit {
   }
 
   getOrders() {
-    this.orderService.getOrders().subscribe(res => {
-      this.ordersArray = res;
-      this.ordersArray.length == 0 ? this.tableData = true : this.tableData == false
-    }, error => {
-      this.showError(error);
-      this.visible = true
-    })
+    this.orderService.getOrders().subscribe(
+      (res: any) => {
+        if (this.role !== "ROLE_ADMIN") {
+          this.ordersArray = res.filter(
+            (order: any) => {
+              debugger
+              return this.doesCreatedByMatch(order);
+            });
+          this.buttonOption = false;
+        } else {
+          this.ordersArray = res;
+        }
+        this.tableData = this.ordersArray.length === 0;
+      },
+      error => {
+        this.showError(error);
+        this.visible = true;
+      }
+    );
   }
-
   getUsersByRole(role: any) {
 
     // this.userArray = [
@@ -180,7 +193,15 @@ export class OrdersComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
   }
 
-  getUserDetails() {
-    this.currentUserDetail = JSON.parse(this.authService.token).userDetails
+  private doesCreatedByMatch(order: any): boolean {
+    return (order.createdBy && order.createdBy.id === this.currentUserDetail.userId) ||
+      (order.designer && order.designer.id === this.currentUserDetail.userId);
   }
+
+
+  private getUserDetails(): void {
+    this.currentUserDetail = JSON.parse(this.authService.token).userDetails;
+    this.role = this.currentUserDetail.authorities[0].authority;
+  }
+
 }

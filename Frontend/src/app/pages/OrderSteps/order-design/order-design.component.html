@@ -31,19 +31,12 @@
         </button>
       </ng-container>
 
-      <ng-container
-        *ngIf="
-          currentUserDetail.authorities[0].authority !== 'ROLE_DESIGNER' &&
-          orderById.designer
-        "
-      >
+      <ng-container *ngIf="!roleIsDesigner && orderById.designer">
         <h3>Designer</h3>
         <h4>{{ orderById.designer.name }}</h4>
       </ng-container>
 
-      <ng-container
-        *ngIf="currentUserDetail.authorities[0].authority === 'ROLE_DESIGNER'"
-      >
+      <ng-container *ngIf="roleIsDesigner">
         <h3>Brief</h3>
         <h4>{{ orderById.assignedBy.name }}</h4>
       </ng-container>

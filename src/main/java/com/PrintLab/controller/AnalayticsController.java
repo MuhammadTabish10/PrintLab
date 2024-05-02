@@ -17,7 +17,7 @@ public class AnalayticsController {
     AnalyticsService analyticsService;
 
     @GetMapping("/printlab-count")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<Map<String, Long>> getAllCount() {
         Map<String, Long> result = analyticsService.count();
         return ResponseEntity.ok(result);
