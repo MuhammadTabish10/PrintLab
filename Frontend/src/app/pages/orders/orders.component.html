@@ -42,63 +42,31 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="order-table-404" colspan="8" *ngIf="tableData">
-            No record found
-          </td>
-        </tr>
-        <tr *ngFor="let order of ordersArray" class="order-table-row-hover"
-        [ngClass]="{'highlighted': order?.id === idFromQueryParam }">
+        <tr *ngFor="let order of ordersArray" class="order-table-row-hover" 
+            [ngClass]="{'highlighted': order?.id === idFromQueryParam }"
+            (click)="onRowClick(order)">
           <th scope="row" class="tracking-id">{{ order?.id }}</th>
           <td>{{ order?.customer?.name }}</td>
           <td>{{ order?.product }}</td>
           <td>Rs. {{ order?.price }}</td>
-          <td>
-            {{ order?.designer?.email }}
-          </td>
-          <td>
-            {{ order?.production?.email }}
-          </td>
-          <td>
-            {{ order?.plateSetter?.email }}
-          </td>
+          <td>{{ order?.designer?.email }}</td>
+          <td>{{ order?.production?.email }}</td>
+          <td>{{ order?.plateSetter?.email }}</td>
           <td class="order-table-btns-container">
             <div class="btn-group mr-2" role="group" aria-label="Second group">
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="viewOrder(order.id)"
-              >
-                <i class="fa-solid fa-hand-pointer"></i>&nbsp;<small
-                  >View</small
-                >
+              <button type="button" class="btn order-table-btn" (click)="viewOrder(order.id)">
+                <i class="fa-solid fa-hand-pointer"></i>&nbsp;<small>View</small>
               </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="editOrder(order.id)"
-              >
+              <button type="button" class="btn order-table-btn" (click)="editOrder(order.id)">
                 <i class="fa-solid fa-pen"></i>&nbsp;<small>Edit</small>
               </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="deleteOrder(order.id)"
-              >
+              <button type="button" class="btn order-table-btn" (click)="deleteOrder(order.id)">
                 <i class="fa-solid fa-trash"></i>&nbsp;<small>Delete</small>
               </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="assignOrder(order.id)"
-              >
+              <button type="button" class="btn order-table-btn" (click)="assignOrder(order.id)">
                 <i class="pi pi-plus"></i>&nbsp;<small>Assign Order</small>
               </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="orderProcessCtp(order?.id)"
-              >
+              <button type="button" class="btn order-table-btn" (click)="orderProcessCtp(order?.id)">
                 <i class="pi pi-list"></i>&nbsp;<small>Order Process Ctp</small>
               </button>
             </div>
@@ -107,6 +75,7 @@
       </tbody>
     </table>
   </div>
+  
   <p-dialog
     header="Assign Order To User"
     [(visible)]="visible"

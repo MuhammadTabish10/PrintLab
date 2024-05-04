@@ -6,6 +6,9 @@ import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
 import { ProductService } from 'src/app/services/product.service';
+import { BusinessUnitService } from '../business-unit-and-processes/Service/business-unit.service';
+import { Customer } from 'src/app/Model/Customer';
+import { Business } from 'src/app/Model/Business';
 
 @Component({
   selector: 'app-add-order',
@@ -17,7 +20,11 @@ export class AddOrderComponent implements OnInit {
   productArray: any = []
   productName: any = ''
   customersArray: any = []
+  businessArray: any = []
+  locationArray: any = []
   selectedCustomer: any = {}
+  selectedBusiness: any = {}
+  selectedLocation: any = {}
   customerDesign: string = 'Customer will provide the design'
   printLabDesign: string = 'Design by PrintLab'
   totalAmount: any
@@ -70,7 +77,7 @@ export class AddOrderComponent implements OnInit {
   constructor(private orderService: OrdersService, private router: Router,
     private productService: ProductRuleService, private route: ActivatedRoute,
     private customerService: CustomerService, private messageService: MessageService,
-    private cdr: ChangeDetectorRef) { }
+    private businessUnitService: BusinessUnitService, private cdr: ChangeDetectorRef)  { }
 
   ngOnInit(): void {
     this.getCustomers()
@@ -293,8 +300,14 @@ export class AddOrderComponent implements OnInit {
   }
 
   getCustomers() {
-    this.customerService.getCustomer().subscribe(res => {
-      this.customersArray = res
+    this.customerService.getCustomer().subscribe((res: Customer[]) => {
+      this.customersArray = res;
+      this.businessArray = this.customersArray.flatMap((customer: Customer)=> 
+      customer.customerBusinessName
+      );
+      this.locationArray = this.businessArray.flatMap((business: Business) =>
+      business.businessBranchList
+      );
     }, error => {
       this.showError(error);
       this.visible = true;

@@ -9,6 +9,56 @@
             <div>
               <h4>Add Order</h4>
             </div>
+
+              <div class="order-body py-2 px-3">
+                <div class="my-3">
+                  <label class="add-order-label m-0">Customer Name</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="customersArray"
+                    optionLabel="name"
+                    [(ngModel)]="selectedCustomer"
+                    placeholder="Select Customer Name"
+                  ></p-dropdown>
+                </div>
+                <div class="my-3">
+                  <label class="add-order-label m-0">Business</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="businessArray"
+                    optionLabel="businessName"
+                    [(ngModel)]="selectedBusiness"
+                    placeholder="Select Business"
+                  ></p-dropdown>
+                </div>
+                <div class="my-3">
+                  <label class="add-order-label m-0">Location</label>
+                  <p-dropdown
+                    styleClass="w-100"
+                    [options]="locationArray"
+                    optionLabel="branchName"
+                    [(ngModel)]="selectedLocation"
+                    placeholder="Select Location"
+                  ></p-dropdown>
+                </div>
+                <div class="my-3" *ngIf="selectedCustomer?.businessName">
+                  <label class="add-order-label m-0">Business Name</label>
+                  <span
+                    class="order-search form-control m-0 w-100"
+                    style="border: 1px solid #ced4da"
+                    >{{ selectedCustomer?.businessName }}</span
+                  >
+                </div>
+                <button
+                  type="submit"
+                  class="btn order-table-btn btn-search-panel w-100"
+                  routerLink="/addCustomer"
+                >
+                  Add New Customer
+                </button>
+              </div>
+              <br>
+            
             <div class="order-body py-2 px-3">
               <div class="my-3">
                 <label class="add-order-label m-0">Product</label>
@@ -163,37 +213,7 @@
             </div>
           </div>
 
-          <div class="main-container">
-            <div class="order-body py-2 px-3">
-              <div class="my-3">
-                <label class="add-order-label m-0">Customer Name</label>
-                <p-dropdown
-                  styleClass="w-100"
-                  [options]="customersArray"
-                  optionLabel="name"
-                  [(ngModel)]="selectedCustomer"
-                  placeholder="Select Customer Name"
-                ></p-dropdown>
-              </div>
-              <div class="my-3" *ngIf="selectedCustomer?.businessName">
-                <label class="add-order-label m-0">Business Name</label>
-                <span
-                  class="order-search form-control m-0 w-100"
-                  style="border: 1px solid #ced4da"
-                  >{{ selectedCustomer?.businessName }}</span
-                >
-              </div>
-              <button
-                type="submit"
-                class="btn order-table-btn btn-search-panel w-100"
-                routerLink="/addCustomer"
-              >
-                Add New Customer
-              </button>
-            </div>
-          </div>
-
-          <div class="main-container">
+          <!-- <div class="main-container">
             <div
               class="order-body upload-section"
               [ngClass]="{ 'upload-img': !imgUrl }"
@@ -225,11 +245,29 @@
               />
               &nbsp;&nbsp; Design by PrintLab
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="col-6 mt-5 p-3 h-100 invoice">
           <h4 class="text-center">Order Summary</h4>
+
+          <div class="my-3">
+            <h5 class="text-decoration-underline">Customer Information:</h5>
+            <div>
+              <div>
+                <span>Client's Name: </span>
+                <span>{{ selectedCustomer?.name }}</span>
+              </div>
+              <div>
+                <span>Business Name: </span>
+                <span>{{ selectedCustomer?.businessName }}</span>
+              </div>
+              <div>
+                <span>Location: </span>
+                <span>{{ selectedCustomer?.location }}</span>
+              </div>
+            </div>
+          </div>
 
           <div class="my-3">
             <h5 class="text-decoration-underline">Order Summary:</h5>
@@ -269,24 +307,10 @@
             </div>
           </div>
 
-          <div class="my-3">
+          <!-- <div class="my-3">
             <h5 class="text-decoration-underline">Design Information:</h5>
             <span>{{ design }}</span>
-          </div>
-
-          <div class="my-3">
-            <h5 class="text-decoration-underline">Customer Information:</h5>
-            <div>
-              <div>
-                <span>Client's Name: </span>
-                <span>{{ selectedCustomer?.name }}</span>
-              </div>
-              <div>
-                <span>Business Name: </span>
-                <span>{{ selectedCustomer?.businessName }}</span>
-              </div>
-            </div>
-          </div>
+          </div> -->
 
           <div class="my-3">
             <h5 class="text-decoration-underline">Estimated Delivery Date:</h5>

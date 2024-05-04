@@ -64,7 +64,7 @@ public class PaperSizeServiceImpl implements PaperSizeService {
 
     @Override
     public PaperSizeDto findByLabel(String label) {
-        Optional<PaperSize> paperSizeOptional = Optional.ofNullable(paperSizeRepository.findByLabel(label));
+        Optional<PaperSize> paperSizeOptional = Optional.ofNullable(paperSizeRepository.findByLabelAndStatus(label,"Active"));
 
         if(paperSizeOptional.isPresent()){
             PaperSize paperSize = paperSizeOptional.get();

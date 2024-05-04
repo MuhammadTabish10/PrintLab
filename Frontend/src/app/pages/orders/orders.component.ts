@@ -59,7 +59,7 @@ export class OrdersComponent implements OnInit {
       this.idFromQueryParam = +param['id'];
     }, error => {
       this.showError(error);
-    })
+    });
   }
 
   getOrders() {
@@ -70,6 +70,10 @@ export class OrdersComponent implements OnInit {
       this.showError(error);
       this.visible = true
     })
+  }
+
+  onRowClick(order: any): void {
+    this.router.navigate(['/order-steps'], { queryParams: { id: order.id } });
   }
 
   getUsersByRole(role: any) {

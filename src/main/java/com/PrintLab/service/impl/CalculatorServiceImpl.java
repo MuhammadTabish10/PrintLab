@@ -106,7 +106,7 @@ public class CalculatorServiceImpl implements CalculatorService {
         logger.info("Uping found for size: " + uping.getProductSize());
 
         //Checking provided PaperSize/SheetSize in database
-        PaperSize paperSize = paperSizeRepository.findByLabel(calculator.getSheetSizeValue());
+        PaperSize paperSize = paperSizeRepository.findByLabelAndStatus(calculator.getSheetSizeValue(),"Active");
         if (paperSize == null) {
             throw new RecordNotFoundException("PaperSize not found for size: " +  paperSize.getLabel());
         }

@@ -123,6 +123,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { StepsModule } from 'primeng/steps';
 import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
+import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.component';
+import { OverviewComponent } from './pages/OrderSteps/overview/overview.component';
+import { DesignComponent } from './pages/OrderSteps/design/design.component';
+import { NewDesignerComponent } from './pages/OrderSteps/new-designer/new-designer.component';
 
 @NgModule({
   declarations: [
@@ -206,6 +210,10 @@ import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.comp
     JobRequestsComponent,
     ImageViewerComponent,
     GetAllJobsComponent,
+    OrderStepsComponent,
+    OverviewComponent,
+    DesignComponent,
+    NewDesignerComponent,
   ],
   imports: [
     BrowserModule,

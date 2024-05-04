@@ -70,6 +70,8 @@ import { ViewCustomerComponent } from './pages/view-customer/view-customer.compo
 import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component';
 import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.component';
 import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
+import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.component';
+import { OverviewComponent } from './pages/OrderSteps/overview/overview.component';
 
 export const routes: Routes = [
   {
@@ -420,6 +422,19 @@ export const routes: Routes = [
     component: GetAllJobsComponent,
     canActivate: [AuthguardService]
   },
+  {
+    path: 'order-steps',
+    component: OrderStepsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+     path: 'overview/:orderId',
+     component: OverviewComponent 
+  },
+  {
+    path: 'design/:orderId',
+    component: OverviewComponent 
+ },
 ];
 
 @NgModule({

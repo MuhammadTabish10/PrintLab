@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface PaperSizeRepository extends JpaRepository<PaperSize,Long> {
-    PaperSize findByLabel(String label);
+//    PaperSize findByLabel(String label);
     List<PaperSize> findByStatus(String status);
 
     @Query("SELECT ps FROM PaperSize ps WHERE ps.label LIKE %:searchLabel%")
@@ -21,4 +21,6 @@ public interface PaperSizeRepository extends JpaRepository<PaperSize,Long> {
     @Transactional
     @Query("UPDATE PaperSize ps SET ps.status = 'inActive' WHERE ps.id = :id")
     void setStatusInactive(@Param("id") Long id);
+
+    PaperSize findByLabelAndStatus(String sheetSizeValue, String active);
 }

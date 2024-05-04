@@ -1,3 +1,8 @@
 export interface orderProcess {
-  // bad me karonga!
+  category: string;
+  product: string;
+  size: string;
+  quantity: number;
+  unit: string;
+  amount: number;
  }

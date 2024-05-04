@@ -79,9 +79,13 @@ export class AuthguardService implements CanActivate {
     }
 
     const orderObj = {
-      url: ['/orders', '/addOrder', '/viewOrder'],
+      url: ['/orders', '/addOrder', '/viewOrder', '/order-steps'],
       permissions: 'Orders'
     }
+    // const orderStepsObj = {
+    //   url: ['/order-steps'],
+    //   permissions: 'OrderSteps'
+    // }
     const orderProcessObj = {
       url: ['/orderProcess', '/transactions', '/transactionRecord', '/order-timeline'],
       permissions: 'OrderProcess'
