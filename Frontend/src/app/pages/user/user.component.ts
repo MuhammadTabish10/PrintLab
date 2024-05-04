@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
 import { User } from 'src/app/Model/User';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
@@ -14,6 +15,8 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class UserComponent {
   userArray: User[] = [];
+  items: MenuItem[] = [];
+  heading: string | undefined | null;
 
   private destroy$ = new Subject<void>();
 
@@ -27,6 +30,10 @@ export class UserComponent {
 
   ngOnInit(): void {
     this.getUsers();
+    this.heading = "Users";
+    this.items = [
+      { label: 'Users' }
+    ];
   }
 
   getUsers() {

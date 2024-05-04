@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { EMPTY, Subject, of, takeUntil } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { RolesService } from 'src/app/services/roles.service';
@@ -25,6 +25,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   rolesObj: any = [];
   email: string = '';
   private destroy$ = new Subject<void>();
+  items: MenuItem[] = [];
 
   constructor(
     private userService: UserService,
@@ -35,22 +36,26 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.items = [
+      { label: 'Users', routerLink: '/user' },
+      { label: 'Add User' }
+    ];
     this.getRoles();
 
     this.route.queryParams
-    .pipe(
-      takeUntil(this.destroy$),
-      switchMap((param) => {
-        this.idFromQueryParam = +param['id'] || 0;
-        this.buttonName = this.idFromQueryParam ? 'Update' : 'Add';
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((param) => {
+          this.idFromQueryParam = +param['id'] || 0;
+          this.buttonName = this.idFromQueryParam ? 'Update' : 'Add';
 
-        if (this.idFromQueryParam) {
-          return this.userService.getUserById(this.idFromQueryParam);
-        } else {
-          return EMPTY;
-        }
-      })
-    )
+          if (this.idFromQueryParam) {
+            return this.userService.getUserById(this.idFromQueryParam);
+          } else {
+            return EMPTY;
+          }
+        })
+      )
       .subscribe(
         (res?: any) => {
 

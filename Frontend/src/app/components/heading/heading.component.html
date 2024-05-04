@@ -1,0 +1,24 @@
+<div class="card flex justify-content-center">
+  <p-breadcrumb class="max-w-full" [model]="items"></p-breadcrumb>
+  <div class="container-fluid" *ngIf="!isFormScreen">
+    <div class="row">
+      <div class="col">
+        <h3>{{ heading }}</h3>
+      </div>
+      <div class="col clearfix text-end">
+        <span class="p-input-icon-right ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" placeholder="Search keyword" />
+        </span>
+        <button
+          pButton
+          type="button"
+          class="btn btn-outline-dark rounded-circle btn-raised ms-3"
+        >
+          <i class="{{ icon }}"></i>
+          <!-- Adjust the icon class as needed -->
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
