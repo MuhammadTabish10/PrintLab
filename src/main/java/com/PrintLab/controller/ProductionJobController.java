@@ -5,6 +5,7 @@ import com.PrintLab.service.ProductionJobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +29,12 @@ public class ProductionJobController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductionJobDto> createProductionJob(@RequestBody ProductionJobDto productionJobDto) {
-        ProductionJobDto createdProductionJob = productionJobService.createProductionJob(productionJobDto);
+    public ResponseEntity<ProductionJobDto> createProductionJob
+            (
+                    @RequestBody ProductionJobDto productionJobDto,
+                    @RequestParam Long loggedInUserId
+            ) {
+        ProductionJobDto createdProductionJob = productionJobService.createProductionJob(productionJobDto, loggedInUserId);
         return new ResponseEntity<>(createdProductionJob, HttpStatus.CREATED);
     }
 
@@ -45,5 +50,17 @@ public class ProductionJobController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/assignUser")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
+    public ResponseEntity<ProductionJobDto> assignUserToOrder(
+            @RequestParam Long orderId,
+            @RequestParam Long userId,
+            @RequestParam String role,
+            @RequestParam Long loggedInUser
+    ) {
+
+        ProductionJobDto assignedUser = productionJobService.assignOrderToUser(orderId, userId, role, loggedInUser);
+        return ResponseEntity.ok(assignedUser);
+    }
 
 }

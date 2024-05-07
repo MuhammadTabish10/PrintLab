@@ -5,6 +5,8 @@ import { JobProcessedDetails } from "./ProcessDetails";
 export interface ProductionJob {
   id: number | null | undefined;
   jobId: string | null | undefined;
+  sizeCategory: string | null | undefined;
+  size: string | null | undefined;
   client: string | null | undefined;
   businessName?: Business[];
   productCategory: any;

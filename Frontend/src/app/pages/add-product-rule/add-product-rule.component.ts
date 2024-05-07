@@ -65,6 +65,7 @@ export class AddProductRuleComponent implements OnInit {
   result: boolean = false;
   selectedCategories: string[] = [];
   selectedSizes: { category: string, size: string }[] = [];
+  orderType: string | undefined | null;
 
   constructor(
     private productRuleService: ProductRuleService,
@@ -99,6 +100,7 @@ export class AddProductRuleComponent implements OnInit {
 
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id'];
+      this.orderType = param['orderType'];
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add';
       } else {
@@ -110,7 +112,6 @@ export class AddProductRuleComponent implements OnInit {
             this.category = parsedCategories
             this.sideValue = this.sideOptions?.productFieldValuesList?.find((option: any) => option.name === res?.printSide)
             if (this.category) {
-
               this.onCategoryChange(this.category);
             } else {
               this.category = this.categoryArray?.productFieldValuesList?.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
@@ -591,6 +592,7 @@ export class AddProductRuleComponent implements OnInit {
       ctp: {
         id: ctpId.id
       },
+      type: this.orderType,
     };
 
     const payload = this.idFromQueryParam
@@ -803,7 +805,6 @@ export class AddProductRuleComponent implements OnInit {
       return [];
     }
   }
-
 
 }
 export interface Container {

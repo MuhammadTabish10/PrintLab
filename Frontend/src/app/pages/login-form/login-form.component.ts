@@ -40,7 +40,7 @@ export class LoginFormComponent implements OnInit {
     }
 
     this.loginService.post(obj).subscribe(res => {
-      debugger
+
       localStorage.setItem("token", JSON.stringify(res));
       localStorage.setItem("isLoggedIn", "true");
       this.router.navigateByUrl('/dashboard');

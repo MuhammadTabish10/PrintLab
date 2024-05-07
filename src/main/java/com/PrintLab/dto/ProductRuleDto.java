@@ -27,4 +27,5 @@ public class ProductRuleDto {
     private PressMachine pressMachine;
     private Ctp ctp;
     private List<ProductRulePaperStockDto> productRulePaperStockList;
+    private String type;
 }

@@ -71,6 +71,7 @@ import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component
 import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.component';
 import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
 import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.component';
+import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-rule-job.component';
 
 export const routes: Routes = [
   {
@@ -424,6 +425,11 @@ export const routes: Routes = [
   {
     path: 'order-overview',
     component: OrderStepsComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'add-product-rule-job',
+    component: ProductRuleJobComponent,
     canActivate: [AuthguardService]
   },
 ];

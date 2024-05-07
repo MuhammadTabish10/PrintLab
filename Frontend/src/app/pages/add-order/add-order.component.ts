@@ -1,14 +1,23 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MessageService, TreeNode } from 'primeng/api';
 import { environment } from 'src/Environments/environment';
+import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { Business, BusinessBranch } from 'src/app/Model/Business';
 import { Customer } from 'src/app/Model/Customer';
+import { ProductCategory } from 'src/app/Model/ProductCategory';
+import { ProductionJob } from 'src/app/Model/ProductionJob';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
-import { ProductService } from 'src/app/services/product.service';
+import { ServiceService } from '../Product/Service/service.service';
+import { ProductService } from 'src/app/Model/ProductService';
+import { JobService } from '../Jobs/Service/job.service';
+import { SuccessMessageService } from 'src/app/services/success-message.service';
+import { BusinessUnitService } from '../business-unit-and-processes/Service/business-unit.service';
+import { BusinessUnit, BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
+import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
 
 @Component({
   selector: 'app-add-order',
@@ -19,10 +28,7 @@ export class AddOrderComponent implements OnInit {
 
   productArray: any = []
   productName: any = ''
-  customersArray: Customer[] = []
-  selectedCustomer: any = {}
-  selectedBusiness: any = {}
-  selectedLocation: any = {}
+  selectedCustomer: string | undefined | null
   customerDesign: string = 'Customer will provide the design'
   printLabDesign: string = 'Design by PrintLab'
   totalAmount: any
@@ -71,39 +77,90 @@ export class AddOrderComponent implements OnInit {
     backColor: 'Select Back Color',
   };
   productRuleId: number = 0;
-  businessList: Business[] = [];
-  branchList: BusinessBranch[] = [];
   currentUserDetail: any;
 
+  customerList: Customer[] = [];
+  businessList: Business[] = [];
+  branchList: BusinessBranch[] = [];
+  selectedBusinesses: Business[] = [];
+  selectedBranches: BusinessBranch[] = [];
+  orderType: string | undefined | null;
+  job: ProductionJob = {
+    id: undefined,
+    client: undefined,
+    businessCategory: undefined,
+    productionUser: undefined,
+    processList: [],
+    jobId: undefined,
+    productCategory: undefined,
+    productName: undefined,
+    description: undefined,
+    qty: undefined,
+    rate: undefined,
+    amount: undefined,
+    linkedInvoice: undefined,
+    privateNotes: undefined,
+    orderTrackingNotes: undefined,
+    productionNotes: undefined,
+    proof: undefined,
+    ctpFileName: undefined,
+    locationOfFile: undefined,
+    sentOn: undefined,
+    designPackageFile: undefined,
+    locationOfDesignFile: undefined,
+    jobStartDate: undefined,
+    productionStartDate: undefined,
+    productionEndDate: undefined,
+    packingAndQADate: undefined,
+    deliveryDate: undefined,
+    sendTo: undefined,
+    expiryDate: undefined,
+    processedDetailList: [],
+    sizeCategory: undefined,
+    size: undefined
+  }
+  categoryList: BusinessUnit[] = [];
+  // productAndServiceList: ProductService[] = [];
+  productRuleJobList: ProductRuleJob[] = [];
+
   constructor(private orderService: OrdersService, private router: Router,
-    private productService: ProductRuleService, private route: ActivatedRoute,
+    private productRuleService: ProductRuleService, private route: ActivatedRoute,
     private customerService: CustomerService, private messageService: MessageService,
-    private authService:AuthguardService,
+    private businessUnitService: BusinessUnitService,
+    private successService: SuccessMessageService,
+    private productionJobService: JobService,
+    private authService: AuthguardService,
     private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
-    this.getCustomers()
+    this.getCustomerList();
     this.getUserDetails();
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
+      this.orderType = param['orderType']
+      console.log(this.orderType);
+
       if (Number.isNaN(this.idFromQueryParam)) {
         this.buttonName = 'Add'
-        this.getProducts()
+        this.orderType === 'auto' ? this.getProducts() : this.getProductList();
       } else {
         this.buttonName = 'Update'
-        this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
-          this.orderToUpdate = res
-          this.selectedCustomer = this.orderToUpdate.customer
-          this.totalAmount = this.orderToUpdate.price
-          this.imgUrl = this.orderToUpdate.url
-          this.designValue = this.orderToUpdate.providedDesign
-          this.designValue ? this.design = this.customerDesign : this.design = this.printLabDesign
-          this.getProducts()
-        }, error => {
-          this.showError(error);
-          this.visible = true;
-        })
+        if (this.orderType === 'auto') {
+          this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
+            this.orderToUpdate = res
+            this.selectedCustomer = this.orderToUpdate.customer
+            this.totalAmount = this.orderToUpdate.price
+            this.imgUrl = this.orderToUpdate.url
+            this.designValue = this.orderToUpdate.providedDesign
+            this.designValue ? this.design = this.customerDesign : this.design = this.printLabDesign
+            this.getProducts()
+          }, error => {
+            this.showError(error);
+            this.visible = true;
+          })
+        } else {
+        }
       }
     })
   }
@@ -160,9 +217,9 @@ export class AddOrderComponent implements OnInit {
         impositionValue: this.impositionValue,
         jobColorsFront: +this.jobFrontValue.name,
         jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null,
-        customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
+        // customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
       }
-      this.orderService.addOrder(obj,this.currentUserDetail.userId).subscribe(res => {
+      this.orderService.addOrder(obj, this.currentUserDetail.userId).subscribe(res => {
         this.router.navigateByUrl('/orders')
       }, error => {
         this.showError(error);
@@ -184,7 +241,7 @@ export class AddOrderComponent implements OnInit {
         impositionValue: this.impositionValue,
         jobColorsFront: +this.jobFrontValue.name,
         jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null,
-        customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
+        // customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
       }
       this.orderService.updateOrder(this.idFromQueryParam, obj).subscribe(res => {
         this.router.navigateByUrl('/orders')
@@ -290,7 +347,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   getProducts() {
-    this.productService.getProductRuleTable().subscribe(res => {
+    this.productRuleService.getProductRuleTable().subscribe(res => {
       this.productArray = res;
 
       if (this.productArray.length === 1) {
@@ -303,25 +360,14 @@ export class AddOrderComponent implements OnInit {
     })
   }
 
-  getCustomers() {
+  private getCustomerList() {
     this.customerService.getCustomer().subscribe(
       (res: Customer[]) => {
-        this.customersArray = res;
-        this.businessList = this.customersArray.flatMap((customer: Customer) =>
-          customer.customerBusinessName
-        );
-        this.branchList = this.businessList.flatMap((business: Business) =>
-          business.businessBranchList!
-        );
-        console.log(this.branchList);
-      }, error => {
-        this.showError(error);
-        this.visible = true;
-      }
-    );
+        this.customerList = res;
+      }, (error: BackendErrorResponse) => {
+        this.showError(error.error.error);
+      });
   }
-
-
 
   uploadFile(event: any) {
     const fileList: FileList = event.target.files;
@@ -458,7 +504,126 @@ export class AddOrderComponent implements OnInit {
 
   getUserDetails() {
     this.currentUserDetail = JSON.parse(this.authService.token).userDetails
-    console.log(this.currentUserDetail);
+  }
+
+  getBusinessList(id: string): void {
+    this.branchList = [];
+    this.selectedBranches = [];
+    this.selectedBusinesses = [];
+    const selectedCustomer = this.findCustomerById(id);
+    if (!selectedCustomer) {
+      return;
+    }
+    this.customerService.getCustomerById(selectedCustomer.id)
+      .subscribe(
+        (res: Customer) => {
+          this.businessList = res.customerBusinessName;
+        },
+        (error: BackendErrorResponse) => {
+          this.showError(error.error.error);
+        }
+      );
+  }
+
+  getBrancheList(selectedBusiness: Business[]): void {
+    this.branchList = [];
+    this.selectedBranches = [];
+    if (selectedBusiness.length === 0) {
+      return;
+    }
+
+    selectedBusiness.forEach((business: Business) => {
+      if (business.businessBranchList && business.businessBranchList.length > 0) {
+        business.businessBranchList.forEach((branch: BusinessBranch) => {
+          this.branchList.push(branch);
+        });
+      }
+    });
+  }
+
+  // Define a method to find the customer object by id
+  findCustomerById(id: string | undefined | null): Customer | undefined {
+    return this.customerList?.find(customer => customer?.id === id);
+  }
+
+  findCategoryById(id: string | undefined | null): BusinessUnit | undefined {
+    return this.categoryList?.find(category => category?.id === id);
+  }
+
+  private getProductList(): void {
+    this.businessUnitService.getBusinessUnits().subscribe(
+      (res: BusinessUnit[]) => {
+        this.categoryList = res;
+      },
+      (err: BackendErrorResponse) => {
+        this.showError(err.error.error);
+      }
+    );
+  }
+
+  getProductNameList(id: number): void {
+    this.productRuleJobList = [];
+    this.job.productName = null;
+    this.job.sizeCategory = null;
+    this.job.size = null;
+    this.businessUnitService.getBusinessUnitById(id).subscribe(
+      (res: BusinessUnit) => {
+        if (res.processList) {
+          res.processList?.forEach((element: BusinessUnitProcessDto) => {
+            this.productRuleJobList = element?.productRuleJobList ? element.productRuleJobList : [];
+          });
+        }
+      },
+      (err: BackendErrorResponse) => {
+        this.showError(err.error.error);
+      });
+  }
+
+
+  calculateAmount(value: ProductionJob) {
+    if (value.qty && value.rate) {
+      value.amount = value.qty * value.rate;
+      this.totalAmount = value.amount;
+    } else {
+      value.amount = 0;
+    }
+  }
+
+  addJob(): void {
+    if (this.job.productCategory.label) {
+      this.job.productCategory = this.job.productCategory.label
+    }
+    this.job.client = this.selectedCustomer;
+    this.selectedBusinesses.forEach(business => {
+      business.businessBranchList = this.selectedBranches;
+    })
+    this.job.businessName = this.selectedBusinesses;
+    const serviceToCall = this.job.id
+      ? this.productionJobService.updateProductionJob(this.idFromQueryParam!, this.job)
+      : this.productionJobService.postProductionJob(this.job,this.currentUserDetail.userId);
+    serviceToCall.subscribe((res: ProductionJob) => {
+      this.successService.showSuccess("Job created successfully");
+      setTimeout(() => {
+        this.router.navigate(['/order-overview'], { queryParams: { id: res.id, orderType: 'manual' } });
+      }, 2000);
+    }, (error: BackendErrorResponse) => {
+      this.showError(error.error.error);
+    })
+  }
+
+  getDetails(name: string): void {
+    const productRule = this.productRuleJobList.find(item => item.productName === name);
+    if (productRule) {
+      this.categoryArray = JSON.parse(productRule.sizeCategory!)
+      this.size = JSON.parse(productRule.size!)
+      this.sizeValue = this.size;
+      console.log(this.sizeValue);
+    }
+  }
+  getSize(name: string): void {
+    this.sizeValue = this.size.filter((item: any) => item.category === name);
+    this.cdr.detectChanges();
+    console.log(this.sizeValue);
 
   }
 }

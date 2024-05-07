@@ -79,7 +79,9 @@ export class CreateJobComponent implements OnInit {
     deliveryDate: undefined,
     sendTo: undefined,
     expiryDate: undefined,
-    processedDetailList: []
+    processedDetailList: [],
+    sizeCategory: undefined,
+    size: undefined
   }
   uploadedFiles: any[] = [];
 
@@ -170,15 +172,15 @@ export class CreateJobComponent implements OnInit {
       business.businessBranchList = this.selectedBranches;
     })
     this.job.businessName = this.selectedBusinesses;
-    const serviceToCall = this.job.id ? this.productionJobService.updateProductionJob(this.idFromQueryParam!, this.job) : this.productionJobService.postProductionJob(this.job);
-    serviceToCall.subscribe((res: ProductionJob) => {
-      this.successService.showSuccess("Job created successfully");
-      setTimeout(() => {
-        this.router.navigate(['/all-jobs']);
-      }, 2000);
-    }, (error: BackendErrorResponse) => {
-      this.errorService.showError(error.error.error);
-    })
+    // const serviceToCall = this.job.id ? this.productionJobService.updateProductionJob(this.idFromQueryParam!, this.job) : this.productionJobService.postProductionJob(this.job);
+    // serviceToCall.subscribe((res: ProductionJob) => {
+    //   this.successService.showSuccess("Job created successfully");
+    //   setTimeout(() => {
+    //     this.router.navigate(['/all-jobs']);
+    //   }, 2000);
+    // }, (error: BackendErrorResponse) => {
+    //   this.errorService.showError(error.error.error);
+    // })
   }
 
   getBusinessList(id: number): void {
@@ -316,7 +318,7 @@ export class CreateJobComponent implements OnInit {
     for (let file of event.files) {
       // Check if the file already exists in uploadedFiles array
       if (!this.isFileAlreadyUploaded(file)) {
-        
+
         this.uploadedFiles.push(file);
       }
     }

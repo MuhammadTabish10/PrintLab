@@ -41,7 +41,9 @@ export class GetAllJobsComponent implements OnInit {
     expiryDate: undefined,
     sendTo: undefined,
     productionUser: undefined,
-    processedDetailList: []
+    processedDetailList: [],
+    sizeCategory: undefined,
+    size: undefined
   };
 
   constructor(

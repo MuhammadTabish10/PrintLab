@@ -24,6 +24,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   roles: any = [];
   rolesObj: any = [];
   email: string = '';
+  status: boolean = false;;
   private destroy$ = new Subject<void>();
   items: MenuItem[] = [];
 
@@ -66,6 +67,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
           this.phoneNumber = this.userToUpdate.phone;
           this.cnicNumber = this.userToUpdate.cnic;
           this.roles = this.userToUpdate.roles[0];
+          this.status = this.userToUpdate.userStatus === "Active" ? true : false;
 
         },
         (error: any) => {
@@ -81,13 +83,15 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   addUser() {
+    debugger
     const obj = {
       email: this.email,
       name: this.nameValue,
       password: this.password,
       phone: this.phoneNumber,
       cnic: this.cnicNumber,
-      roles: [{ id: this.roles.id }]
+      roles: [{ id: this.roles.id }],
+      userStatus: this.status === false ? "Inactive" : "Active",
     };
 
     const request = this.idFromQueryParam

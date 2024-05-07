@@ -1,6 +1,9 @@
 package com.PrintLab.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -13,6 +16,6 @@ public class BusinessUnitProcessDto {
     private String process;
     private boolean billable;
     private List<VendorDto> vendors;
-    @ToString.Exclude
+    private List<ProductRuleJobDto> productRuleJobList;
     private BusinessUnitCategoryDto category;
 }

@@ -235,6 +235,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                 .ctp(ctpRepository.findById(productRule.getCtp().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Ctp not found")))
                 .productRulePaperStockList(productRulePaperStockDtoList)
+                .type(productRule.getType())
                 .build();
     }
 
@@ -272,6 +273,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                 .ctp(ctpRepository.findById(productRuleDto.getCtp().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Ctp not found")))
                 .productRulePaperStockList(productRulePaperStocks)
+                .type(productRuleDto.getType())
                 .build();
     }
 }

@@ -23,5 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmailAndStatusIsTrue(String email);
 
+    User findByEmailAndStatusIsTrueAndUserStatus(String email, String userStatus);
+
 }
 

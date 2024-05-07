@@ -120,7 +120,7 @@ export class GetBindingLaboursComponent implements OnInit, OnDestroy {
   }
 
   private doesLogedInProductionUser(productionVendors: User): void {
-    debugger
+
   }
 
 

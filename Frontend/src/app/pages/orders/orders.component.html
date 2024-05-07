@@ -16,13 +16,14 @@
         [(ngModel)]="search"
         (keyup)="searchOrder($event.target)"
       />
-      <button
+      <!-- <button
         type="button"
         class="btn order-table-btn btn-search-panel"
         routerLink="/addOrder"
       >
         + Add
-      </button>
+      </button> -->
+      <p-panelMenu [model]="items" class=""/>
     </form>
   </div>
 
