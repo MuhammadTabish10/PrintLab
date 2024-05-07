@@ -35,5 +35,5 @@ public class BusinessUnitProcess {
 
     @ManyToMany(mappedBy = "processList")
     @JsonIgnore
-    private List<ProductionJob> jobs;
+    private List<ProductRuleJob> productRuleJobList;
 }

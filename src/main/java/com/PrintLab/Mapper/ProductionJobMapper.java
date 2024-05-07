@@ -1,23 +1,22 @@
 package com.PrintLab.Mapper;
 
 import com.PrintLab.dto.ProductionJobDto;
-import com.PrintLab.dto.ProofDto;
 import com.PrintLab.model.ProductionJob;
-import com.PrintLab.model.Proof;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class ProductionJobMapper {
 
-    private final BusinessUnitProcessMapper businessUnitProcessMapper;
+    //    private final BusinessUnitProcessMapper businessUnitProcessMapper;
     private final BusinessAndBranchMapper businessAndBranchMapper;
     private final JobProcessedDetailsMapper detailMapper;
 
-    public ProductionJobMapper(BusinessUnitProcessMapper businessUnitProcessMapper, BusinessAndBranchMapper businessAndBranchMapper, JobProcessedDetailsMapper detailMapper) {
-        this.businessUnitProcessMapper = businessUnitProcessMapper;
+    public ProductionJobMapper(
+            BusinessAndBranchMapper businessAndBranchMapper,
+            JobProcessedDetailsMapper detailMapper
+    ) {
         this.businessAndBranchMapper = businessAndBranchMapper;
         this.detailMapper = detailMapper;
     }
@@ -31,9 +30,9 @@ public class ProductionJobMapper {
                 .businessName(productionJob.getBusinesses().stream()
                         .map(businessAndBranchMapper::toBusinessDto)
                         .collect(Collectors.toList()))
-                .processList(productionJob.getProcessList().stream()
-                        .map(businessUnitProcessMapper::toProcessDto)
-                        .collect(Collectors.toList()))
+//                .processList(productionJob.getProcessList().stream()
+//                        .map(businessUnitProcessMapper::toProcessDto)
+//                        .collect(Collectors.toList()))
                 .jobId(productionJob.getJobId())
                 .productCategory(productionJob.getProductCategory())
                 .productName(productionJob.getProductName())
@@ -57,14 +56,23 @@ public class ProductionJobMapper {
                 .deliveryDate(productionJob.getDeliveryDate())
                 .expiryDate(productionJob.getExpiryDate())
                 .sendTo(productionJob.getSendTo())
-                .proof(productionJob.getProof().stream()
-                        .map(proof -> {
-                            ProofDto proofDto = new ProofDto();
-                            proofDto.setId(proof.getId());
-                            proofDto.setFileData(proof.getFileData());
-                            return proofDto;
-                        })
-                        .collect(Collectors.toList()))
+                .sizeCategory(productionJob.getSizeCategory())
+                .size(productionJob.getSize())
+                .timeStamp(productionJob.getTimeStamp())
+                .assignedBy(productionJob.getAssignedBy())
+                .createdBy(productionJob.getCreatedBy())
+                .designer(productionJob.getDesigner())
+                .plateSetter(productionJob.getPlateSetter())
+                .production(productionJob.getProduction())
+                .status(productionJob.getStatus())
+//                .proof(productionJob.getProof().stream()
+//                        .map(proof -> {
+//                            ProofDto proofDto = new ProofDto();
+//                            proofDto.setId(proof.getId());
+//                            proofDto.setFileData(proof.getFileData());
+//                            return proofDto;
+//                        })
+//                        .collect(Collectors.toList()))
                 .processedDetailList(productionJob.getProcessedDetailList().stream()
                         .map(detailMapper::toDto)
                         .collect(Collectors.toList()))
@@ -82,9 +90,9 @@ public class ProductionJobMapper {
                 .businesses(productionJobDto.getBusinessName().stream()
                         .map(businessAndBranchMapper::toBusinessEntity)
                         .collect(Collectors.toList()))
-                .processList(productionJobDto.getProcessList().stream()
-                        .map(businessUnitProcessMapper::toProcessEntity)
-                        .collect(Collectors.toList()))
+//                .processList(productionJobDto.getProcessList().stream()
+//                        .map(businessUnitProcessMapper::toProcessEntity)
+//                        .collect(Collectors.toList()))
                 .jobId(productionJobDto.getJobId())
                 .productCategory(productionJobDto.getProductCategory())
                 .productName(productionJobDto.getProductName())
@@ -107,24 +115,33 @@ public class ProductionJobMapper {
                 .packingAndQADate(productionJobDto.getPackingAndQADate())
                 .deliveryDate(productionJobDto.getDeliveryDate())
                 .expiryDate(productionJobDto.getExpiryDate())
+                .sizeCategory(productionJobDto.getSizeCategory())
+                .timeStamp(productionJobDto.getTimeStamp())
+                .assignedBy(productionJobDto.getAssignedBy())
+                .createdBy(productionJobDto.getCreatedBy())
+                .designer(productionJobDto.getDesigner())
+                .plateSetter(productionJobDto.getPlateSetter())
+                .production(productionJobDto.getProduction())
+                .size(productionJobDto.getSize())
                 .sendTo(productionJobDto.getSendTo())
+                .status(productionJobDto.getStatus())
                 .processedDetailList(productionJobDto.getProcessedDetailList().stream()
                         .map(detailMapper::toEntity)
                         .collect(Collectors.toList()))
                 .build();
 
         // Create and set the Proof objects
-        List<Proof> proofs = productionJobDto.getProof().stream()
-                .map(proofDto -> {
-                    Proof proof = new Proof();
-                    proof.setId(proofDto.getId());
-                    proof.setFileData(proofDto.getFileData());
-                    proof.setProductionJob(productionJob); // Set the reference to the current ProductionJob
-                    return proof;
-                })
-                .collect(Collectors.toList());
-
-        productionJob.setProof(proofs);
+//        List<Proof> proofs = productionJobDto.getProof().stream()
+//                .map(proofDto -> {
+//                    Proof proof = new Proof();
+//                    proof.setId(proofDto.getId());
+//                    proof.setFileData(proofDto.getFileData());
+//                    proof.setProductionJob(productionJob); // Set the reference to the current ProductionJob
+//                    return proof;
+//                })
+//                .collect(Collectors.toList());
+//
+//        productionJob.setProof(proofs);
 
         return productionJob;
     }

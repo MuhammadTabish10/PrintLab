@@ -30,6 +30,7 @@ public class User {
     private String cnic;
 
     private Boolean status;
+    private String userStatus;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

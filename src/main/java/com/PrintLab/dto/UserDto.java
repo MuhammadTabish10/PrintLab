@@ -25,4 +25,5 @@ public class UserDto {
     private Boolean status;
     private Set<Role> roles = new HashSet<>();
     private VendorDto vendor;
+    private String userStatus;
 }

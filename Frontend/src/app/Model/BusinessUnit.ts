@@ -1,3 +1,4 @@
+import { ProductRuleJob } from "./ProductRuleJob";
 import { Vendor } from "./Vendor";
 
 export interface BusinessUnit {
@@ -10,6 +11,7 @@ export interface BusinessUnitProcessDto {
   id: number | undefined | null;
   process: string | undefined | null;
   billable: boolean | undefined | null;
+  productRuleJobList?: ProductRuleJob[];
   vendors?: Vendor[];
 }
 

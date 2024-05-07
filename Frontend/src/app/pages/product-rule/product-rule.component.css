@@ -1,0 +1,11 @@
+::ng-deep.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-action {
+  color: white;
+  padding: 1rem;
+  font-weight: 700;
+  background-color: black;
+  border-radius:3%;
+}
+.custom::ng-deep.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-action .p-menuitem-icon {
+  margin-right: 0.5rem;
+  margin-left:25%;
+}

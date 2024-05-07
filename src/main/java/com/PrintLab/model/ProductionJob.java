@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,6 @@ public class ProductionJob {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String client;
     private String businessCategory;
     @ManyToMany
@@ -29,15 +29,7 @@ public class ProductionJob {
     )
     private List<Business> businesses;
     private String productionUser;
-
-    @ManyToMany
-    @JoinTable(
-            name = "job_process",
-            joinColumns = @JoinColumn(name = "production_job_id"),
-            inverseJoinColumns = @JoinColumn(name = "business_unit_process_id")
-    )
-    private List<BusinessUnitProcess> processList;
-
+    private Long titleId;
     private String jobId;
     private String productCategory;
     private String productName;
@@ -53,8 +45,8 @@ public class ProductionJob {
     private String orderTrackingNotes;
     @Column(columnDefinition = "TEXT")
     private String productionNotes;
-    @OneToMany(mappedBy = "productionJob", cascade = CascadeType.ALL)
-    private List<Proof> proof;
+//    @OneToMany(mappedBy = "productionJob", cascade = CascadeType.ALL)
+//    private List<Proof> proof;
     private String ctpFileName;
     private String locationOfFile;
     private Date sentOn;
@@ -69,4 +61,25 @@ public class ProductionJob {
     private String sendTo;
     @OneToMany(mappedBy = "productionJob", cascade = CascadeType.ALL)
     private List<JobProcessedDetails> processedDetailList;
+    private String sizeCategory;
+    private String size;
+    private LocalDateTime timeStamp;
+    @ManyToOne()
+    private User assignedBy;
+
+    @ManyToOne()
+    private User createdBy;
+    @ManyToOne()
+    @JoinColumn(name = "user_designer_id")
+    private User designer;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_production_id")
+    private User production;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_plate_setter_id")
+    private User plateSetter;
+
+    private String status;
 }

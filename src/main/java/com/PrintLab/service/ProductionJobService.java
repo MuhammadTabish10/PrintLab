@@ -9,9 +9,11 @@ public interface ProductionJobService {
 
     ProductionJobDto getProductionJobById(Long id);
 
-    ProductionJobDto createProductionJob(ProductionJobDto productionJobDto);
+    ProductionJobDto createProductionJob(ProductionJobDto productionJobDto,Long loggedInUserId);
 
     ProductionJobDto updateProductionJob(Long id, ProductionJobDto productionJobDto);
 
     void deleteProductionJob(Long id);
+
+    ProductionJobDto assignOrderToUser(Long orderId, Long userId, String role, Long loggedInUser);
 }

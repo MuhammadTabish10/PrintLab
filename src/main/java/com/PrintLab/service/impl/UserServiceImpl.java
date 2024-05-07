@@ -150,6 +150,7 @@ public class UserServiceImpl implements UserService {
                 .phone(user.getPhone())
                 .cnic(user.getCnic())
                 .status(user.getStatus())
+                .userStatus(user.getUserStatus())
                 .roles(user.getRoles())
                 .build();
     }
@@ -165,6 +166,7 @@ public class UserServiceImpl implements UserService {
                 .email(userDto.getEmail())
                 .cnic(userDto.getCnic())
                 .status(userDto.getStatus())
+                .userStatus(userDto.getUserStatus())
                 .roles(userDto.getRoles())
                 .build();
     }

@@ -124,10 +124,17 @@ import { StepsModule } from 'primeng/steps';
 import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
 import { MenubarModule } from 'primeng/menubar';
 import { SidebarModule } from 'primeng/sidebar';
+import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.component';
 import { OrderOverViewComponent } from './pages/OrderSteps/order-over-view/order-over-view.component';
 import { OrderDesignComponent } from './pages/OrderSteps/order-design/order-design.component';
-import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { HeadingComponent } from './components/heading/heading.component';
+import { PanelMenuModule } from 'primeng/panelmenu';
+import { JoinWithCommaSeparatedPipe } from './CustomPipes/map-and-join.pipe';
+import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-rule-job.component';
+import { AddProductSizeComponent } from './pages/Product/add-product-size/add-product-size.component';
+import { DefineProductRuleManualComponent } from './pages/Product/define-product-rule-manual/define-product-rule-manual.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -213,6 +220,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     OrderStepsComponent,
     OrderOverViewComponent,
     OrderDesignComponent,
+    HeadingComponent,
+    JoinWithCommaSeparatedPipe,
+    ProductRuleJobComponent,
+    AddProductSizeComponent,
+    DefineProductRuleManualComponent,
   ],
   imports: [
     BrowserModule,
@@ -257,6 +269,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     MenubarModule,
     SidebarModule,
     ConfirmDialogModule,
+    BreadcrumbModule,
+    PanelMenuModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService, MessageService, ConfirmationService,
     provideRouter(routes, withHashLocation()), DatePipe],

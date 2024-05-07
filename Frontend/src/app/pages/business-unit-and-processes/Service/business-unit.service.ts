@@ -23,6 +23,12 @@ export class BusinessUnitService {
     return this.http.get<BusinessUnit[]>(url);
   }
 
+  // Retrieve all business unit categories by name
+  getBusinessUnitListByName(name:string): Observable<BusinessUnit[]> {
+    const url = `${this.BASE_URL}/business-unit-categories/categories/${name}`;
+    return this.http.get<BusinessUnit[]>(url);
+  }
+
   // Retrieve a specific business unit category by ID
   getBusinessUnitById(id: number): Observable<BusinessUnit> {
     const url = `${this.BASE_URL}/business-unit-categories/${id}`;

@@ -1,0 +1,8 @@
+.form-switch-lg input[type="checkbox"] {
+  width: 55px;
+  height: 25px;
+}
+
+.bg-green {
+  background-color: green;
+}

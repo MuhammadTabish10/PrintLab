@@ -38,4 +38,5 @@ public class ProductRule {
 
     @OneToMany(mappedBy = "productRule", cascade = CascadeType.ALL)
     private List<ProductRulePaperStock> productRulePaperStockList;
+    private String type;
 }

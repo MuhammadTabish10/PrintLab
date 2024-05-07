@@ -7,7 +7,6 @@ import com.PrintLab.model.BusinessUnitCategory;
 import com.PrintLab.model.BusinessUnitProcess;
 import com.PrintLab.model.Vendor;
 import com.PrintLab.service.impl.VendorServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,19 +15,35 @@ import java.util.stream.Collectors;
 @Component
 public class BusinessUnitCategoryMapper {
 
-    @Autowired
-    private VendorServiceImpl vendorMapper;
+
+    private final VendorServiceImpl vendorMapper;
+    private final ProductRuleJobMapper productRuleJobMapper;
+
+    public BusinessUnitCategoryMapper(VendorServiceImpl vendorMapper, ProductRuleJobMapper productRuleJobMapper) {
+        this.vendorMapper = vendorMapper;
+        this.productRuleJobMapper = productRuleJobMapper;
+    }
 
     public BusinessUnitCategoryDto toDto(BusinessUnitCategory category) {
         List<BusinessUnitProcessDto> processDtoList = category.getProcessList().stream()
-                .map(process -> BusinessUnitProcessDto.builder()
-                        .id(process.getId())
-                        .process(process.getProcess())
-                        .billable(process.isBillable())
-                        .vendors(process.getVendors().stream()
-                                .map(vendorMapper::toDto)
-                                .collect(Collectors.toList()))
-                        .build())
+                .map(process -> {
+                    BusinessUnitProcessDto processDto = BusinessUnitProcessDto.builder()
+                            .id(process.getId())
+                            .process(process.getProcess())
+                            .billable(process.isBillable())
+                            .vendors(process.getVendors().stream()
+                                    .map(vendorMapper::toDto)
+                                    .collect(Collectors.toList()))
+                            .build();
+
+                    if (process.getProductRuleJobList() != null) {
+                        processDto.setProductRuleJobList(process.getProductRuleJobList().stream()
+                                .map(productRuleJobMapper::toDto)
+                                .collect(Collectors.toList()));
+                    }
+
+                    return processDto;
+                })
                 .collect(Collectors.toList());
 
         return BusinessUnitCategoryDto.builder()

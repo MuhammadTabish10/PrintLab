@@ -1,9 +1,9 @@
-
 <div class="body-position">
   <app-dashboard-head></app-dashboard-head>
 
   <div class="main-container">
     <div>
+      <!-- <app-heading [items]="items" [heading]="'add-user'" [icon]="'pi pi-user-plus'" [isFormScreen]="true"></app-heading> -->
       <h4>{{ buttonName }} User</h4>
     </div>
 
@@ -23,8 +23,8 @@
                 class="order-search form-control order-form-input m-0"
                 [(ngModel)]="email"
                 style="border: 1px solid #ced4da"
-                placeholder="Enter email"
                 name="email"
+                autocomplete="off"
                 required
               />
             </div>
@@ -35,7 +35,6 @@
                 class="order-search form-control order-form-input m-0"
                 [(ngModel)]="nameValue"
                 style="border: 1px solid #ced4da"
-                placeholder="Enter Name"
                 name="name"
                 required
               />
@@ -53,7 +52,6 @@
                 [toggleMask]="true"
                 name="password"
                 autocomplete="off"
-                placeholder="Enter your password"
               >
                 <ng-template pTemplate="header">
                   <h6>Pick a password</h6>
@@ -77,7 +75,6 @@
                 class="order-search form-control order-form-input m-0"
                 [(ngModel)]="phoneNumber"
                 style="border: 1px solid #ced4da"
-                placeholder="Enter Phone Number"
                 name="Phone Number"
                 required
               />
@@ -91,7 +88,6 @@
                 class="order-search form-control order-form-input m-0"
                 [(ngModel)]="cnicNumber"
                 style="border: 1px solid #ced4da"
-                placeholder="Enter cnic Number"
                 name="cnic Number"
                 required
               />
@@ -105,8 +101,21 @@
                 optionLabel="name"
                 name="roles"
                 [(ngModel)]="roles"
-                placeholder="Select Roles"
               ></p-dropdown>
+            </div>
+          </div>
+          <div class="row justify-content-end">
+            <div class="col-md-1 my-3 mt-4">
+              <label class="add-order-label m-0">Status</label>
+              <div class="form-check form-switch form-switch-lg">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="flexSwitchCheckChecked"
+                  name="impositionValueChecked"
+                  [(ngModel)]="status"
+                />
+              </div>
             </div>
           </div>
           <div class="row">

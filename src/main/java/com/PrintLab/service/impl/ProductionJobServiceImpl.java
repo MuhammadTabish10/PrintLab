@@ -1,17 +1,24 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.Mapper.ProductionJobMapper;
-import com.PrintLab.dto.*;
+import com.PrintLab.dto.BusinessDto;
+import com.PrintLab.dto.JobProcessedDetailsDto;
+import com.PrintLab.dto.ProductionJobDto;
+import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.*;
 import com.PrintLab.repository.BusinessRepository;
-import com.PrintLab.repository.BusinessUnitProcessRepository;
 import com.PrintLab.repository.JobProcessedDetailsRepository;
 import com.PrintLab.repository.ProductionJobRepository;
+import com.PrintLab.repository.UserRepository;
 import com.PrintLab.service.ProductionJobService;
+import com.PrintLab.utils.EmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,16 +30,20 @@ public class ProductionJobServiceImpl implements ProductionJobService {
     private final ProductionJobRepository jobRepository;
     private final ProductionJobMapper mapper;
     private final BusinessRepository businessRepository;
-    private final BusinessUnitProcessRepository businessUnitProcessRepository;
+    private final UserRepository userRepository;
+    private final EmailUtils emailUtils;
+//    private final BusinessUnitProcessRepository businessUnitProcessRepository;
 
     private final JobProcessedDetailsRepository jobProcessedDetailsRepository;
 
     @Autowired
-    public ProductionJobServiceImpl(ProductionJobRepository jobRepository, ProductionJobMapper mapper, BusinessRepository businessRepository, BusinessUnitProcessRepository businessUnitProcessRepository, JobProcessedDetailsRepository jobProcessedDetailsRepository) {
+    public ProductionJobServiceImpl(ProductionJobRepository jobRepository, ProductionJobMapper mapper, BusinessRepository businessRepository, UserRepository userRepository, EmailUtils emailUtils, JobProcessedDetailsRepository jobProcessedDetailsRepository) {
         this.jobRepository = jobRepository;
         this.mapper = mapper;
         this.businessRepository = businessRepository;
-        this.businessUnitProcessRepository = businessUnitProcessRepository;
+        this.userRepository = userRepository;
+        this.emailUtils = emailUtils;
+//        this.businessUnitProcessRepository = businessUnitProcessRepository;
         this.jobProcessedDetailsRepository = jobProcessedDetailsRepository;
     }
 
@@ -51,8 +62,15 @@ public class ProductionJobServiceImpl implements ProductionJobService {
     }
 
     @Override
-    public ProductionJobDto createProductionJob(ProductionJobDto productionJobDto) {
+    public ProductionJobDto createProductionJob(ProductionJobDto productionJobDto, Long loggedInUserId) {
+        User loggedInUser = userRepository.findById(loggedInUserId)
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
         ProductionJob productionJob = mapper.toProductionJobEntity(productionJobDto);
+        productionJob.setStatus("New / Unassigned");
+        productionJob.setCreatedBy(loggedInUser);
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
+        productionJob.setTimeStamp(timeStampUtc);
         ProductionJob savedProductionJob = jobRepository.save(productionJob);
         return mapper.toProductionJobDto(savedProductionJob);
     }
@@ -65,9 +83,9 @@ public class ProductionJobServiceImpl implements ProductionJobService {
             ProductionJob productionJob = optionalProductionJob.get();
             updateProductionJobFields(productionJob, productionJobDto);
             updateBusinesses(productionJob, productionJobDto);
-            updateProcessList(productionJob, productionJobDto);
+//            updateProcessList(productionJob, productionJobDto);
             updateProcessedDetails(productionJob, productionJobDto);
-            updateProofs(productionJob, productionJobDto);
+//            updateProofs(productionJob, productionJobDto);
             ProductionJob updatedProductionJob = jobRepository.save(productionJob);
             return mapper.toProductionJobDto(updatedProductionJob);
         }
@@ -115,18 +133,18 @@ public class ProductionJobServiceImpl implements ProductionJobService {
         }
     }
 
-    private void updateProcessList(ProductionJob productionJob, ProductionJobDto productionJobDto) {
-        if (productionJobDto.getProcessList() != null) {
-            List<BusinessUnitProcess> updatedProcessList = new ArrayList<>();
-            for (BusinessUnitProcessDto processDto : productionJobDto.getProcessList()) {
-                BusinessUnitProcess process = businessUnitProcessRepository.findById(processDto.getId()).orElse(null);
-                if (process != null) {
-                    updatedProcessList.add(process);
-                }
-            }
-            productionJob.setProcessList(updatedProcessList);
-        }
-    }
+//    private void updateProcessList(ProductionJob productionJob, ProductionJobDto productionJobDto) {
+//        if (productionJobDto.getProcessList() != null) {
+//            List<BusinessUnitProcess> updatedProcessList = new ArrayList<>();
+//            for (BusinessUnitProcessDto processDto : productionJobDto.getProcessList()) {
+//                BusinessUnitProcess process = businessUnitProcessRepository.findById(processDto.getId()).orElse(null);
+//                if (process != null) {
+//                    updatedProcessList.add(process);
+//                }
+//            }
+//            productionJob.setProcessList(updatedProcessList);
+//        }
+//    }
 
     private void updateProcessedDetails(ProductionJob productionJob, ProductionJobDto productionJobDto) {
         if (productionJobDto.getProcessedDetailList() != null) {
@@ -163,24 +181,52 @@ public class ProductionJobServiceImpl implements ProductionJobService {
     }
 
 
-    private void updateProofs(ProductionJob productionJob, ProductionJobDto productionJobDto) {
-        if (productionJobDto.getProof() != null) {
-            List<Proof> updatedProofs = new ArrayList<>();
-            for (ProofDto proofDto : productionJobDto.getProof()) {
-                Proof proof = Proof.builder()
-                        .id(proofDto.getId())
-                        .fileData(proofDto.getFileData())
-                        .productionJob(productionJob)
-                        .build();
-                updatedProofs.add(proof);
-            }
-            productionJob.setProof(updatedProofs);
-        }
-    }
-
-
+//    private void updateProofs(ProductionJob productionJob, ProductionJobDto productionJobDto) {
+//        if (productionJobDto.getProof() != null) {
+//            List<Proof> updatedProofs = new ArrayList<>();
+//            for (ProofDto proofDto : productionJobDto.getProof()) {
+//                Proof proof = Proof.builder()
+//                        .id(proofDto.getId())
+//                        .fileData(proofDto.getFileData())
+//                        .productionJob(productionJob)
+//                        .build();
+//                updatedProofs.add(proof);
+//            }
+//            productionJob.setProof(updatedProofs);
+//        }
+//    }
     @Override
     public void deleteProductionJob(Long id) {
         jobRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public ProductionJobDto assignOrderToUser(Long orderId, Long userId, String role, Long loggedInUserId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + userId));
+        User loggedInUser = userRepository.findById(loggedInUserId)
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
+
+        ProductionJob productionJob = jobRepository.findById(orderId)
+                .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
+
+        if (role.equalsIgnoreCase("ROLE_PRODUCTION")) {
+            productionJob.setProduction(user);
+            emailUtils.sendOrderAssignedEmail(user.getEmail(), productionJob);
+        } else if (role.equalsIgnoreCase("ROLE_DESIGNER")) {
+            productionJob.setDesigner(user);
+            emailUtils.sendOrderAssignedEmail(user.getEmail(), productionJob);
+        } else if (role.equalsIgnoreCase("ROLE_PLATE_SETTER")) {
+            productionJob.setPlateSetter(user);
+            emailUtils.sendOrderAssignedEmail(user.getEmail(), productionJob);
+        }
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
+        productionJob.setTimeStamp(timeStampUtc);
+        productionJob.setStatus("Connected");
+        productionJob.setAssignedBy(loggedInUser);
+        jobRepository.save(productionJob);
+        return mapper.toProductionJobDto(productionJob);
     }
 }

@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrdersService } from 'src/app/services/orders.service';
+import { JobService } from '../../Jobs/Service/job.service';
+import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
+import { ErrorHandleService } from 'src/app/services/error-handle.service';
+import { BusinessUnitService } from '../../business-unit-and-processes/Service/business-unit.service';
+import { BusinessUnit } from 'src/app/Model/BusinessUnit';
 
 @Component({
   selector: 'app-order-over-view',
@@ -10,20 +15,44 @@ import { OrdersService } from 'src/app/services/orders.service';
 export class OrderOverViewComponent implements OnInit {
   orderById: any = {};
   idFromQueryParam: number | undefined | null;
-  parsedSize: any = {};
+  parsedSize: string | undefined | null;
+  orderType: string | undefined | null;
+  category: string | null | undefined;
 
   constructor(
+    private businessUnitService: BusinessUnitService,
+    private errorService: ErrorHandleService,
+    private orderService: OrdersService,
+    private jobService: JobService,
     private route: ActivatedRoute,
-    private orderService: OrdersService
   ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.idFromQueryParam = +params['id'];
-      if (this.idFromQueryParam) {
+      this.orderType = params['orderType'];
+
+      if (this.idFromQueryParam && this.orderType === 'auto') {
         this.getOrderById(this.idFromQueryParam);
+      } else {
+        this.getJobbyId(this.idFromQueryParam);
       }
     });
+  }
+
+  getJobbyId(id: number) {
+    this.jobService.getProductionJobById(id).subscribe(
+      (res) => {
+        this.orderById = res;
+
+        this.getCategoryById(+this.orderById.productCategory);
+        const uniCode = '×';
+        const [width, height] = this.orderById.size.trim().split(uniCode).map((value: any) => value.trim());
+        this.parsedSize = width + " x " + height;
+        console.log(this.orderById);
+      }, (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      });
   }
 
   getOrderById(id: number): void {
@@ -39,10 +68,20 @@ export class OrderOverViewComponent implements OnInit {
   }
 
   parseSize(sizeString: string): any {
-    debugger
     const parsedSize = JSON.parse(sizeString);
     const [width, height] = parsedSize.inch.split('x').map((value: any) => value.trim());
     this.parsedSize = width + " x " + height
     return this.parsedSize;
+  }
+
+  getCategoryById(id: number): void {
+    this.businessUnitService.getBusinessUnitById(id).subscribe(
+      (data: BusinessUnit) => {
+        this.category = data.name;
+      },
+      (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      }
+    );
   }
 }

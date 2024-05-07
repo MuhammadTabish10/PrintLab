@@ -79,7 +79,9 @@ export class AuthguardService implements CanActivate {
     }
 
     const orderObj = {
-      url: ['/orders', '/addOrder', '/viewOrder',"/order-overview"],
+      url: ['/orders', '/addOrder', '/viewOrder', "/order-overview",
+        "/order-design", "/order-pre-production", "/order-pre-production",
+        "/order-packing-&-qa", "/order-delivery"],
       permissions: 'Orders'
     }
     const orderProcessObj = {
@@ -87,7 +89,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'OrderProcess'
     }
     const ProductRule = {
-      url: ['/ProductRule', '/addProductRule', '/viewProductRule'],
+      url: ['/ProductRule', '/addProductRule', '/viewProductRule','/add-product-rule-job'],
       permissions: 'ProductRule'
     }
     // const productObj = {

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrdersService } from 'src/app/services/orders.service';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { AuthguardService } from 'src/app/services/authguard.service';
 
@@ -39,6 +39,7 @@ export class OrdersComponent implements OnInit {
   currentUserDetail: any = {};
   role: string | undefined | null;
   buttonOption: boolean = true;
+  items: MenuItem[] | undefined;
 
 
   constructor(
@@ -52,6 +53,26 @@ export class OrdersComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.items = [
+      {
+        label: 'Add Order',
+        icon: 'pi pi-cart-plus',
+        items: [
+          {
+            label: 'Auto',
+            icon: 'pi pi-spin pi-cog',
+            routerLink: "/addOrder",
+            queryParams: { orderType: 'auto' }
+          },
+          {
+            label: 'Manual',
+            icon: 'pi pi-wrench',
+            routerLink: '/addOrder',
+            queryParams: { orderType: 'manual' }
+          }
+        ]
+      },
+    ]
     this.getOrders()
     this.getUserDetails();
     this.cdr.detectChanges();
@@ -74,7 +95,7 @@ export class OrdersComponent implements OnInit {
         if (this.role !== "ROLE_ADMIN") {
           this.ordersArray = res.filter(
             (order: any) => {
-              debugger
+
               return this.doesCreatedByMatch(order);
             });
           this.buttonOption = false;
@@ -102,7 +123,7 @@ export class OrdersComponent implements OnInit {
   }
 
   editOrder(id: any) {
-    this.router.navigate(['/addOrder'], { queryParams: { id: id } });
+    this.router.navigate(['/addOrder'], { queryParams: { id: id, orderType: 'auto' } });
   }
 
   viewOrder(id: any) {
@@ -178,14 +199,20 @@ export class OrdersComponent implements OnInit {
 
   onRowClick(event: MouseEvent, orderId: number): void {
     // Check if the click occurred on a button
-    debugger
+
     const isButton = (event.target as HTMLElement).tagName === 'BUTTON' ||
       (event.target as HTMLElement).tagName === 'SMALL' ||
       (event.target as HTMLElement).tagName === 'I';
 
     if (!isButton) {
       // If the click didn't occur on a button, navigate to order overview
-      this.router.navigate(['/order-overview'], { queryParams: { id: orderId } });
+      this.router.navigate(['/order-overview'],
+        {
+          queryParams: {
+            id: orderId,
+            orderType: 'auto'
+          }
+        });
     }
   }
 

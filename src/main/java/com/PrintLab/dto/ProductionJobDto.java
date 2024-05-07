@@ -1,10 +1,12 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -46,4 +48,13 @@ public class ProductionJobDto {
     private List<ProofDto> proof;
     private String sendTo;
     private List<JobProcessedDetailsDto> processedDetailList;
+    private String sizeCategory;
+    private String size;
+    private LocalDateTime timeStamp;
+    private User assignedBy;
+    private User createdBy;
+    private User designer;
+    private User production;
+    private User plateSetter;
+    private String status;
 }

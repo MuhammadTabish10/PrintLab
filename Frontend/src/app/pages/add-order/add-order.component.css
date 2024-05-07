@@ -1,0 +1,10 @@
+::ng-deep p-inputnumber,
+::ng-deep .p-inputnumber {
+  display: flex;
+  width: 100%;
+}
+.description {
+  max-width: 100%; /* or specify a specific width */
+  word-wrap: break-word; /* Break long words and wrap onto the next line */
+}
+
