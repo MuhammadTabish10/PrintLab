@@ -86,6 +86,14 @@ public class ProductionJobServiceImpl implements ProductionJobService {
 //            updateProcessList(productionJob, productionJobDto);
             updateProcessedDetails(productionJob, productionJobDto);
 //            updateProofs(productionJob, productionJobDto);
+
+            productionJob.setSizeCategory(productionJobDto.getSizeCategory());
+            productionJob.setSize(productionJobDto.getSize());
+            productionJob.setTimeStamp(productionJobDto.getTimeStamp());
+            productionJob.setCreatedBy(productionJobDto.getCreatedBy());
+            productionJob.setStatus(productionJobDto.getStatus());
+            productionJob.setCreatedBy(productionJobDto.getCreatedBy());
+
             ProductionJob updatedProductionJob = jobRepository.save(productionJob);
             return mapper.toProductionJobDto(updatedProductionJob);
         }
