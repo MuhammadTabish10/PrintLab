@@ -23,7 +23,7 @@
       >
         + Add
       </button> -->
-      <p-panelMenu [model]="items" class=""/>
+      <p-panelMenu [model]="items" class="" />
     </form>
   </div>
 
@@ -36,13 +36,14 @@
           <th scope="col" class="col-3">Customer Name</th>
           <th scope="col" class="col-3">Product Name</th>
           <th scope="col" class="col-2">Price</th>
-          <th scope="col" class="col-2">Assign Designer</th>
+          <th scope="col" class="col-2">Type</th>
+          <!-- <th scope="col" class="col-2">Assign Designer</th>
           <th scope="col" class="col-2" *ngIf="buttonOption">
             Assign Production
           </th>
           <th scope="col" class="col-2" *ngIf="buttonOption">
             Assign Plate Setter
-          </th>
+          </th> -->
           <th scope="col" class="col-3" *ngIf="buttonOption">Action</th>
         </tr>
       </thead>
@@ -55,15 +56,16 @@
         <tr
           *ngFor="let order of ordersArray"
           class="order-table-row-hover"
-          (click)="onRowClick($event, order.id)"
+          (click)="onRowClick($event, order.id, order.type)"
           [ngClass]="{ highlighted: order?.id === idFromQueryParam }"
         >
           <th scope="row" class="tracking-id">{{ order?.id }}</th>
           <td>{{ order?.createdBy?.name }}</td>
-          <td>{{ order?.customer?.name }}</td>
-          <td>{{ order?.product }}</td>
-          <td>Rs. {{ order?.price }}</td>
-          <td>
+          <td>{{ order?.customer?.name ||  order?.client?.name }}</td>
+          <td>{{ order?.product || order?.productName }}</td>
+          <td>Rs. {{ order?.price || order?.amount }}</td>
+          <td>{{ order?.type }}</td>
+          <!-- <td>
             {{ order?.designer?.email }}
           </td>
           <td>
@@ -71,13 +73,13 @@
           </td>
           <td>
             {{ order?.plateSetter?.email }}
-          </td>
+          </td> -->
           <td class="order-table-btns-container" *ngIf="buttonOption">
             <div class="btn-group mr-2" role="group" aria-label="Second group">
               <button
                 type="button"
                 class="btn order-table-btn"
-                (click)="viewOrder(order.id)"
+                (click)="viewOrder(order.id, order.type)"
               >
                 <i class="fa-solid fa-hand-pointer"></i>&nbsp;<small
                   >View</small
@@ -86,14 +88,14 @@
               <button
                 type="button"
                 class="btn order-table-btn"
-                (click)="editOrder(order.id)"
+                (click)="editOrder(order.id, order.type)"
               >
                 <i class="fa-solid fa-pen"></i>&nbsp;<small>Edit</small>
               </button>
               <button
                 type="button"
                 class="btn order-table-btn"
-                (click)="deleteOrder(order.id)"
+                (click)="deleteOrder(order.id, order.type)"
               >
                 <i class="fa-solid fa-trash"></i>&nbsp;<small>Delete</small>
               </button>

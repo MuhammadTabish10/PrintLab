@@ -269,6 +269,7 @@ public class OrderServiceImpl implements OrderService {
                 .assignedBy(order.getAssignedBy())
                 .productRule(order.getProductRule())
                 .createdBy(order.getCreatedBy())
+                .type(order.getType())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .build();
@@ -298,6 +299,7 @@ public class OrderServiceImpl implements OrderService {
                 .productRule(orderDto.getProductRule())
                 .assignedBy(orderDto.getAssignedBy())
                 .createdBy(orderDto.getCreatedBy())
+                .type(orderDto.getType())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .build();

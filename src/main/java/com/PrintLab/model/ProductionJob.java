@@ -19,7 +19,9 @@ public class ProductionJob {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String client;
+    @ManyToOne()
+    @JoinColumn(name = "customer_id")
+    private Customer client;
     private String businessCategory;
     @ManyToMany
     @JoinTable(
@@ -82,4 +84,5 @@ public class ProductionJob {
     private User plateSetter;
 
     private String status;
+    private String type;
 }

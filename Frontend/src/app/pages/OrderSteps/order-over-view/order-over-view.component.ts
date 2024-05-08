@@ -46,9 +46,10 @@ export class OrderOverViewComponent implements OnInit {
         this.orderById = res;
 
         this.getCategoryById(+this.orderById.productCategory);
-        const uniCode = '×';
-        const [width, height] = this.orderById.size.trim().split(uniCode).map((value: any) => value.trim());
-        this.parsedSize = width + " x " + height;
+        const size = this.orderById.size.trim();
+        const parts = size.split(/[×x]/).map((part: string) => part.trim());
+        const formattedSize = parts.join(' x ');
+        this.parsedSize = formattedSize;
         console.log(this.orderById);
       }, (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);

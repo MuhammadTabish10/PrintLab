@@ -1,5 +1,6 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.Customer;
 import com.PrintLab.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.util.List;
 @Data
 public class ProductionJobDto {
     private Long id;
-    private String client;
+    private Customer client;
     private String businessCategory;
     private String productionUser;
     private List<BusinessDto>businessName;
@@ -57,4 +58,5 @@ public class ProductionJobDto {
     private User production;
     private User plateSetter;
     private String status;
+    private String type;
 }

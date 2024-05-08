@@ -4,6 +4,9 @@ import { OrdersService } from 'src/app/services/orders.service';
 import { MenuItem, MessageService } from 'primeng/api';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { AuthguardService } from 'src/app/services/authguard.service';
+import { JobService } from '../Jobs/Service/job.service';
+import { ProductionJob } from 'src/app/Model/ProductionJob';
+import { forkJoin } from 'rxjs';
 
 export interface Roles {
   name?: string;
@@ -44,6 +47,7 @@ export class OrdersComponent implements OnInit {
 
   constructor(
     private orderService: OrdersService,
+    private jobService: JobService,
     private router: Router,
     private authService: AuthguardService,
     private messageService: MessageService,
@@ -89,32 +93,68 @@ export class OrdersComponent implements OnInit {
     })
   }
 
-  getOrders() {
-    this.orderService.getOrders().subscribe(
-      (res: any) => {
-        if (this.role !== "ROLE_ADMIN") {
-          this.ordersArray = res.filter(
-            (order: any) => {
+  // getOrders() {
+  //   const orderAuto$ = this.orderService.getOrders();
+  //   const jobManual$ = this.jobService.getAllProductRuleJob();
 
-              return this.doesCreatedByMatch(order);
-            });
+  //   forkJoin([orderAuto$, jobManual$]).subscribe(
+  //     ([autoData, manualData]: [any, ProductionJob[]]) => {
+  //       if (this.role !== "ROLE_ADMIN") {
+  //         this.ordersArray = res.filter(
+  //           (order: any) => {
+  //             return this.doesCreatedByMatch(order);
+  //           });
+  //         this.buttonOption = false;
+  //       } else {
+  //         this.ordersArray = res;
+  //       }
+  //       this.tableData = this.ordersArray.length === 0;
+  //     },
+  //     error => {
+  //       this.showError(error);
+  //       this.visible = true;
+  //     }
+  //   );
+  // }
+
+
+  private getOrders(): void {
+
+    const orderAuto$ = this.orderService.getOrders();
+    const jobManual$ = this.jobService.getAllProductionJobs();
+
+    forkJoin([orderAuto$, jobManual$]).subscribe(
+      ([autoData, manualData]: [any, ProductionJob[]]) => {
+        // Process autoData
+        if (this.role !== "ROLE_ADMIN") {
+          this.ordersArray = autoData.filter((order: any) => this.doesCreatedByMatch(order));
           this.buttonOption = false;
         } else {
-          this.ordersArray = res;
+          this.ordersArray = autoData;
         }
-        this.tableData = this.ordersArray.length === 0;
+
+        // Process manualData
+        manualData = manualData.map((item: ProductionJob) => ({
+          ...item,
+          title: item.productName
+        }));
+
+        // Merge data
+        const mergedData = [...autoData, ...manualData];
+
+        // Assign mergedData to your tableData
+        this.ordersArray = mergedData;
+        console.log(this.ordersArray);
       },
-      error => {
+      (error: any) => {
         this.showError(error);
         this.visible = true;
       }
     );
   }
-  getUsersByRole(role: any) {
 
-    // this.userArray = [
-    //   { name: "Usama", id: 5 }
-    // ]
+
+  getUsersByRole(role: any) {
     this.orderService.getUserByRole(role.name).subscribe(res => {
       this.userArray = res
     }, error => {
@@ -122,16 +162,33 @@ export class OrdersComponent implements OnInit {
     })
   }
 
-  editOrder(id: any) {
-    this.router.navigate(['/addOrder'], { queryParams: { id: id, orderType: 'auto' } });
+  editOrder(id: number, type: string) {
+    this.router.navigate(['/addOrder'], { queryParams: { id: id, orderType: type } });
   }
 
-  viewOrder(id: any) {
-    this.router.navigate(['/viewOrder'], { queryParams: { id: id } });
+  viewOrder(id: number, type: string) {
+    this.router.navigate(['/viewOrder'], { queryParams: { id: id, orderType: type } });
   }
 
-  deleteOrder(id: any) {
+  deleteOrder(id: number, type: string) {
+    if (type === 'auto') {
+      this.deleteAutoOrder(id);
+    } else {
+      this.deleteManualOrder(id);
+    }
+  }
+
+  deleteAutoOrder(id: number) {
     this.orderService.deleteOrder(id).subscribe(() => {
+      this.getOrders()
+    }, error => {
+      this.showError(error);
+      this.visible = true
+    })
+  }
+
+  deleteManualOrder(id: number) {
+    this.jobService.deleteProductionJob(id).subscribe(() => {
       this.getOrders()
     }, error => {
       this.showError(error);
@@ -197,7 +254,7 @@ export class OrdersComponent implements OnInit {
   //   this.router.navigate(['/orderProcessPaperMarket'], { queryParams: { id: this.orderId } });
   // }
 
-  onRowClick(event: MouseEvent, orderId: number): void {
+  onRowClick(event: MouseEvent, orderId: number, type: string): void {
     // Check if the click occurred on a button
 
     const isButton = (event.target as HTMLElement).tagName === 'BUTTON' ||
@@ -210,7 +267,7 @@ export class OrdersComponent implements OnInit {
         {
           queryParams: {
             id: orderId,
-            orderType: 'auto'
+            orderType: type
           }
         });
     }

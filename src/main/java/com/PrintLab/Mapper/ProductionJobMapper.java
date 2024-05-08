@@ -1,7 +1,9 @@
 package com.PrintLab.Mapper;
 
 import com.PrintLab.dto.ProductionJobDto;
+import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.ProductionJob;
+import com.PrintLab.repository.CustomerRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -12,19 +14,21 @@ public class ProductionJobMapper {
     //    private final BusinessUnitProcessMapper businessUnitProcessMapper;
     private final BusinessAndBranchMapper businessAndBranchMapper;
     private final JobProcessedDetailsMapper detailMapper;
-
+    private final CustomerRepository customerRepository;
     public ProductionJobMapper(
             BusinessAndBranchMapper businessAndBranchMapper,
-            JobProcessedDetailsMapper detailMapper
-    ) {
+            JobProcessedDetailsMapper detailMapper,
+            CustomerRepository customerRepository) {
         this.businessAndBranchMapper = businessAndBranchMapper;
         this.detailMapper = detailMapper;
+        this.customerRepository = customerRepository;
     }
 
     public ProductionJobDto toProductionJobDto(ProductionJob productionJob) {
         return ProductionJobDto.builder()
                 .id(productionJob.getId())
-                .client(productionJob.getClient())
+                .client(customerRepository.findById(productionJob.getClient().getId())
+                        .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .businessCategory(productionJob.getBusinessCategory())
                 .productionUser(productionJob.getProductionUser())
                 .businessName(productionJob.getBusinesses().stream()
@@ -65,6 +69,7 @@ public class ProductionJobMapper {
                 .plateSetter(productionJob.getPlateSetter())
                 .production(productionJob.getProduction())
                 .status(productionJob.getStatus())
+                .type(productionJob.getType())
 //                .proof(productionJob.getProof().stream()
 //                        .map(proof -> {
 //                            ProofDto proofDto = new ProofDto();
@@ -82,9 +87,24 @@ public class ProductionJobMapper {
 
     public ProductionJob toProductionJobEntity(ProductionJobDto productionJobDto) {
         // Create the ProductionJob object
-        ProductionJob productionJob = ProductionJob.builder()
+
+        // Create and set the Proof objects
+//        List<Proof> proofs = productionJobDto.getProof().stream()
+//                .map(proofDto -> {
+//                    Proof proof = new Proof();
+//                    proof.setId(proofDto.getId());
+//                    proof.setFileData(proofDto.getFileData());
+//                    proof.setProductionJob(productionJob); // Set the reference to the current ProductionJob
+//                    return proof;
+//                })
+//                .collect(Collectors.toList());
+//
+//        productionJob.setProof(proofs);
+
+        return ProductionJob.builder()
                 .id(productionJobDto.getId())
-                .client(productionJobDto.getClient())
+                .client(customerRepository.findById(productionJobDto.getClient().getId())
+                        .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .businessCategory(productionJobDto.getBusinessCategory())
                 .productionUser(productionJobDto.getProductionUser())
                 .businesses(productionJobDto.getBusinessName().stream()
@@ -117,6 +137,7 @@ public class ProductionJobMapper {
                 .expiryDate(productionJobDto.getExpiryDate())
                 .sizeCategory(productionJobDto.getSizeCategory())
                 .timeStamp(productionJobDto.getTimeStamp())
+                .type(productionJobDto.getType())
                 .assignedBy(productionJobDto.getAssignedBy())
                 .createdBy(productionJobDto.getCreatedBy())
                 .designer(productionJobDto.getDesigner())
@@ -129,21 +150,6 @@ public class ProductionJobMapper {
                         .map(detailMapper::toEntity)
                         .collect(Collectors.toList()))
                 .build();
-
-        // Create and set the Proof objects
-//        List<Proof> proofs = productionJobDto.getProof().stream()
-//                .map(proofDto -> {
-//                    Proof proof = new Proof();
-//                    proof.setId(proofDto.getId());
-//                    proof.setFileData(proofDto.getFileData());
-//                    proof.setProductionJob(productionJob); // Set the reference to the current ProductionJob
-//                    return proof;
-//                })
-//                .collect(Collectors.toList());
-//
-//        productionJob.setProof(proofs);
-
-        return productionJob;
     }
 
 

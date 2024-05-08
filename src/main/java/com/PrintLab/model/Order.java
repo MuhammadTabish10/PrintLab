@@ -62,4 +62,5 @@ public class Order
     @ManyToOne()
     @JoinColumn(name = "user_plate_setter_id")
     private User plateSetter;
+    private String type;
 }

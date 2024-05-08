@@ -81,7 +81,8 @@ export class CreateJobComponent implements OnInit {
     expiryDate: undefined,
     processedDetailList: [],
     sizeCategory: undefined,
-    size: undefined
+    size: undefined,
+    type: undefined
   }
   uploadedFiles: any[] = [];
 

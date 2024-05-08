@@ -117,7 +117,8 @@ export class AddOrderComponent implements OnInit {
     expiryDate: undefined,
     processedDetailList: [],
     sizeCategory: undefined,
-    size: undefined
+    size: undefined,
+    type: undefined
   }
   categoryList: BusinessUnit[] = [];
   // productAndServiceList: ProductService[] = [];
@@ -217,7 +218,8 @@ export class AddOrderComponent implements OnInit {
         impositionValue: this.impositionValue,
         jobColorsFront: +this.jobFrontValue.name,
         jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null,
-        // customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
+        type: this.orderType,
+        customer: { id: +this.selectedCustomer! } || { id: 0 }
       }
       this.orderService.addOrder(obj, this.currentUserDetail.userId).subscribe(res => {
         this.router.navigateByUrl('/orders')
@@ -241,7 +243,8 @@ export class AddOrderComponent implements OnInit {
         impositionValue: this.impositionValue,
         jobColorsFront: +this.jobFrontValue.name,
         jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null,
-        // customer: Object.keys(this.selectedCustomer).length === 0 ? { id: 0 } : this.selectedCustomer
+        type: this.orderType,
+        customer: { id: +this.selectedCustomer! } || { id: 0 }
       }
       this.orderService.updateOrder(this.idFromQueryParam, obj).subscribe(res => {
         this.router.navigateByUrl('/orders')
@@ -590,25 +593,39 @@ export class AddOrderComponent implements OnInit {
   }
 
   addJob(): void {
-    if (this.job.productCategory.label) {
-      this.job.productCategory = this.job.productCategory.label
-    }
-    this.job.client = this.selectedCustomer;
-    this.selectedBusinesses.forEach(business => {
-      business.businessBranchList = this.selectedBranches;
-    })
-    this.job.businessName = this.selectedBusinesses;
+    this.transformProductCategory();
+    this.assignJobProperties();
     const serviceToCall = this.job.id
       ? this.productionJobService.updateProductionJob(this.idFromQueryParam!, this.job)
-      : this.productionJobService.postProductionJob(this.job,this.currentUserDetail.userId);
-    serviceToCall.subscribe((res: ProductionJob) => {
-      this.successService.showSuccess("Job created successfully");
-      setTimeout(() => {
-        this.router.navigate(['/order-overview'], { queryParams: { id: res.id, orderType: 'manual' } });
-      }, 2000);
-    }, (error: BackendErrorResponse) => {
-      this.showError(error.error.error);
-    })
+      : this.productionJobService.postProductionJob(this.job, this.currentUserDetail.userId);
+    serviceToCall.subscribe(
+      (res: ProductionJob) => this.handleSuccessForJob(res),
+      (error: BackendErrorResponse) => {
+        this.showError(error.error.error);
+      }
+    );
+  }
+
+  transformProductCategory(): void {
+    if (this.job.productCategory.label) {
+      this.job.productCategory = this.job.productCategory.label;
+    }
+  }
+
+  assignJobProperties(): void {
+    this.job.type = this.orderType;
+    this.job.client = this.findCustomerById(this.selectedCustomer);
+    this.selectedBusinesses.forEach(business => {
+      business.businessBranchList = this.selectedBranches;
+    });
+    this.job.businessName = this.selectedBusinesses;
+  }
+
+  handleSuccessForJob(res: ProductionJob): void {
+    this.successService.showSuccess("Job created successfully");
+    setTimeout(() => {
+      this.router.navigate(['/order-overview'], { queryParams: { id: res.id, orderType: 'manual' } });
+    }, 2000);
   }
 
   getDetails(name: string): void {

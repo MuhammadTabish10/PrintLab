@@ -452,7 +452,7 @@
             type="submit"
             class="btn order-table-btn btn-search-panel w-100"
             [disabled]="totalAmount == null"
-            (click)="addJob()"
+            (click)="orderType === 'manual' ? addJob() : addOrder()"
           >
             {{ buttonName }} Order
           </button>

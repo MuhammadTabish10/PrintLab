@@ -43,7 +43,8 @@ export class GetAllJobsComponent implements OnInit {
     productionUser: undefined,
     processedDetailList: [],
     sizeCategory: undefined,
-    size: undefined
+    size: undefined,
+    type: undefined
   };
 
   constructor(

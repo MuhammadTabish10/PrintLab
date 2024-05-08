@@ -31,6 +31,7 @@ public class OrderDto
     private String url;
     private Long productRule;
     private String status;
+    private String type;
     private Boolean ctpProcess;
     private Boolean pressMachineProcess;
     private Boolean paperMarketProcess;

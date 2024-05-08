@@ -1,5 +1,6 @@
 import { Business } from "./Business";
 import { BusinessUnitProcessDto } from "./BusinessUnit";
+import { Customer } from "./Customer";
 import { JobProcessedDetails } from "./ProcessDetails";
 
 export interface ProductionJob {
@@ -7,7 +8,7 @@ export interface ProductionJob {
   jobId: string | null | undefined;
   sizeCategory: string | null | undefined;
   size: string | null | undefined;
-  client: string | null | undefined;
+  client: Customer | null | undefined;
   businessName?: Business[];
   productCategory: any;
   productName: string | null | undefined;
@@ -33,6 +34,7 @@ export interface ProductionJob {
   deliveryDate: Date | null | undefined;
   expiryDate: Date | null | undefined;
   sendTo: string | null | undefined;
+  type: string | null | undefined;
   productionUser: string | null | undefined;
   processList?: BusinessUnitProcessDto[];
   processedDetailList: JobProcessedDetails[];
