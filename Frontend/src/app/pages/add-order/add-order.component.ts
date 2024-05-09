@@ -573,15 +573,20 @@ export class AddOrderComponent implements OnInit {
     this.businessUnitService.getBusinessUnitById(id).subscribe(
       (res: BusinessUnit) => {
         if (res.processList) {
-          const uniqueProductRuleJobList = new Map<string, ProductRuleJob>(); // Initialize a Map to store unique items keyed by productName
+           // Initialize a Map to store unique items keyed by productName
+          const uniqueProductRuleJobList = new Map<string, ProductRuleJob>();
           res.processList?.forEach((element: BusinessUnitProcessDto) => {
             if (element.productRuleJobList) {
               element.productRuleJobList.forEach((item) => {
-                uniqueProductRuleJobList.set(item.productName!, item as ProductRuleJob); // Use productName as key to ensure uniqueness
+                // Use productName as key to ensure uniqueness
+                if (item.productName) {
+                  uniqueProductRuleJobList.set(item.productName, item as ProductRuleJob);
+                }
               });
             }
           });
-          this.productRuleJobList = Array.from(uniqueProductRuleJobList.values()); // Convert Map values to an array
+           // Convert Map values to an array
+          this.productRuleJobList = Array.from(uniqueProductRuleJobList.values());
         }
       },
       (err: BackendErrorResponse) => {

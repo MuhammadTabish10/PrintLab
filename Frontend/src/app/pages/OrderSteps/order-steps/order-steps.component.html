@@ -43,49 +43,75 @@
   <ul class="nav nav-tabs" style="width: 100%">
     <li class="nav-item" style="flex: 1">
       <a
-        class="nav-link active bg-dark rounded-0 text-center text-warning"
+        [ngClass]="
+          active === 'overview' ? 'bg-dark text-white' : 'bg-light text-dark'
+        "
+        class="nav-link active rounded-0 text-center"
         data-bs-toggle="tab"
         href="#overview"
+        (click)="active = 'overview'"
         >OVERVIEW</a
       >
     </li>
     <li class="nav-item" style="flex: 1">
       <a
-        class="nav-link bg-dark rounded-0 text-center text-warning"
+        [ngClass]="
+          active === 'design' ? 'bg-dark text-white' : 'bg-light text-dark'
+        "
+        class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#design"
+        (click)="active = 'design'"
         >DESIGN</a
       >
     </li>
     <li class="nav-item" style="flex: 1">
       <a
-        class="nav-link bg-dark rounded-0 text-center text-warning"
+        [ngClass]="
+          active === 'pre-production'
+            ? 'bg-dark text-white'
+            : 'bg-light text-dark'
+        "
+        class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#pre-production"
+        (click)="active = 'pre-production'"
         >PRE PRODUCTION</a
       >
     </li>
     <li class="nav-item" style="flex: 1">
       <a
-        class="nav-link bg-dark rounded-0 text-center text-warning"
+        [ngClass]="
+          active === 'production' ? 'bg-dark text-white' : 'bg-light text-dark'
+        "
+        class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#production"
+        (click)="active = 'production'"
         >PRODUCTION</a
       >
     </li>
     <li class="nav-item" style="flex: 1">
       <a
-        class="nav-link bg-dark rounded-0 text-center text-warning"
+        [ngClass]="
+          active === 'packing-qa' ? 'bg-dark text-white' : 'bg-light text-dark'
+        "
+        class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#packing-qa"
+        (click)="active = 'packing-qa'"
         >PACKING & QA</a
       >
     </li>
     <li class="nav-item" style="flex: 1">
       <a
-        class="nav-link bg-dark rounded-0 text-center text-warning"
+        [ngClass]="
+          active === 'delivery' ? 'bg-dark text-white' : 'bg-light text-dark'
+        "
+        class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#delivery"
+        (click)="active = 'delivery'"
         >DELIVERY</a
       >
     </li>
@@ -99,10 +125,15 @@
     </div>
     <div class="tab-pane fade" id="pre-production"></div>
     <div class="tab-pane fade" id="production">
-      <ul class="nav nav-tabs" style="width: 100%">
+      <ul class="nav nav-tabs border border-1 border-dark" style="width: 100%">
         <li class="nav-item" style="flex: 1">
           <a
-            class="nav-link active bg-dark rounded-0 text-center text-warning"
+            [ngClass]="
+              nestedActive === 'overviewProduction'
+                ? 'bg-gray text-white'
+                : 'bg-light text-dark'
+            "
+            class="nav-link active rounded-0 text-center"
             data-bs-toggle="tab"
             href="#overviewProduction"
             (click)="getTimeLine()"
@@ -111,11 +142,16 @@
         </li>
         <li class="nav-item" style="flex: 1">
           <a
-            class="nav-link bg-dark rounded-0 text-center text-warning"
+            [ngClass]="
+              nestedActive === 'jobProocessDetails'
+                ? 'bg-gray opacity-75 text-white'
+                : 'bg-light text-dark'
+            "
+            class="nav-link rounded-0 text-center"
             data-bs-toggle="tab"
             href="#jobProocessDetails"
-            (click)="jobProcessedActive = true"
-            >Processes</a
+            (click)="jobProcessedActive = true; nestedActive = 'jobProocessDetails'"
+            >PROCESS</a
           >
         </li>
       </ul>

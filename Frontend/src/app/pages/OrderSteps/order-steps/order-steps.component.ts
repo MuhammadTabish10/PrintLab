@@ -38,6 +38,8 @@ export class OrderStepsComponent implements OnInit {
   confirmationActive: boolean = false;
   processedJobList: JobProcessedDetails[] = [];
   productRuleJob: ProductRuleJob | undefined | null;
+  active: string = '';
+  nestedActive: string = '';
 
   constructor(
     private errorHandleService: ErrorHandleService,
@@ -239,6 +241,7 @@ export class OrderStepsComponent implements OnInit {
     });
   }
   getTimeLine(): void {
+    this.nestedActive = 'overviewProduction';
     if (this.overviewActive) {
       this.getUpdatedTimeLine(this.productRuleJob?.id!);
     } else {
