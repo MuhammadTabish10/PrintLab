@@ -25,8 +25,8 @@ public class JobProcessedDetails {
     private String processName;
     private LocalDateTime timeStamp;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "production_job_id")
+    @JoinColumn(name = "product_rule_job_id")
     @JsonIgnore
     @ToString.Exclude
-    private ProductionJob productionJob;
+    private ProductRuleJob productRuleJob;
 }

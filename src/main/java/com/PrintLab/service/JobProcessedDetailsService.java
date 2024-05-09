@@ -15,5 +15,5 @@ public interface JobProcessedDetailsService {
 
     List<JobProcessedDetailsDto> getAllJobDetails();
 
-    List<JobProcessedDetailsDto> getJobDetailByProductionId(Long id);
+    List<JobProcessedDetailsDto> getJobDetailByProductRuleJobId(Long id);
 }

@@ -15,15 +15,14 @@ public class JobProcessDetailController {
     @Autowired
     JobProcessedDetailsService jobProcessedDetailsService;
 
-
     @GetMapping("/{id}")
     public ResponseEntity<JobProcessedDetailsDto> getJobDetailById(@PathVariable Long id) {
             return ResponseEntity.ok(jobProcessedDetailsService.getJobDetailById(id));
     }
 
-    @GetMapping("/by-production/{id}")
+    @GetMapping("/by-product/{id}")
     public ResponseEntity<List<JobProcessedDetailsDto>> getJobDetailByProductionId(@PathVariable Long id) {
-        List<JobProcessedDetailsDto> jobDetailsDtoList = jobProcessedDetailsService.getJobDetailByProductionId(id);
+        List<JobProcessedDetailsDto> jobDetailsDtoList = jobProcessedDetailsService.getJobDetailByProductRuleJobId(id);
         return ResponseEntity.ok(jobDetailsDtoList);
     }
 

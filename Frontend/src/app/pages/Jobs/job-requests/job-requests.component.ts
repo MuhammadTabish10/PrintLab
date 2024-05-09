@@ -1,5 +1,5 @@
 import { Vendor } from './../../../Model/Vendor';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
 import { ProductionJob } from 'src/app/Model/ProductionJob';
 import { JobService } from '../Service/job.service';
@@ -11,8 +11,9 @@ import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { DatePipe } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
 
 @Component({
   selector: 'app-job-requests',
@@ -49,6 +50,7 @@ export class JobRequestsComponent implements OnInit {
   // disableCheck: boolean = false;
   processedJobList: JobProcessedDetails[] = [];
   idFromQueryParam: number | null | undefined;
+  productRuleJob: ProductRuleJob | null | undefined;
   constructor(
     private datePipe: DatePipe,
     private route: ActivatedRoute,
@@ -61,147 +63,86 @@ export class JobRequestsComponent implements OnInit {
   onActiveIndexChange(event: number) {
     this.activeIndex = event;
   }
-
-  overviewActive: boolean = true;
-  jobProcessedActive: boolean = false;
+  
+  @Input() jobProcessedActive: boolean = false;
   paymentActive: boolean = false;
   confirmationActive: boolean = false;
   ngOnInit() {
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(param => {
       this.idFromQueryParam = +param['id'] || null;
     });
-    if (this.idFromQueryParam) {
+    if (this.idFromQueryParam && this.jobProcessedActive) {
       this.getProcessList(this.idFromQueryParam).then(() => {
         this.handleRoles();
       });
-      if (this.overviewActive) {
-        this.getUpdatedTimeLine(this.idFromQueryParam);
-      }
-    }
-    this.items = [
-      {
-        label: 'Overview',
-        command: (event: any) => this.toggleTab('overview')
-      },
-      {
-        label: 'Processed',
-        command: (event: any) => this.toggleTab('jobProcessed')
-      },
-      {
-        label: 'Payment',
-        command: (event: any) => this.toggleTab('payment')
-      },
-      {
-        label: 'Confirm',
-        command: (event: any) => this.toggleTab('confirmation')
-      }
-    ];
-  }
-
-  private toggleTab(tabName: string) {
-    this.overviewActive = tabName === 'overview';
-    this.jobProcessedActive = tabName === 'jobProcessed';
-    this.paymentActive = tabName === 'payment';
-    this.confirmationActive = tabName === 'confirm';
-    if (this.overviewActive && this.idFromQueryParam) {
-      this.getUpdatedTimeLine(this.idFromQueryParam);
-    } else {
-      this.events = [];
     }
   }
 
   private async getProcessList(id: number) {
-    return new Promise<void>((resolve, reject) => {
-      this.jobService.getProductionJobById(id).subscribe(
-        (res: ProductionJob) => {
-          this.jobById = res;
-
-          if (this.jobById.processList && this.jobById.processedDetailList.length === 0) {
-            this.jobById.processedDetailList = [];
-            for (let i = 0; i < this.jobById.processList.length; i++) {
-              this.jobById.processedDetailList?.push({
-                id: undefined,
-                amount: undefined,
-                vendor: undefined,
-                payment: undefined,
-                jobProcessed: undefined,
-                status: undefined,
-                processName: undefined,
-                timeStamp: undefined
-              });
-            }
-          } else if (
-            this.jobById.processList &&
-            this.jobById.processedDetailList.length !== this.jobById.processList.length
-          ) {
-            const remainingLength = this.jobById.processList.length - this.jobById.processedDetailList.length;
-            for (let i = 0; i < remainingLength; i++) {
-              this.jobById.processedDetailList?.push({
-                id: undefined,
-                amount: undefined,
-                vendor: undefined,
-                payment: undefined,
-                jobProcessed: undefined,
-                status: undefined,
-                processName: undefined,
-                timeStamp: undefined
-              });
-            }
+    try {
+      const productionJob: ProductionJob | undefined = await this.jobService.getProductionJobById(id).toPromise();
+      this.jobById = productionJob;
+      const productRuleJobs: ProductRuleJob[] | null | undefined = await this.getProductRuleJobByName(this.jobById?.productName).toPromise();
+      this.productRuleJob = productRuleJobs ? productRuleJobs[0] : undefined;
+      if (productRuleJobs && productRuleJobs.length && productRuleJobs.length > 0) {
+        if (productRuleJobs[0].processList && productRuleJobs[0].processedDetailList.length === 0) {
+          productRuleJobs[0].processedDetailList = [];
+          for (let i = 0; i < productRuleJobs[0].processList.length; i++) {
+            productRuleJobs[0].processedDetailList?.push({
+              id: undefined,
+              amount: undefined,
+              vendor: undefined,
+              payment: undefined,
+              jobProcessed: undefined,
+              status: undefined,
+              processName: undefined,
+              timeStamp: undefined
+            });
           }
-          resolve();
-        },
-        (error: BackendErrorResponse) => {
-          this.errorHandleService.showError(error.error.error);
-          reject();
+        } else if (
+          productRuleJobs[0].processList &&
+          productRuleJobs[0].processedDetailList.length !== productRuleJobs[0].processList.length
+        ) {
+          const remainingLength = productRuleJobs[0].processList.length - productRuleJobs[0].processedDetailList.length;
+          for (let i = 0; i < remainingLength; i++) {
+            productRuleJobs[0].processedDetailList?.push({
+              id: undefined,
+              amount: undefined,
+              vendor: undefined,
+              payment: undefined,
+              jobProcessed: undefined,
+              status: undefined,
+              processName: undefined,
+              timeStamp: undefined
+            });
+          }
         }
-      );
-    });
+      }
+    } catch (error: any) {
+      this.errorHandleService.showError(error.error.error);
+      throw error;
+    }
   }
 
-  // onNextTabClick(obj: any) {
-  //
-  //   // const keys = Object.keys(obj);
-  //   // const allKeysExist = keys.every(key => obj[key] !== undefined);
-
-  //   this.isCurrentTabFilled = true;
-
-  //   if (this.isCurrentTabFilled) {
-  //     this.openTabIndex! += 1;
-  //   }
-  // }
-
   submit(category: BusinessUnitProcessDto, index: number, event: EventTarget) {
-    // const isChecked = this.returnIfNotChecked(event);
-
-    // if (!isChecked) {
-    //   return;
-    // }
-
-    if (this.jobById?.processedDetailList) {
-      this.jobById.processedDetailList[index].processName = category.process;
-
+    if (this.productRuleJob?.processedDetailList) {
+      this.productRuleJob.processedDetailList[index].processName = category.process;
       // Get current timestamp
       const currentTimeStamp = new Date().getTime();
-
       // Add 5 hours in milliseconds
       const increasedTimeStamp = currentTimeStamp + (5 * 60 * 60 * 1000);
-
       // Create a new Date object with the increased timestamp
       const newTimeStamp = new Date(increasedTimeStamp);
-
       // Assign the new timestamp to the processed detail
-      this.jobById.processedDetailList[index].timeStamp = newTimeStamp;
-
-      const filteredList = this.filterProcessDetailList(this.jobById.processedDetailList);
+      this.productRuleJob.processedDetailList[index].timeStamp = newTimeStamp;
+      const filteredList = this.filterProcessDetailList(this.productRuleJob.processedDetailList);
+      debugger
       if (filteredList.length > 0) {
-        this.jobById.processedDetailList = filteredList;
-        this.jobService.updateProductionJob(this.idFromQueryParam!, this.jobById).subscribe(
-          (res: ProductionJob) => {
+        this.productRuleJob.processedDetailList = filteredList;
+        this.jobService.updateProductRuleJob(this.productRuleJob.id!, this.productRuleJob).subscribe(
+          (res: ProductRuleJob) => {
             this.handleRoles();
             this.getProcessList(this.idFromQueryParam!);
-            if (this.overviewActive) {
-              this.getUpdatedTimeLine(this.idFromQueryParam!);
-            }
             this.successMsgService.showSuccess(`Job ${category.process!} processed successfully`);
           },
           (error: BackendErrorResponse) => {
@@ -218,11 +159,6 @@ export class JobRequestsComponent implements OnInit {
     return details.filter(detail => detail.amount !== null && detail.amount !== undefined);
   }
 
-  // private returnIfNotChecked(event: EventTarget) {
-  //   return (event as HTMLInputElement).checked;
-  // }
-
-
   private decodeToken(): string {
     const token = localStorage.getItem('token');
     const decodedToken = this.authGuardSerivce.getDecodedAccessToken(token!);
@@ -230,46 +166,21 @@ export class JobRequestsComponent implements OnInit {
   }
 
   private handleRoles() {
-
     const role = this.decodeToken();
-    if (role !== 'ADMIN' && this.jobById?.processedDetailList && this.jobById?.processedDetailList?.length > 0) {
+    debugger
+    if (role !== 'ADMIN' && this.productRuleJob?.processedDetailList && this.productRuleJob?.processedDetailList?.length > 0) {
       // this.disableCheck = true;
-      this.disabledTabs = this.jobById?.processedDetailList?.map(process => !!process.jobProcessed) || [];
+      this.disabledTabs = this.productRuleJob?.processedDetailList?.map(process => !!process.jobProcessed) || [];
     }
   }
-  private getUpdatedTimeLine(id: number) {
-    this.jobService.getProcessedJobDetailsByProductionId(id).subscribe((res: JobProcessedDetails[]) => {
-      this.processedJobList = res;
 
-      this.events = [];
-
-      this.processedJobList.forEach(job => {
-        const event: EventItem = {
-          status: job.processName,
-          date: job.timeStamp ? this.formatDate(job.timeStamp) : null,
-          icon: null,
-          color: null,
-          routerLink: null,
-          queryParams: null,
-          red: null
-        };
-        this.events.push(event);
-      });
-    }, (error: BackendErrorResponse) => {
-      this.errorHandleService.showError(error.error.error);
-    });
-  }
-  private formatDate(dateArray: number[] | Date): string | null {
-    if (!Array.isArray(dateArray) || dateArray.length < 5) {
-      return ''; // Invalid date format, return empty string
-    }
-
-    // Create a Date object from the array
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4]);
-
-    // Format the Date object using DatePipe
-
-    return this.datePipe.transform(date, 'EEEE, MMMM d, yyyy, h:mm a');
+  private getProductRuleJobByName(name: string | null | undefined): Observable<ProductRuleJob[] | null> {
+    return this.jobService.getProductRuleJobByName(name).pipe(
+      catchError((error: BackendErrorResponse) => {
+        this.errorHandleService.showError(error.error.error);
+        return of(null);
+      })
+    );
   }
 
 }

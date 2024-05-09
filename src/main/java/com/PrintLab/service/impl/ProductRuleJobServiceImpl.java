@@ -2,16 +2,20 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.Mapper.ProductRuleJobMapper;
 import com.PrintLab.dto.BusinessUnitProcessDto;
+import com.PrintLab.dto.JobProcessedDetailsDto;
 import com.PrintLab.dto.ProductRuleJobDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.BusinessUnitProcess;
+import com.PrintLab.model.JobProcessedDetails;
 import com.PrintLab.model.ProductRuleJob;
 import com.PrintLab.repository.BusinessUnitProcessRepository;
+import com.PrintLab.repository.JobProcessedDetailsRepository;
 import com.PrintLab.repository.ProductRuleJobRepository;
 import com.PrintLab.service.ProductRuleJobService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -20,22 +24,23 @@ import java.util.stream.Collectors;
 @Service
 public class ProductRuleJobServiceImpl implements ProductRuleJobService {
 
-    private final ProductRuleJobRepository productRuleJobRepository;
-    //    private final JobSizeRepository jobSizeRepository;
+//    private final JobSizeRepository jobSizeRepository;
 //    private final JobSizeMapper jobSizeMapper;
+//    private final EntityManager entityManager;
+    private final ProductRuleJobRepository productRuleJobRepository;
     private final ProductRuleJobMapper productRuleJobMapper;
-    //    private final EntityManager entityManager;
     private final BusinessUnitProcessRepository businessUnitProcessRepository;
-
+    private final JobProcessedDetailsRepository jobProcessedDetailsRepository;
     public ProductRuleJobServiceImpl
             (
                     ProductRuleJobRepository productRuleJobRepository,
                     ProductRuleJobMapper productRuleJobMapper,
-                    BusinessUnitProcessRepository businessUnitProcessRepository
-            ) {
+                    BusinessUnitProcessRepository businessUnitProcessRepository,
+                    JobProcessedDetailsRepository jobProcessedDetailsRepository) {
         this.productRuleJobRepository = productRuleJobRepository;
         this.productRuleJobMapper = productRuleJobMapper;
         this.businessUnitProcessRepository = businessUnitProcessRepository;
+        this.jobProcessedDetailsRepository = jobProcessedDetailsRepository;
     }
 
 
@@ -77,6 +82,7 @@ public class ProductRuleJobServiceImpl implements ProductRuleJobService {
             productRuleJob.setSizeCategory(productRuleJobDto.getSizeCategory());
             productRuleJob.setSize(productRuleJobDto.getSize());
             updateProcessList(productRuleJob, productRuleJobDto);
+            updateProcessedDetails(productRuleJob, productRuleJobDto);
             ProductRuleJob updatedProductRuleJob = productRuleJobRepository.save(productRuleJob);
             return productRuleJobMapper.toDto(updatedProductRuleJob);
         } else {
@@ -110,6 +116,66 @@ public class ProductRuleJobServiceImpl implements ProductRuleJobService {
         }
     }
 
+
+    private void updateProcessedDetails(ProductRuleJob productRuleJob, ProductRuleJobDto productRuleJobDto) {
+        if (productRuleJobDto.getProcessedDetailList() != null) {
+            List<JobProcessedDetails> updatedProcessedDetails = new ArrayList<>();
+            for (JobProcessedDetailsDto processedDetailsDto : productRuleJobDto.getProcessedDetailList()) {
+                JobProcessedDetails processedDetails;
+                if (processedDetailsDto.getId() != null) {
+                    // If the id is present, try to find the existing entity and update it
+                    processedDetails = jobProcessedDetailsRepository.findById(processedDetailsDto.getId()).orElse(null);
+                } else {
+                    // If the id is null, create a new entity
+                    processedDetails = new JobProcessedDetails();
+                    // Set the productionJobId reference
+                    processedDetails.setProductRuleJob(productRuleJob);
+                }
+                // Update the entity with data from the DTO
+                if (processedDetails != null) {
+                    // Check if each property in the DTO is not null before setting it in the entity
+                    processedDetails.setAmount(processedDetailsDto.getAmount());
+                    processedDetails.setVendor(processedDetailsDto.getVendor());
+                    processedDetails.setPayment(processedDetailsDto.getPayment());
+                    processedDetails.setStatus(processedDetailsDto.isStatus());
+                    processedDetails.setJobProcessed(processedDetailsDto.isJobProcessed());
+                    processedDetails.setProcessName(processedDetailsDto.getProcessName());
+                    processedDetails.setTimeStamp(processedDetailsDto.getTimeStamp());
+                    // Add the updated or new entity to the list
+                    updatedProcessedDetails.add(processedDetails);
+                }
+            }
+            // Set the list of updated or new entities to the production job
+            productRuleJob.setProcessedDetailList(updatedProcessedDetails);
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        Optional<ProductRuleJob> productRuleJobOptional = productRuleJobRepository.findById(id);
+        if (productRuleJobOptional.isPresent()) {
+            productRuleJobRepository.deleteById(id);
+        } else {
+            throw new RecordNotFoundException("ProductRuleJob not found with id: " + id);
+        }
+    }
+
+    @Override
+    public Boolean checkTitle(String productName) {
+        return (productRuleJobRepository.existsByProductName(productName));
+    }
+
+    @Override
+    public List<ProductRuleJobDto> searchByProductName(String name) {
+        List<ProductRuleJob> productRuleList = productRuleJobRepository.findProductRuleByProductName(name);
+        return productRuleList.stream()
+                .map(productRuleJobMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+}
 
 //    private void updateSizeList(ProductRuleJob productRuleJob, ProductRuleJobDto productRuleJobDto) {
 //        if (productRuleJobDto.getSizeList() != null) {
@@ -154,21 +220,3 @@ public class ProductRuleJobServiceImpl implements ProductRuleJobService {
 //            }
 //        }
 //    }
-
-
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        Optional<ProductRuleJob> productRuleJobOptional = productRuleJobRepository.findById(id);
-        if (productRuleJobOptional.isPresent()) {
-            productRuleJobRepository.deleteById(id);
-        } else {
-            throw new RecordNotFoundException("ProductRuleJob not found with id: " + id);
-        }
-    }
-
-    @Override
-    public Boolean checkTitle(String productName) {
-        return (productRuleJobRepository.existsByProductName(productName));
-    }
-}

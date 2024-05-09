@@ -34,7 +34,8 @@ export class ProductRuleJobComponent implements OnInit {
     type: undefined,
     id: undefined,
     category: '',
-    size: undefined
+    size: undefined,
+    processedDetailList: []
   };
   isExist: boolean = false;
   categoryList: BusinessUnit[] = [];
@@ -189,7 +190,7 @@ export class ProductRuleJobComponent implements OnInit {
           }
         });
         this.productRuleJob.productName = res.productName;
-        this.targetProducts = res.processList;
+        this.targetProducts = res.processList!;
 
         // if (this.sizeList && this.sizeList.length > 0) {
         //   const resSizeList = res.sizeList;

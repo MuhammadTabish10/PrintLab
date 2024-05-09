@@ -1,5 +1,6 @@
 <app-dashboard-head></app-dashboard-head>
 <div class="container-fluid p-4">
+  <p-toast></p-toast>
   <div class="row">
     <div class="col-6">
       <h3 *ngIf="idFromQueryParam" class="m-0">
@@ -24,7 +25,7 @@
     </div>
   </div>
 </div>
-<div class="card mt-3">
+<!-- <div class="card mt-3">
   <p-tabView>
     <p-tabPanel header="OVERVIEW">
       <app-order-over-view></app-order-over-view>
@@ -37,42 +38,116 @@
     <p-tabPanel header="PACKING & QA"> </p-tabPanel>
     <p-tabPanel header="DELIVERY"> </p-tabPanel>
   </p-tabView>
-  <!-- <div class="row">
-    <div class="col-2 px-0">
-      <button
-        class="btn btn-dark w-100 border-white rounded-0"
-        onclick="[<app-order-over-view></app-order-over-view>]"
+</div> -->
+<div class="card mt-3">
+  <ul class="nav nav-tabs" style="width: 100%">
+    <li class="nav-item" style="flex: 1">
+      <a
+        class="nav-link active bg-dark rounded-0 text-center text-warning"
+        data-bs-toggle="tab"
+        href="#overview"
+        >OVERVIEW</a
       >
-        OVERVIEW
-      </button>
-    </div>
-    <div class="col-2 px-0">
-      <button
-        class="btn btn-dark w-100 border-white rounded-0"
-        onclick="[<app-order-design></app-order-design>]"
+    </li>
+    <li class="nav-item" style="flex: 1">
+      <a
+        class="nav-link bg-dark rounded-0 text-center text-warning"
+        data-bs-toggle="tab"
+        href="#design"
+        >DESIGN</a
       >
-        DESIGN
-      </button>
+    </li>
+    <li class="nav-item" style="flex: 1">
+      <a
+        class="nav-link bg-dark rounded-0 text-center text-warning"
+        data-bs-toggle="tab"
+        href="#pre-production"
+        >PRE PRODUCTION</a
+      >
+    </li>
+    <li class="nav-item" style="flex: 1">
+      <a
+        class="nav-link bg-dark rounded-0 text-center text-warning"
+        data-bs-toggle="tab"
+        href="#production"
+        >PRODUCTION</a
+      >
+    </li>
+    <li class="nav-item" style="flex: 1">
+      <a
+        class="nav-link bg-dark rounded-0 text-center text-warning"
+        data-bs-toggle="tab"
+        href="#packing-qa"
+        >PACKING & QA</a
+      >
+    </li>
+    <li class="nav-item" style="flex: 1">
+      <a
+        class="nav-link bg-dark rounded-0 text-center text-warning"
+        data-bs-toggle="tab"
+        href="#delivery"
+        >DELIVERY</a
+      >
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="overview">
+      <app-order-over-view></app-order-over-view>
     </div>
-    <div class="col-2 px-0">
-      <button class="btn btn-dark w-100 border-white rounded-0">
-        PRE PRODUCTION
-      </button>
+    <div class="tab-pane fade" id="design">
+      <app-order-design></app-order-design>
     </div>
-    <div class="col-2 px-0">
-      <button class="btn btn-dark w-100 border-white rounded-0">
-        PRODUCTION
-      </button>
+    <div class="tab-pane fade" id="pre-production"></div>
+    <div class="tab-pane fade" id="production">
+      <ul class="nav nav-tabs" style="width: 100%">
+        <li class="nav-item" style="flex: 1">
+          <a
+            class="nav-link active bg-dark rounded-0 text-center text-warning"
+            data-bs-toggle="tab"
+            href="#overviewProduction"
+            (click)="getTimeLine()"
+            >OVERVIEW</a
+          >
+        </li>
+        <li class="nav-item" style="flex: 1">
+          <a
+            class="nav-link bg-dark rounded-0 text-center text-warning"
+            data-bs-toggle="tab"
+            href="#jobProocessDetails"
+            (click)="jobProcessedActive = true"
+            >Processes</a
+          >
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="overviewProduction">
+          <div *ngIf="overviewActive">
+            <div class="card p-5">
+              <p-timeline [value]="events">
+                <ng-template pTemplate="content" let-event>
+                  <small class="p-text-secondary">{{ event.date }}</small>
+                </ng-template>
+                <ng-template pTemplate="opposite" let-event>
+                  {{ event.status }}
+                </ng-template>
+              </p-timeline>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div
+          class="tab-pane fade show active"
+          id="jobProocessDetails"
+          *ngIf="jobProcessedActive"
+        >
+          <app-job-requests
+            [jobProcessedActive]="jobProcessedActive"
+          ></app-job-requests>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="packing-qa"></div>
+      <div class="tab-pane fade" id="delivery"></div>
     </div>
-    <div class="col-2 px-0">
-      <button class="btn btn-dark w-100 border-white rounded-0">
-        PACKING & QA
-      </button>
-    </div>
-    <div class="col-2 px-0">
-      <button class="btn btn-dark w-100 border-white rounded-0">
-        DELIVERY
-      </button>
-    </div>
-  </div> -->
+  </div>
 </div>

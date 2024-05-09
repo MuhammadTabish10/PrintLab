@@ -1,4 +1,5 @@
 import { BusinessUnitProcessDto } from "./BusinessUnit";
+import { JobProcessedDetails } from "./ProcessDetails";
 
 export interface ProductRuleJob {
   id: number | undefined | null;
@@ -6,6 +7,7 @@ export interface ProductRuleJob {
   sizeCategory: string | undefined | null;
   size: string | undefined | null;
   category: string | undefined | null;
-  processList: BusinessUnitProcessDto[];
+  processList?: BusinessUnitProcessDto[];
+  processedDetailList: JobProcessedDetails[];
   type: string | undefined | null;
 }

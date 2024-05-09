@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class BindingLabourController {
-
     @Autowired
     BindingLabourService bindingLabourService;
 
@@ -49,7 +48,6 @@ public class BindingLabourController {
         bindingLabourService.deleteById(id);
         return ResponseEntity.ok().build();
     }
-
     @PutMapping("/binding-labour/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<BindingLabourDto> updateLabour(@PathVariable Long id, @RequestBody BindingLabour bindingLabour) {

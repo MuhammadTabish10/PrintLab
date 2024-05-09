@@ -2,10 +2,11 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.Mapper.ProductionJobMapper;
 import com.PrintLab.dto.BusinessDto;
-import com.PrintLab.dto.JobProcessedDetailsDto;
 import com.PrintLab.dto.ProductionJobDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.model.*;
+import com.PrintLab.model.Business;
+import com.PrintLab.model.ProductionJob;
+import com.PrintLab.model.User;
 import com.PrintLab.repository.BusinessRepository;
 import com.PrintLab.repository.JobProcessedDetailsRepository;
 import com.PrintLab.repository.ProductionJobRepository;
@@ -84,7 +85,7 @@ public class ProductionJobServiceImpl implements ProductionJobService {
             updateProductionJobFields(productionJob, productionJobDto);
             updateBusinesses(productionJob, productionJobDto);
 //            updateProcessList(productionJob, productionJobDto);
-            updateProcessedDetails(productionJob, productionJobDto);
+//            updateProcessedDetails(productionJob, productionJobDto);
 //            updateProofs(productionJob, productionJobDto);
 
             ProductionJob updatedProductionJob = jobRepository.save(productionJob);
@@ -152,42 +153,42 @@ public class ProductionJobServiceImpl implements ProductionJobService {
 //        }
 //    }
 
-    private void updateProcessedDetails(ProductionJob productionJob, ProductionJobDto productionJobDto) {
-        if (productionJobDto.getProcessedDetailList() != null) {
-            List<JobProcessedDetails> updatedProcessedDetails = new ArrayList<>();
-            for (JobProcessedDetailsDto processedDetailsDto : productionJobDto.getProcessedDetailList()) {
-                JobProcessedDetails processedDetails;
-                if (processedDetailsDto.getId() != null) {
-                    // If the id is present, try to find the existing entity and update it
-                    processedDetails = jobProcessedDetailsRepository.findById(processedDetailsDto.getId()).orElse(null);
-                } else {
-                    // If the id is null, create a new entity
-                    processedDetails = new JobProcessedDetails();
-                    // Set the productionJobId reference
-                    processedDetails.setProductionJob(productionJob);
-                }
-                // Update the entity with data from the DTO
-                if (processedDetails != null) {
-                    // Check if each property in the DTO is not null before setting it in the entity
-                    processedDetails.setAmount(processedDetailsDto.getAmount());
-                    processedDetails.setVendor(processedDetailsDto.getVendor());
-                    processedDetails.setPayment(processedDetailsDto.getPayment());
-                    // Assuming these properties are boolean, you can directly set them
-                    processedDetails.setStatus(processedDetailsDto.isStatus());
-                    processedDetails.setJobProcessed(processedDetailsDto.isJobProcessed());
-                    processedDetails.setProcessName(processedDetailsDto.getProcessName());
-                    processedDetails.setTimeStamp(processedDetailsDto.getTimeStamp());
-                    // Add the updated or new entity to the list
-                    updatedProcessedDetails.add(processedDetails);
-                }
-            }
-            // Set the list of updated or new entities to the production job
-            productionJob.setProcessedDetailList(updatedProcessedDetails);
-        }
-    }
+//    private void updateProcessedDetails(ProductionJob productionJob, ProductionJobDto productionJobDto) {
+//        if (productionJobDto.getProcessedDetailList() != null) {
+//            List<JobProcessedDetails> updatedProcessedDetails = new ArrayList<>();
+//            for (JobProcessedDetailsDto processedDetailsDto : productionJobDto.getProcessedDetailList()) {
+//                JobProcessedDetails processedDetails;
+//                if (processedDetailsDto.getId() != null) {
+//                    // If the id is present, try to find the existing entity and update it
+//                    processedDetails = jobProcessedDetailsRepository.findById(processedDetailsDto.getId()).orElse(null);
+//                } else {
+//                    // If the id is null, create a new entity
+//                    processedDetails = new JobProcessedDetails();
+//                    // Set the productionJobId reference
+//                    processedDetails.setProductionJob(productionJob);
+//                }
+//                // Update the entity with data from the DTO
+//                if (processedDetails != null) {
+//                    // Check if each property in the DTO is not null before setting it in the entity
+//                    processedDetails.setAmount(processedDetailsDto.getAmount());
+//                    processedDetails.setVendor(processedDetailsDto.getVendor());
+//                    processedDetails.setPayment(processedDetailsDto.getPayment());
+//                    // Assuming these properties are boolean, you can directly set them
+//                    processedDetails.setStatus(processedDetailsDto.isStatus());
+//                    processedDetails.setJobProcessed(processedDetailsDto.isJobProcessed());
+//                    processedDetails.setProcessName(processedDetailsDto.getProcessName());
+//                    processedDetails.setTimeStamp(processedDetailsDto.getTimeStamp());
+//                    // Add the updated or new entity to the list
+//                    updatedProcessedDetails.add(processedDetails);
+//                }
+//            }
+//            // Set the list of updated or new entities to the production job
+//            productionJob.setProcessedDetailList(updatedProcessedDetails);
+//        }
+//    }
 
 
-//    private void updateProofs(ProductionJob productionJob, ProductionJobDto productionJobDto) {
+    //    private void updateProofs(ProductionJob productionJob, ProductionJobDto productionJobDto) {
 //        if (productionJobDto.getProof() != null) {
 //            List<Proof> updatedProofs = new ArrayList<>();
 //            for (ProofDto proofDto : productionJobDto.getProof()) {

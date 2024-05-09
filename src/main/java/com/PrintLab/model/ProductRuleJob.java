@@ -28,5 +28,7 @@ public class ProductRuleJob {
             inverseJoinColumns = @JoinColumn(name = "business_unit_process_id")
     )
     private List<BusinessUnitProcess> processList;
+    @OneToMany(mappedBy = "productRuleJob", cascade = CascadeType.ALL)
+    private List<JobProcessedDetails> processedDetailList;
     private String type;
 }

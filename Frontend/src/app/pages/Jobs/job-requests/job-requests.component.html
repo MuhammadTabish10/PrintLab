@@ -1,39 +1,22 @@
-
 <div class="body-position ps-4 ps-lg-0">
-  <app-dashboard-head></app-dashboard-head>
   <div class="main-container ms-lg-1 ms-3">
+    <p-toast></p-toast>
     <div class="text-center text-lg-start">
       <h4>Job process</h4>
       <p class="page-intro">Whole data about your business here</p>
     </div>
-    <div class="card">
-      <p-toast></p-toast>
-      <p-steps
-        [model]="items"
-        [readonly]="false"
-        [activeIndex]="activeIndex"
-        (activeIndexChange)="onActiveIndexChange($event)"
-      >
-      </p-steps>
-    </div>
     <div class="order-body">
-      <div *ngIf="overviewActive">
-        <div class="card p-5">
-          <p-timeline [value]="events">
-            <ng-template pTemplate="content" let-event>
-              <small class="p-text-secondary">{{ event.date }}</small>
-            </ng-template>
-            <ng-template pTemplate="opposite" let-event>
-              {{ event.status }}
-            </ng-template>
-          </p-timeline>
-        </div>
-      </div>
       <div *ngIf="jobProcessedActive">
-        <div class="container-fluid card p-3">
+        <div
+          class="container-fluid card p-3"
+          *ngIf="productRuleJob?.processList"
+        >
           <p-accordion [multiple]="true" [activeIndex]="openTabIndex">
             <p-accordionTab
-              *ngFor="let category of jobById?.processList; let i = index"
+              *ngFor="
+                let category of productRuleJob?.processList;
+                let i = index
+              "
               [selected]="i === openTabIndex"
               (onOpen)="openTabIndex = i"
             >
@@ -48,7 +31,7 @@
                   {{ category.process }}
                 </span>
               </ng-template>
-              <div class="card px-1" *ngIf="jobById">
+              <div class="card px-1" *ngIf="productRuleJob">
                 <div class="row my-3">
                   <div class="col-6">
                     <label class="d-block add-order-label m-0 fw-bolder"
@@ -63,7 +46,7 @@
                       [style]="{ width: '10%' }"
                       [name]="'amount[' + i + ']'"
                       [required]="true"
-                      [(ngModel)]="jobById.processedDetailList[i].amount"
+                      [(ngModel)]="productRuleJob.processedDetailList[i].amount"
                     ></p-inputNumber>
                   </div>
                 </div>
@@ -79,7 +62,7 @@
                       optionLabel="name"
                       optionValue="name"
                       [disabled]="disabledTabs[i]"
-                      [(ngModel)]="jobById.processedDetailList[i].vendor"
+                      [(ngModel)]="productRuleJob.processedDetailList[i].vendor"
                       [filter]="true"
                       filterBy="name"
                       [name]="'vendor[' + i + ']'"
@@ -96,7 +79,9 @@
                       styleClass="w-100"
                       [disabled]="disabledTabs[i]"
                       optionValue="name"
-                      [(ngModel)]="jobById.processedDetailList[i].payment"
+                      [(ngModel)]="
+                        productRuleJob.processedDetailList[i].payment
+                      "
                       optionLabel="name"
                       [filter]="true"
                       filterBy="name"
@@ -113,12 +98,12 @@
                       <input
                         class="form-check-input"
                         type="checkbox"
-                        id="flexSwitchCheckChecked"
+                        [id]="'flexSwitchCheckChecked[' + i + ']'"
                         [disabled]="disabledTabs[i]"
-                        name="impositionValueChecked"
+                        [name]="'impositionValueChecked[' + i + ']'"
                         (change)="submit(category, i, $event.target!)"
                         [(ngModel)]="
-                          jobById.processedDetailList[i].jobProcessed
+                          productRuleJob.processedDetailList[i].jobProcessed
                         "
                       />
                     </div>
@@ -128,7 +113,7 @@
               <!-- <div class="text-center mt-3">
               <button
                 class="btn btn-primary"
-                (click)="onNextTabClick(jobById?.processedDetailList)"
+                (click)="onNextTabClick(productRuleJob?.processedDetailList)"
               >
                 Next
               </button>

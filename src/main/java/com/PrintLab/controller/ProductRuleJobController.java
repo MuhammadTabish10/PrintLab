@@ -38,7 +38,7 @@ public class ProductRuleJobController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<ProductRuleJobDto> updateProductRuleJob(@PathVariable Long id, @RequestBody ProductRuleJobDto productRuleJobDto) {
         ProductRuleJobDto updatedProductRuleJobDto = productRuleJobService.update(id, productRuleJobDto);
         return ResponseEntity.ok(updatedProductRuleJobDto);
@@ -54,5 +54,12 @@ public class ProductRuleJobController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> checkTitle(@PathVariable String productName){
         return ResponseEntity.ok(productRuleJobService.checkTitle(productName));
+    }
+
+    @GetMapping("/get-by-name/{name}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
+    public ResponseEntity<List<ProductRuleJobDto>> getProductRuleJobByName(@PathVariable String name) {
+        List<ProductRuleJobDto> productRuleJobDtoList = productRuleJobService.searchByProductName(name);
+        return ResponseEntity.ok(productRuleJobDtoList);
     }
 }

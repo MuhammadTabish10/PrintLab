@@ -9,10 +9,11 @@ import java.util.stream.Collectors;
 @Component
 public class ProductRuleJobMapper {
     private final BusinessUnitProcessMapper businessUnitProcessMapper;
-//    private final JobSizeMapper jobSizeMapper;
+    private final JobProcessedDetailsMapper detailMapper;
 
-    public ProductRuleJobMapper(BusinessUnitProcessMapper businessUnitProcessMapper) {
+    public ProductRuleJobMapper(BusinessUnitProcessMapper businessUnitProcessMapper, JobProcessedDetailsMapper detailMapper) {
         this.businessUnitProcessMapper = businessUnitProcessMapper;
+        this.detailMapper = detailMapper;
     }
 
     public ProductRuleJobDto toDto(ProductRuleJob productRuleJob) {
@@ -24,6 +25,9 @@ public class ProductRuleJobMapper {
                 .size(productRuleJob.getSize())
                 .processList(productRuleJob.getProcessList().stream()
                         .map(businessUnitProcessMapper::toProcessDto)
+                        .collect(Collectors.toList()))
+                .processedDetailList(productRuleJob.getProcessedDetailList().stream()
+                        .map(detailMapper::toDto)
                         .collect(Collectors.toList()))
                 .type(productRuleJob.getType())
                 .build();
@@ -38,6 +42,9 @@ public class ProductRuleJobMapper {
                 .size(productRuleJobDto.getSize())
                 .processList(productRuleJobDto.getProcessList().stream()
                         .map(businessUnitProcessMapper::toProcessEntity)
+                        .collect(Collectors.toList()))
+                .processedDetailList(productRuleJobDto.getProcessedDetailList().stream()
+                        .map(detailMapper::toEntity)
                         .collect(Collectors.toList()))
                 .type(productRuleJobDto.getType())
                 .build();

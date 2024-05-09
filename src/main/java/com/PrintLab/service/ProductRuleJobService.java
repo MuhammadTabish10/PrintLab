@@ -16,4 +16,6 @@ public interface ProductRuleJobService {
     void delete(Long id);
 
     Boolean checkTitle(String productName);
+
+    List<ProductRuleJobDto> searchByProductName(String name);
 }

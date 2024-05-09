@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 public class ProductionJobMapper {
 
     //    private final BusinessUnitProcessMapper businessUnitProcessMapper;
+//    private final JobProcessedDetailsMapper detailMapper;
     private final BusinessAndBranchMapper businessAndBranchMapper;
-    private final JobProcessedDetailsMapper detailMapper;
     private final CustomerRepository customerRepository;
+
     public ProductionJobMapper(
             BusinessAndBranchMapper businessAndBranchMapper,
-            JobProcessedDetailsMapper detailMapper,
-            CustomerRepository customerRepository) {
+            CustomerRepository customerRepository
+    ) {
         this.businessAndBranchMapper = businessAndBranchMapper;
-        this.detailMapper = detailMapper;
         this.customerRepository = customerRepository;
     }
 
@@ -78,9 +78,9 @@ public class ProductionJobMapper {
 //                            return proofDto;
 //                        })
 //                        .collect(Collectors.toList()))
-                .processedDetailList(productionJob.getProcessedDetailList().stream()
-                        .map(detailMapper::toDto)
-                        .collect(Collectors.toList()))
+//                .processedDetailList(productionJob.getProcessedDetailList().stream()
+//                        .map(detailMapper::toDto)
+//                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -146,9 +146,9 @@ public class ProductionJobMapper {
                 .size(productionJobDto.getSize())
                 .sendTo(productionJobDto.getSendTo())
                 .status(productionJobDto.getStatus())
-                .processedDetailList(productionJobDto.getProcessedDetailList().stream()
-                        .map(detailMapper::toEntity)
-                        .collect(Collectors.toList()))
+//                .processedDetailList(productionJobDto.getProcessedDetailList().stream()
+//                        .map(detailMapper::toEntity)
+//                        .collect(Collectors.toList()))
                 .build();
     }
 

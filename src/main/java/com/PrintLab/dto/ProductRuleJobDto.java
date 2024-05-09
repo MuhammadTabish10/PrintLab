@@ -17,5 +17,6 @@ public class ProductRuleJobDto {
     private String size;
     private String category;
     private List<BusinessUnitProcessDto> processList;
+    private List<JobProcessedDetailsDto> processedDetailList;
     private String type;
 }

@@ -68,10 +68,10 @@ public class JobProcessDetailServiceImpl implements JobProcessedDetailsService {
     }
 
     @Override
-    public List<JobProcessedDetailsDto> getJobDetailByProductionId(Long id) {
-        List<JobProcessedDetails> jobDetailsList = jobProcessedDetailsRepository.findByProductionJobIdAndJobProcessedIsTrue(id);
+    public List<JobProcessedDetailsDto> getJobDetailByProductRuleJobId(Long id) {
+        List<JobProcessedDetails> jobDetailsList = jobProcessedDetailsRepository.findByProductRuleJobIdAndJobProcessedIsTrue(id);
         if (jobDetailsList.isEmpty()) {
-            throw new RecordNotFoundException(String.format("No job details found for production job ID %d", id));
+            throw new RecordNotFoundException(String.format("No job details found for product job ID %d", id));
         }
         return jobDetailsList.stream()
                 .map(jobProcessedDetailsMapper::toDto)

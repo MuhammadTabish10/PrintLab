@@ -37,13 +37,6 @@
           <th scope="col" class="col-3">Product Name</th>
           <th scope="col" class="col-2">Price</th>
           <th scope="col" class="col-2">Type</th>
-          <!-- <th scope="col" class="col-2">Assign Designer</th>
-          <th scope="col" class="col-2" *ngIf="buttonOption">
-            Assign Production
-          </th>
-          <th scope="col" class="col-2" *ngIf="buttonOption">
-            Assign Plate Setter
-          </th> -->
           <th scope="col" class="col-3" *ngIf="buttonOption">Action</th>
         </tr>
       </thead>
@@ -61,19 +54,10 @@
         >
           <th scope="row" class="tracking-id">{{ order?.id }}</th>
           <td>{{ order?.createdBy?.name }}</td>
-          <td>{{ order?.customer?.name ||  order?.client?.name }}</td>
+          <td>{{ order?.customer?.name || order?.client?.name }}</td>
           <td>{{ order?.product || order?.productName }}</td>
           <td>Rs. {{ order?.price || order?.amount }}</td>
           <td>{{ order?.type }}</td>
-          <!-- <td>
-            {{ order?.designer?.email }}
-          </td>
-          <td>
-            {{ order?.production?.email }}
-          </td>
-          <td>
-            {{ order?.plateSetter?.email }}
-          </td> -->
           <td class="order-table-btns-container" *ngIf="buttonOption">
             <div class="btn-group mr-2" role="group" aria-label="Second group">
               <button

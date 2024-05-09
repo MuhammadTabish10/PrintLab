@@ -61,8 +61,8 @@ public class ProductionJob {
     private Date deliveryDate;
     private Date expiryDate;
     private String sendTo;
-    @OneToMany(mappedBy = "productionJob", cascade = CascadeType.ALL)
-    private List<JobProcessedDetails> processedDetailList;
+//    @OneToMany(mappedBy = "productionJob", cascade = CascadeType.ALL)
+//    private List<JobProcessedDetails> processedDetailList;
     private String sizeCategory;
     private String size;
     private LocalDateTime timeStamp;

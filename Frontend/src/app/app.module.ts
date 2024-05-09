@@ -135,6 +135,8 @@ import { JoinWithCommaSeparatedPipe } from './CustomPipes/map-and-join.pipe';
 import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-rule-job.component';
 import { AddProductSizeComponent } from './pages/Product/add-product-size/add-product-size.component';
 import { DefineProductRuleManualComponent } from './pages/Product/define-product-rule-manual/define-product-rule-manual.component';
+import { JsonParsePipe } from './CustomPipes/JsonParsePipe.pipe';
+import { SizeFormatPipe } from './CustomPipes/size-format.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -225,6 +227,8 @@ import { DefineProductRuleManualComponent } from './pages/Product/define-product
     ProductRuleJobComponent,
     AddProductSizeComponent,
     DefineProductRuleManualComponent,
+    JsonParsePipe,
+    SizeFormatPipe,
   ],
   imports: [
     BrowserModule,

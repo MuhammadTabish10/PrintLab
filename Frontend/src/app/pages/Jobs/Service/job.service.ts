@@ -28,8 +28,8 @@ export class JobService {
   }
 
   // Get details of job by production iD
-  getProcessedJobDetailsByProductionId(id: number): Observable<JobProcessedDetails[]> {
-    const url = `${this.BASE_URL}/job-details/by-production/${id}`;
+  getProcessedJobDetailsByProductRuleJobId(id: number): Observable<JobProcessedDetails[]> {
+    const url = `${this.BASE_URL}/job-details/by-product/${id}`;
     return this.http.get<JobProcessedDetails[]>(url);
   }
 
@@ -63,6 +63,11 @@ export class JobService {
   getProductRuleJobById(id: number): Observable<ProductRuleJob> {
     const url = `${this.BASE_URL}/product-rule-jobs/${id}`;
     return this.http.get<ProductRuleJob>(url);
+  }
+  // Get product Rule job by Name
+  getProductRuleJobByName(name: string | null | undefined): Observable<ProductRuleJob[]> {
+    const url = `${this.BASE_URL}/product-rule-jobs/get-by-name/${name}`;
+    return this.http.get<ProductRuleJob[]>(url);
   }
 
   // Post production job
