@@ -565,6 +565,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   getProductNameList(id: number): void {
+    debugger
     this.productRuleJobList = [];
     this.job.productName = null;
     this.job.sizeCategory = null;
@@ -572,9 +573,15 @@ export class AddOrderComponent implements OnInit {
     this.businessUnitService.getBusinessUnitById(id).subscribe(
       (res: BusinessUnit) => {
         if (res.processList) {
+          const uniqueProductRuleJobList = new Map<string, ProductRuleJob>(); // Initialize a Map to store unique items keyed by productName
           res.processList?.forEach((element: BusinessUnitProcessDto) => {
-            this.productRuleJobList = element?.productRuleJobList ? element.productRuleJobList : [];
+            if (element.productRuleJobList) {
+              element.productRuleJobList.forEach((item) => {
+                uniqueProductRuleJobList.set(item.productName!, item as ProductRuleJob); // Use productName as key to ensure uniqueness
+              });
+            }
           });
+          this.productRuleJobList = Array.from(uniqueProductRuleJobList.values()); // Convert Map values to an array
         }
       },
       (err: BackendErrorResponse) => {
