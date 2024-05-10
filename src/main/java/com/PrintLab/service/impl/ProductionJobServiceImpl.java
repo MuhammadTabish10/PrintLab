@@ -216,7 +216,13 @@ public class ProductionJobServiceImpl implements ProductionJobService {
 
         ProductionJob productionJob = jobRepository.findById(orderId)
                 .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
+        setUser(user,role,productionJob);
+        setProductionJob(loggedInUser, productionJob);
+        jobRepository.save(productionJob);
+        return mapper.toProductionJobDto(productionJob);
+    }
 
+    private void setUser(User user, String role, ProductionJob productionJob){
         if (role.equalsIgnoreCase("ROLE_PRODUCTION")) {
             productionJob.setProduction(user);
             emailUtils.sendOrderAssignedEmail(user.getEmail(), productionJob);
@@ -227,12 +233,13 @@ public class ProductionJobServiceImpl implements ProductionJobService {
             productionJob.setPlateSetter(user);
             emailUtils.sendOrderAssignedEmail(user.getEmail(), productionJob);
         }
+    }
+
+    private void setProductionJob(User loggedInUser, ProductionJob productionJob){
         ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
         LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
         productionJob.setTimeStamp(timeStampUtc);
         productionJob.setStatus("Connected");
         productionJob.setAssignedBy(loggedInUser);
-        jobRepository.save(productionJob);
-        return mapper.toProductionJobDto(productionJob);
     }
 }
