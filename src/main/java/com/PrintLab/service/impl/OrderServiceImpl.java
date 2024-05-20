@@ -1,6 +1,5 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.Mapper.BusinessAndBranchMapper;
 import com.PrintLab.dto.BusinessDto;
 import com.PrintLab.dto.OrderDto;
 import com.PrintLab.exception.RecordNotFoundException;
@@ -28,12 +27,10 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerRepository customerRepository;
     private final BusinessRepository businessRepository;
     private final OrderRepository orderRepository;
-    private final BusinessAndBranchMapper businessAndBranchMapper;
     private final UserRepository userRepository;
     private final EmailUtils emailUtils;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, BusinessAndBranchMapper businessAndBranchMapper, UserRepository userRepository, EmailUtils emailUtils) {
-        this.businessAndBranchMapper = businessAndBranchMapper;
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, UserRepository userRepository, EmailUtils emailUtils) {
         this.customerRepository = customerRepository;
         this.businessRepository = businessRepository;
         this.orderRepository = orderRepository;
