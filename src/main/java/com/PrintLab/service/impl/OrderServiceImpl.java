@@ -21,7 +21,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -45,34 +44,32 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto save(OrderDto orderDto,Long loggedInUserId) {
-
+    public OrderDto save(OrderDto orderDto, Long loggedInUserId) {
         User loggedInUser = userRepository.findById(loggedInUserId)
                 .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
-        if (orderDto.getType().equalsIgnoreCase("auto")) {
-            if (orderDto.getSideOptionValue() == null) {
-                orderDto.setSideOptionValue("SINGLE_SIDED");
+        if (orderDto.getSideOptionValue() == null) {
+            orderDto.setSideOptionValue("SINGLE_SIDED");
+        }
+        if (!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+            if (orderDto.getJobColorsFront() == null) {
+                orderDto.setJobColorsFront(1L);
             }
-            if (!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
-                if (orderDto.getJobColorsFront() == null) {
-                    orderDto.setJobColorsFront(1L);
-                }
-                if (orderDto.getJobColorsBack() == null) {
-                    orderDto.setJobColorsBack(1L);
-                }
-            } else if (orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
-                if (orderDto.getJobColorsFront() == null) {
-                    orderDto.setJobColorsFront(1L);
-                }
-            } else if (orderDto.getSideOptionValue().equals("SINGLE_SIDED")) {
-                if (orderDto.getJobColorsFront() == null) {
-                    orderDto.setJobColorsFront(1L);
-                }
+            if (orderDto.getJobColorsBack() == null) {
+                orderDto.setJobColorsBack(1L);
             }
-            if (orderDto.getQuantity() == null) {
-                orderDto.setQuantity(1000.0);
+        } else if (orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+            if (orderDto.getJobColorsFront() == null) {
+                orderDto.setJobColorsFront(1L);
+            }
+        } else if (orderDto.getSideOptionValue().equals("SINGLE_SIDED")) {
+            if (orderDto.getJobColorsFront() == null) {
+                orderDto.setJobColorsFront(1L);
             }
         }
+        if (orderDto.getQuantity() == null) {
+            orderDto.setQuantity(1000.0);
+        }
+
         orderDto.setStatus("New / Unassigned");
         orderDto.setCreatedBy(loggedInUser);
         ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
@@ -110,8 +107,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto findByIdAndType(Long id,String type) {
-        Optional<Order> optionalOrder = orderRepository.findByIdAndType(id,type);
+    public OrderDto findByIdAndType(Long id, String type) {
+        Optional<Order> optionalOrder = orderRepository.findByIdAndType(id, type);
 
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
@@ -156,7 +153,7 @@ public class OrderServiceImpl implements OrderService {
                 existingOrder.setUrl(orderDto.getUrl());
                 existingOrder.setCustomer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found at id => " + orderDto.getCustomer().getId())));
-            }else {
+            } else {
                 updateProductionJobFields(existingOrder, orderDto);
                 updateBusinesses(existingOrder, orderDto);
             }
@@ -328,34 +325,6 @@ public class OrderServiceImpl implements OrderService {
                 .type(order.getType())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
-                .businessCategory(order.getBusinessCategory())
-                .productionUser(order.getProductionUser())
-                .businesses(order.getBusinesses().stream()
-                        .map(businessAndBranchMapper::toBusinessDto)
-                        .collect(Collectors.toList()))
-                .jobId(order.getJobId())
-                .productCategory(order.getProductCategory())
-                .description(order.getDescription())
-                .qty(order.getQty())
-                .rate(order.getRate())
-                .amount(order.getAmount())
-                .linkedInvoice(order.getLinkedInvoice())
-                .privateNotes(order.getPrivateNotes())
-                .orderTrackingNotes(order.getOrderTrackingNotes())
-                .productionNotes(order.getProductionNotes())
-                .ctpFileName(order.getCtpFileName())
-                .locationOfFile(order.getLocationOfFile())
-                .sentOn(order.getSentOn())
-                .designPackageFile(order.getDesignPackageFile())
-                .locationOfDesignFile(order.getLocationOfDesignFile())
-                .jobStartDate(order.getJobStartDate())
-                .productionStartDate(order.getProductionStartDate())
-                .productionEndDate(order.getProductionEndDate())
-                .packingAndQADate(order.getPackingAndQADate())
-                .deliveryDate(order.getDeliveryDate())
-                .expiryDate(order.getExpiryDate())
-                .sendTo(order.getSendTo())
-                .production(order.getProduction())
                 .build();
     }
 
@@ -386,34 +355,6 @@ public class OrderServiceImpl implements OrderService {
                 .type(orderDto.getType())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
-                .businessCategory(orderDto.getBusinessCategory())
-                .productionUser(orderDto.getProductionUser())
-                .businesses(orderDto.getBusinesses().stream()
-                        .map(businessAndBranchMapper::toBusinessEntity)
-                        .collect(Collectors.toList()))
-                .jobId(orderDto.getJobId())
-                .productCategory(orderDto.getProductCategory())
-                .description(orderDto.getDescription())
-                .qty(orderDto.getQty())
-                .rate(orderDto.getRate())
-                .amount(orderDto.getAmount())
-                .linkedInvoice(orderDto.getLinkedInvoice())
-                .privateNotes(orderDto.getPrivateNotes())
-                .orderTrackingNotes(orderDto.getOrderTrackingNotes())
-                .productionNotes(orderDto.getProductionNotes())
-                .ctpFileName(orderDto.getCtpFileName())
-                .locationOfFile(orderDto.getLocationOfFile())
-                .sentOn(orderDto.getSentOn())
-                .designPackageFile(orderDto.getDesignPackageFile())
-                .locationOfDesignFile(orderDto.getLocationOfDesignFile())
-                .jobStartDate(orderDto.getJobStartDate())
-                .productionStartDate(orderDto.getProductionStartDate())
-                .productionEndDate(orderDto.getProductionEndDate())
-                .packingAndQADate(orderDto.getPackingAndQADate())
-                .deliveryDate(orderDto.getDeliveryDate())
-                .expiryDate(orderDto.getExpiryDate())
-                .sendTo(orderDto.getSendTo())
-                .production(orderDto.getProduction())
                 .build();
     }
 }
