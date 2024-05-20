@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -43,4 +45,30 @@ public class OrderDto
     private User createdBy;
     private User assignedBy;
     private Customer customer;
+    private String businessCategory;
+    private List<BusinessDto> businesses;
+    private String productionUser;
+    private Long titleId;
+    private String jobId;
+    private String productCategory;
+    private String description;
+    private Integer qty;
+    private Integer rate;
+    private Integer amount;
+    private String linkedInvoice;
+    private String privateNotes;
+    private String orderTrackingNotes;
+    private String productionNotes;
+    private String ctpFileName;
+    private String locationOfFile;
+    private Date sentOn;
+    private String designPackageFile;
+    private String locationOfDesignFile;
+    private Date jobStartDate;
+    private Date productionStartDate;
+    private Date productionEndDate;
+    private Date packingAndQADate;
+    private Date deliveryDate;
+    private Date expiryDate;
+    private String sendTo;
 }

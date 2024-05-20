@@ -41,11 +41,12 @@ export class ViewOrderComponent implements OnInit {
 
   getOrderById() {
 
-    const serviceToCall = this.orderType === 'auto'
-      ? this.orderService.getOrderById(this.idFromQueryParam)
-      : this.jobService.getProductionJobById(this.idFromQueryParam);
+    // const serviceToCall = this.orderType === 'auto'
+    //   ? this.orderService.getOrderById(this.idFromQueryParam)
+    //   : this.jobService.getProductionJobById(this.idFromQueryParam);
 
-    serviceToCall
+    // serviceToCall
+    this.orderService.getOrderByIdAndType(this.idFromQueryParam, this.orderType!)
       .subscribe((res: any | ProductionJob) => {
         this.order = res
         debugger

@@ -16,16 +16,16 @@ export class JobService {
   constructor(private http: HttpClient) { }
 
   // Get all production jobs
-  getAllProductionJobs(): Observable<ProductionJob[]> {
-    const url = `${this.BASE_URL}/production-jobs`;
-    return this.http.get<ProductionJob[]>(url);
-  }
+  // getAllProductionJobs(): Observable<ProductionJob[]> {
+  //   const url = `${this.BASE_URL}/production-jobs`;
+  //   return this.http.get<ProductionJob[]>(url);
+  // }
 
   // Get production job by ID
-  getProductionJobById(id: number): Observable<ProductionJob> {
-    const url = `${this.BASE_URL}/production-jobs/${id}`;
-    return this.http.get<ProductionJob>(url);
-  }
+  // getProductionJobById(id: number): Observable<ProductionJob> {
+  //   const url = `${this.BASE_URL}/production-jobs/${id}`;
+  //   return this.http.get<ProductionJob>(url);
+  // }
 
   // Get details of job by production iD
   getProcessedJobDetailsByProductRuleJobId(id: number): Observable<JobProcessedDetails[]> {
@@ -34,25 +34,25 @@ export class JobService {
   }
 
   // Post production job
-  postProductionJob(job: ProductionJob, id: number): Observable<ProductionJob> {
-    const url = `${this.BASE_URL}/production-jobs`;
-    const params = {
-      loggedInUserId: id
-    }
-    return this.http.post<ProductionJob>(url, job, { params });
-  }
+  // postProductionJob(job: ProductionJob, id: number): Observable<ProductionJob> {
+  //   const url = `${this.BASE_URL}/production-jobs`;
+  //   const params = {
+  //     loggedInUserId: id
+  //   }
+  //   return this.http.post<ProductionJob>(url, job, { params });
+  // }
 
   // Update production job
-  updateProductionJob(id: number, job: ProductionJob): Observable<ProductionJob> {
-    const url = `${this.BASE_URL}/production-jobs/${id}`;
-    return this.http.put<ProductionJob>(url, job);
-  }
+  // updateProductionJob(id: number, job: ProductionJob): Observable<ProductionJob> {
+  //   const url = `${this.BASE_URL}/production-jobs/${id}`;
+  //   return this.http.put<ProductionJob>(url, job);
+  // }
 
   // Delete production job
-  deleteProductionJob(id: number): Observable<void> {
-    const url = `${this.BASE_URL}/production-jobs/${id}`;
-    return this.http.delete<void>(url);
-  }
+  // deleteProductionJob(id: number): Observable<void> {
+  //   const url = `${this.BASE_URL}/production-jobs/${id}`;
+  //   return this.http.delete<void>(url);
+  // }
   // Get all product Rule jobs
   getAllProductRuleJob(): Observable<ProductRuleJob[]> {
     const url = `${this.BASE_URL}/product-rule-jobs`;
@@ -70,7 +70,7 @@ export class JobService {
     return this.http.get<ProductRuleJob[]>(url);
   }
 
-  // Post production job
+  // Post productRule job
   postProductRuleJob(job: ProductRuleJob): Observable<ProductRuleJob> {
     const url = `${this.BASE_URL}/product-rule-jobs`;
     return this.http.post<ProductRuleJob>(url, job);
@@ -94,14 +94,14 @@ export class JobService {
   }
 
   // Assign Job
-  saveAssignedUser(user: number, role: string, orderId: number, logedInUser: number): Observable<ProductionJob> {
-    const url = `${this.BASE_URL}/production-jobs/assignUser`;
-    const params = {
-      orderId: orderId,
-      userId: user,
-      role: role,
-      loggedInUser: logedInUser
-    };
-    return this.http.post<ProductionJob>(url, null, { params });
-  }
+  // saveAssignedUser(user: number, role: string, orderId: number, logedInUser: number): Observable<ProductionJob> {
+  //   const url = `${this.BASE_URL}/production-jobs/assignUser`;
+  //   const params = {
+  //     orderId: orderId,
+  //     userId: user,
+  //     role: role,
+  //     loggedInUser: logedInUser
+  //   };
+  //   return this.http.post<ProductionJob>(url, null, { params });
+  // }
 }

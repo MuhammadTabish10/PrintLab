@@ -32,30 +32,35 @@ export class OrderOverViewComponent implements OnInit {
       this.idFromQueryParam = +params['id'];
       this.orderType = params['orderType'];
 
-      if (this.idFromQueryParam && this.orderType === 'auto') {
-        this.getOrderById(this.idFromQueryParam);
-      } else {
-        this.getJobbyId(this.idFromQueryParam);
-      }
+      // if (this.idFromQueryParam && this.orderType === 'auto') {
+      this.getOrderById(this.idFromQueryParam);
+      // } else {
+      //   this.getJobbyId(this.idFromQueryParam);
+      // }
     });
   }
 
-  getJobbyId(id: number) {
-    this.jobService.getProductionJobById(id).subscribe(
-      (res) => {
-        this.orderById = res;
-        this.getCategoryById(+this.orderById.productCategory);
-      }, (error: BackendErrorResponse) => {
-        this.errorService.showError(error.error.error);
-      });
-  }
+  // getJobbyId(id: number) {
+  //   this.jobService.getProductionJobById(id).subscribe(
+  //     (res) => {
+  //       this.orderById = res;
+  //       this.getCategoryById(+this.orderById.productCategory);
+  //     }, (error: BackendErrorResponse) => {
+  //       this.errorService.showError(error.error.error);
+  //     });
+  // }
 
   getOrderById(id: number): void {
-    this.orderService.getOrderById(id).subscribe(
-      (data) => {
-        this.orderById = data;
-        this.orderById.size = JSON.parse(this.orderById.size);
-        this.orderById.size = this.orderById.size.inch;
+    this.orderService.getOrderByIdAndType(id, this.orderType!).subscribe(
+      (data: any) => {
+        if (data.type === "auto") {
+          this.orderById = data;
+          this.orderById.size = JSON.parse(this.orderById.size);
+          this.orderById.size = this.orderById.size.inch;
+        } else {
+          this.orderById = data;
+          this.getCategoryById(+this.orderById.productCategory);
+        }
       },
       (error) => {
         console.error('Error fetching order:', error);

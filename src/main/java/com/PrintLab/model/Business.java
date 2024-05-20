@@ -25,5 +25,5 @@ public class Business {
     private Customer customer;
     @ManyToMany(mappedBy = "businesses")
     @JsonIgnore
-    private List<ProductionJob> productionJobs;
+    private List<Order> order;
 }

@@ -200,7 +200,7 @@ export class OrderProcessComponent implements OnInit {
   }
 
   getOrderById() {
-    this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
+    this.orderService.getOrderByIdAndType(this.idFromQueryParam,"").subscribe(res => {
       this.order = res
       this.size = JSON.parse(this.order.size);
       this.getProductRuleById(this.order.productRule);

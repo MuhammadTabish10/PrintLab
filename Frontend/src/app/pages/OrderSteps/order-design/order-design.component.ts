@@ -49,14 +49,14 @@ export class OrderDesignComponent implements OnInit {
   }
 
   getOrderById(id: number): void {
-    const serviceToCall = this.orderType === 'auto'
-      ? this.orderService.getOrderById(id)
-      : this.jobService.getProductionJobById(id);
-    serviceToCall
+    // const serviceToCall = this.orderType === 'auto'
+    //   ? this.orderService.getOrderById(id)
+    //   : this.jobService.getProductionJobById(id);
+    // serviceToCall
+    this.orderService.getOrderByIdAndType(id, this.orderType!)
       .subscribe(
         (data) => {
           this.orderById = data;
-
           this.orderById.timeStamp = new Date(this.orderById.timeStamp[0], this.orderById.timeStamp[1] - 1, this.orderById.timeStamp[2], this.orderById.timeStamp[3], this.orderById.timeStamp[4]);
           this.orderById.timeStamp = this.datePipe.transform(this.orderById.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
         },
@@ -90,10 +90,11 @@ export class OrderDesignComponent implements OnInit {
   }
   saveOrder(user?: number, role?: string, orderId?: number | undefined | null, logedInUser?: number | null | undefined): void {
     if (user && role && orderId && logedInUser) {
-      const serviceToCall = this.orderType === 'auto'
-        ? this.orderService.saveAssignedUser(user, role, orderId, logedInUser)
-        : this.jobService.saveAssignedUser(user, role, orderId, logedInUser);
-        serviceToCall
+      // const serviceToCall = this.orderType === 'auto'
+      //   ? this.orderService.saveAssignedUser(user, role, orderId, logedInUser)
+      //   : this.jobService.saveAssignedUser(user, role, orderId, logedInUser);
+      //   serviceToCall
+      this.orderService.saveAssignedUser(user, role, orderId, logedInUser)
         .subscribe(
           (res: any) => {
             if (this.idFromQueryParam) {

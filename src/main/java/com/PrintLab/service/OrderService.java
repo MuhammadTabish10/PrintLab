@@ -12,7 +12,7 @@ public interface OrderService {
 
     List<OrderDto> searchByProduct(String product);
 
-    OrderDto findById(Long id);
+    OrderDto findByIdAndType(Long id,String type);
 
     String deleteById(Long id);
 

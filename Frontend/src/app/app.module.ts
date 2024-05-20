@@ -114,14 +114,14 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EditorModule } from 'primeng/editor';
 import { InputMaskModule } from 'primeng/inputmask';
 import { ViewCustomerComponent } from './pages/view-customer/view-customer.component';
-import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component';
+// import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component';
 import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.component';
 import { PickListModule } from 'primeng/picklist';
 import { ImageViewerComponent } from './pages/Jobs/image-viewer/image-viewer.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { StepsModule } from 'primeng/steps';
-import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
+// import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
 import { MenubarModule } from 'primeng/menubar';
 import { SidebarModule } from 'primeng/sidebar';
 import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.component';
@@ -215,10 +215,10 @@ import { SizeFormatPipe } from './CustomPipes/size-format.pipe';
     ViewUpingComponent,
     BusinessUnitAndProcessesComponent,
     ViewCustomerComponent,
-    CreateJobComponent,
+    // CreateJobComponent,
     JobRequestsComponent,
     ImageViewerComponent,
-    GetAllJobsComponent,
+    // GetAllJobsComponent,
     OrderStepsComponent,
     OrderOverViewComponent,
     OrderDesignComponent,

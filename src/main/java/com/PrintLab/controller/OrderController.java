@@ -32,9 +32,16 @@ public class OrderController {
     }
 
     @GetMapping("/order/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT')")
-    public ResponseEntity<OrderDto> getOrderById(@PathVariable Long id) {
-        OrderDto orderDto = orderService.findById(id);
+    @PreAuthorize("hasAnyRole(" +
+            "'ROLE_ADMIN', 'ROLE_PRODUCTION', " +
+            "'ROLE_DESIGNER', 'ROLE_PLATE_SETTER'," +
+            "'ROLE_CUSTOMER_SUPPORT'" +
+            ")")
+    public ResponseEntity<OrderDto> getOrderById(
+            @PathVariable Long id,
+            @RequestParam String type
+    ) {
+        OrderDto orderDto = orderService.findByIdAndType(id,type);
         return ResponseEntity.ok(orderDto);
     }
 

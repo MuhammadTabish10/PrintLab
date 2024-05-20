@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -42,4 +43,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("UPDATE Order o SET o.paperMarketProcess = :isDone WHERE o.id = :id")
     void setPaperMarketProcessProcessMarkAsDone(@Param("id") Long id, @Param("isDone") Boolean isDone);
 
+    Optional<Order> findByIdAndType(Long id, String type);
 }

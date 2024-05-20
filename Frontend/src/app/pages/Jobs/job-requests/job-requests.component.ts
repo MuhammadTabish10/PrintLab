@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
+import { OrdersService } from 'src/app/services/orders.service';
 
 @Component({
   selector: 'app-job-requests',
@@ -30,7 +31,7 @@ export class JobRequestsComponent implements OnInit {
 
   disabledTabs: boolean[] = [];
 
-  jobById: ProductionJob | undefined | null;
+  jobById: any;
 
   isCurrentTabFilled: boolean = false;
 
@@ -55,6 +56,7 @@ export class JobRequestsComponent implements OnInit {
     private datePipe: DatePipe,
     private route: ActivatedRoute,
     private jobService: JobService,
+    private orderService: OrdersService,
     private authGuardSerivce: AuthguardService,
     private errorHandleService: ErrorHandleService,
     private successMsgService: SuccessMessageService,
@@ -63,7 +65,7 @@ export class JobRequestsComponent implements OnInit {
   onActiveIndexChange(event: number) {
     this.activeIndex = event;
   }
-  
+
   @Input() jobProcessedActive: boolean = false;
   paymentActive: boolean = false;
   confirmationActive: boolean = false;
@@ -80,9 +82,9 @@ export class JobRequestsComponent implements OnInit {
 
   private async getProcessList(id: number) {
     try {
-      const productionJob: ProductionJob | undefined = await this.jobService.getProductionJobById(id).toPromise();
+      const productionJob = await this.orderService.getOrderByIdAndType(id, "manual").toPromise();
       this.jobById = productionJob;
-      const productRuleJobs: ProductRuleJob[] | null | undefined = await this.getProductRuleJobByName(this.jobById?.productName).toPromise();
+      const productRuleJobs: ProductRuleJob[] | null | undefined = await this.getProductRuleJobByName(this.jobById?.product).toPromise();
       this.productRuleJob = productRuleJobs ? productRuleJobs[0] : undefined;
       if (productRuleJobs && productRuleJobs.length && productRuleJobs.length > 0) {
         if (productRuleJobs[0].processList && productRuleJobs[0].processedDetailList.length === 0) {

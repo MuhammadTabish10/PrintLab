@@ -53,9 +53,10 @@ export class OrdersService {
     return this.http.get(url);
   }
 
-  getOrderById(id: any) {
-    let url = `${this._url}/order/${id}`
-    return this.http.get(url)
+  getOrderByIdAndType(id: number, type: string) {
+    let url = `${this._url}/order/${id}`;
+    const params = new HttpParams().set('type', type);
+    return this.http.get(url, { params });
   }
 
   deleteOrder(id: any) {

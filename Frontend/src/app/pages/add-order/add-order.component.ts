@@ -18,6 +18,7 @@ import { SuccessMessageService } from 'src/app/services/success-message.service'
 import { BusinessUnitService } from '../business-unit-and-processes/Service/business-unit.service';
 import { BusinessUnit, BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
 import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
+import { Order } from 'src/app/Model/Order';
 
 @Component({
   selector: 'app-add-order',
@@ -85,15 +86,15 @@ export class AddOrderComponent implements OnInit {
   selectedBusinesses: Business[] = [];
   selectedBranches: BusinessBranch[] = [];
   orderType: string | undefined | null;
-  job: ProductionJob = {
+  job: Order = {
     id: undefined,
-    client: undefined,
+    customer: undefined,
     businessCategory: undefined,
     productionUser: undefined,
     processList: [],
     jobId: undefined,
     productCategory: undefined,
-    productName: undefined,
+    product: undefined,
     description: undefined,
     qty: undefined,
     rate: undefined,
@@ -102,7 +103,6 @@ export class AddOrderComponent implements OnInit {
     privateNotes: undefined,
     orderTrackingNotes: undefined,
     productionNotes: undefined,
-    proof: undefined,
     ctpFileName: undefined,
     locationOfFile: undefined,
     sentOn: undefined,
@@ -116,9 +116,32 @@ export class AddOrderComponent implements OnInit {
     sendTo: undefined,
     expiryDate: undefined,
     processedDetailList: [],
-    sizeCategory: undefined,
+    category: undefined,
     size: undefined,
-    type: undefined
+    type: undefined,
+    paper: undefined,
+    gsm: undefined,
+    quantity: undefined,
+    price: undefined,
+    jobColorsFront: undefined,
+    sideOptionValue: undefined,
+    impositionValue: undefined,
+    jobColorsBack: undefined,
+    providedDesign: undefined,
+    url: undefined,
+    productRule: undefined,
+    status: undefined,
+    ctpProcess: undefined,
+    pressMachineProcess: undefined,
+    paperMarketProcess: undefined,
+    designer: undefined,
+    production: undefined,
+    plateSetter: undefined,
+    isRejected: false,
+    timeStamp: undefined,
+    createdBy: undefined,
+    assignedBy: undefined,
+    titleId: undefined
   }
   categoryList: BusinessUnit[] = [];
   // productAndServiceList: ProductService[] = [];
@@ -148,7 +171,7 @@ export class AddOrderComponent implements OnInit {
       } else {
         this.buttonName = 'Update'
         if (this.orderType === 'auto') {
-          this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
+          this.orderService.getOrderByIdAndType(this.idFromQueryParam,this.orderType).subscribe(res => {
             this.orderToUpdate = res
             this.selectedCustomer = this.orderToUpdate.customer
             this.totalAmount = this.orderToUpdate.price
@@ -567,8 +590,8 @@ export class AddOrderComponent implements OnInit {
   getProductNameList(id: number): void {
     debugger
     this.productRuleJobList = [];
-    this.job.productName = null;
-    this.job.sizeCategory = null;
+    this.job.product = null;
+    this.job.category = null;
     this.job.size = null;
     this.businessUnitService.getBusinessUnitById(id).subscribe(
       (res: BusinessUnit) => {
@@ -595,7 +618,7 @@ export class AddOrderComponent implements OnInit {
   }
 
 
-  calculateAmount(value: ProductionJob) {
+  calculateAmount(value: Order) {
     if (value.qty && value.rate) {
       value.amount = value.qty * value.rate;
       this.totalAmount = value.amount;
@@ -608,10 +631,10 @@ export class AddOrderComponent implements OnInit {
     this.transformProductCategory();
     this.assignJobProperties();
     const serviceToCall = this.job.id
-      ? this.productionJobService.updateProductionJob(this.idFromQueryParam!, this.job)
-      : this.productionJobService.postProductionJob(this.job, this.currentUserDetail.userId);
+      ? this.orderService.updateOrder(this.idFromQueryParam!, this.job)
+      : this.orderService.addOrder(this.job, this.currentUserDetail.userId);
     serviceToCall.subscribe(
-      (res: ProductionJob) => this.handleSuccessForJob(res),
+      (res: any) => this.handleSuccessForJob(res),
       (error: BackendErrorResponse) => {
         this.showError(error.error.error);
       }
@@ -619,18 +642,18 @@ export class AddOrderComponent implements OnInit {
   }
 
   transformProductCategory(): void {
-    if (this.job.productCategory.label) {
+    if (this.job?.productCategory.label) {
       this.job.productCategory = this.job.productCategory.label;
     }
   }
 
   assignJobProperties(): void {
     this.job.type = this.orderType;
-    this.job.client = this.findCustomerById(this.selectedCustomer);
+    this.job.customer = this.findCustomerById(this.selectedCustomer);
     this.selectedBusinesses.forEach(business => {
       business.businessBranchList = this.selectedBranches;
     });
-    this.job.businessName = this.selectedBusinesses;
+    this.job.businesses = this.selectedBusinesses;
   }
 
   handleSuccessForJob(res: ProductionJob): void {

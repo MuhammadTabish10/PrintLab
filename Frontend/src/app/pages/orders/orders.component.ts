@@ -93,65 +93,62 @@ export class OrdersComponent implements OnInit {
     })
   }
 
-  // getOrders() {
-  //   const orderAuto$ = this.orderService.getOrders();
-  //   const jobManual$ = this.jobService.getAllProductRuleJob();
-
-  //   forkJoin([orderAuto$, jobManual$]).subscribe(
-  //     ([autoData, manualData]: [any, ProductionJob[]]) => {
-  //       if (this.role !== "ROLE_ADMIN") {
-  //         this.ordersArray = res.filter(
-  //           (order: any) => {
-  //             return this.doesCreatedByMatch(order);
-  //           });
-  //         this.buttonOption = false;
-  //       } else {
-  //         this.ordersArray = res;
-  //       }
-  //       this.tableData = this.ordersArray.length === 0;
-  //     },
-  //     error => {
-  //       this.showError(error);
-  //       this.visible = true;
-  //     }
-  //   );
-  // }
-
-
-  private getOrders(): void {
-
-    const orderAuto$ = this.orderService.getOrders();
-    const jobManual$ = this.jobService.getAllProductionJobs();
-
-    forkJoin([orderAuto$, jobManual$]).subscribe(
-      ([autoData, manualData]: [any, ProductionJob[]]) => {
-        // Process autoData
+  getOrders() {
+    this.orderService.getOrders().subscribe(
+      (res: any) => {
         if (this.role !== "ROLE_ADMIN") {
-          this.ordersArray = autoData.filter((order: any) => this.doesCreatedByMatch(order));
+          this.ordersArray = res.filter(
+            (order: any) => {
+              return this.doesCreatedByMatch(order);
+            });
           this.buttonOption = false;
         } else {
-          this.ordersArray = autoData;
+          this.ordersArray = res;
         }
-
-        // Process manualData
-        manualData = manualData.map((item: ProductionJob) => ({
-          ...item,
-          title: item.productName
-        }));
-
-        // Merge data
-        const mergedData = [...autoData, ...manualData];
-
-        // Assign mergedData to your tableData
-        this.ordersArray = mergedData;
-        console.log(this.ordersArray);
+        this.tableData = this.ordersArray.length === 0;
       },
-      (error: any) => {
+      error => {
         this.showError(error);
         this.visible = true;
       }
     );
   }
+
+
+  // private getOrders(): void {
+
+  //   const orderAuto$ = this.orderService.getOrders();
+  //   const jobManual$ = this.jobService.getAllProductionJobs();
+
+  //   forkJoin([orderAuto$, jobManual$]).subscribe(
+  //     ([autoData, manualData]: [any, ProductionJob[]]) => {
+  //       // Process autoData
+  //       if (this.role !== "ROLE_ADMIN") {
+  //         this.ordersArray = autoData.filter((order: any) => this.doesCreatedByMatch(order));
+  //         this.buttonOption = false;
+  //       } else {
+  //         this.ordersArray = autoData;
+  //       }
+
+  //       // Process manualData
+  //       manualData = manualData.map((item: ProductionJob) => ({
+  //         ...item,
+  //         title: item.productName
+  //       }));
+
+  //       // Merge data
+  //       const mergedData = [...autoData, ...manualData];
+
+  //       // Assign mergedData to your tableData
+  //       this.ordersArray = mergedData;
+  //       console.log(this.ordersArray);
+  //     },
+  //     (error: any) => {
+  //       this.showError(error);
+  //       this.visible = true;
+  //     }
+  //   );
+  // }
 
 
   getUsersByRole(role: any) {
@@ -171,11 +168,17 @@ export class OrdersComponent implements OnInit {
   }
 
   deleteOrder(id: number, type: string) {
-    if (type === 'auto') {
-      this.deleteAutoOrder(id);
-    } else {
-      this.deleteManualOrder(id);
-    }
+    // if (type === 'auto') {
+    //   this.deleteAutoOrder(id);
+    // } else {
+    //   this.deleteManualOrder(id);
+    // }
+    this.orderService.deleteOrder(id).subscribe(() => {
+      this.getOrders()
+    }, error => {
+      this.showError(error);
+      this.visible = true
+    })
   }
 
   deleteAutoOrder(id: number) {
@@ -187,14 +190,14 @@ export class OrdersComponent implements OnInit {
     })
   }
 
-  deleteManualOrder(id: number) {
-    this.jobService.deleteProductionJob(id).subscribe(() => {
-      this.getOrders()
-    }, error => {
-      this.showError(error);
-      this.visible = true
-    })
-  }
+  // deleteManualOrder(id: number) {
+  //   this.jobService.deleteProductionJob(id).subscribe(() => {
+  //     this.getOrders()
+  //   }, error => {
+  //     this.showError(error);
+  //     this.visible = true
+  //   })
+  // }
 
   statusSorting(find: any) {
     this.orderService.statusSorting(find).subscribe(res => {

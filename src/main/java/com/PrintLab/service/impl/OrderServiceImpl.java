@@ -1,11 +1,11 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.Mapper.BusinessAndBranchMapper;
+import com.PrintLab.dto.BusinessDto;
 import com.PrintLab.dto.OrderDto;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.model.CustomUserDetail;
-import com.PrintLab.model.Order;
-import com.PrintLab.model.Role;
-import com.PrintLab.model.User;
+import com.PrintLab.model.*;
+import com.PrintLab.repository.BusinessRepository;
 import com.PrintLab.repository.CustomerRepository;
 import com.PrintLab.repository.OrderRepository;
 import com.PrintLab.repository.UserRepository;
@@ -21,18 +21,23 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
+    private final BusinessRepository businessRepository;
+    private final OrderRepository orderRepository;
+    private final BusinessAndBranchMapper businessAndBranchMapper;
     private final UserRepository userRepository;
     private final EmailUtils emailUtils;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, UserRepository userRepository, EmailUtils emailUtils) {
-        this.orderRepository = orderRepository;
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, BusinessAndBranchMapper businessAndBranchMapper, UserRepository userRepository, EmailUtils emailUtils) {
+        this.businessAndBranchMapper = businessAndBranchMapper;
         this.customerRepository = customerRepository;
+        this.businessRepository = businessRepository;
+        this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.emailUtils = emailUtils;
     }
@@ -41,31 +46,33 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDto save(OrderDto orderDto,Long loggedInUserId) {
+
         User loggedInUser = userRepository.findById(loggedInUserId)
                 .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
-        if (orderDto.getSideOptionValue() == null) {
-            orderDto.setSideOptionValue("SINGLE_SIDED");
+        if (orderDto.getType().equalsIgnoreCase("auto")) {
+            if (orderDto.getSideOptionValue() == null) {
+                orderDto.setSideOptionValue("SINGLE_SIDED");
+            }
+            if (!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+                if (orderDto.getJobColorsFront() == null) {
+                    orderDto.setJobColorsFront(1L);
+                }
+                if (orderDto.getJobColorsBack() == null) {
+                    orderDto.setJobColorsBack(1L);
+                }
+            } else if (orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+                if (orderDto.getJobColorsFront() == null) {
+                    orderDto.setJobColorsFront(1L);
+                }
+            } else if (orderDto.getSideOptionValue().equals("SINGLE_SIDED")) {
+                if (orderDto.getJobColorsFront() == null) {
+                    orderDto.setJobColorsFront(1L);
+                }
+            }
+            if (orderDto.getQuantity() == null) {
+                orderDto.setQuantity(1000.0);
+            }
         }
-        if (!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
-            if (orderDto.getJobColorsFront() == null) {
-                orderDto.setJobColorsFront(1L);
-            }
-            if (orderDto.getJobColorsBack() == null) {
-                orderDto.setJobColorsBack(1L);
-            }
-        } else if (orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
-            if (orderDto.getJobColorsFront() == null) {
-                orderDto.setJobColorsFront(1L);
-            }
-        } else if (orderDto.getSideOptionValue().equals("SINGLE_SIDED")) {
-            if (orderDto.getJobColorsFront() == null) {
-                orderDto.setJobColorsFront(1L);
-            }
-        }
-        if (orderDto.getQuantity() == null) {
-            orderDto.setQuantity(1000.0);
-        }
-
         orderDto.setStatus("New / Unassigned");
         orderDto.setCreatedBy(loggedInUser);
         ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
@@ -103,8 +110,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto findById(Long id) {
-        Optional<Order> optionalOrder = orderRepository.findById(id);
+    public OrderDto findByIdAndType(Long id,String type) {
+        Optional<Order> optionalOrder = orderRepository.findByIdAndType(id,type);
 
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
@@ -120,7 +127,6 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> optionalOrder = orderRepository.findById(id);
 
         if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
             orderRepository.deleteById(id);
         } else {
             throw new RecordNotFoundException(String.format("Order not found for id => %d", id));
@@ -134,22 +140,26 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> optionalOrder = orderRepository.findById(id);
         if (optionalOrder.isPresent()) {
             Order existingOrder = optionalOrder.get();
-            existingOrder.setProduct(orderDto.getProduct());
-            existingOrder.setPaper(orderDto.getPaper());
-            existingOrder.setSize(orderDto.getSize());
-            existingOrder.setCategory(orderDto.getCategory());
-            existingOrder.setGsm(orderDto.getGsm());
-            existingOrder.setQuantity(orderDto.getQuantity());
-            existingOrder.setPrice(orderDto.getPrice());
-            existingOrder.setJobColorsFront(orderDto.getJobColorsFront());
-            existingOrder.setSideOptionValue(orderDto.getSideOptionValue());
-            existingOrder.setImpositionValue(orderDto.getImpositionValue());
-            existingOrder.setJobColorsBack(orderDto.getJobColorsBack());
-            existingOrder.setProvidedDesign(orderDto.getProvidedDesign());
-            existingOrder.setUrl(orderDto.getUrl());
-            existingOrder.setCustomer(customerRepository.findById(orderDto.getCustomer().getId())
-                    .orElseThrow(() -> new RecordNotFoundException("Customer not found at id => " + orderDto.getCustomer().getId())));
-
+            if (existingOrder.getType().equalsIgnoreCase("auto")) {
+                existingOrder.setProduct(orderDto.getProduct());
+                existingOrder.setPaper(orderDto.getPaper());
+                existingOrder.setSize(orderDto.getSize());
+                existingOrder.setCategory(orderDto.getCategory());
+                existingOrder.setGsm(orderDto.getGsm());
+                existingOrder.setQuantity(orderDto.getQuantity());
+                existingOrder.setPrice(orderDto.getPrice());
+                existingOrder.setJobColorsFront(orderDto.getJobColorsFront());
+                existingOrder.setSideOptionValue(orderDto.getSideOptionValue());
+                existingOrder.setImpositionValue(orderDto.getImpositionValue());
+                existingOrder.setJobColorsBack(orderDto.getJobColorsBack());
+                existingOrder.setProvidedDesign(orderDto.getProvidedDesign());
+                existingOrder.setUrl(orderDto.getUrl());
+                existingOrder.setCustomer(customerRepository.findById(orderDto.getCustomer().getId())
+                        .orElseThrow(() -> new RecordNotFoundException("Customer not found at id => " + orderDto.getCustomer().getId())));
+            }else {
+                updateProductionJobFields(existingOrder, orderDto);
+                updateBusinesses(existingOrder, orderDto);
+            }
             Order updatedOrder = orderRepository.save(existingOrder);
             return toDto(updatedOrder);
         } else {
@@ -241,6 +251,52 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    private void updateProductionJobFields(Order productionJob, OrderDto productionJobDto) {
+        productionJob.setCustomer(productionJobDto.getCustomer());
+        productionJob.setBusinessCategory(productionJobDto.getBusinessCategory());
+        productionJob.setProductionUser(productionJobDto.getProductionUser());
+        productionJob.setProductCategory(productionJobDto.getProductCategory());
+        productionJob.setProduct(productionJobDto.getProduct());
+        productionJob.setDescription(productionJobDto.getDescription());
+        productionJob.setQty(productionJobDto.getQty());
+        productionJob.setRate(productionJobDto.getRate());
+        productionJob.setAmount(productionJobDto.getAmount());
+        productionJob.setLinkedInvoice(productionJobDto.getLinkedInvoice());
+        productionJob.setPrivateNotes(productionJobDto.getPrivateNotes());
+        productionJob.setOrderTrackingNotes(productionJobDto.getOrderTrackingNotes());
+        productionJob.setProductionNotes(productionJobDto.getProductionNotes());
+        productionJob.setCtpFileName(productionJobDto.getCtpFileName());
+        productionJob.setLocationOfFile(productionJobDto.getLocationOfFile());
+        productionJob.setSentOn(productionJobDto.getSentOn());
+        productionJob.setDesignPackageFile(productionJobDto.getDesignPackageFile());
+        productionJob.setLocationOfDesignFile(productionJobDto.getLocationOfDesignFile());
+        productionJob.setJobStartDate(productionJobDto.getJobStartDate());
+        productionJob.setProductionStartDate(productionJobDto.getProductionStartDate());
+        productionJob.setProductionEndDate(productionJobDto.getProductionEndDate());
+        productionJob.setPackingAndQADate(productionJobDto.getPackingAndQADate());
+        productionJob.setDeliveryDate(productionJobDto.getDeliveryDate());
+        productionJob.setExpiryDate(productionJobDto.getExpiryDate());
+        productionJob.setSendTo(productionJobDto.getSendTo());
+        productionJob.setCategory(productionJobDto.getCategory());
+        productionJob.setSize(productionJobDto.getSize());
+        productionJob.setTimeStamp(productionJobDto.getTimeStamp());
+        productionJob.setStatus(productionJobDto.getStatus());
+        productionJob.setCreatedBy(productionJobDto.getCreatedBy());
+    }
+
+    private void updateBusinesses(Order productionJob, OrderDto productionJobDto) {
+        if (productionJobDto.getBusinesses() != null) {
+            List<Business> updatedBusinesses = new ArrayList<>();
+            for (BusinessDto businessDto : productionJobDto.getBusinesses()) {
+                Business business = businessRepository.findById(businessDto.getId()).orElse(null);
+                if (business != null) {
+                    updatedBusinesses.add(business);
+                }
+            }
+            productionJob.setBusinesses(updatedBusinesses);
+        }
+    }
+
 
     public OrderDto toDto(Order order) {
         return OrderDto.builder()
@@ -272,6 +328,34 @@ public class OrderServiceImpl implements OrderService {
                 .type(order.getType())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
+                .businessCategory(order.getBusinessCategory())
+                .productionUser(order.getProductionUser())
+                .businesses(order.getBusinesses().stream()
+                        .map(businessAndBranchMapper::toBusinessDto)
+                        .collect(Collectors.toList()))
+                .jobId(order.getJobId())
+                .productCategory(order.getProductCategory())
+                .description(order.getDescription())
+                .qty(order.getQty())
+                .rate(order.getRate())
+                .amount(order.getAmount())
+                .linkedInvoice(order.getLinkedInvoice())
+                .privateNotes(order.getPrivateNotes())
+                .orderTrackingNotes(order.getOrderTrackingNotes())
+                .productionNotes(order.getProductionNotes())
+                .ctpFileName(order.getCtpFileName())
+                .locationOfFile(order.getLocationOfFile())
+                .sentOn(order.getSentOn())
+                .designPackageFile(order.getDesignPackageFile())
+                .locationOfDesignFile(order.getLocationOfDesignFile())
+                .jobStartDate(order.getJobStartDate())
+                .productionStartDate(order.getProductionStartDate())
+                .productionEndDate(order.getProductionEndDate())
+                .packingAndQADate(order.getPackingAndQADate())
+                .deliveryDate(order.getDeliveryDate())
+                .expiryDate(order.getExpiryDate())
+                .sendTo(order.getSendTo())
+                .production(order.getProduction())
                 .build();
     }
 
@@ -302,6 +386,34 @@ public class OrderServiceImpl implements OrderService {
                 .type(orderDto.getType())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
+                .businessCategory(orderDto.getBusinessCategory())
+                .productionUser(orderDto.getProductionUser())
+                .businesses(orderDto.getBusinesses().stream()
+                        .map(businessAndBranchMapper::toBusinessEntity)
+                        .collect(Collectors.toList()))
+                .jobId(orderDto.getJobId())
+                .productCategory(orderDto.getProductCategory())
+                .description(orderDto.getDescription())
+                .qty(orderDto.getQty())
+                .rate(orderDto.getRate())
+                .amount(orderDto.getAmount())
+                .linkedInvoice(orderDto.getLinkedInvoice())
+                .privateNotes(orderDto.getPrivateNotes())
+                .orderTrackingNotes(orderDto.getOrderTrackingNotes())
+                .productionNotes(orderDto.getProductionNotes())
+                .ctpFileName(orderDto.getCtpFileName())
+                .locationOfFile(orderDto.getLocationOfFile())
+                .sentOn(orderDto.getSentOn())
+                .designPackageFile(orderDto.getDesignPackageFile())
+                .locationOfDesignFile(orderDto.getLocationOfDesignFile())
+                .jobStartDate(orderDto.getJobStartDate())
+                .productionStartDate(orderDto.getProductionStartDate())
+                .productionEndDate(orderDto.getProductionEndDate())
+                .packingAndQADate(orderDto.getPackingAndQADate())
+                .deliveryDate(orderDto.getDeliveryDate())
+                .expiryDate(orderDto.getExpiryDate())
+                .sendTo(orderDto.getSendTo())
+                .production(orderDto.getProduction())
                 .build();
     }
 }

@@ -14,6 +14,7 @@ import { SuccessMessageService } from 'src/app/services/success-message.service'
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
+import { Order } from 'src/app/Model/Order';
 
 @Component({
   selector: 'app-order-steps',
@@ -26,7 +27,7 @@ export class OrderStepsComponent implements OnInit {
   private destroy$ = new Subject<void>();
   orderById: any = {};
   events: EventItem[] = [];
-  jobById: ProductionJob | undefined | null;
+  jobById: Order | undefined | null;
   idFromQueryParam: number | undefined | null;
   orderIdWithPrefix: string | undefined | null;
   orderType: string | undefined | null;
@@ -63,15 +64,32 @@ export class OrderStepsComponent implements OnInit {
     });
   }
 
+  // getOrderById(id: number): void {
+  //   const serviceToCall = this.orderType === 'auto'
+  //     ? this.orderService.getOrderById(id)
+  //     : this.jobService.getProductionJobById(id);
+  //   serviceToCall
+  //     .subscribe(
+  //       (data) => {
+  //         this.orderById = data;
+  //         this.getProductRuleJobByName(this.orderById.product);
+  //         this.orderById.timeStamp = new Date(this.orderById.timeStamp[0], this.orderById.timeStamp[1] - 1, this.orderById.timeStamp[2], this.orderById.timeStamp[3], this.orderById.timeStamp[4]);
+  //         this.orderById.timeStamp = this.datePipe.transform(this.orderById.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
+  //         console.log(this.orderById.status);
+  //       },
+  //       (error) => {
+  //         console.error('Error fetching order:', error);
+  //       }
+  //     );
+  // }
+
   getOrderById(id: number): void {
-    const serviceToCall = this.orderType === 'auto'
-      ? this.orderService.getOrderById(id)
-      : this.jobService.getProductionJobById(id);
-    serviceToCall
+    this.orderService.getOrderByIdAndType(id, this.orderType!)
       .subscribe(
         (data) => {
           this.orderById = data;
-          this.getProductRuleJobByName(this.orderById.productName);
+          debugger
+          this.getProductRuleJobByName(this.orderById.product);
           this.orderById.timeStamp = new Date(this.orderById.timeStamp[0], this.orderById.timeStamp[1] - 1, this.orderById.timeStamp[2], this.orderById.timeStamp[3], this.orderById.timeStamp[4]);
           this.orderById.timeStamp = this.datePipe.transform(this.orderById.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
           console.log(this.orderById.status);
@@ -152,8 +170,8 @@ export class OrderStepsComponent implements OnInit {
       const filteredList = this.filterProcessDetailList(this.jobById.processedDetailList);
       if (filteredList.length > 0) {
         this.jobById.processedDetailList = filteredList;
-        this.jobService.updateProductionJob(this.idFromQueryParam!, this.jobById).subscribe(
-          (res: ProductionJob) => {
+        this.orderService.updateOrder(this.idFromQueryParam!, this.jobById).subscribe(
+          (res: any) => {
             this.handleRoles();
             this.getProcessList(this.idFromQueryParam!);
             if (this.overviewActive) {
@@ -196,10 +214,10 @@ export class OrderStepsComponent implements OnInit {
 
   private async getProcessList(id: number) {
     return new Promise<void>((resolve, reject) => {
-      this.jobService.getProductionJobById(id).subscribe(
-        (res: ProductionJob) => {
+      this.orderService.getOrderByIdAndType(id, "manual").subscribe(
+        (res: any) => {
           this.jobById = res;
-          if (this.jobById.processList && this.jobById.processedDetailList.length === 0) {
+          if (this.jobById?.processList && this.jobById.processedDetailList.length === 0) {
             this.jobById.processedDetailList = [];
             for (let i = 0; i < this.jobById.processList.length; i++) {
               this.jobById.processedDetailList?.push({
@@ -214,7 +232,7 @@ export class OrderStepsComponent implements OnInit {
               });
             }
           } else if (
-            this.jobById.processList &&
+            this.jobById?.processList &&
             this.jobById.processedDetailList.length !== this.jobById.processList.length
           ) {
             const remainingLength = this.jobById.processList.length - this.jobById.processedDetailList.length;

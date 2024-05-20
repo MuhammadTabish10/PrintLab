@@ -184,7 +184,7 @@
                     <label class="add-order-label m-0">Product Name</label>
                     <p-dropdown
                       styleClass="w-100"
-                      [(ngModel)]="job.productName"
+                      [(ngModel)]="job.product"
                       [options]="productRuleJobList"
                       (ngModelChange)="getDetails($event)"
                       optionLabel="productName"
@@ -196,7 +196,7 @@
                     <label class="add-order-label m-0">Size Category</label>
                     <p-dropdown
                       styleClass="w-100"
-                      [(ngModel)]="job.sizeCategory"
+                      [(ngModel)]="job.category"
                       [options]="categoryArray"
                       (ngModelChange)="getSize($event)"
                       optionLabel="name"
@@ -423,9 +423,9 @@
             </div>
             <div class="py-1">
               <h6 class="fw-normal" *ngIf="job.productCategory?.label">
-                Product: {{ job.productName }}
+                Product: {{ job.product }}
               </h6>
-              <h6 class="fw-normal description" *ngIf="job.productName">
+              <h6 class="fw-normal description" *ngIf="job.product">
                 Description: {{ job.description }}
               </h6>
               <h6 class="fw-normal" *ngIf="job.description">
