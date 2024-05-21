@@ -19,4 +19,6 @@ public interface BusinessUnitCategoryService {
     Boolean getCategoryByName(String name);
 
     List<BusinessUnitCategoryDto> getAllByName(String name);
+
+    BusinessUnitCategoryDto updateProcessReorder(Long categoryId, BusinessUnitCategoryDto category);
 }

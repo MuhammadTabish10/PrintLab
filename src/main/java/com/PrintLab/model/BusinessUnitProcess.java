@@ -17,7 +17,7 @@ public class BusinessUnitProcess {
     private Long id;
 
     private String process;
-    private boolean billable;
+    private String type;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
