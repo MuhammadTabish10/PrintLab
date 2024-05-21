@@ -80,34 +80,40 @@ export class ProductRuleComponent implements OnInit {
       })
     }
   }
-  getProductRule() {
-    const productRuleAuto$ = this.productRuleService.getProductRuleTable();
-    const productRuleManual$ = this.jobService.getAllProductRuleJob();
+  // getProductRule() {
+  //   const productRuleAuto$ = this.productRuleService.getProductRuleTable();
+  //   const productRuleManual$ = this.jobService.getAllProductRuleJob();
 
-    forkJoin([productRuleAuto$, productRuleManual$]).subscribe(
-      ([autoData, manualData]: [any, ProductRuleJob[]]) => {
+  //   forkJoin([productRuleAuto$, productRuleManual$]).subscribe(
+  //     ([autoData, manualData]: [any, ProductRuleJob[]]) => {
 
-        autoData.forEach((item: any) => {
-          item.category = JSON.parse(item.category);
-        });
+  //       autoData.forEach((item: any) => {
+  //         item.category = JSON.parse(item.category);
+  //       });
 
-        manualData = manualData.map((item: ProductRuleJob) => {
-          return {
-            ...item,
-            title: item.productName
-          };
-        });
-        const mergedData = [...autoData, ...manualData];
-        // Assign mergedData to your tableData
-        this.tableData = mergedData;
-        console.log(this.tableData);
-      },
-      (error: any) => {
-        this.showError(error);
-      }
-    );
+  //       manualData = manualData.map((item: ProductRuleJob) => {
+  //         return {
+  //           ...item,
+  //           title: item.productName
+  //         };
+  //       });
+  //       const mergedData = [...autoData, ...manualData];
+  //       // Assign mergedData to your tableData
+  //       this.tableData = mergedData;
+  //       console.log(this.tableData);
+  //     },
+  //     (error: any) => {
+  //       this.showError(error);
+  //     }
+  //   );
 
-  }
+  // }
+private getProductRule(): void{
+  this.productRuleService.getProductRuleTable().subscribe((res:any)=>{
+    this.tableData = res;
+  },(error: BackendErrorResponse)=>{});
+}
+
   viewProduct(id: any) {
     this.router.navigate(['/viewProductRule'], { queryParams: { id: id } });
   }

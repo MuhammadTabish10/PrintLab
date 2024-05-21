@@ -15,17 +15,20 @@ import java.util.List;
 @Data
 public class ProductRuleDto {
     private Long id;
-    private String title;
+    private String productName;
     private String printSide;
     private String jobColorFront;
     private String jobColorBack;
-    private String category;
+    private String sizeCategory;
     private String size;
     private String quantity;
     private Boolean impositionValue;
-    private Boolean status;
+    private String status;
     private PressMachine pressMachine;
     private Ctp ctp;
+    private String businessCategory;
+    private List<BusinessUnitProcessDto> processList;
+    private List<JobProcessedDetailsDto> processedDetailList;
     private List<ProductRulePaperStockDto> productRulePaperStockList;
     private String type;
 }

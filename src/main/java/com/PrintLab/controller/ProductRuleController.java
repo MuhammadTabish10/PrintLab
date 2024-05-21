@@ -25,8 +25,8 @@ public class ProductRuleController {
 
     @GetMapping("/product-rule/check-title/{title}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Boolean> checkTitle(@PathVariable String title){
-        return ResponseEntity.ok(productRuleService.checkTitle(title));
+    public ResponseEntity<Boolean> checkTitle(@PathVariable String productName){
+        return ResponseEntity.ok(productRuleService.checkTitle(productName));
     }
 
     @GetMapping("/product-rule")
@@ -45,8 +45,8 @@ public class ProductRuleController {
 
     @GetMapping("/product-rule/names/{name}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ProductRuleDto>> getProductRuleByName(@PathVariable String name) {
-        List<ProductRuleDto> productRuleDtoList = productRuleService.searchByTitle(name);
+    public ResponseEntity<List<ProductRuleDto>> getProductRuleByName(@PathVariable String productName) {
+        List<ProductRuleDto> productRuleDtoList = productRuleService.searchByName(productName);
         return ResponseEntity.ok(productRuleDtoList);
     }
 

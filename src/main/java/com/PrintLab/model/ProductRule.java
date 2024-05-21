@@ -18,15 +18,16 @@ public class ProductRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
+    private String productName;
     private String printSide;
     private String jobColorFront;
     private String jobColorBack;
-    private String category;
+    private String sizeCategory;
+    @Column(columnDefinition = "TEXT")
     private String size;
     private String quantity;
     private Boolean impositionValue;
-    private Boolean status;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "press_machine_id")
@@ -38,5 +39,16 @@ public class ProductRule {
 
     @OneToMany(mappedBy = "productRule", cascade = CascadeType.ALL)
     private List<ProductRulePaperStock> productRulePaperStockList;
+
+    private String businessCategory;
+    @ManyToMany
+    @JoinTable(
+            name = "rule_process",
+            joinColumns = @JoinColumn(name = "product_rule_id"),
+            inverseJoinColumns = @JoinColumn(name = "business_unit_process_id")
+    )
+    private List<BusinessUnitProcess> processList;
+    @OneToMany(mappedBy = "productRule", cascade = CascadeType.ALL)
+    private List<JobProcessedDetails> processedDetailList;
     private String type;
 }

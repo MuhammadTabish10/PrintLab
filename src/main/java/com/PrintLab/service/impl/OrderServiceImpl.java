@@ -326,7 +326,7 @@ public class OrderServiceImpl implements OrderService {
 
         Long totalElements = countTotalElements(criteriaBuilder, searchCriteria);
 
-        List<LeadDto> dtoList = mapToDto(resultList);
+        List<OrderDto> dtoList = mapToDto(resultList);
 
         PaginationResponse paginationResponse = new PaginationResponse();
         paginationResponse.setContent(dtoList);
