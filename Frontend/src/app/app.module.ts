@@ -137,6 +137,7 @@ import { AddProductSizeComponent } from './pages/Product/add-product-size/add-pr
 import { DefineProductRuleManualComponent } from './pages/Product/define-product-rule-manual/define-product-rule-manual.component';
 import { JsonParsePipe } from './CustomPipes/JsonParsePipe.pipe';
 import { SizeFormatPipe } from './CustomPipes/size-format.pipe';
+
 @NgModule({
   declarations: [
     AppComponent,

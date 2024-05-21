@@ -24,6 +24,7 @@ import { Order } from 'src/app/Model/Order';
   selector: 'app-add-order',
   templateUrl: './add-order.component.html',
   styleUrls: ['./add-order.component.css']
+
 })
 export class AddOrderComponent implements OnInit {
 
@@ -155,9 +156,44 @@ export class AddOrderComponent implements OnInit {
     private productionJobService: JobService,
     private authService: AuthguardService,
     private cdr: ChangeDetectorRef,
-  ) { }
+  ) { 
+  //   this.selectedUnit = '';
+  // this.unitOptions = [
+  //   { id: 'inch', name: 'Inch' },
+  //   { id: 'mm', name: 'Millimeter' }
+  // ];
+ }
+ job12: any = {
+  L1: null,
+  L2: null,
+  size: null
+};
+selectedUnit12: string = '';
+unitOptions12: any[] = [
+  { id: 'inch', name: 'Inch' },
+  { id: 'mm', name: 'Millimeter' }
+];
+
+onSubmit() {
+  const l1 = this.job12.L1;
+  const l2 = this.job12.L2;
+  const unit = this.selectedUnit12;
+
+  if (l1 !== null && l2 !== null && unit) {
+    this.job.size = this.concatenateValues(l1, l2, unit);
+    this.visible2 = false; 
+  } else {
+    console.error('L1, L2, or unit is not properly defined.');
+  }
+}
+
+concatenateValues(l1: number, l2: number, unit: string): string {
+  return `${l1} x ${l2} ${unit}`;
+
+}
 
   ngOnInit(): void {
+
     this.getCustomerList();
     this.getUserDetails();
     this.route.queryParams.subscribe(param => {
@@ -662,7 +698,10 @@ export class AddOrderComponent implements OnInit {
       this.router.navigate(['/order-overview'], { queryParams: { id: res.id, orderType: 'manual' } });
     }, 2000);
   }
-
+  visible2: boolean = false;
+  showDialog() {
+      this.visible2 = true;
+  }
   getDetails(name: string): void {
     const productRule = this.productRuleJobList.find(item => item.productName === name);
     if (productRule) {
@@ -670,6 +709,7 @@ export class AddOrderComponent implements OnInit {
       this.size = JSON.parse(productRule.size!)
       this.sizeValue = this.size;
       console.log(this.sizeValue);
+      
     }
   }
   getSize(name: string): void {

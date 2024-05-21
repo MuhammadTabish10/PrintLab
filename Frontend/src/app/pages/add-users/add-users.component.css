@@ -6,3 +6,41 @@
 .bg-green {
   background-color: green;
 }
+
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0 15px;
+  }
+
+  .order-body {
+    padding: 10px;
+  }
+
+  .order-form-input {
+    font-size: 14px;
+  }
+
+  .btn-search-panel {
+    width: 100%;
+  }
+
+  .form-check {
+    margin-top: 0.5rem;
+  }
+
+  .col-md-6,
+  .col-lg-4 {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .col-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .btn-search-panel {
+    width: 100%;
+  }
+}

@@ -1,0 +1,36 @@
+/* Base styles for Flexbox */
+.d-flex {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap onto the next line as needed */
+    justify-content: space-evenly; /* Evenly distribute space around items */
+}
+
+/* Styles for individual charts */
+.app-dashboard-chart, .app-dashboard-chart-pie {
+    flex: 1 1 100%; /* Take full width on smaller screens to maximize visibility */
+    padding: 10px; /* Provide padding to avoid visual clutter */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+}
+
+/* Tablet screens (768px and above) */
+@media (min-width: 768px) {
+    .app-dashboard-chart, .app-dashboard-chart-pie {
+        flex: 1 1 50%; /* Each chart takes half the width on medium screens */
+    }
+}
+
+/* Desktop screens (992px and above) */
+@media (min-width: 992px) {
+    .app-dashboard-chart, .app-dashboard-chart-pie {
+        flex: 0 0 30%; /* Lock each chart to half width on larger screens */
+    }
+}
+
+/* Large desktop screens (1200px and above) */
+@media (min-width: 1200px) {
+    .app-dashboard-chart, .app-dashboard-chart-pie {
+        flex: 0 0 45%; /* Slightly reduce width for more breathing room */
+        max-width: 35%; /* Ensure maximum width does not exceed 45% */
+        margin: 0 2.5%; /* Add margin for spacing between charts */
+    }
+}

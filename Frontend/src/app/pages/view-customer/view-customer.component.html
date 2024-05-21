@@ -1,4 +1,3 @@
-
 <div class="body-position">
   <app-dashboard-head></app-dashboard-head>
   <div class="main-container">
@@ -16,122 +15,39 @@
             </ng-template>
             <div>
               <div class="row mx-auto">
-                <div class="col-md-3 my-3">
+                <div class="col-12 col-md-6 col-lg-3 my-3">
                   <label class="add-order-label m-0 fw-bolder">Name</label>
-                  <!-- <input
-                    type="text"
-                    class="order-search form-control order-form-input m-0"
-                    [(ngModel)]="customer.name"
-                    style="border: 1px solid #ced4da"
-                    name="name"
-                    required
-                    readonly
-                  /> -->
                   <h6>{{ customer.name }}</h6>
                 </div>
-                <div class="col-md-3 my-3">
+                <div class="col-12 col-md-6 col-lg-3 my-3">
                   <label class="add-order-label m-0 fw-bolder">Email</label>
-                  <!-- <input
-                    type="email"
-                    class="order-search form-control order-form-input m-0"
-                    [(ngModel)]="customer.email"
-                    style="border: 1px solid #ced4da"
-                    name="email"
-                    readonly
-                  /> -->
                   <h6>{{ customer.email }}</h6>
                 </div>
-                <div class="col-md-3 my-3">
-                  <label class="add-order-label m-0 fw-bolder">Whats App</label>
-                  <!-- <input
-                    type="text"
-                    class="order-search form-control order-form-input m-0"
-                    [(ngModel)]="customer.whatsApp"
-                    style="border: 1px solid #ced4da"
-                    name="whatsApp"
-                    readonly
-                  /> -->
+                <div class="col-12 col-md-6 col-lg-3 my-3">
+                  <label class="add-order-label m-0 fw-bolder">WhatsApp</label>
                   <h6>{{ customer.whatsApp }}</h6>
                 </div>
-                <div class="col-md-3 my-3">
+                <div class="col-12 col-md-6 col-lg-3 my-3">
                   <label class="add-order-label m-0 fw-bolder">Phone</label>
-                  <!-- <input
-                    type="text"
-                    class="order-search form-control order-form-input m-0"
-                    [(ngModel)]="customer.mobileNo"
-                    style="border: 1px solid #ced4da"
-                    name="phone"
-                    readonly
-                  /> -->
                   <h6>{{ customer.mobileNo }}</h6>
                 </div>
-                <div class="col-md-3 my-3">
+                <div class="col-12 col-md-6 col-lg-3 my-3">
                   <label class="add-order-label m-0 fw-bolder">Id</label>
-                  <!-- <input
-                    type="text"
-                    class="order-search form-control order-form-input m-0"
-                    [(ngModel)]="customer.statusId"
-                    style="border: 1px solid #ced4da"
-                    placeholder="Enter Website Name"
-                    name="id"
-                    readonly
-                  /> -->
                   <h6>{{ customer.statusId }}</h6>
                 </div>
-
-                <div class="col-md-3 my-3">
-                  <label class="add-order-label m-0 d-block fw-bolder"
-                    >Since</label
-                  >
-                  <!-- <p-calendar
-                    name="since"
-                    [(ngModel)]="customer.since"
-                    [style]="{ width: '100%' }"
-                    [showIcon]="true"
-                    readonly
-                  ></p-calendar> -->
+                <div class="col-12 col-md-6 col-lg-3 my-3">
+                  <label class="add-order-label m-0 d-block fw-bolder">Since</label>
                   <h6>{{ customer.since | date }}</h6>
                 </div>
-
-                <!-- <div class="col-md-3 my-3">
-                  <label class="add-order-label m-0">Lead Owner</label>
-                  <input
-                    class="order-search form-control order-form-input m-0"
-                    [(ngModel)]="customer.leadOwner"
-                    style="border: 1px solid #ced4da"
-                    placeholder="Enter Website Name"
-                    name="leadOwner"
-                    readonly
-                  />
-                </div> -->
-                <div
-                  class="col-md-3 my-3 mt-4"
-                  *ngIf="
-                    customer.clientStatus !== undefined &&
-                    customer.clientStatus !== null
-                  "
-                >
+                <div class="col-12 col-md-6 col-lg-3 my-3 mt-4" *ngIf="customer.clientStatus !== undefined && customer.clientStatus !== null">
                   <label class="add-order-label m-0 fw-bolder">Active</label>
-                  <!-- <div class="form-check form-switch form-switch-lg">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="flexSwitchCheckChecked"
-                      name="impositionValueChecked"
-                      [(ngModel)]="customer.clientStatus"
-                      disabled
-                    />
-                  </div> -->
                   <h6>{{ customer.clientStatus }}</h6>
                 </div>
               </div>
             </div>
           </p-accordionTab>
         </p-accordion>
-        <p-accordion
-          [multiple]="true"
-          *ngIf="customer.name && customer.statusId"
-        >
+        <p-accordion [multiple]="true" *ngIf="customer.name && customer.statusId">
           <p-accordionTab>
             <ng-template pTemplate="header">
               <span class="font-bold white-space-nowrap text-nowrap py-15">
@@ -144,110 +60,45 @@
                 Business
               </button>
             </div>
-
             <div>
               <p-accordion [multiple]="true">
-                <p-accordionTab
-                  *ngFor="let business of businessList; let i = index"
-                  [selected]="i === openTabIndex"
-                  (onOpen)="openTabIndex = i"
-                  (onClose)="openTabIndex = null"
-                >
+                <p-accordionTab *ngFor="let business of businessList; let i = index" [selected]="i === openTabIndex" (onOpen)="openTabIndex = i" (onClose)="openTabIndex = null">
                   <ng-template pTemplate="header">
                     <span class="ms-3 badge">
-                      <p-badge
-                        [value]="
-                          business.businessBranchList?.length?.toString()
-                        "
-                        [style]="{ 'background-color': 'black' }"
-                      ></p-badge>
+                      <p-badge [value]="business.businessBranchList?.length?.toString()" [style]="{ 'background-color': 'black' }"></p-badge>
                     </span>
-
-                    <span
-                      class="font-bold white-space-nowrap text-nowrap"
-                      [ngClass]="{
-                        'p-accordion p-accordion-header:not(p-disabled)p-highlight p-accordion-header-link':
-                          i === openTabIndex
-                      }"
-                    >
+                    <span class="font-bold white-space-nowrap text-nowrap" [ngClass]="{ 'p-accordion p-accordion-header:not(p-disabled)p-highlight p-accordion-header-link': i === openTabIndex }">
                       {{ business?.businessName }}
                     </span>
-
-                    <div
-                      class="d-flex justify-content-end align-items-center w-100"
-                    >
+                    <div class="d-flex justify-content-end align-items-center w-100">
                       <span class="pi pi-plus me-3 opacity-25"></span>
                       <span class="pi pi-file-edit me-3 opacity-25"></span>
-                      <span
-                        *ngIf="business.businessBranchList?.length === 0"
-                        class="pi pi-trash"
-                      ></span>
+                      <span *ngIf="business.businessBranchList?.length === 0" class="pi pi-trash"></span>
                     </div>
                   </ng-template>
                   <div class="card" *ngIf="business.businessBranchList">
-                    <p-table
-                      *ngIf="business.businessBranchList.length > 0"
-                      [value]="business.businessBranchList"
-                      [columns]="cols"
-                      [reorderableColumns]="true"
-                      [tableStyle]="{ 'min-width': '50rem' }"
-                    >
+                    <p-table *ngIf="business.businessBranchList.length > 0" [value]="business.businessBranchList" [columns]="cols" [reorderableColumns]="true" [tableStyle]="{ 'min-width': '50rem' }">
                       <ng-template pTemplate="header" let-columns>
                         <tr>
                           <th style="width: 3rem"></th>
-                          <th
-                            class="col-2"
-                            *ngFor="let col of columns"
-                            pReorderableColumn
-                          >
-                            {{ col.header }}
-                          </th>
-                          <!-- Add Actions column header -->
-                          <th
-                            class="col-3 text-end"
-                            style="padding-right: 4.5rem"
-                          >
-                            Actions
-                          </th>
+                          <th class="col-2" *ngFor="let col of columns" pReorderableColumn>{{ col.header }}</th>
+                          <th class="col-3 text-end" style="padding-right: 4.5rem">Actions</th>
                         </tr>
                       </ng-template>
-                      <ng-template
-                        pTemplate="body"
-                        let-rowData
-                        let-columns="columns"
-                        let-index="rowIndex"
-                      >
+                      <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
                         <tr [pReorderableRow]="index">
                           <td>
-                            <span
-                              class="pi pi-bars"
-                              pReorderableRowHandle
-                            ></span>
+                            <span class="pi pi-bars" pReorderableRowHandle></span>
                           </td>
                           <td *ngFor="let col of columns">
-                            <ng-container>
-                              {{ rowData[col.field] }}
-                            </ng-container>
+                            <ng-container>{{ rowData[col.field] }}</ng-container>
                           </td>
-                          <!-- Actions column -->
                           <td class="text-end">
-                            <div
-                              class="btn-group mr-2"
-                              role="group"
-                              aria-label="Second group"
-                            >
-                              <button
-                                type="button"
-                                class="btn order-table-btn"
-                                disabled
-                              >
+                            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                              <button type="button" class="btn order-table-btn" disabled>
                                 <i class="fa-solid fa-pen"></i>&nbsp;Edit
                               </button>
-                              <button
-                                type="button"
-                                class="btn order-table-btn"
-                                disabled
-                              >
+                              <button type="button" class="btn order-table-btn" disabled>
                                 <i class="fa-solid fa-trash"></i>&nbsp;Delete
                               </button>
                             </div>
@@ -270,60 +121,27 @@
             </ng-template>
             <div>
               <div class="row">
-                <div class="col-3 my-3">
-                  <label class="add-order-label m-0 fw-bolder"
-                    >Client Preferred</label
-                  >
-                  <!-- <input
-                    class="order-search form-control order-form-input m-0"
-                    [(ngModel)]="customer.clientPreferred"
-                    style="border: 1px solid #ced4da"
-                    name="clientPreferred"
-                    readonly
-                  /> -->
+                <div class="col-12 col-md-6 col-lg-3 my-3">
+                  <label class="add-order-label m-0 fw-bolder">Client Preferred</label>
                   <h6>{{ customer.clientPreferred }}</h6>
                 </div>
-
-                <div
-                  class="col-3 my-3 d-flex justify-content-center"
-                  *ngIf="customer?.primaryPaymentMethod?.length"
-                >
-                  <div class="chip-container text-center">
-                    <span
-                      class="chip text-center"
-                      *ngFor="let item of customer?.primaryPaymentMethod"
-                      >{{ item }}</span
-                    >
-                  </div>
-                </div>
-
-                <div class="col-3 my-3">
+                <div class="col-12 col-md-6 col-lg-3 my-3">
                   <label class="add-order-label m-0 fw-bolder">Terms</label>
-                  <!-- <input
-                    class="order-search form-control order-form-input m-0"
-                    [(ngModel)]="customer.terms"
-                    style="border: 1px solid #ced4da"
-                    name="terms"
-                    readonly
-                  /> -->
                   <h6>{{ customer.terms }}</h6>
                 </div>
-                <div class="col-3 my-3">
+                <div class="col-12 col-md-6 col-lg-3 my-3">
                   <label class="add-order-label m-0 fw-bolder">Tax</label>
-                  <!-- <input
-                    class="order-search form-control order-form-input m-0"
-                    [(ngModel)]="customer.tax"
-                    style="border: 1px solid #ced4da"
-                    name="tax"
-                    readonly
-                  /> -->
                   <h6>{{ customer.tax }}</h6>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3 my-3 d-flex justify-content-center" *ngIf="customer?.primaryPaymentMethod?.length">
+                  <div class="chip-container text-center">
+                    <span class="chip text-center" *ngFor="let item of customer?.primaryPaymentMethod">{{ item }}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </p-accordionTab>
         </p-accordion>
-
         <p-accordion [multiple]="true">
           <p-accordionTab>
             <ng-template pTemplate="header">
@@ -332,39 +150,13 @@
               </span>
             </ng-template>
             <div class="card">
-              <p-editor
-                [(ngModel)]="customer.notes"
-                [style]="{ height: '320px' }"
-                name="notes"
-                [readonly]="true"
-                class="custom-editor"
-              ></p-editor>
+              <p-editor [(ngModel)]="customer.notes" [style]="{ height: '320px' }" name="notes" [readonly]="true" class="custom-editor"></p-editor>
             </div>
           </p-accordionTab>
         </p-accordion>
-
-        <!-- <div
-          class="col-12 text-end my-4 d-flex justify-content-end"
-          *ngIf="customer.showLead !== undefined && customer.showLead !== null"
-        >
-          <label class="add-order-label m-0 me-2">Share with lead owner</label>
-          <div class="form-check form-switch form-switch-lg">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="flexSwitchCheckChecked2"
-              name="impositionValueChecked2"
-              [(ngModel)]="customer.showLead"
-            />
-          </div>
-        </div> -->
         <div class="col-12 text-end my-4 d-flex justify-content-end">
-          <button
-            type="button"
-            class="btn btn-dark px-4 ms-auto"
-            routerLink="/customers"
-          >
-            {{ "Back" }}
+          <button type="button" class="btn btn-dark px-4 ms-auto" routerLink="/customers">
+            Back
           </button>
         </div>
       </form>

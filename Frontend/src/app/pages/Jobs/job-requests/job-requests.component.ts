@@ -14,7 +14,11 @@ import { DatePipe } from '@angular/common';
 import { Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
+<<<<<<< HEAD
+import { SharedStateService } from '../../OrderSteps/shared-state.service';
+=======
 import { OrdersService } from 'src/app/services/orders.service';
+>>>>>>> 5c05261abfb39c17c0818e6871b848f73397cd4a
 
 @Component({
   selector: 'app-job-requests',
@@ -60,12 +64,16 @@ export class JobRequestsComponent implements OnInit {
     private authGuardSerivce: AuthguardService,
     private errorHandleService: ErrorHandleService,
     private successMsgService: SuccessMessageService,
+    private sharedStateService : SharedStateService
   ) { }
 
-  onActiveIndexChange(event: number) {
-    this.activeIndex = event;
+  onCheckboxChange(event: any) {
+    this.sharedStateService.setButtonActive(event.target.checked);
   }
+<<<<<<< HEAD
+=======
 
+>>>>>>> 5c05261abfb39c17c0818e6871b848f73397cd4a
   @Input() jobProcessedActive: boolean = false;
   paymentActive: boolean = false;
   confirmationActive: boolean = false;

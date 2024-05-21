@@ -8,9 +8,9 @@
       </div>
 
       <div class="order-body py-2">
-        <div class="container">
+        <div class="container-fluid">
           <div class="row">
-            <div class="col-6 my-3">
+            <div class="col-12 col-md-6 my-3">
               <label class="add-order-label m-0">Business Name</label>
               <input
                 type="text"
@@ -22,7 +22,7 @@
                 required
               />
             </div>
-            <div class="col-6 my-3">
+            <div class="col-12 col-md-6 my-3">
               <label class="add-order-label m-0">Point of Contact</label>
               <input
                 type="text"
@@ -33,7 +33,7 @@
                 name="contactNameValue"
               />
             </div>
-            <div class="col-6 my-3">
+            <div class="col-12 col-md-6 my-3">
               <label class="add-order-label m-0">Phone</label>
               <input
                 type="number"
@@ -44,18 +44,18 @@
                 name="number"
               />
             </div>
-            <div class="col-6 my-3">
+            <div class="col-12 col-md-6 my-3">
               <label class="add-order-label m-0">Email</label>
               <input
                 type="text"
                 class="order-search form-control order-form-input m-0"
                 [(ngModel)]="emailValue"
                 style="border: 1px solid #ced4da"
-                placeholder="Enter Address"
-                name="addressValue"
+                placeholder="Enter Email"
+                name="emailValue"
               />
             </div>
-            <div class="col-6 my-3">
+            <div class="col-12 col-md-6 my-3">
               <label class="add-order-label m-0">Address</label>
               <input
                 type="text"
@@ -67,7 +67,7 @@
                 required
               />
             </div>
-            <div class="col-6 my-3" *ngIf="productionUserList.length > 0">
+            <div class="col-12 col-md-6 my-3" *ngIf="productionUserList.length > 0">
               <label class="add-order-label m-0">Production Users</label>
               <p-multiSelect
                 styleClass="w-100"
@@ -75,7 +75,7 @@
                 optionLabel="name"
                 display="chip"
                 name="productionUser"
-                placeholder="Select Item"
+                placeholder="Select Users"
                 [(ngModel)]="selectedUsers"
               ></p-multiSelect>
             </div>
@@ -111,11 +111,11 @@
         class="order-body py-2 my-2"
         *ngFor="let element of vendorProcess; let i = index"
       >
-        <div class="container">
+        <div class="container-fluid">
           <div class="row">
-            <div class="col-11 my-2">
-              <label class="add-order-label d-inline-block m-0">Process</label
-              ><br />
+            <div class="col-12 col-md-11 my-2">
+              <label class="add-order-label d-inline-block m-0">Process</label>
+              <br />
               <p-dropdown
                 styleClass="w-100"
                 optionLabel="name"
@@ -125,51 +125,9 @@
                   buttonName == 'Add' ? 'Select Process' : placeHolder[i]
                 "
                 name="material"
-              >
-              </p-dropdown>
+              ></p-dropdown>
             </div>
-            <!-- <div class="col-4 my-2">
-            <label class="add-order-label d-inline-block m-0"
-              >Material Type</label
-            ><br />
-            <input
-              type="text"
-              class="order-search form-control order-form-input m-0"
-              [(ngModel)]="materialProcess[i]"
-              style="border: 1px solid #ced4da"
-              placeholder="Enter Value"
-              name="process"
-              required
-            />
-          </div>
-          <div class="col-4 my-2">
-            <label class="add-order-label d-inline-block m-0"
-              >Rate (sq.ft)</label
-            ><br />
-            <input
-              type="number"
-              class="order-search form-control order-form-input m-0"
-              [(ngModel)]="rateProcess[i]"
-              style="border: 1px solid #ced4da"
-              placeholder="Enter Value"
-              name="rate"
-              required
-            />
-          </div>
-          <div class="col-11 my-2">
-            <label class="add-order-label d-inline-block m-0">Notes</label
-            ><br />
-            <textarea
-              class="order-search form-control order-form-input m-0"
-              style="border: 1px solid #ced4da"
-              [(ngModel)]="notesProcess[i]"
-              placeholder="Enter Notes"
-              rows="4"
-              name="notesProcess"
-              required
-            ></textarea>
-          </div> -->
-            <div class="col-1 align-self-lg-end">
+            <div class="col-12 col-md-1 align-self-end">
               <button
                 type="button"
                 class="btn order-table-btn btn-search-panel"

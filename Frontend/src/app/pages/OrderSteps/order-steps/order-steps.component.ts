@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { QueryParam } from 'src/app/Model/QueryParam';
 import { OrdersService } from 'src/app/services/orders.service';
@@ -12,16 +12,20 @@ import { BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
 import { ProductionJob } from 'src/app/Model/ProductionJob';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { AuthguardService } from 'src/app/services/authguard.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
+<<<<<<< HEAD
+import { SharedStateService } from '../shared-state.service';
+=======
 import { Order } from 'src/app/Model/Order';
+>>>>>>> 5c05261abfb39c17c0818e6871b848f73397cd4a
 
 @Component({
   selector: 'app-order-steps',
   templateUrl: './order-steps.component.html',
   styleUrls: ['./order-steps.component.css']
 })
-export class OrderStepsComponent implements OnInit {
+export class OrderStepsComponent implements OnInit , OnDestroy{
 
 
   private destroy$ = new Subject<void>();
@@ -50,8 +54,10 @@ export class OrderStepsComponent implements OnInit {
     private jobService: JobService,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
+    private sharedStateService : SharedStateService
   ) { }
-
+  isButtonActive: boolean = true;
+  private subscription !: Subscription;
   ngOnInit(): void {
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params: Params) => {
       this.idFromQueryParam = +params['id'];
@@ -61,9 +67,20 @@ export class OrderStepsComponent implements OnInit {
       if (this.idFromQueryParam) {
         this.getOrderById(this.idFromQueryParam);
       }
+   
     });
-  }
+    this.subscription = this.sharedStateService.buttonActive$.subscribe(
+      (isActive) => {
+        this.isButtonActive = isActive;
+      }
+    );
 
+<<<<<<< HEAD
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+=======
   // getOrderById(id: number): void {
   //   const serviceToCall = this.orderType === 'auto'
   //     ? this.orderService.getOrderById(id)
@@ -83,6 +100,7 @@ export class OrderStepsComponent implements OnInit {
   //     );
   // }
 
+>>>>>>> 5c05261abfb39c17c0818e6871b848f73397cd4a
   getOrderById(id: number): void {
     this.orderService.getOrderByIdAndType(id, this.orderType!)
       .subscribe(
