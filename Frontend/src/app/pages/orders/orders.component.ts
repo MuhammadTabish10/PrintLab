@@ -2,13 +2,13 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrdersService } from 'src/app/services/orders.service';
 import { MenuItem, MessageService } from 'primeng/api';
-import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { JobService } from '../Jobs/Service/job.service';
-import { ProductionJob } from 'src/app/Model/ProductionJob';
-import { forkJoin } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Order } from 'src/app/Model/Order';
+import { PaginatorState } from 'primeng/paginator';
+import { PaginationResponse } from 'src/app/Model/PaginationResponse';
 
 export interface Roles {
   name?: string;
@@ -28,7 +28,6 @@ export class OrdersComponent implements OnInit {
 
   error: string = ''
   visible!: boolean
-  ordersArray: any = []
   tableData: Boolean = false
   search: string = ''
   roleArray: Roles[] | undefined;
@@ -45,7 +44,62 @@ export class OrdersComponent implements OnInit {
   role: string | undefined | null;
   buttonOption: boolean = true;
   items: MenuItem[] | undefined;
-
+  private destroy$ = new Subject<void>();
+  paginatedOrders: PaginationResponse<Order> | undefined | null;
+  order: Order = {
+    id: undefined,
+    product: undefined,
+    paper: undefined,
+    sizeCategory: undefined,
+    size: undefined,
+    gsm: undefined,
+    quantity: undefined,
+    amount: undefined,
+    jobColorsFront: undefined,
+    sideOptionValue: undefined,
+    impositionValue: undefined,
+    jobColorsBack: undefined,
+    providedDesign: undefined,
+    url: undefined,
+    productRule: undefined,
+    status: undefined,
+    type: undefined,
+    ctpProcess: undefined,
+    pressMachineProcess: undefined,
+    paperMarketProcess: undefined,
+    designer: undefined,
+    production: undefined,
+    plateSetter: undefined,
+    isRejected: false,
+    timeStamp: undefined,
+    createdBy: undefined,
+    assignedBy: undefined,
+    customer: undefined,
+    businessCategory: undefined,
+    productionUser: undefined,
+    titleId: undefined,
+    jobId: undefined,
+    productCategory: undefined,
+    description: undefined,
+    rate: undefined,
+    linkedInvoice: undefined,
+    privateNotes: undefined,
+    orderTrackingNotes: undefined,
+    productionNotes: undefined,
+    ctpFileName: undefined,
+    locationOfFile: undefined,
+    sentOn: undefined,
+    designPackageFile: undefined,
+    locationOfDesignFile: undefined,
+    jobStartDate: undefined,
+    productionStartDate: undefined,
+    productionEndDate: undefined,
+    packingAndQADate: undefined,
+    deliveryDate: undefined,
+    expiryDate: undefined,
+    sendTo: undefined,
+    processedDetailList: []
+  }
 
   constructor(
     private orderService: OrdersService,
@@ -95,26 +149,29 @@ export class OrdersComponent implements OnInit {
     })
   }
 
-  getOrders() {
-    this.orderService.getOrders().subscribe(
-      (res: any) => {
-        if (this.role !== "ROLE_ADMIN") {
-          this.ordersArray = res.filter(
-            (order: any) => {
-              return this.doesCreatedByMatch(order);
-            });
-          this.buttonOption = false;
-        } else {
-          this.ordersArray = res;
-        }
-        this.tableData = this.ordersArray.length === 0;
-        this.ordersArray.forEach((element: Order) => {
-          if (element.size && this.isJsonString(element.size)) {
-            debugger
-            element.size = JSON.parse(element.size!).inch;
+  getOrders(pageState?: PaginatorState, order?: Order): void {
+    debugger
+    this.orderService.getOrders(pageState, order!).pipe(takeUntil(this.destroy$)).subscribe(
+      (res: PaginationResponse<Order>) => {
+        if (this.paginatedOrders?.content) {
+          if (this.role !== "ROLE_ADMIN") {
+            this.paginatedOrders.content = res.content.filter(
+              (order: Order) => {
+                return this.doesCreatedByMatch(order);
+              });
+            this.buttonOption = false;
+          } else {
+            this.paginatedOrders.content = res.content;
           }
-        });
-        console.log(this.ordersArray);
+          this.tableData = this.paginatedOrders.content.length === 0;
+          this.paginatedOrders.content.forEach((element: Order) => {
+            if (element.size && this.isJsonString(element.size)) {
+              debugger
+              element.size = JSON.parse(element.size!).inch;
+            }
+          });
+          console.log(this.paginatedOrders.content);
+        }
       },
       error => {
         this.showError(error);
@@ -217,24 +274,26 @@ export class OrdersComponent implements OnInit {
   // }
 
   statusSorting(find: any) {
-    this.orderService.statusSorting(find).subscribe(res => {
-      this.ordersArray = res
-    }, error => {
-      this.showError(error);
-      this.visible = true
-    })
+    this.orderService.statusSorting(find).subscribe(
+      (res: any) => {
+        this.paginatedOrders = res
+      }, error => {
+        this.showError(error);
+        this.visible = true
+      })
   }
 
   searchOrder(order: any) {
     if (this.search == '') {
       this.getOrders()
     } else {
-      this.orderService.searchById(order.value).subscribe(res => {
-        this.ordersArray = res
-      }, error => {
-        this.showError(error);
-        this.visible = true
-      })
+      this.orderService.searchById(order.value).subscribe(
+        (res: any) => {
+          this.paginatedOrders = res
+        }, error => {
+          this.showError(error);
+          this.visible = true
+        })
     }
   }
   assignOrder(getById: number) {

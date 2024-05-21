@@ -1,6 +1,7 @@
 package com.PrintLab.service;
 
 import com.PrintLab.dto.OrderDto;
+import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.model.Order;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public interface OrderService {
     void updatePressMachineProcess(Long id, Boolean isDone);
 
     void reject(Long id, Boolean rejected);
+
+    PaginationResponse getAllPaginatedOrders(Integer pageNumber, Integer pageSize, OrderDto orderDto);
 }
 
 

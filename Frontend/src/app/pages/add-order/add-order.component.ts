@@ -96,7 +96,6 @@ export class AddOrderComponent implements OnInit {
     productCategory: undefined,
     product: undefined,
     description: undefined,
-    qty: undefined,
     rate: undefined,
     amount: undefined,
     linkedInvoice: undefined,
@@ -116,13 +115,12 @@ export class AddOrderComponent implements OnInit {
     sendTo: undefined,
     expiryDate: undefined,
     processedDetailList: [],
-    category: undefined,
+    sizeCategory: undefined,
     size: undefined,
     type: undefined,
     paper: undefined,
     gsm: undefined,
     quantity: undefined,
-    price: undefined,
     jobColorsFront: undefined,
     sideOptionValue: undefined,
     impositionValue: undefined,
@@ -591,7 +589,7 @@ export class AddOrderComponent implements OnInit {
     debugger
     this.productRuleJobList = [];
     this.job.product = null;
-    this.job.category = null;
+    this.job.sizeCategory = null;
     this.job.size = null;
     this.businessUnitService.getBusinessUnitById(id).subscribe(
       (res: BusinessUnit) => {
@@ -619,8 +617,8 @@ export class AddOrderComponent implements OnInit {
 
 
   calculateAmount(value: Order) {
-    if (value.qty && value.rate) {
-      value.amount = value.qty * value.rate;
+    if (value.quantity && value.rate) {
+      value.amount = value.quantity * value.rate;
       this.totalAmount = value.amount;
     } else {
       value.amount = 0;

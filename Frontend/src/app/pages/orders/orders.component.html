@@ -102,14 +102,7 @@
         </tr>
       </tbody>
     </table> -->
-    <p-table
-      #dt1
-      [value]="ordersArray"
-      dataKey="id"
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 25, 50]"
-      [paginator]="true"
-    >
+    <p-table #dt1 [value]="paginatedOrders?.content!" dataKey="id" [globalFilterFields]="['name']">
       <ng-template pTemplate="caption">
         <div class="flex">
           <p-button
@@ -137,19 +130,19 @@
           <th style="min-width: 15rem">
             <div class="flex align-items-center">
               Category
-              <p-columnFilter type="text" field="name" display="menu" />
+              <p-columnFilter type="text" field="category" display="menu" [(ngModel)]="order.businessCategory" />
             </div>
           </th>
           <th style="min-width: 15rem">
             <div class="flex align-items-center">
               Product
-              <p-columnFilter type="text" field="country.name" display="menu" />
+              <p-columnFilter type="text" field="product" display="menu" [(ngModel)]="order.product"/>
             </div>
           </th>
           <th style="min-width: 10rem">
             <div class="flex align-items-center">
               Size
-              <p-columnFilter type="date" field="date" display="menu" />
+              <p-columnFilter type="text" field="size" display="menu" [(ngModel)]="order.size"/>
             </div>
           </th>
           <th pSortableColumn="quantity" style="min-width: 10rem">
@@ -170,19 +163,19 @@
           <th style="min-width: 15rem">
             <div class="flex align-items-center">
               Status
-              <p-columnFilter type="text" field="status" display="menu" />
+              <p-columnFilter type="text" field="status" display="menu" [(ngModel)]="order.status"/>
             </div>
           </th>
           <th style="min-width: 15rem">
             <div class="flex align-items-center">
               Created by
-              <p-columnFilter type="text" field="status" display="menu" />
+              <p-columnFilter type="text" field="createdBy" display="menu" [(ngModel)]="order.createdBy"/>
             </div>
           </th>
           <th style="min-width: 15rem">
             <div class="flex align-items-center">
               Timestamp
-              <p-columnFilter type="text" field="status" display="menu" />
+              <p-columnFilter type="text" field="timeStamp" display="menu" />
             </div>
           </th>
           <th style="min-width: 15rem">
@@ -239,6 +232,20 @@
         </tr>
       </ng-template>
     </p-table>
+    <p-paginator
+      [rows]="paginatedOrders?.pageSize!"
+      [totalRecords]="paginatedOrders?.totalElements!"
+      (onPageChange)="getOrders($event)"
+      [rowsPerPageOptions]="[5, 10, 15]"
+      currentPageReportTemplate="Showing {{
+        paginatedOrders?.pageNumber! * paginatedOrders?.pageSize!
+      }} to {{
+        (paginatedOrders?.pageNumber! + 1) * paginatedOrders?.pageSize!
+      }} of {{ paginatedOrders?.totalElements! }} entries"
+      [alwaysShow]="true"
+      [pageLinkSize]="5"
+      [showCurrentPageReport]="true"
+    ></p-paginator>
   </div>
   <p-dialog
     header="Assign Order To User"

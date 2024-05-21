@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.OrderDto;
+import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.model.Order;
 import com.PrintLab.service.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -116,4 +117,16 @@ public class OrderController {
         orderService.reject(id, rejected);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/get-paginated-orders")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<PaginationResponse> findAll(
+            @RequestParam(value = "page-number", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "page-size", defaultValue = "10", required = false) Integer pageSize,
+            @RequestBody OrderDto orderDto
+    ) {
+        PaginationResponse paginationResponse = orderService.getAllPaginatedOrders(pageNumber, pageSize,orderDto);
+        return ResponseEntity.ok(paginationResponse);
+    }
+
 }

@@ -196,7 +196,7 @@
                     <label class="add-order-label m-0">Size Category</label>
                     <p-dropdown
                       styleClass="w-100"
-                      [(ngModel)]="job.category"
+                      [(ngModel)]="job.sizeCategory"
                       [options]="categoryArray"
                       (ngModelChange)="getSize($event)"
                       optionLabel="name"
@@ -231,13 +231,13 @@
                   <div class="col-lg-12 col-md-12 col-sm-6">
                     <label class="add-order-label m-0 d-block">Quantity</label>
                     <p-inputNumber
-                      [(ngModel)]="job.qty"
+                      [(ngModel)]="job.quantity"
                       inputId="minmaxQty"
                       class="w-100"
                       [min]="0"
                       [format]="true"
                       (onInput)="calculateAmount(job)"
-                      name="qty"
+                      name="quantity"
                       #qtyModel="ngModel"
                       [required]="true"
                     ></p-inputNumber>
@@ -429,9 +429,9 @@
                 Description: {{ job.description }}
               </h6>
               <h6 class="fw-normal" *ngIf="job.description">
-                Quantity: {{ job.qty }}
+                Quantity: {{ job.quantity }}
               </h6>
-              <h6 class="fw-normal" *ngIf="job.qty">rate: {{ job.rate }}</h6>
+              <h6 class="fw-normal" *ngIf="job.quantity">rate: {{ job.rate }}</h6>
             </div>
             <div class="mt-4">
               <span>Total: </span>

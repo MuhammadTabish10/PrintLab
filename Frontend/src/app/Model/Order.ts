@@ -8,11 +8,11 @@ export interface Order {
   id: number | undefined | null;
   product: string | undefined | null;
   paper: string | undefined | null;
-  category: string | undefined | null;
+  sizeCategory: string | undefined | null;
   size: string | undefined | null;
   gsm: number | undefined | null;
   quantity: number | undefined | null;
-  price: number | undefined | null;
+  amount: number | undefined | null;
   jobColorsFront: number | undefined | null;
   sideOptionValue: string | undefined | null;
   impositionValue: boolean | undefined | null;
@@ -40,9 +40,7 @@ export interface Order {
   jobId: string | undefined | null;
   productCategory: any;
   description: string | undefined | null;
-  qty: number | undefined | null;
   rate: number | undefined | null;
-  amount: number | undefined | null;
   linkedInvoice: string | undefined | null;
   privateNotes: string | undefined | null;
   orderTrackingNotes: string | undefined | null;

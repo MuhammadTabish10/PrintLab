@@ -1,10 +1,10 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.BusinessDto;
-import com.PrintLab.dto.LeadDto;
 import com.PrintLab.dto.OrderDto;
 import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.exception.RecordNotFoundException;
+import com.PrintLab.model.Order;
 import com.PrintLab.model.*;
 import com.PrintLab.repository.BusinessRepository;
 import com.PrintLab.repository.CustomerRepository;
@@ -19,11 +19,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -306,6 +304,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
     public PaginationResponse getAllPaginatedOrders(Integer pageNumber, Integer pageSize, OrderDto searchCriteria) {
         Pageable page = PageRequest.of(pageNumber, pageSize);
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -313,21 +312,26 @@ public class OrderServiceImpl implements OrderService {
         Root<Order> leadsRoot = cq.from(Order.class);
 
         List<Predicate> predicates = buildPredicates(criteriaBuilder, leadsRoot, searchCriteria);
-
         cq.where(predicates.toArray(new Predicate[0]));
         cq.orderBy(criteriaBuilder.desc(leadsRoot.get("id")));
-        TypedQuery<Order> query = entityManager.createQuery(cq);
 
+        TypedQuery<Order> query = entityManager.createQuery(cq);
+        applyPagination(query, pageNumber, pageSize);
+
+        List<Order> resultList = query.getResultList();
+        Long totalElements = countTotalElements(criteriaBuilder, searchCriteria);
+        List<OrderDto> dtoList = mapToDto(resultList);
+
+        return createPaginationResponse(dtoList, pageNumber, pageSize, totalElements);
+    }
+
+    private void applyPagination(TypedQuery<?> query, Integer pageNumber, Integer pageSize) {
         int firstResult = pageNumber * pageSize;
         query.setFirstResult(firstResult);
         query.setMaxResults(pageSize);
+    }
 
-        List<Order> resultList = query.getResultList();
-
-        Long totalElements = countTotalElements(criteriaBuilder, searchCriteria);
-
-        List<LeadDto> dtoList = mapToDto(resultList);
-
+    private PaginationResponse createPaginationResponse(List<OrderDto> dtoList, Integer pageNumber, Integer pageSize, Long totalElements) {
         PaginationResponse paginationResponse = new PaginationResponse();
         paginationResponse.setContent(dtoList);
         paginationResponse.setPageNumber(pageNumber);
@@ -338,6 +342,7 @@ public class OrderServiceImpl implements OrderService {
 
         return paginationResponse;
     }
+
 
     private List<OrderDto> mapToDto(List<Order> leadsList) {
         return leadsList.stream()
@@ -361,17 +366,43 @@ public class OrderServiceImpl implements OrderService {
     private List<Predicate> buildPredicates(CriteriaBuilder criteriaBuilder, Root<Order> orderRoot, OrderDto searchCriteria) {
         List<Predicate> predicates = new ArrayList<>();
 
-        if (searchCriteria.getBusinessCategory() != null && !searchCriteria.getBusinessCategory().isEmpty()) {
-            predicates.add(criteriaBuilder.like(orderRoot.get("businessCategory"), "%" + searchCriteria.getBusinessCategory() + "%"));
-        }
+        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getBusinessCategory(), orderRoot.get("businessCategory"));
+        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getProduct(), orderRoot.get("product"));
+        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), orderRoot.get("status"));
+        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getType(), orderRoot.get("type"));
 
-        if (searchCriteria.getProduct() != null && !searchCriteria.getProduct().isEmpty()) {
-            predicates.add(criteriaBuilder.like(orderRoot.get("leadStatusType"), "%" + searchCriteria.getProduct() + "%"));
-        }
+        Optional.ofNullable(searchCriteria.getCreatedBy())
+                .ifPresent(createdBy -> addCreatedByPredicate(criteriaBuilder, predicates, orderRoot, createdBy));
 
-        predicates.add(criteriaBuilder.isTrue(orderRoot.get("status")));
+        Optional.ofNullable(searchCriteria.getTimeStamp())
+                .ifPresent(timeStamp -> addTimeStampPredicate(criteriaBuilder, predicates, orderRoot, timeStamp));
+
+        Optional.ofNullable(searchCriteria.getBusinesses())
+                .ifPresent(businesses -> addBusinessPredicate(criteriaBuilder, predicates, orderRoot, businesses));
 
         return predicates;
+    }
+
+
+    private void addLikePredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, String value, Path<String> path) {
+        Optional.ofNullable(value)
+                .ifPresent(v -> predicates.add(criteriaBuilder.like(path, "%" + v + "%")));
+    }
+
+    private void addCreatedByPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, User createdBy) {
+        Join<Order, User> createdByJoin = orderRoot.join("createdBy");
+        predicates.add(criteriaBuilder.like(createdByJoin.get("name"), "%" + createdBy.getName() + "%"));
+    }
+
+    private void addTimeStampPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, LocalDateTime timeStamp) {
+        LocalDate userEnteredDate = timeStamp.toLocalDate();
+        LocalDate currentLocalDate = LocalDate.now();
+        predicates.add(criteriaBuilder.between(orderRoot.get("timeStamp").as(LocalDate.class), userEnteredDate, currentLocalDate));
+    }
+
+    private void addBusinessPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, List<BusinessDto> businessesDto) {
+        Join<Order, Business> orderBusinessJoin = orderRoot.join("businesses");
+        predicates.add(orderBusinessJoin.in(businessesDto));
     }
 
 

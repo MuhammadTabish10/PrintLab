@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/Environments/environment';
 import { User } from '../Model/User';
+import { Order } from '../Model/Order';
+import { PaginationResponse } from '../Model/PaginationResponse';
+import { PaginatorState } from 'primeng/paginator';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +26,17 @@ export class OrdersService {
     return this.http.post(url, order, { params: { loggedInUser: createdBy } })
   }
 
-  getOrders() {
-    let url = `${this._url}/order`;
-    return this.http.get(url);
+  getOrders(pageState?: PaginatorState, search?: Order): Observable<PaginationResponse<Order>>{
+    let params = new HttpParams();
+    if (pageState?.hasOwnProperty('page') && pageState?.hasOwnProperty('rows')) {
+      params = params.set('page-number', pageState?.page!);
+      params = params.set('page-size', pageState?.rows!);
+    } else {
+      params = params.set('page-number', 0);
+      params = params.set('page-size', 10);
+    }
+    let url = `${this._url}/get-paginated-orders`;
+    return this.http.post<PaginationResponse<Order>>(url, search ? search : {}, { params });
   }
 
   getAssignedOrders() {
