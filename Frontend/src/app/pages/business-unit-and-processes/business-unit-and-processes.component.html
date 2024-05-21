@@ -60,6 +60,7 @@
               [columns]="cols"
               [reorderableColumns]="true"
               [tableStyle]="{ 'min-width': '50rem' }"
+              (onRowReorder)="onReorder(category)"
             >
               <ng-template pTemplate="header" let-columns>
                 <tr>

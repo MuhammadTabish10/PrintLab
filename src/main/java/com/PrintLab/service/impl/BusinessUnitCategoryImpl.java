@@ -265,10 +265,7 @@ public class BusinessUnitCategoryImpl implements BusinessUnitCategoryService {
     }
 
 
-    //    @Override
-//    public void deleteProcess(Long processId) {
-//        processRepository.deleteById(processId);
-//    }
+
     @Override
     public String deleteProcess(Long processId) {
         Optional<BusinessUnitProcess> optionalProcess = processRepository.findById(processId);

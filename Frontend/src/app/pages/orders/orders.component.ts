@@ -7,6 +7,8 @@ import { AuthguardService } from 'src/app/services/authguard.service';
 import { JobService } from '../Jobs/Service/job.service';
 import { ProductionJob } from 'src/app/Model/ProductionJob';
 import { forkJoin } from 'rxjs';
+import { Table } from 'primeng/table';
+import { Order } from 'src/app/Model/Order';
 
 export interface Roles {
   name?: string;
@@ -106,6 +108,13 @@ export class OrdersComponent implements OnInit {
           this.ordersArray = res;
         }
         this.tableData = this.ordersArray.length === 0;
+        this.ordersArray.forEach((element: Order) => {
+          if (element.size && this.isJsonString(element.size)) {
+            debugger
+            element.size = JSON.parse(element.size!).inch;
+          }
+        });
+        console.log(this.ordersArray);
       },
       error => {
         this.showError(error);
@@ -114,6 +123,14 @@ export class OrdersComponent implements OnInit {
     );
   }
 
+  isJsonString(str: string): boolean {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   // private getOrders(): void {
 
@@ -291,4 +308,5 @@ export class OrdersComponent implements OnInit {
     this.role = this.currentUserDetail.authorities[0].authority;
   }
 
+  public clear(table: Table): void { }
 }

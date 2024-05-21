@@ -25,10 +25,10 @@ public class Order
     private String paper;
     @Column(columnDefinition = "TEXT")
     private String size;
-    private String category;
+    private String sizeCategory;
     private Double gsm;
     private Double quantity;
-    private Double price;
+    private Double rate;
     private Long jobColorsFront;
     private String sideOptionValue;
     private Boolean impositionValue;
@@ -78,9 +78,7 @@ public class Order
     private String productCategory;
     @Column(columnDefinition = "TEXT")
     private String description;
-    private Integer qty;
-    private Integer rate;
-    private Integer amount;
+    private Double amount;
     private String linkedInvoice;
     @Column(columnDefinition = "TEXT")
     private String privateNotes;

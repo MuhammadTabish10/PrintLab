@@ -8,3 +8,7 @@
   background-color: black;
   border-radius:3%;
 }
+::ng-deep.p-column-filter-overlay-menu .p-column-filter-add-rule {
+  padding: 0.75rem 1.25rem;
+  display: none;
+}

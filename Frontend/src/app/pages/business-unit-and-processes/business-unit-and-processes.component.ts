@@ -9,6 +9,7 @@ import { Vendor } from 'src/app/Model/Vendor';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { MessageService } from 'primeng/api';
 import { Column } from 'src/app/Model/Column';
+import { TableRowReorderEvent } from 'primeng/table';
 
 @Component({
   selector: 'app-business-unit-and-processes',
@@ -64,7 +65,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
   private getCategoryList(): void {
     this.businessService.getBusinessUnits().subscribe(
       (res: BusinessUnit[]) => {
-        
+
         this.categoryList = res;
 
         this.cols = [
@@ -89,7 +90,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
     if (this.selectedProcess.process) {
       this.category.processList?.push(this.selectedProcess);
     }
-    
+
     const serviceToCall = this.category.id
       ? this.businessService.putBusinessUnit(this.category.id!, this.category)
       : this.businessService.postBusinessUnit(this.category);
@@ -102,7 +103,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
         this.visible = false;
         this.mode = 'Category';
         this.heading = 'Category';
-        
+
         const indexOfUpdatedCategory = this.categoryList.findIndex(category => category.id === this.category.id);
         this.openTabIndex = [indexOfUpdatedCategory];
         this.category = {
@@ -120,7 +121,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
         this.getCategoryList();
       },
       (error: BackendErrorResponse) => {
-        
+
         this.onToastClose();
         this.errorHandleService.showError(error.error.error);
       }
@@ -129,7 +130,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
 
 
   deleteProcessAndItsVendors(categoryId: number): void {
-    
+
     this.businessService.deleteProcess(+categoryId).subscribe(
       () => {
         this.getCategoryList();
@@ -160,14 +161,14 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
       this.mode = 'Update';
       this.heading = 'Process';
       if (process) {
-        
+
         this.selectedProcess.id = process.id;
         this.selectedProcess.process = process.process;
         this.selectedProcess.billable = process.billable;
         this.selectedVendors = process.vendors!;
       }
     } if (id) {
-      
+
       this.name = category?.name;
       this.mode = 'Category';
       this.heading = 'Category';
@@ -201,33 +202,11 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
     }
     this.selectedVendors = [];
   }
-  // onBlur(category?: string) {
-  //   this.businessService.getBusinessUnitByName(category?.trim()).subscribe((result: Boolean) => {
-  //     if (result === true) {
-  //       
-  //       const error = { error: { error: "A similar category already exists." } }
-  //       this.restrict = true;
-  //       this.onToastClose();
-  //       this.errorHandleService.showError(error.error.error);
-  //     } else {
-  //       this.success = 'This is a new product';
-  //       this.restrict = false;
-  //     }
-  //   }, err => {
-  //     
-  //     err
-  //   });
-  // }
   onToastClose() {
     this.messageService.clear();
   }
 
-  // editCategory(category: BusinessUnit) {
-  //   this.businessService.putBusinessUnit(category?.id!, category).subscribe(
-  //     (res: BusinessUnit) => {
-  //       
-  //     }, (err: BackendErrorResponse) => {
-  //       this.errorHandleService.showError(err.error.error);
-  //     });
-  // }
+  public onReorder(category:BusinessUnit): void {
+    console.log(category);
+  }
 }
