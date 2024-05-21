@@ -51,7 +51,13 @@ public class BusinessUnitCategoryController {
     @PutMapping("/{categoryId}")
     public ResponseEntity<BusinessUnitCategoryDto> updateCategory(@PathVariable Long categoryId, @RequestBody BusinessUnitCategoryDto categoryDto) {
         BusinessUnitCategoryDto updatedCategory = categoryService.updateCategory(categoryId, categoryDto);
-        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+        return ResponseEntity.ok(updatedCategory);
+    }
+
+    @PutMapping("/updateProcessReorder/{categoryId}")
+    public ResponseEntity<BusinessUnitCategoryDto> updateProcessOrder(@PathVariable Long categoryId, @RequestBody BusinessUnitCategoryDto categoryDto) {
+        BusinessUnitCategoryDto updatedProcessOrder = categoryService.updateProcessReorder(categoryId, categoryDto);
+        return ResponseEntity.ok(updatedProcessOrder);
     }
 
     // DELETE

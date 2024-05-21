@@ -14,7 +14,7 @@ import java.util.List;
 public class BusinessUnitProcessDto {
     private Long id;
     private String process;
-    private boolean billable;
+    private String type;
     private List<VendorDto> vendors;
     private List<ProductRuleJobDto> productRuleJobList;
     private BusinessUnitCategoryDto category;

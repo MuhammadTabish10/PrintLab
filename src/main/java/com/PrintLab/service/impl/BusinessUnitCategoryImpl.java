@@ -1,6 +1,7 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.Mapper.BusinessUnitCategoryMapper;
+import com.PrintLab.Mapper.BusinessUnitProcessMapper;
 import com.PrintLab.dto.BusinessUnitCategoryDto;
 import com.PrintLab.dto.BusinessUnitProcessDto;
 import com.PrintLab.exception.RecordNotFoundException;
@@ -26,15 +27,17 @@ public class BusinessUnitCategoryImpl implements BusinessUnitCategoryService {
     private final BusinessUnitProcessRepository processRepository;
     private final VendorRepository vendorRepository;
     private final BusinessUnitCategoryMapper categoryMapper;
+    private final BusinessUnitProcessMapper processMapper;
 
     public BusinessUnitCategoryImpl(
             BusinessUnitCategoryRepository categoryRepository,
-            BusinessUnitProcessRepository processRepository, VendorRepository vendorRepository, BusinessUnitCategoryMapper categoryMapper
+            BusinessUnitProcessRepository processRepository, VendorRepository vendorRepository, BusinessUnitCategoryMapper categoryMapper, BusinessUnitProcessMapper processMapper
     ) {
         this.categoryRepository = categoryRepository;
         this.processRepository = processRepository;
         this.vendorRepository = vendorRepository;
         this.categoryMapper = categoryMapper;
+        this.processMapper = processMapper;
     }
 
     @Override
@@ -236,7 +239,7 @@ public class BusinessUnitCategoryImpl implements BusinessUnitCategoryService {
     private BusinessUnitProcess createNewProcess(BusinessUnitCategory category, BusinessUnitProcessDto processDto) {
         return BusinessUnitProcess.builder()
                 .process(processDto.getProcess())
-                .billable(processDto.isBillable())
+                .type(processDto.getType())
                 .category(category)
                 .vendors(processDto.getVendors().stream()
                         .map(categoryMapper::toEntity)
@@ -246,7 +249,7 @@ public class BusinessUnitCategoryImpl implements BusinessUnitCategoryService {
 
     private void updateProcessFields(BusinessUnitProcess process, BusinessUnitProcessDto processDto) {
         process.setProcess(processDto.getProcess());
-        process.setBillable(processDto.isBillable());
+        process.setType(processDto.getType());
         process.setVendors(processDto.getVendors().stream()
                 .map(categoryMapper::toEntity)
                 .collect(Collectors.toList()));
@@ -293,6 +296,24 @@ public class BusinessUnitCategoryImpl implements BusinessUnitCategoryService {
         return categories.stream()
                 .map(categoryMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public BusinessUnitCategoryDto updateProcessReorder(Long categoryId, BusinessUnitCategoryDto category) {
+
+        Optional<BusinessUnitCategory> existCategoryOptional = categoryRepository.findById(categoryId);
+
+        if (existCategoryOptional.isPresent()) {
+            BusinessUnitCategory existCategory = existCategoryOptional.get();
+
+            existCategory.setProcessList(categoryMapper.toEntity(category).getProcessList());
+
+            categoryRepository.save(existCategory);
+
+            return categoryMapper.toDto(existCategory);
+        } else {
+            throw new IllegalArgumentException("Category not found");
+        }
     }
 
 }
