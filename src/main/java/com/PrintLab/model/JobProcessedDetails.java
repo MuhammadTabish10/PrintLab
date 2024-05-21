@@ -28,5 +28,5 @@ public class JobProcessedDetails {
     @JoinColumn(name = "product_rule_job_id")
     @JsonIgnore
     @ToString.Exclude
-    private ProductRuleJob productRuleJob;
+    private ProductRule productRule;
 }

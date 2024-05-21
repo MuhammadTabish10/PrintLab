@@ -17,11 +17,11 @@ public class BusinessUnitCategoryMapper {
 
 
     private final VendorServiceImpl vendorMapper;
-    private final ProductRuleJobMapper productRuleJobMapper;
+    private final ProductRuleMapper productRuleMapper;
 
-    public BusinessUnitCategoryMapper(VendorServiceImpl vendorMapper, ProductRuleJobMapper productRuleJobMapper) {
+    public BusinessUnitCategoryMapper(VendorServiceImpl vendorMapper, ProductRuleMapper productRuleMapper) {
         this.vendorMapper = vendorMapper;
-        this.productRuleJobMapper = productRuleJobMapper;
+        this.productRuleMapper = productRuleMapper;
     }
 
     public BusinessUnitCategoryDto toDto(BusinessUnitCategory category) {
@@ -36,9 +36,9 @@ public class BusinessUnitCategoryMapper {
                                     .collect(Collectors.toList()))
                             .build();
 
-                    if (process.getProductRuleJobList() != null) {
-                        processDto.setProductRuleJobList(process.getProductRuleJobList().stream()
-                                .map(productRuleJobMapper::toDto)
+                    if (process.getProductRuleList() != null) {
+                        processDto.setProductRuleJobList(process.getProductRuleList().stream()
+                                .map(productRuleMapper::toDto)
                                 .collect(Collectors.toList()));
                     }
 

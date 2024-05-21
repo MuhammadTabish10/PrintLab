@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface JobProcessedDetailsRepository extends JpaRepository<JobProcessedDetails, Long> {
-    List<JobProcessedDetails> findByProductRuleJobIdAndJobProcessedIsTrue(Long id);
+
+    List<JobProcessedDetails> findByProductRuleIdAndJobProcessedIsTrue(Long id);
 }
