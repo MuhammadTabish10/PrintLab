@@ -122,7 +122,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public List<ProductRuleDto> getAllProductRuleInGroupSheet() {
-        List<ProductRule> productRuleList = productRuleRepository.findAllAndGroupSheetIsTrueAndType("manual");
+        List<ProductRule> productRuleList = productRuleRepository.findByGroupSheetTrueAndType("manual");
         return productRuleList.stream()
                 .map(productRuleMapper::toDto)
                 .collect(Collectors.toList());

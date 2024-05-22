@@ -64,5 +64,5 @@ public class ProductRule {
     private Boolean predefined;
     private Boolean custom;
     private Integer up;
-
+    private Long groupSheetOf;
 }

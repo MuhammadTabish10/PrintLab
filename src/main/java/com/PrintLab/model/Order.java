@@ -98,4 +98,7 @@ public class Order
     private Date deliveryDate;
     private Date expiryDate;
     private String sendTo;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItems> orderItems;
 }
