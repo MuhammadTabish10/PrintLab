@@ -130,6 +130,7 @@ public class ProductRuleMapper {
                 .predefined(productRule.getPredefined())
                 .custom(productRule.getCustom())
                 .up(productRule.getUp())
+                .groupSheetOf(productRule.getGroupSheetOf())
                 .build();
     }
 
@@ -204,6 +205,7 @@ public class ProductRuleMapper {
                 .predefined(productRuleDto.getPredefined())
                 .custom(productRuleDto.getCustom())
                 .up(productRuleDto.getUp())
+                .groupSheetOf(productRuleDto.getGroupSheetOf())
                 .build();
     }
 

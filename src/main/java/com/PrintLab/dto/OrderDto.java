@@ -69,4 +69,5 @@ public class OrderDto
     private Date deliveryDate;
     private Date expiryDate;
     private String sendTo;
+    private List<OrderItemsDto> orderItems;
 }

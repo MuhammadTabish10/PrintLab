@@ -1,7 +1,9 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.Mapper.OrderItemsMapper;
 import com.PrintLab.dto.BusinessDto;
 import com.PrintLab.dto.OrderDto;
+import com.PrintLab.dto.OrderItemsDto;
 import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Order;
@@ -40,14 +42,16 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final EntityManager entityManager;
     private final EmailUtils emailUtils;
+    private final OrderItemsMapper orderItemsMapper;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, EmailUtils emailUtils) {
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper) {
         this.customerRepository = customerRepository;
         this.businessRepository = businessRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.entityManager = entityManager;
         this.emailUtils = emailUtils;
+        this.orderItemsMapper = orderItemsMapper;
     }
 
 
@@ -407,6 +411,14 @@ public class OrderServiceImpl implements OrderService {
 
 
     public OrderDto toDto(Order order) {
+
+        List<OrderItemsDto> orderItems = null;
+        if(order.getOrderItems() != null){
+            orderItems = order.getOrderItems().stream()
+                    .map(orderItemsMapper::toDto)
+                    .collect(Collectors.toList());
+        }
+
         return OrderDto.builder()
                 .id(order.getId())
                 .product(order.getProduct())
@@ -436,10 +448,19 @@ public class OrderServiceImpl implements OrderService {
                 .type(order.getType())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
+                .orderItems(orderItems)
                 .build();
     }
 
     public Order toEntity(OrderDto orderDto) {
+
+        List<OrderItems> orderItems = null;
+        if(orderDto.getOrderItems() != null){
+            orderItems = orderDto.getOrderItems().stream()
+                    .map(orderItemsMapper::toEntity)
+                    .collect(Collectors.toList());
+        }
+
         return Order.builder()
                 .id(orderDto.getId())
                 .product(orderDto.getProduct())
@@ -466,6 +487,7 @@ public class OrderServiceImpl implements OrderService {
                 .type(orderDto.getType())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
+                .orderItems(orderItems)
                 .build();
     }
 }
