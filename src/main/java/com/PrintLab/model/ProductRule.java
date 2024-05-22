@@ -52,4 +52,5 @@ public class ProductRule {
     @OneToMany(mappedBy = "productRule", cascade = CascadeType.ALL)
     private List<JobProcessedDetails> processedDetailList;
     private String type;
+    private Long groupSheetOf;
 }

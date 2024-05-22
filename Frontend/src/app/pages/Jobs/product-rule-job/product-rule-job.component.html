@@ -1,148 +1,234 @@
 <form class="was-validated" #myForm="ngForm" novalidate (ngSubmit)="submit()">
   <p-toast></p-toast>
   <app-dashboard-head></app-dashboard-head>
-  <div class="container-fluid my-3">
-    <div class="card">
-      <div class="row mx-3">
-        <div class="col">
-          <div class="form-group mb-3">
-            <label class="form-label fs-4">Product</label>
-            <input
-              autocomplete="on"
-              (focusout)="onFocusOutEvent(productRuleJob.productName!)"
-              type="text"
-              class="form-control"
-              id="formGroupExampleInput"
-              name="productname"
-              [(ngModel)]="productRuleJob.productName"
-              required
-            />
-            <div class="invalid-feedback">Please fill out this field.</div>
-            <div *ngIf="isExist" class="text-danger">
-              This product already exist.
+  <div class="card flex justify-content-center">
+    <p-accordion [multiple]="true" [activeIndex]="[0, 1, 2]">
+      <p-accordionTab header="Details:">
+        <div class="container-fluid my-3">
+          <div class="card">
+            <div class="row mx-3">
+              <div class="col-3">
+                <label class="add-order-label m-0">Category</label>
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="categoryList"
+                  [(ngModel)]="productRuleJob.businessCategory"
+                  [required]="true"
+                  optionLabel="name"
+                  optionValue="name"
+                  (ngModelChange)="onCategoryChange($event)"
+                  name="category"
+                ></p-dropdown>
+              </div>
+              <div class="col-3">
+                <div class="form-group mb-3">
+                  <label class="add-order-label m-0">Product</label>
+                  <input
+                    pInputText
+                    autocomplete="on"
+                    (focusout)="onFocusOutEvent(productRuleJob.productName!)"
+                    type="text"
+                    class="form-control"
+                    id="formGroupExampleInput"
+                    name="productname"
+                    [(ngModel)]="productRuleJob.productName"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please fill out this field.
+                  </div>
+                  <div *ngIf="isExist" class="text-danger">
+                    This product already exist.
+                  </div>
+                </div>
+              </div>
+              <div class="col-4">
+                <label class="add-order-label m-0">Visible to</label>
+                <p-multiSelect
+                  styleClass="w-100"
+                  class="customSize"
+                  [options]="roleList"
+                  [(ngModel)]="productRuleJob.visibleTo"
+                  [required]="true"
+                  optionLabel="name"
+                  optionValue="name"
+                  display="chip"
+                  name="roles"
+                ></p-multiSelect>
+              </div>
+              <div class="col-1">
+                <label class="add-order-label m-0">Active</label>
+                <div class="form-check form-switch form-switch-lg">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="flexSwitchCheckChecked"
+                    name="impositionValueChecked"
+                    [(ngModel)]="productRuleJob.status"
+                  />
+                </div>
+              </div>
+              <div class="col-1">
+                <label class="add-order-label m-0">GroupSheet</label>
+                <div class="form-check form-switch form-switch-lg">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="flexSwitchCheckChecked2"
+                    name="impositionValueChecked2"
+                    [(ngModel)]="productRuleJob.groupSheet"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="container-fluid">
-    <div class="card">
-      <div class="row mx-3">
-        <div class="col">
-          <label class="add-order-label m-0">Category</label>
-          <p-multiSelect
-            styleClass="w-100"
-            [options]="categoryArray?.productFieldValuesList"
-            optionLabel="name"
-            name="sizeCategory"
-            (onChange)="onSizeCategoryChange($event.value)"
-            [(ngModel)]="category"
-            [required]="true"
-            placeholder="Select category"
-            display="chip"
-          ></p-multiSelect>
-          <div *ngIf="category" class="text-success ps-2">{{ valid }}</div>
-          <div *ngIf="!category" class="text-danger ps-2">{{ invalid }}</div>
-        </div>
-
-        <div class="col" *ngIf="category">
-          <label class="add-order-label m-0">Paper Size</label>
-          <p-multiSelect
-            styleClass="w-100"
-            [options]="uppingArray"
-            optionLabel="label"
-            display="chip"
-            [required]="true"
-            (onChange)="onUpingChange(upping)"
-            name="paperSize"
-            [(ngModel)]="upping"
-            placeholder="Select Upping"
-          ></p-multiSelect>
-          <div *ngIf="upping" class="text-success ps-2">{{ valid }}</div>
-          <div *ngIf="!upping" class="text-danger ps-2">{{ invalid }}</div>
-        </div>
-      </div>
-      <div class="row mx-3 my-1">
-        <div *ngIf="selectedCategories.length > 0" class="mb-3">
-          <label class="add-order-label m-0"
-            >Selected Categories and Sizes:</label
-          >
-          <!-- Display categories and sizes -->
-          <div class="row" *ngIf="selectedCategories.length > 0">
-            <ng-container *ngFor="let selectedCategory of selectedCategories">
-              <div class="col-lg-4 mb-3">
-                <div class="card">
-                  <div class="card-header">
-                    {{ selectedCategory.toUpperCase() }}
-                  </div>
-                  <ul class="list-group list-group-flush">
-                    <li
-                      class="list-group-item"
-                      *ngFor="let size of getSizesForCategory(selectedCategory)"
-                    >
-                      {{ size }}
-                    </li>
-                  </ul>
-                </div>
+      </p-accordionTab>
+      <p-accordionTab header="Sizes:">
+        <div class="card">
+          <div class="row mx-3 my-3">
+            <div class="col-1">
+              <label class="add-order-label m-0">Predefined</label>
+              <div class="form-check form-switch form-switch-lg">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="flexSwitchCheckChecked3"
+                  name="impositionValueChecked3"
+                  [(ngModel)]="productRuleJob.predefined"
+                />
               </div>
-            </ng-container>
+            </div>
+            <div class="col-1">
+              <label class="add-order-label m-0">Custom</label>
+              <div class="form-check form-switch form-switch-lg">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="flexSwitchCheckChecked4"
+                  name="impositionValueChecked4"
+                  [(ngModel)]="productRuleJob.custom"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="card my-3">
-      <div class="row mx-3 py-3">
-        <div class="col-lg-4">
-          <label class="add-order-label m-0">Category</label>
-          <p-dropdown
-            styleClass="w-100"
-            [options]="categoryList"
-            [(ngModel)]="productRuleJob.category"
-            [required]="true"
-            optionLabel="name"
-            optionValue="name"
-            (ngModelChange)="onCategoryChange($event)"
-            name="category"
-          ></p-dropdown>
-        </div>
-        <div class="col-lg-8">
-          <div class="card p-3">
-            <p-pickList
-              [source]="sourceProducts"
-              [target]="targetProducts"
-              sourceHeader="Available"
-              targetHeader="Selected"
-              name="processes"
-              [dragdrop]="true"
-              [responsive]="true"
-              [sourceStyle]="{ height: '19rem' }"
-              [targetStyle]="{ height: '19rem' }"
-              filterBy="name"
-              sourceFilterPlaceholder="Search by name"
-              targetFilterPlaceholder="Search by name"
-              breakpoint="1400px"
-            >
-              <ng-template let-product pTemplate="item">
-                <div class="flex flex-wrap p-2 align-items-center gap-3">
-                  <div class="flex-1 flex flex-column gap-2">
-                    <span class="font-bold">{{ product.process }}</span>
-                    <div class="flex align-items-center gap-2">
-                      <i class="pi pi-tag text-sm"></i>
-                      <span *ngFor="let item of processCategory">{{
-                        item.name
-                      }}</span>
+          <div class="row mx-3">
+            <div class="col-12">
+              <label class="add-order-label m-0">Category</label>
+              <p-multiSelect
+                styleClass="w-100"
+                [options]="categoryArray?.productFieldValuesList"
+                optionLabel="name"
+                name="sizeCategory"
+                (onChange)="onSizeCategoryChange($event.value)"
+                [(ngModel)]="category"
+                [required]="true"
+                placeholder="Select category"
+                display="chip"
+              ></p-multiSelect>
+              <div *ngIf="category" class="text-success ps-2">{{ valid }}</div>
+              <div *ngIf="!category" class="text-danger ps-2">
+                {{ invalid }}
+              </div>
+            </div>
+
+            <div class="col-12" *ngIf="category">
+              <label class="add-order-label m-0">Paper Size</label>
+              <p-multiSelect
+                styleClass="w-100"
+                [options]="uppingArray"
+                optionLabel="label"
+                display="chip"
+                [required]="true"
+                (onChange)="onUpingChange(upping)"
+                name="paperSize"
+                [(ngModel)]="upping"
+                placeholder="Select Upping"
+              ></p-multiSelect>
+              <div *ngIf="upping" class="text-success ps-2">{{ valid }}</div>
+              <div *ngIf="!upping" class="text-danger ps-2">{{ invalid }}</div>
+            </div>
+          </div>
+          <div class="row mx-3 my-1">
+            <div *ngIf="selectedCategories.length > 0" class="mb-3">
+              <label class="add-order-label m-0"
+                >Selected Categories and Sizes:</label
+              >
+              <!-- Display categories and sizes -->
+              <div class="row" *ngIf="selectedCategories.length > 0">
+                <ng-container
+                  *ngFor="let selectedCategory of selectedCategories"
+                >
+                  <div class="col-lg-4 mb-3">
+                    <div class="card">
+                      <div class="card-header">
+                        {{ selectedCategory.toUpperCase() }}
+                      </div>
+                      <ul class="list-group list-group-flush">
+                        <li
+                          class="list-group-item"
+                          *ngFor="
+                            let size of getSizesForCategory(selectedCategory)
+                          "
+                        >
+                          {{ size }}
+                        </li>
+                      </ul>
                     </div>
                   </div>
-                </div>
-              </ng-template>
-            </p-pickList>
+                </ng-container>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="text-end mb-3">
-      <button class="btn btn-dark col-1" type="submit" [disabled]="isExist === true || myForm.invalid">{{ mode }}</button>
-    </div>
+      </p-accordionTab>
+      <p-accordionTab header="Production Process:">
+        <div class="container-fluid">
+          <div class="card my-3">
+            <div class="row mx-3 py-3">
+              <div class="col-lg-12">
+                <div class="card p-3">
+                  <p-pickList
+                    [source]="sourceProducts"
+                    [target]="targetProducts"
+                    sourceHeader="Available"
+                    targetHeader="Selected"
+                    name="processes"
+                    [dragdrop]="true"
+                    [responsive]="true"
+                    [sourceStyle]="{ height: '19rem' }"
+                    [targetStyle]="{ height: '19rem' }"
+                    filterBy="name"
+                    sourceFilterPlaceholder="Search by name"
+                    targetFilterPlaceholder="Search by name"
+                    breakpoint="1400px"
+                  >
+                    <ng-template let-product pTemplate="item">
+                      <div class="flex flex-wrap p-2 align-items-center gap-3">
+                        <div class="flex-1 flex flex-column gap-2">
+                          <span class="fw-bolder">{{ product.process }}</span>
+                          <div class="flex align-items-center gap-2">
+                            <small>{{ product.type }}</small>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-pickList>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-end mb-3">
+            <button
+              class="btn btn-dark col-1"
+              type="submit"
+              [disabled]="isExist === true || myForm.invalid"
+            >
+              {{ mode }}
+            </button>
+          </div>
+        </div>
+      </p-accordionTab>
+    </p-accordion>
   </div>
 </form>

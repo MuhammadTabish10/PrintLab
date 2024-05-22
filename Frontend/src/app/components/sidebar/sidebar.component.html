@@ -12,7 +12,9 @@
       </li>
 
       <li *ngIf="sessionStorageService.hasPermission('Dashboard')">
-        <span class="sidebar-list-hover d-flex align-items-baseline d-flex align-items-baseline">
+        <span
+          class="sidebar-list-hover d-flex align-items-baseline d-flex align-items-baseline"
+        >
           <i class="fa fa-home align-self-baseline"></i>
           <a class="nav-text nav-link" [routerLink]="['/dashboard']">
             Dashboard
@@ -47,7 +49,10 @@
         </span>
       </li>
 
-      <li *ngIf="sessionStorageService.hasPermission('ProductRule')" class="mt-2">
+      <li
+        *ngIf="sessionStorageService.hasPermission('ProductRule')"
+        class="mt-2"
+      >
         <span class="sidebar-list-hover d-flex align-items-baseline">
           <i class="fa fa-shopping-bag align-self-baseline"></i>
           <a class="nav-text nav-link" [routerLink]="['/ProductRule']">
@@ -69,7 +74,7 @@
 
       <li *ngIf="sessionStorageService.hasPermission('Orders')" class="mt-2">
         <span class="sidebar-list-hover d-flex align-items-baseline">
-          <i class="fa fa-shopping-cart "></i>
+          <i class="fa fa-shopping-cart"></i>
           <a class="nav-text nav-link" [routerLink]="['/orders']"> Orders </a>
         </span>
       </li>
@@ -92,9 +97,12 @@
         </span>
       </li> -->
 
-      <li *ngIf="sessionStorageService.hasPermission('JobDesigner')" class="mt-2">
+      <li
+        *ngIf="sessionStorageService.hasPermission('JobDesigner')"
+        class="mt-2"
+      >
         <span class="sidebar-list-hover d-flex align-items-baseline">
-          <i class="fa fa-shopping-cart "></i>
+          <i class="fa fa-shopping-cart"></i>
           <a class="nav-text nav-link" [routerLink]="['/jobDesignerOrders']">
             Orders
           </a>
@@ -105,7 +113,7 @@
         class="mt-2"
       >
         <span class="sidebar-list-hover d-flex align-items-baseline">
-          <i class="fa fa-shopping-cart "></i>
+          <i class="fa fa-shopping-cart"></i>
           <a class="nav-text nav-link" [routerLink]="['/jobProductionOrders']">
             Orders
           </a>
@@ -116,7 +124,7 @@
         class="mt-2"
       >
         <span class="sidebar-list-hover d-flex align-items-baseline">
-          <i class="fa fa-shopping-cart "></i>
+          <i class="fa fa-shopping-cart"></i>
           <a class="nav-text nav-link" [routerLink]="['/jobPlateSetterOrders']">
             Orders
           </a>
@@ -125,7 +133,7 @@
 
       <li *ngIf="sessionStorageService.hasPermission('Customers')" class="mt-2">
         <span class="sidebar-list-hover d-flex align-items-baseline">
-          <i class="fa fa-user "></i>
+          <i class="fa fa-user"></i>
           <a class="nav-text nav-link" [routerLink]="['/customers']">
             Customers
           </a>
@@ -161,13 +169,16 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/vendor']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">Vendor</span>
           </a>
         </span>
       </li>
 
-      <li *ngIf="sessionStorageService.hasPermission('Calculator')" class="mt-2">
+      <li
+        *ngIf="sessionStorageService.hasPermission('Calculator')"
+        class="mt-2"
+      >
         <span class="sidebar-list-hover d-flex align-items-baseline">
           <i class="fa fa-calculator"></i>
           <a class="nav-text nav-link" [routerLink]="['/calculator']">
@@ -214,14 +225,20 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/paperSize']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">Paper Size</span>
           </a>
         </span>
       </li>
 
-      <li *ngIf="sessionStorageService.hasPermission('PaperStock')" class="mt-2">
-        <span class="sidebar-list-hover d-flex align-items-baseline" *ngIf="isDropDown3Open == true">
+      <li
+        *ngIf="sessionStorageService.hasPermission('PaperStock')"
+        class="mt-2"
+      >
+        <span
+          class="sidebar-list-hover d-flex align-items-baseline"
+          *ngIf="isDropDown3Open == true"
+        >
           <i class="fa fa-pied-piper"></i>
           <a class="nav-text nav-link" [routerLink]="['/paperStock']">
             Paper Stock
@@ -240,7 +257,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/uping']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">Uping</span>
           </a>
         </span>
@@ -257,7 +274,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/uping-view']"
           >
-            <i class="fa fa-hand-pointer "></i>
+            <i class="fa fa-hand-pointer"></i>
             <span class="nav-text">View Uping</span>
           </a>
         </span>
@@ -274,7 +291,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/inventory']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">Inventory</span>
           </a>
         </span>
@@ -285,7 +302,7 @@
         *ngIf="sessionStorageService.hasPermission('Configuration')"
       >
         <span class="d-flex align-items-baseline" (click)="toggleDropDown(4)">
-          <i class="fa fa-bars "></i>
+          <i class="fa fa-bars"></i>
           <span class="nav-text fw-bolder d-flex text-nowrap">
             Vendor Rates
             <i
@@ -311,7 +328,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/get-binding-labours']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">BindingLabours</span>
           </a>
         </span>
@@ -327,7 +344,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/get-lamination-vendors']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">Lamination Vendors</span>
           </a>
         </span>
@@ -343,7 +360,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/get-uv-vendors']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">UV Vendors</span>
           </a>
         </span>
@@ -359,7 +376,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/ctp']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">CTP</span>
           </a>
         </span>
@@ -367,7 +384,9 @@
 
       <li
         class="settingOptions mt-2"
-        *ngIf="sessionStorageService.hasPermission('Configuration_Press_Machine')"
+        *ngIf="
+          sessionStorageService.hasPermission('Configuration_Press_Machine')
+        "
       >
         <span>
           <a
@@ -376,7 +395,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/pressMachine']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">Press Machine</span>
           </a>
         </span>
@@ -395,7 +414,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/paperMarket']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">Paper Market</span>
           </a>
         </span>
@@ -406,7 +425,7 @@
         *ngIf="sessionStorageService.hasPermission('Configuration_Settings')"
       >
         <span class="d-flex align-items-baseline" (click)="toggleDropDown(5)">
-          <i class="fa fa-bars "></i>
+          <i class="fa fa-bars"></i>
           <span class="nav-text fw-bolder d-flex align-items-baseline">
             System
             <i
@@ -434,7 +453,7 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/productProcess']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">Product Process</span>
           </a>
         </span>
@@ -451,14 +470,20 @@
             class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
             [routerLink]="['/settings']"
           >
-            <i class="fa fa-gear "></i>
+            <i class="fa fa-gear"></i>
             <span class="nav-text">Settings</span>
           </a>
         </span>
       </li>
 
-      <li *ngIf="sessionStorageService.hasPermission('Permissions')" class="mt-2">
-        <span class="sidebar-list-hover d-flex align-items-baseline" *ngIf="isDropDown5Open">
+      <li
+        *ngIf="sessionStorageService.hasPermission('Permissions')"
+        class="mt-2"
+      >
+        <span
+          class="sidebar-list-hover d-flex align-items-baseline"
+          *ngIf="isDropDown5Open"
+        >
           <i class="fa fa-plus"></i>
           <a class="nav-text nav-link" [routerLink]="['/permission']">
             Permissions
@@ -471,8 +496,10 @@
         *ngIf="sessionStorageService.hasPermission('ProductServices')"
       >
         <span class="d-flex align-items-baseline" (click)="toggleDropDown(6)">
-          <i class="fa fa-bars "></i>
-          <span class="nav-text fw-bolder d-flex align-items-baseline text-nowrap">
+          <i class="fa fa-bars"></i>
+          <span
+            class="nav-text fw-bolder d-flex align-items-baseline text-nowrap"
+          >
             Product Services
             <i
               class="fa-solid fa-chevron-down dd-icon-settings ms-3"
@@ -490,7 +517,10 @@
         *ngIf="sessionStorageService.hasPermission('ProductCategories')"
         class="mt-2"
       >
-        <span class="sidebar-list-hover d-flex align-items-baseline" *ngIf="isDropDown6Open">
+        <span
+          class="sidebar-list-hover d-flex align-items-baseline"
+          *ngIf="isDropDown6Open"
+        >
           <i class="fa fa-plus"></i>
           <a class="nav-text nav-link" [routerLink]="['/product-categories']">
             Product Category
@@ -502,7 +532,10 @@
         *ngIf="sessionStorageService.hasPermission('ProductServices')"
         class="mt-2"
       >
-        <span class="sidebar-list-hover d-flex align-items-baseline" *ngIf="isDropDown6Open">
+        <span
+          class="sidebar-list-hover d-flex align-items-baseline"
+          *ngIf="isDropDown6Open"
+        >
           <i class="fa fa-plus"></i>
           <a class="nav-text nav-link" [routerLink]="['/product-services']">
             Product Service
@@ -515,8 +548,10 @@
         *ngIf="sessionStorageService.hasPermission('Invoice')"
       >
         <span class="d-flex align-items-baseline" (click)="toggleDropDown(7)">
-          <i class="fa fa-bars "></i>
-          <span class="nav-text fw-bolder d-flex align-items-baseline text-nowrap">
+          <i class="fa fa-bars"></i>
+          <span
+            class="nav-text fw-bolder d-flex align-items-baseline text-nowrap"
+          >
             Invoice Section
             <i
               class="fa-solid fa-chevron-down dd-icon-settings ms-3"
@@ -531,7 +566,10 @@
       </li>
 
       <li *ngIf="sessionStorageService.hasPermission('Invoice')" class="mt-2">
-        <span class="sidebar-list-hover d-flex align-items-baseline" *ngIf="isDropDown7Open">
+        <span
+          class="sidebar-list-hover d-flex align-items-baseline"
+          *ngIf="isDropDown7Open"
+        >
           <i class="fa fa-plus"></i>
           <a class="nav-text nav-link" [routerLink]="['/get-invoices']">
             Invoice
@@ -542,6 +580,10 @@
   </nav>
 </p-sidebar>
 
-<button (click)="sidebarVisible = true" class="btn btn-light border border-dark">
+<button
+  (click)="sidebarVisible = true"
+  class="btn btn-light border border-dark"
+  type="button"
+>
   <i class="pi pi-list"></i>
 </button>

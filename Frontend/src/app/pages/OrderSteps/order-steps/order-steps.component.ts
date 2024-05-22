@@ -9,12 +9,11 @@ import { JobProcessedDetails } from 'src/app/Model/ProcessDetails';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
-import { ProductionJob } from 'src/app/Model/ProductionJob';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { Subject, takeUntil } from 'rxjs';
-import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
 import { Order } from 'src/app/Model/Order';
+import { ProductRule } from 'src/app/Model/ProductRule';
 
 @Component({
   selector: 'app-order-steps',
@@ -38,7 +37,7 @@ export class OrderStepsComponent implements OnInit {
   activeIndex: number = 0;
   confirmationActive: boolean = false;
   processedJobList: JobProcessedDetails[] = [];
-  productRuleJob: ProductRuleJob | undefined | null;
+  productRule: ProductRule | undefined | null
   active: string = '';
   nestedActive: string = '';
 
@@ -89,7 +88,6 @@ export class OrderStepsComponent implements OnInit {
         (data) => {
           this.orderById = data;
           debugger
-          this.getProductRuleJobByName(this.orderById.product);
           this.orderById.timeStamp = new Date(this.orderById.timeStamp[0], this.orderById.timeStamp[1] - 1, this.orderById.timeStamp[2], this.orderById.timeStamp[3], this.orderById.timeStamp[4]);
           this.orderById.timeStamp = this.datePipe.transform(this.orderById.timeStamp, 'EEEE, MMMM d, yyyy, h:mm a');
           console.log(this.orderById.status);
@@ -261,19 +259,10 @@ export class OrderStepsComponent implements OnInit {
   getTimeLine(): void {
     this.nestedActive = 'overviewProduction';
     if (this.overviewActive) {
-      this.getUpdatedTimeLine(this.productRuleJob?.id!);
+      this.getUpdatedTimeLine(this.productRule?.id!);
     } else {
       this.events = [];
     }
   }
 
-  private getProductRuleJobByName(productName: string): void {
-    this.jobService.getProductRuleJobByName(productName).subscribe(
-      (res: ProductRuleJob[]) => {
-        this.productRuleJob = res[0];
-      },
-      (error: BackendErrorResponse) => {
-        this.errorHandleService.showError(error.error.error);
-      })
-  }
 }

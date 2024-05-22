@@ -1,7 +1,7 @@
-import { Vendor } from './../../../Model/Vendor';
+import { ProductRuleService } from 'src/app/services/product-rule.service';
+import { GlobalVariables } from './../../add-order/GlobalVariables';
 import { Component, Input, OnInit } from '@angular/core';
 import { BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
-import { ProductionJob } from 'src/app/Model/ProductionJob';
 import { JobService } from '../Service/job.service';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { JobProcessedDetails } from 'src/app/Model/ProcessDetails';
@@ -13,8 +13,9 @@ import { AuthguardService } from 'src/app/services/authguard.service';
 import { DatePipe } from '@angular/common';
 import { Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
 import { OrdersService } from 'src/app/services/orders.service';
+import { ProductRule } from 'src/app/Model/ProductRule';
+import { Order } from 'src/app/Model/Order';
 
 @Component({
   selector: 'app-job-requests',
@@ -31,7 +32,7 @@ export class JobRequestsComponent implements OnInit {
 
   disabledTabs: boolean[] = [];
 
-  jobById: any;
+  orderById: Order | undefined;
 
   isCurrentTabFilled: boolean = false;
 
@@ -51,14 +52,14 @@ export class JobRequestsComponent implements OnInit {
   // disableCheck: boolean = false;
   processedJobList: JobProcessedDetails[] = [];
   idFromQueryParam: number | null | undefined;
-  productRuleJob: ProductRuleJob | null | undefined;
+  productRule: ProductRule | null | undefined;
   constructor(
     private datePipe: DatePipe,
     private route: ActivatedRoute,
-    private jobService: JobService,
     private orderService: OrdersService,
     private authGuardSerivce: AuthguardService,
     private errorHandleService: ErrorHandleService,
+    private ProductRuleService: ProductRuleService,
     private successMsgService: SuccessMessageService,
   ) { }
 
@@ -83,11 +84,12 @@ export class JobRequestsComponent implements OnInit {
   private async getProcessList(id: number) {
     try {
       const productionJob = await this.orderService.getOrderByIdAndType(id, "manual").toPromise();
-      this.jobById = productionJob;
-      const productRuleJobs: ProductRuleJob[] | null | undefined = await this.getProductRuleJobByName(this.jobById?.product).toPromise();
-      this.productRuleJob = productRuleJobs ? productRuleJobs[0] : undefined;
+      this.orderById = productionJob;
+      const productRuleJobs: ProductRule[] | null | undefined = await this.getProductRuleJobByName(this.orderById?.product).toPromise();
+      this.productRule = productRuleJobs ? productRuleJobs[0] : undefined;
       if (productRuleJobs && productRuleJobs.length && productRuleJobs.length > 0) {
-        if (productRuleJobs[0].processList && productRuleJobs[0].processedDetailList.length === 0) {
+        if (productRuleJobs[0].processList && productRuleJobs[0].processedDetailList
+          && productRuleJobs[0].processedDetailList.length === 0) {
           productRuleJobs[0].processedDetailList = [];
           for (let i = 0; i < productRuleJobs[0].processList.length; i++) {
             productRuleJobs[0].processedDetailList?.push({
@@ -102,7 +104,7 @@ export class JobRequestsComponent implements OnInit {
             });
           }
         } else if (
-          productRuleJobs[0].processList &&
+          productRuleJobs[0].processList && productRuleJobs[0].processedDetailList &&
           productRuleJobs[0].processedDetailList.length !== productRuleJobs[0].processList.length
         ) {
           const remainingLength = productRuleJobs[0].processList.length - productRuleJobs[0].processedDetailList.length;
@@ -127,8 +129,8 @@ export class JobRequestsComponent implements OnInit {
   }
 
   submit(category: BusinessUnitProcessDto, index: number, event: EventTarget) {
-    if (this.productRuleJob?.processedDetailList) {
-      this.productRuleJob.processedDetailList[index].processName = category.process;
+    if (this.productRule?.processedDetailList) {
+      this.productRule.processedDetailList[index].processName = category.process;
       // Get current timestamp
       const currentTimeStamp = new Date().getTime();
       // Add 5 hours in milliseconds
@@ -136,13 +138,13 @@ export class JobRequestsComponent implements OnInit {
       // Create a new Date object with the increased timestamp
       const newTimeStamp = new Date(increasedTimeStamp);
       // Assign the new timestamp to the processed detail
-      this.productRuleJob.processedDetailList[index].timeStamp = newTimeStamp;
-      const filteredList = this.filterProcessDetailList(this.productRuleJob.processedDetailList);
+      this.productRule.processedDetailList[index].timeStamp = newTimeStamp;
+      const filteredList = this.filterProcessDetailList(this.productRule.processedDetailList);
       debugger
       if (filteredList.length > 0) {
-        this.productRuleJob.processedDetailList = filteredList;
-        this.jobService.updateProductRuleJob(this.productRuleJob.id!, this.productRuleJob).subscribe(
-          (res: ProductRuleJob) => {
+        this.productRule.processedDetailList = filteredList;
+        this.ProductRuleService.updateProductRule(this.productRule.id!, this.productRule).subscribe(
+          (res: ProductRule) => {
             this.handleRoles();
             this.getProcessList(this.idFromQueryParam!);
             this.successMsgService.showSuccess(`Job ${category.process!} processed successfully`);
@@ -170,14 +172,14 @@ export class JobRequestsComponent implements OnInit {
   private handleRoles() {
     const role = this.decodeToken();
     debugger
-    if (role !== 'ADMIN' && this.productRuleJob?.processedDetailList && this.productRuleJob?.processedDetailList?.length > 0) {
+    if (role !== 'ADMIN' && this.productRule?.processedDetailList && this.productRule?.processedDetailList?.length > 0) {
       // this.disableCheck = true;
-      this.disabledTabs = this.productRuleJob?.processedDetailList?.map(process => !!process.jobProcessed) || [];
+      this.disabledTabs = this.productRule?.processedDetailList?.map(process => !!process.jobProcessed) || [];
     }
   }
 
-  private getProductRuleJobByName(name: string | null | undefined): Observable<ProductRuleJob[] | null> {
-    return this.jobService.getProductRuleJobByName(name).pipe(
+  private getProductRuleJobByName(name: string | null | undefined): Observable<ProductRule[] | null> {
+    return this.ProductRuleService.searchProduct(name!).pipe(
       catchError((error: BackendErrorResponse) => {
         this.errorHandleService.showError(error.error.error);
         return of(null);

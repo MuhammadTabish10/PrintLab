@@ -268,7 +268,6 @@ public class BusinessUnitCategoryImpl implements BusinessUnitCategoryService {
     }
 
 
-
     @Override
     public String deleteProcess(Long processId) {
         Optional<BusinessUnitProcess> optionalProcess = processRepository.findById(processId);
@@ -302,26 +301,32 @@ public class BusinessUnitCategoryImpl implements BusinessUnitCategoryService {
             throw new IllegalArgumentException("Category ID cannot be null");
         }
 
+        // Fetch the existing category
         BusinessUnitCategory existCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
+        // Detach the existing processes from the category
         List<BusinessUnitProcess> existingProcesses = existCategory.getProcessList();
         if (existingProcesses != null && !existingProcesses.isEmpty()) {
-            processRepository.deleteAll(existingProcesses);
+            for (BusinessUnitProcess process : existingProcesses) {
+                process.setCategory(null);
+            }
+            processRepository.saveAll(existingProcesses);
         }
 
+        // Convert DTO to entity and set the new process list
         List<BusinessUnitProcess> updatedProcessList = categoryMapper.toEntity(categoryDto).getProcessList();
         for (BusinessUnitProcess process : updatedProcessList) {
-            process.setId(null);
+            process.setId(null); // Ensure new IDs are generated if needed
             process.setCategory(existCategory);
         }
         existCategory.setProcessList(updatedProcessList);
 
-        categoryRepository.save(existCategory);
+        // Save the updated category
+        existCategory = categoryRepository.save(existCategory);
 
         return categoryMapper.toDto(existCategory);
     }
-
 
 
 }

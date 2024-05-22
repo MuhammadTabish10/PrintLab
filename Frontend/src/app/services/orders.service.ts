@@ -26,7 +26,7 @@ export class OrdersService {
     return this.http.post(url, order, { params: { loggedInUser: createdBy } })
   }
 
-  getOrders(pageState?: PaginatorState, search?: Order): Observable<PaginationResponse<Order>>{
+  getOrders(pageState?: PaginatorState, search?: Order): Observable<PaginationResponse<Order>> {
     let params = new HttpParams();
     if (pageState?.hasOwnProperty('page') && pageState?.hasOwnProperty('rows')) {
       params = params.set('page-number', pageState?.page!);
@@ -64,10 +64,9 @@ export class OrdersService {
     return this.http.get(url);
   }
 
-  getOrderByIdAndType(id: number, type: string) {
-    let url = `${this._url}/order/${id}`;
+  getOrderByIdAndType(id: number, type: string): Observable<Order> {
     const params = new HttpParams().set('type', type);
-    return this.http.get(url, { params });
+    return this.http.get<Order>(`${this._url}/order/${id}`, { params });
   }
 
   deleteOrder(id: any) {

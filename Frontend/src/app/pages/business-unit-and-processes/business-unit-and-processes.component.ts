@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from 'src/app/services/product.service';
 import { BusinessUnitService } from './Service/business-unit.service';
 import { BusinessUnit, BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
@@ -9,7 +8,8 @@ import { Vendor } from 'src/app/Model/Vendor';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { MessageService } from 'primeng/api';
 import { Column } from 'src/app/Model/Column';
-import { TableRowReorderEvent } from 'primeng/table';
+import { ProductField } from 'src/app/Model/ProductField';
+import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 
 @Component({
   selector: 'app-business-unit-and-processes',
@@ -21,11 +21,12 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
 
   categoryList: BusinessUnit[] = [];
   selectedProcess: BusinessUnitProcessDto = {
-    id: undefined,
     process: undefined,
-    billable: false,
     vendors: undefined,
+    type: undefined,
+    id: undefined,
   };
+  types: ProductField | undefined | null;
   name: string | undefined | null
   position: string = 'top';
   openTabIndex: number | number[] | null | undefined;
@@ -40,8 +41,8 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
     name: undefined,
     processList: [{
       id: undefined,
+      type: undefined,
       process: undefined,
-      billable: false
     }],
   };
   visible: boolean = false;
@@ -54,6 +55,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
     private errorHandleService: ErrorHandleService,
     private successService: SuccessMessageService,
     private businessService: BusinessUnitService,
+    private productFieldService: ProductDefinitionService,
     private messageService: MessageService,
     private vendorService: VendorService,
   ) { }
@@ -61,6 +63,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
   ngOnInit() {
     this.getCategoryList();
     this.getAllVendors();
+    this.getAllProcessTypes("PROCESS_TYPES");
   }
   private getCategoryList(): void {
     this.businessService.getBusinessUnits().subscribe(
@@ -70,7 +73,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
 
         this.cols = [
           { field: 'process', header: 'Process' },
-          { field: 'billable', header: 'Billable' },
+          { field: 'type', header: 'Type' },
           { field: 'vendors', header: 'Vendors' }
         ];
 
@@ -90,7 +93,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
     if (this.selectedProcess.process) {
       this.category.processList?.push(this.selectedProcess);
     }
-
+    debugger
     const serviceToCall = this.category.id
       ? this.businessService.putBusinessUnit(this.category.id!, this.category)
       : this.businessService.postBusinessUnit(this.category);
@@ -112,10 +115,10 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
           processList: undefined,
         }
         this.selectedProcess = {
-          id: null,
-          process: null,
-          billable: null,
           vendors: undefined,
+          process: null,
+          type: null,
+          id: null,
         }
         this.selectedVendors = [];
         this.getCategoryList();
@@ -164,7 +167,7 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
 
         this.selectedProcess.id = process.id;
         this.selectedProcess.process = process.process;
-        this.selectedProcess.billable = process.billable;
+        this.selectedProcess.type = process.type;
         this.selectedVendors = process.vendors!;
       }
     } if (id) {
@@ -196,8 +199,8 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
     }
     this.selectedProcess = {
       id: null,
+      type: null,
       process: null,
-      billable: null,
       vendors: undefined,
     }
     this.selectedVendors = [];
@@ -206,7 +209,24 @@ export class BusinessUnitAndProcessesComponent implements OnInit {
     this.messageService.clear();
   }
 
-  public onReorder(category:BusinessUnit): void {
-    console.log(category);
+  public onReorder(category: BusinessUnit): void {
+    this.businessService.reorderProcessList(category).subscribe(
+      (res: BusinessUnit) => {
+        this.getCategoryList();
+      },
+      (error: BackendErrorResponse) => {
+        this.onToastClose();
+        this.errorHandleService.showError(error.error.error);
+      }
+    )
+  }
+  private getAllProcessTypes(field: string) {
+    this.productFieldService.searchProductField(field)
+      .subscribe(
+        (data: any) => {
+          this.types = data[0];
+        }, (error: BackendErrorResponse) => {
+          this.errorHandleService.showError(error.error.error);
+        })
   }
 }

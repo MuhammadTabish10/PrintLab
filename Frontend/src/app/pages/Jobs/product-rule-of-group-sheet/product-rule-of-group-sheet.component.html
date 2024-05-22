@@ -1,0 +1,67 @@
+<form class="was-validated" #myForm="ngForm" novalidate (ngSubmit)="submit()">
+  <p-toast></p-toast>
+  <app-dashboard-head></app-dashboard-head>
+  <div class="card flex justify-content-center">
+    <p-accordion [multiple]="true" [activeIndex]="[0]">
+      <p-accordionTab header="Details:">
+        <div class="container-fluid my-3">
+          <div class="card">
+            <div class="row mx-3">
+              <div class="col-3">
+                <label class="add-order-label m-0">Category</label>
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="categoryList"
+                  [(ngModel)]="productRule.businessCategory"
+                  [required]="true"
+                  optionLabel="name"
+                  optionValue="name"
+                  name="category"
+                ></p-dropdown>
+              </div>
+              <div class="col-3">
+                <label class="add-order-label m-0">Group Sheet</label>
+                <p-dropdown
+                  styleClass="w-100"
+                  [options]="productRuleList"
+                  [(ngModel)]="productRule.g"
+                  [required]="true"
+                  optionLabel="name"
+                  optionValue="name"
+                  name="category"
+                ></p-dropdown>
+              </div>
+
+              <div class="col-4">
+                <label class="add-order-label m-0">Visible to</label>
+                <p-multiSelect
+                  styleClass="w-100"
+                  class="customSize"
+                  [options]="roleList"
+                  [(ngModel)]="productRule.visibleTo"
+                  [required]="true"
+                  optionLabel="name"
+                  optionValue="name"
+                  display="chip"
+                  name="roles"
+                ></p-multiSelect>
+              </div>
+              <div class="col-1">
+                <label class="add-order-label m-0">Active</label>
+                <div class="form-check form-switch form-switch-lg">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="flexSwitchCheckChecked"
+                    name="impositionValueChecked"
+                    [(ngModel)]="productRule.status"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-accordionTab>
+    </p-accordion>
+  </div>
+</form>

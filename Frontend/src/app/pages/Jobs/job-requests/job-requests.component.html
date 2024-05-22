@@ -9,12 +9,12 @@
       <div *ngIf="jobProcessedActive">
         <div
           class="container-fluid card p-3"
-          *ngIf="productRuleJob?.processList"
+          *ngIf="productRule?.processList"
         >
           <p-accordion [multiple]="true" [activeIndex]="openTabIndex">
             <p-accordionTab
               *ngFor="
-                let category of productRuleJob?.processList;
+                let category of productRule?.processList;
                 let i = index
               "
               [selected]="i === openTabIndex"
@@ -31,7 +31,7 @@
                   {{ category.process }}
                 </span>
               </ng-template>
-              <div class="card px-1" *ngIf="productRuleJob">
+              <div class="card px-1" *ngIf="productRule">
                 <div class="row my-3">
                   <div class="col-6">
                     <label class="d-block add-order-label m-0 fw-bolder"
@@ -46,7 +46,7 @@
                       [style]="{ width: '10%' }"
                       [name]="'amount[' + i + ']'"
                       [required]="true"
-                      [(ngModel)]="productRuleJob.processedDetailList[i].amount"
+                      [(ngModel)]="productRule.processedDetailList[i].amount"
                     ></p-inputNumber>
                   </div>
                 </div>
@@ -62,7 +62,7 @@
                       optionLabel="name"
                       optionValue="name"
                       [disabled]="disabledTabs[i]"
-                      [(ngModel)]="productRuleJob.processedDetailList[i].vendor"
+                      [(ngModel)]="productRule.processedDetailList[i].vendor"
                       [filter]="true"
                       filterBy="name"
                       [name]="'vendor[' + i + ']'"
@@ -80,7 +80,7 @@
                       [disabled]="disabledTabs[i]"
                       optionValue="name"
                       [(ngModel)]="
-                        productRuleJob.processedDetailList[i].payment
+                        productRule.processedDetailList[i].payment
                       "
                       optionLabel="name"
                       [filter]="true"
@@ -103,7 +103,7 @@
                         [name]="'impositionValueChecked[' + i + ']'"
                         (change)="submit(category, i, $event.target!)"
                         [(ngModel)]="
-                          productRuleJob.processedDetailList[i].jobProcessed
+                          productRule.processedDetailList[i].jobProcessed
                         "
                       />
                     </div>
@@ -113,7 +113,7 @@
               <!-- <div class="text-center mt-3">
               <button
                 class="btn btn-primary"
-                (click)="onNextTabClick(productRuleJob?.processedDetailList)"
+                (click)="onNextTabClick(productRule?.processedDetailList)"
               >
                 Next
               </button>

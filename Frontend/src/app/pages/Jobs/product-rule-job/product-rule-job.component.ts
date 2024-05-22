@@ -1,6 +1,6 @@
+import { RequestBody } from './../../product-rule/RequestBody';
 import { Component, OnInit } from '@angular/core';
 import { JobService } from '../Service/job.service';
-import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
@@ -11,6 +11,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { UpingService } from 'src/app/services/uping.service';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
+import { ProductRule } from 'src/app/Model/ProductRule';
+import { Roles } from 'src/app/Model/User';
+import { RolesService } from 'src/app/services/roles.service';
 
 @Component({
   selector: 'app-product-rule-job',
@@ -28,16 +31,7 @@ export class ProductRuleJobComponent implements OnInit {
   selectedSizes: { category: string, size: string }[] = [];
   uppingArray: any
   upping: any;
-  productRuleJob: ProductRuleJob = {
-    sizeCategory: undefined,
-    productName: undefined,
-    processList: [],
-    type: undefined,
-    id: undefined,
-    category: '',
-    size: undefined,
-    processedDetailList: []
-  };
+  productRuleJob: ProductRule = { ...RequestBody.productRuleBody };
   isExist: boolean = false;
   categoryList: BusinessUnit[] = [];
   processCategory: BusinessUnit[] = [];
@@ -46,6 +40,7 @@ export class ProductRuleJobComponent implements OnInit {
   mode: string | undefined | null;
   idFromQueryParam: number | null | undefined;
   orderType: string | null | undefined;
+  roleList: Roles[] = [];
 
 
   constructor
@@ -55,6 +50,7 @@ export class ProductRuleJobComponent implements OnInit {
       private productRuleService: ProductRuleService,
       private successService: SuccessMessageService,
       private errorService: ErrorHandleService,
+      private roleService: RolesService,
       private getUpping: UpingService,
       private route: ActivatedRoute,
       private router: Router,
@@ -74,11 +70,12 @@ export class ProductRuleJobComponent implements OnInit {
       }
     });
     this.getSizeList("Category");
+    this.getAllRoles();
     this.getCategoryList();
   }
 
   onFocusOutEvent(productName: string) {
-    this.productRuleService.checkUniqueProduct(productName).subscribe((result: any) => {
+    this.productRuleService.checkUniqueProduct(productName).subscribe((result: boolean) => {
       this.isExist = result;
       if (result === true) {
         const error = "This product already exist.";
@@ -110,26 +107,42 @@ export class ProductRuleJobComponent implements OnInit {
     this.businessUnitService.getBusinessUnits().subscribe(
       (res: BusinessUnit[]) => {
         this.categoryList = res;
-
       }, (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
       }
     );
   }
 
+  // onCategoryChange(category: string): void {
+  //   this.businessUnitService.processListByCategoryName(category).subscribe(
+  //     (res: BusinessUnit[]) => {
+  //       this.processCategory = res;
+  //       res.forEach((element: BusinessUnit) => {
+  //         if (element.processList?.includes(type === "Optional")) {
+  //           this.sourceProducts = element.processList!;
+  //         }
+  //       })
+
+  //     }, (error: BackendErrorResponse) => {
+  //       this.errorService.showError(error.error.error);
+  //     }
+  //   )
+  // }
   onCategoryChange(category: string): void {
     this.businessUnitService.processListByCategoryName(category).subscribe(
       (res: BusinessUnit[]) => {
         this.processCategory = res;
-        res.forEach((element: BusinessUnit) => {
-          this.sourceProducts = element.processList!;
-        })
-
-      }, (error: BackendErrorResponse) => {
+        const allProcesses = res.flatMap(element => element.processList || []);
+        console.log(allProcesses);
+        this.sourceProducts = allProcesses.filter(process => process.type?.toUpperCase() === ("Optional").toUpperCase());
+        this.targetProducts = allProcesses.filter(process => process.type?.toUpperCase() === ("Compulsory").toUpperCase());
+      },
+      (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
       }
-    )
+    );
   }
+
 
   onSizeCategoryChange(event: any) {
 
@@ -137,12 +150,9 @@ export class ProductRuleJobComponent implements OnInit {
     this.selectedSizes = [];
     this.getUpping.getUping().subscribe(
       (response: any) => {
-
-        this.uppingArray = []; // Clear the array before populating it
-
+        this.uppingArray = [];
         // Map the `name` property of each object in the `value` array
         this.selectedCategories = event.map((item: any) => item?.name?.toLowerCase()).filter(Boolean);
-
         // Filter the response based on the category names
         this.uppingArray = response.filter((el: any) => this.selectedCategories.includes(el.category.toLowerCase()))
           .map((el: any) => ({
@@ -165,8 +175,8 @@ export class ProductRuleJobComponent implements OnInit {
     } else {
       this.selectedSizes = [];
       this.selectedSizes = value.map((item: any) => ({
-        category: item.category, // Assuming item.category represents the category
-        size: item.show // Assuming item.show represents the size
+        category: item.category,
+        size: item.show
       }));
       this.upping = value;
     }
@@ -175,7 +185,7 @@ export class ProductRuleJobComponent implements OnInit {
   getProductRuleJobById(id: number) {
     this.productRuleService.getProductRuleById(id).subscribe(
       (res: any) => {
-        this.productRuleJob.category = res.category;
+        this.productRuleJob.businessCategory = res.businessCategory;
         res.sizeCategory = JSON.parse(res.sizeCategory!);
         const sizeArray = JSON.parse(res.size!);
         this.category = res.sizeCategory;
@@ -190,23 +200,6 @@ export class ProductRuleJobComponent implements OnInit {
         });
         this.productRuleJob.productName = res.productName;
         this.targetProducts = res.processList!;
-
-        // if (this.sizeList && this.sizeList.length > 0) {
-        //   const resSizeList = res.sizeList;
-
-        //   this.productRuleJob.sizeList = (this.sizeList ?? []).filter((size: any) => {
-        //     return resSizeList.some((jobSize: JobSize) => jobSize.name === size.name);
-        //   });
-
-        //   // Add id property to each size object in productRuleJob.sizeList
-        //   this.productRuleJob.sizeList.forEach((size: any, index: number) => {
-        //     size.id = resSizeList[index].id;
-        //   });
-
-        // } else {
-        //   this.getProductRuleJobById(id);
-        // }
-
       },
       (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
@@ -215,13 +208,6 @@ export class ProductRuleJobComponent implements OnInit {
   }
 
   submit() {
-    // if (!this.idFromQueryParam) {
-    //   this.productRuleJob.sizeList = this.productRuleJob.sizeList.map(size => ({
-    //     id: null,
-    //     name: size.name,
-    //     status: null,
-    //   }));
-    // }
     this.productRuleJob.sizeCategory = JSON.stringify(this.category);
     this.productRuleJob.size = JSON.stringify(this.upping);
     this.productRuleJob.processList = this.targetProducts;
@@ -252,5 +238,16 @@ export class ProductRuleJobComponent implements OnInit {
     } else {
       return [];
     }
+  }
+
+  getAllRoles() {
+    this.roleService.getRoles().subscribe(
+      (res: any) => {
+        this.roleList = res;
+      },
+      (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      }
+    );
   }
 }

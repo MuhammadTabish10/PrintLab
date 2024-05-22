@@ -96,31 +96,22 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     @Override
     public List<ProductRuleDto> getAllProductRule() {
         List<ProductRule> productRuleList = productRuleRepository.findByStatus("Active");
-        List<ProductRuleDto> productRuleDtoList = new ArrayList<>();
-
-        for (ProductRule productRule : productRuleList) {
-            ProductRuleDto productRuleDto = productRuleMapper.toDto(productRule);
-            productRuleDtoList.add(productRuleDto);
-        }
-        return productRuleDtoList;
+        return productRuleList.stream()
+                .map(productRuleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ProductRuleDto> searchByName(String productName) {
         List<ProductRule> productRuleList = productRuleRepository.findProductRuleByProductName(productName);
-        List<ProductRuleDto> productRuleDtoList = new ArrayList<>();
-
-        for (ProductRule productRule : productRuleList) {
-            ProductRuleDto productRuleDto = productRuleMapper.toDto(productRule);
-            productRuleDtoList.add(productRuleDto);
-        }
-        return productRuleDtoList;
+        return productRuleList.stream()
+                .map(productRuleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public ProductRuleDto getProductRuleById(Long id) {
         Optional<ProductRule> optionalProductRule = productRuleRepository.findById(id);
-
         if (optionalProductRule.isPresent()) {
             ProductRule productRule = optionalProductRule.get();
             return productRuleMapper.toDto(productRule);
@@ -297,7 +288,6 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         paginationResponse.setTotalElements(totalElements.intValue());
         paginationResponse.setTotalPages((int) Math.ceil((double) totalElements / pageSize));
         paginationResponse.setLastPage(pageNumber >= (Math.ceil((double) totalElements / pageSize) - 1));
-
         return paginationResponse;
     }
 

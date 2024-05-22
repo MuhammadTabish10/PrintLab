@@ -1,4 +1,3 @@
-
 <div class="body-position ps-4 ps-lg-0">
   <app-dashboard-head></app-dashboard-head>
   <div class="main-container ms-lg-1">
@@ -213,15 +212,26 @@
       <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
         <div class="col-12">
           <label class="add-order-label m-0">Billable</label>
-          <div class="form-check form-switch form-switch-lg">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="flexSwitchCheckChecked"
-              name="impositionValueChecked"
-              [(ngModel)]="selectedProcess.billable"
-              [ngClass]="{ 'bg-green': selectedProcess.billable }"
-            />
+          <p-dropdown
+            [options]="types?.productFieldValuesList"
+            styleClass="w-100"
+            optionLabel="name"
+            optionValue="name"
+            [(ngModel)]="selectedProcess.type"
+            [appendTo]="'body'"
+            name="type"
+            #type="ngModel"
+            [required]="true"
+            [ngClass]="{
+              'ng-dirty ng-invalid':
+                type.invalid && (type.dirty || type.touched)
+            }"
+          >
+          </p-dropdown>
+          <div *ngIf="type.invalid && (type.dirty || type.touched)">
+            <div *ngIf="type.errors" class="text-danger m-1">
+              Type is required.
+            </div>
           </div>
         </div>
       </div>

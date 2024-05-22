@@ -67,11 +67,10 @@ import { CreateLeadComponent } from './pages/Leads/create-lead/create-lead.compo
 import { ViewUpingComponent } from './pages/view-uping/view-uping.component';
 import { BusinessUnitAndProcessesComponent } from './pages/business-unit-and-processes/business-unit-and-processes.component';
 import { ViewCustomerComponent } from './pages/view-customer/view-customer.component';
-// import { CreateJobComponent } from './pages/Jobs/create-job/create-job.component';
 import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.component';
-// import { GetAllJobsComponent } from './pages/Jobs/get-all-jobs/get-all-jobs.component';
 import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.component';
 import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-rule-job.component';
+import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
 
 export const routes: Routes = [
   {
@@ -430,6 +429,11 @@ export const routes: Routes = [
   {
     path: 'add-product-rule-job',
     component: ProductRuleJobComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'add-product-rule-group-sheet',
+    component: ProductRuleOfGroupSheetComponent,
     canActivate: [AuthguardService]
   },
 ];

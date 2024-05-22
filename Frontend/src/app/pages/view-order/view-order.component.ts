@@ -5,7 +5,6 @@ import { MessageService } from 'primeng/api';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
 import { JobService } from '../Jobs/Service/job.service';
 import { ProductionJob } from 'src/app/Model/ProductionJob';
-import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 @Component({
   selector: 'app-view-order',
@@ -50,12 +49,8 @@ export class ViewOrderComponent implements OnInit {
       .subscribe((res: any | ProductionJob) => {
         this.order = res
         debugger
-        if (this.orderType === 'auto') {
-          this.size = JSON.parse(this.order.size);
-          this.getProductRuleById(this.order.productRule)
-        } else {
-          this.getProductRuleJobByName(this.order.productName);
-        }
+        this.size = JSON.parse(this.order.size);
+        this.getProductRuleById(this.order.productRule)
       }, error => {
         this.showError(error)
         this.visible = true
@@ -81,12 +76,4 @@ export class ViewOrderComponent implements OnInit {
       .join(', ');
   }
 
-  getProductRuleJobByName(productName: string | null | undefined): void {
-    this.jobService.getProductRuleJobByName(productName).subscribe(
-      (res: ProductRuleJob[]) => {
-        this.productRule = res[0];
-      }, (error: BackendErrorResponse) => {
-        this.showError(error.error.error);
-      });
-  }
 }

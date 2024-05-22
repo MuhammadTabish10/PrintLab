@@ -46,4 +46,5 @@ export class ProductDefinitionService {
     let url = `${this._url}/product-field/names/${name}`
     return this.http.get(url)
   }
+  
 }

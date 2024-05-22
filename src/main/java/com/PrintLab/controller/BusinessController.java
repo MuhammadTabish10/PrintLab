@@ -60,26 +60,3 @@ public class BusinessController {
         return ResponseEntity.noContent().build();
     }
 }
-
-//import com.PrintLab.GenericController.GenericController;
-//import com.PrintLab.model.Business;
-//import com.PrintLab.repository.BusinessRepository;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//@RestController
-//@RequestMapping("/api/businesses")
-//public class BusinessController extends GenericController<Business, Long> {
-//
-//    private final BusinessRepository businessRepository;
-//
-//    public BusinessController(BusinessRepository businessRepository) {
-//        this.businessRepository = businessRepository;
-//    }
-//
-//    @Override
-//    protected JpaRepository<Business, Long> getRepository() {
-//        return businessRepository;
-//    }
-//}

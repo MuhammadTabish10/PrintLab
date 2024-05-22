@@ -16,7 +16,6 @@ export class ProductRuleService {
   constructor(private http: HttpClient) { }
 
   getProductRule(action: string, body: any) {
-
     let url = `${this._url}/paper-market-rates/product-rule?action=${action}`
     return this.http.post(url, body ? body : {})
   }
@@ -47,21 +46,18 @@ export class ProductRuleService {
     let url = `${this._url}/product-rule/${id}`
     return this.http.delete(url)
   }
-  getProductRuleById(id: any) {
-    let url = `${this._url}/product-rule/${id}`
-    return this.http.get(url)
+  getProductRuleById(id: any): Observable<ProductRule> {
+    return this.http.get<ProductRule>(`${this._url}/product-rule/${id}`);
   }
-  updateProductRule(id: any, obj: any) {
-    let url = `${this._url}/product-rule/${id}`
-    return this.http.put(url, obj)
+  updateProductRule(id: number, obj: any): Observable<ProductRule> {
+    return this.http.put<ProductRule>(`${this._url}/product-rule/${id}`, obj)
   }
 
   searchProduct(name: string): Observable<ProductRule[]> {
     return this.http.get<ProductRule[]>(`${this._url}/product-rule/names/${name}`);
   }
 
-  checkUniqueProduct(productName: string) {
-    let url = `${this._url}/product-rule/check-title/${productName}`;
-    return this.http.get(url);
+  checkUniqueProduct(productName: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this._url}/product-rule/check-title/${productName}`);
   }
 }

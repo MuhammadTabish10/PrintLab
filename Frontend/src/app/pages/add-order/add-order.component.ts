@@ -1,25 +1,22 @@
 import { GlobalVariables } from './GlobalVariables';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, TreeNode } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { environment } from 'src/Environments/environment';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { Business, BusinessBranch } from 'src/app/Model/Business';
 import { Customer } from 'src/app/Model/Customer';
-import { ProductCategory } from 'src/app/Model/ProductCategory';
 import { ProductionJob } from 'src/app/Model/ProductionJob';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
-import { ServiceService } from '../Product/Service/service.service';
-import { ProductService } from 'src/app/Model/ProductService';
 import { JobService } from '../Jobs/Service/job.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { BusinessUnitService } from '../business-unit-and-processes/Service/business-unit.service';
 import { BusinessUnit, BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
-import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
 import { Order } from 'src/app/Model/Order';
+import { ProductRule } from 'src/app/Model/ProductRule';
 
 @Component({
   selector: 'app-add-order',
@@ -89,7 +86,7 @@ export class AddOrderComponent implements OnInit {
   orderType: string | undefined | null;
   job: Order = { ...GlobalVariables.order }
   categoryList: BusinessUnit[] = [];
-  productRuleJobList: ProductRuleJob[] = [];
+  productRuleJobList: ProductRule[] = [];
 
   constructor(
     private orderService: OrdersService, private router: Router,
@@ -540,13 +537,13 @@ export class AddOrderComponent implements OnInit {
       (res: BusinessUnit) => {
         if (res.processList) {
           // Initialize a Map to store unique items keyed by productName
-          const uniqueProductRuleJobList = new Map<string, ProductRuleJob>();
+          const uniqueProductRuleJobList = new Map<string, ProductRule>();
           res.processList?.forEach((element: BusinessUnitProcessDto) => {
             if (element.productRuleJobList) {
               element.productRuleJobList.forEach((item) => {
                 // Use productName as key to ensure uniqueness
                 if (item.productName) {
-                  uniqueProductRuleJobList.set(item.productName, item as ProductRuleJob);
+                  uniqueProductRuleJobList.set(item.productName, item as ProductRule);
                 }
               });
             }

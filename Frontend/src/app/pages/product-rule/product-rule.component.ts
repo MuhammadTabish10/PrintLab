@@ -44,17 +44,23 @@ export class ProductRuleComponent implements OnInit {
         icon: 'pi pi-plus',
         items: [
           {
-            label: 'Define product rule',
+            label: 'Auto',
             icon: 'pi pi-spin pi-cog',
             routerLink: "/addProductRule",
             queryParams: { orderType: 'auto' }
           },
           {
-            label: 'Define by process',
+            label: 'Manual',
             icon: 'pi pi-wrench',
             routerLink: '/add-product-rule-job',
             queryParams: { orderType: 'manual' }
-          }
+          },
+          {
+            label: 'Group Sheet',
+            icon: 'pi pi-id-card',
+            routerLink: '/add-product-rule-group-sheet',
+            queryParams: { orderType: 'groupSheet' }
+          },
         ]
       },
     ]

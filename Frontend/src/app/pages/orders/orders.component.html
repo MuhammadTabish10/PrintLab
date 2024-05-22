@@ -1,12 +1,11 @@
-<div class="container-fluid">
-  <app-dashboard-head></app-dashboard-head>
-  <div class="container-fluid mt-5">
-    <div class="row">
-      <h4>Orders</h4>
-    </div>
+<app-dashboard-head></app-dashboard-head>
+<div class="container-fluid mt-5">
+  <div class="row">
+    <h4>Orders</h4>
   </div>
+
   <div class="order-body">
-    <form class="order-search-panel">
+    <form class="order-search-panel py-0 px-0">
       <input
         class="order-search form-control"
         type="search"
@@ -16,18 +15,12 @@
         [(ngModel)]="search"
         (keyup)="searchOrder($event.target)"
       />
-      <!-- <button
-        type="button"
-        class="btn order-table-btn btn-search-panel"
-        routerLink="/addOrder"
-      >
-        + Add
-      </button> -->
       <p-panelMenu [model]="items" class="" />
     </form>
   </div>
-
-  <div class="order-table overflow-x-auto text-nowrap">
+</div>
+<div class="container-fluid">
+  <div class="card">
     <!-- <table class="table table-fixed table-responsive text-center">
       <thead>
         <tr>
@@ -439,63 +432,64 @@
       [showCurrentPageReport]="true"
     ></p-paginator>
   </div>
-  <p-dialog
-    header="Assign Order To User"
-    [(visible)]="visible"
-    [breakpoints]="{ '960px': '75vw' }"
-    [style]="{ width: '50vw' }"
-    [draggable]="false"
-    [resizable]="false"
-  >
-    <div class="row mx-auto my-3">
-      <div class="col-6">
-        <label class="d-block add-order-label m-0">Select Role</label>
-        <p-dropdown
-          styleClass="w-100"
-          appendTo="body"
-          [options]="roleArray"
-          [(ngModel)]="selectedRole"
-          (onChange)="getUsersByRole($event.value)"
-          placeholder="Select a Role"
-          optionLabel="name"
-        ></p-dropdown>
-      </div>
-      <div class="col-6">
-        <label class="d-block add-order-label m-0">Select User</label>
-        <p-dropdown
-          styleClass="w-100"
-          appendTo="body"
-          [options]="userArray"
-          [filter]="true"
-          filterBy="name"
-          [(ngModel)]="selectedUser"
-          placeholder="Select a User"
-          emptyMessage="Select a role first"
-          optionLabel="name"
-        ></p-dropdown>
-      </div>
+</div>
+<p-dialog
+  header="Assign Order To User"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="row mx-auto my-3">
+    <div class="col-6">
+      <label class="d-block add-order-label m-0">Select Role</label>
+      <p-dropdown
+        styleClass="w-100"
+        appendTo="body"
+        [options]="roleArray"
+        [(ngModel)]="selectedRole"
+        (onChange)="getUsersByRole($event.value)"
+        placeholder="Select a Role"
+        optionLabel="name"
+      ></p-dropdown>
     </div>
-    <div class="text-danger row ms-3" *ngIf="plzSelect">
-      Please Assign then Save
+    <div class="col-6">
+      <label class="d-block add-order-label m-0">Select User</label>
+      <p-dropdown
+        styleClass="w-100"
+        appendTo="body"
+        [options]="userArray"
+        [filter]="true"
+        filterBy="name"
+        [(ngModel)]="selectedUser"
+        placeholder="Select a User"
+        emptyMessage="Select a role first"
+        optionLabel="name"
+      ></p-dropdown>
     </div>
-    <div class="d-flex justify-content-end me-3">
-      <button
-        class="btn btn-dark"
-        (click)="
-          saveOrder(
-            selectedUser,
-            selectedRole,
-            selectedOrderId,
-            currentUserDetail
-          )
-        "
-      >
-        Save
-      </button>
-    </div>
-  </p-dialog>
-  <p-toast></p-toast>
-  <!-- <p-dialog
+  </div>
+  <div class="text-danger row ms-3" *ngIf="plzSelect">
+    Please Assign then Save
+  </div>
+  <div class="d-flex justify-content-end me-3">
+    <button
+      class="btn btn-dark"
+      (click)="
+        saveOrder(
+          selectedUser,
+          selectedRole,
+          selectedOrderId,
+          currentUserDetail
+        )
+      "
+    >
+      Save
+    </button>
+  </div>
+</p-dialog>
+<p-toast></p-toast>
+<!-- <p-dialog
     header="Chose the option"
     [(visible)]="processOptions"
     [breakpoints]="{ '960px': '75vw' }"
@@ -521,4 +515,3 @@
       </div>
     </div>
   </p-dialog> -->
-</div>

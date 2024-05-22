@@ -24,7 +24,7 @@ export class BusinessUnitService {
   }
 
   // Retrieve all business unit categories by name
-  getBusinessUnitListByName(name:string): Observable<BusinessUnit[]> {
+  getBusinessUnitListByName(name: string): Observable<BusinessUnit[]> {
     const url = `${this.BASE_URL}/business-unit-categories/categories/${name}`;
     return this.http.get<BusinessUnit[]>(url);
   }
@@ -58,5 +58,9 @@ export class BusinessUnitService {
   processListByCategoryName(category: string): Observable<BusinessUnit[]> {
     const url = `${this.BASE_URL}/business-unit-categories/categories/${category}`;
     return this.http.get<BusinessUnit[]>(url);
+  }
+  public reorderProcessList(businessUnit: BusinessUnit): Observable<BusinessUnit> {
+    const url = `${this.BASE_URL}/business-unit-categories/updateProcessReorder/${businessUnit.id}`;
+    return this.http.put<BusinessUnit>(url, businessUnit);
   }
 }

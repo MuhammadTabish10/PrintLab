@@ -133,10 +133,9 @@ import { HeadingComponent } from './components/heading/heading.component';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { JoinWithCommaSeparatedPipe } from './CustomPipes/map-and-join.pipe';
 import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-rule-job.component';
-import { AddProductSizeComponent } from './pages/Product/add-product-size/add-product-size.component';
-import { DefineProductRuleManualComponent } from './pages/Product/define-product-rule-manual/define-product-rule-manual.component';
 import { JsonParsePipe } from './CustomPipes/JsonParsePipe.pipe';
 import { SizeFormatPipe } from './CustomPipes/size-format.pipe';
+import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -225,10 +224,11 @@ import { SizeFormatPipe } from './CustomPipes/size-format.pipe';
     HeadingComponent,
     JoinWithCommaSeparatedPipe,
     ProductRuleJobComponent,
-    AddProductSizeComponent,
-    DefineProductRuleManualComponent,
+    // AddProductSizeComponent,
+    // DefineProductRuleManualComponent,
     JsonParsePipe,
     SizeFormatPipe,
+    ProductRuleOfGroupSheetComponent,
   ],
   imports: [
     BrowserModule,

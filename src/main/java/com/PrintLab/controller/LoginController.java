@@ -44,7 +44,7 @@ public class LoginController {
         UserDetails userDetails = myUserDetailService.loadUserByUsername(loginCredentials.getEmail());
         String jwtToken = jwtUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwtToken,userDetails));
+        return ResponseEntity.ok(new AuthenticationResponse(jwtToken, userDetails));
     }
 
     @PostMapping("/signup")
