@@ -1,5 +1,7 @@
 package com.PrintLab.controller;
 
+import com.PrintLab.dto.OrderDto;
+import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.ProductRuleDto;
 import com.PrintLab.service.ProductRuleService;
 import org.springframework.http.ResponseEntity;
@@ -62,5 +64,16 @@ public class ProductRuleController {
     public ResponseEntity<ProductRuleDto> updateProductRule(@PathVariable Long id, @RequestBody ProductRuleDto productRuleDto) {
         ProductRuleDto updatedProductRule = productRuleService.update(id, productRuleDto);
         return ResponseEntity.ok(updatedProductRule);
+    }
+
+    @PostMapping("/get-paginated-productRule")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<PaginationResponse> findAll(
+            @RequestParam(value = "page-number", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "page-size", defaultValue = "10", required = false) Integer pageSize,
+            @RequestBody ProductRuleDto productRuleDto
+    ) {
+        PaginationResponse paginationResponse = productRuleService.getAllPaginatedProductRule(pageNumber, pageSize, productRuleDto);
+        return ResponseEntity.ok(paginationResponse);
     }
 }

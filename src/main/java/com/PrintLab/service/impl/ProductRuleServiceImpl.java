@@ -1,24 +1,23 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.Mapper.ProductRuleMapper;
-import com.PrintLab.dto.BusinessUnitProcessDto;
-import com.PrintLab.dto.JobProcessedDetailsDto;
-import com.PrintLab.dto.ProductRuleDto;
-import com.PrintLab.dto.ProductRulePaperStockDto;
+import com.PrintLab.dto.*;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.model.BusinessUnitProcess;
-import com.PrintLab.model.JobProcessedDetails;
-import com.PrintLab.model.ProductRule;
-import com.PrintLab.model.ProductRulePaperStock;
+import com.PrintLab.model.*;
+import com.PrintLab.model.Order;
 import com.PrintLab.repository.*;
 import com.PrintLab.service.ProductRuleService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,14 +30,16 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     private final ProductRuleMapper productRuleMapper;
     private final BusinessUnitProcessRepository businessUnitProcessRepository;
     private final JobProcessedDetailsRepository jobProcessedDetailsRepository;
+    private final EntityManager entityManager;
 
-    public ProductRuleServiceImpl(ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, ProductRulePaperStockRepository productRulePaperStockRepository, ProductRuleMapper productRuleMapper, BusinessUnitProcessRepository businessUnitProcessRepository, JobProcessedDetailsRepository jobProcessedDetailsRepository) {
+    public ProductRuleServiceImpl(EntityManager entityManager, ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, ProductRulePaperStockRepository productRulePaperStockRepository, ProductRuleMapper productRuleMapper, BusinessUnitProcessRepository businessUnitProcessRepository, JobProcessedDetailsRepository jobProcessedDetailsRepository) {
         this.productRuleRepository = productRuleRepository;
         this.vendorRepository = vendorRepository;
         this.productRulePaperStockRepository = productRulePaperStockRepository;
         this.productRuleMapper = productRuleMapper;
         this.businessUnitProcessRepository = businessUnitProcessRepository;
         this.jobProcessedDetailsRepository = jobProcessedDetailsRepository;
+        this.entityManager = entityManager;
     }
 
     @Transactional
@@ -254,5 +255,78 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         } else {
             throw new RecordNotFoundException(String.format("ProductRule not found for id => %d", id));
         }
+    }
+
+    @Override
+    public PaginationResponse getAllPaginatedProductRule(Integer pageNumber, Integer pageSize, ProductRuleDto searchCriteria) {
+        Pageable page = PageRequest.of(pageNumber, pageSize);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ProductRule> cq = criteriaBuilder.createQuery(ProductRule.class);
+        Root<ProductRule> leadsRoot = cq.from(ProductRule.class);
+
+        List<Predicate> predicates = buildPredicates(criteriaBuilder, leadsRoot, searchCriteria);
+        cq.where(predicates.toArray(new Predicate[0]));
+        cq.orderBy(criteriaBuilder.desc(leadsRoot.get("id")));
+
+        TypedQuery<ProductRule> query = entityManager.createQuery(cq);
+        applyPagination(query, pageNumber, pageSize);
+
+        List<ProductRule> resultList = query.getResultList();
+        Long totalElements = countTotalElements(criteriaBuilder, searchCriteria);
+        List<ProductRuleDto> dtoList = mapToDto(resultList);
+
+        return createPaginationResponse(dtoList, pageNumber, pageSize, totalElements);
+    }
+
+    private void applyPagination(TypedQuery<?> query, Integer pageNumber, Integer pageSize) {
+        int firstResult = pageNumber * pageSize;
+        query.setFirstResult(firstResult);
+        query.setMaxResults(pageSize);
+    }
+
+    private PaginationResponse createPaginationResponse(List<ProductRuleDto> dtoList, Integer pageNumber, Integer pageSize, Long totalElements) {
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(dtoList);
+        paginationResponse.setPageNumber(pageNumber);
+        paginationResponse.setPageSize(pageSize);
+        paginationResponse.setTotalElements(totalElements.intValue());
+        paginationResponse.setTotalPages((int) Math.ceil((double) totalElements / pageSize));
+        paginationResponse.setLastPage(pageNumber >= (Math.ceil((double) totalElements / pageSize) - 1));
+
+        return paginationResponse;
+    }
+
+
+    private List<ProductRuleDto> mapToDto(List<ProductRule> leadsList) {
+        return leadsList.stream()
+                .map(productRuleMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private Long countTotalElements(CriteriaBuilder criteriaBuilder, ProductRuleDto searchCriteria) {
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<ProductRule> root = countQuery.from(ProductRule.class);
+        countQuery.select(criteriaBuilder.count(root));
+
+        List<Predicate> predicates = buildPredicates(criteriaBuilder, root, searchCriteria);
+        countQuery.where(predicates.toArray(new Predicate[0]));
+
+        return entityManager.createQuery(countQuery).getSingleResult();
+    }
+
+
+    private List<Predicate> buildPredicates(CriteriaBuilder criteriaBuilder, Root<ProductRule> productRuleRoot, ProductRuleDto searchCriteria) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getBusinessCategory(), productRuleRoot.get("businessCategory"));
+        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getType(), productRuleRoot.get("type"));
+        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), productRuleRoot.get("status"));
+
+        return predicates;
+    }
+
+    private void addLikePredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, String value, Path<String> path) {
+        Optional.ofNullable(value)
+                .ifPresent(v -> predicates.add(criteriaBuilder.like(path, "%" + v + "%")));
     }
 }
