@@ -1,5 +1,6 @@
 package com.PrintLab.service;
 
+import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.ProductRuleDto;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface ProductRuleService {
     ProductRuleDto getProductRuleById(Long id);
     ProductRuleDto update(Long id,ProductRuleDto productRuleDto);
     void deleteById(Long id);
+
+    PaginationResponse getAllPaginatedProductRule(Integer pageNumber, Integer pageSize, ProductRuleDto searchCriteria);
 }
