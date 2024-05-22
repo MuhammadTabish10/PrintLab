@@ -1,14 +1,12 @@
 package com.PrintLab.Mapper;
 
-import com.PrintLab.dto.BusinessUnitProcessDto;
-import com.PrintLab.dto.JobProcessedDetailsDto;
-import com.PrintLab.dto.ProductRuleDto;
-import com.PrintLab.dto.ProductRulePaperStockDto;
+import com.PrintLab.dto.*;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.ProductRule;
 import com.PrintLab.model.ProductRulePaperStock;
 import com.PrintLab.repository.CtpRepository;
 import com.PrintLab.repository.PressMachineRepository;
+import com.PrintLab.service.impl.RoleServiceImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,14 +21,27 @@ public class ProductRuleMapper {
 
     private final CtpRepository ctpRepository;
 
-    public ProductRuleMapper(BusinessUnitProcessMapper businessUnitProcessMapper, JobProcessedDetailsMapper detailMapper, PressMachineRepository pressMachineRepository, CtpRepository ctpRepository) {
+    private final RoleServiceImpl roleService;
+
+    public ProductRuleMapper(RoleServiceImpl roleService, BusinessUnitProcessMapper businessUnitProcessMapper, JobProcessedDetailsMapper detailMapper, PressMachineRepository pressMachineRepository, CtpRepository ctpRepository) {
         this.businessUnitProcessMapper = businessUnitProcessMapper;
         this.detailMapper = detailMapper;
         this.pressMachineRepository = pressMachineRepository;
         this.ctpRepository = ctpRepository;
+        this.roleService = roleService;
     }
 
     public ProductRuleDto toDto(ProductRule productRule) {
+        List<ProductRulePaperStock> productRulePaperStockList = productRule.getProductRulePaperStockList();
+
+        if (productRulePaperStockList != null && !productRulePaperStockList.isEmpty()) {
+            return toDtoWithPaperStock(productRule);
+        } else {
+            return toDtoWithoutPaperStock(productRule);
+        }
+    }
+
+    private ProductRuleDto toDtoWithPaperStock(ProductRule productRule) {
         List<ProductRulePaperStockDto> productRulePaperStockDtoList = productRule.getProductRulePaperStockList().stream()
                 .map(prps -> {
                     ProductRulePaperStockDto productRulePaperStockDto = new ProductRulePaperStockDto();
@@ -67,7 +78,6 @@ public class ProductRuleMapper {
                 .jobColorBack(productRule.getJobColorBack())
                 .jobColorFront(productRule.getJobColorFront())
                 .sizeCategory(productRule.getSizeCategory())
-                .businessCategory(productRule.getBusinessCategory())
                 .size(productRule.getSize())
                 .quantity(productRule.getQuantity())
                 .impositionValue(productRule.getImpositionValue())
@@ -82,6 +92,54 @@ public class ProductRuleMapper {
                 .type(productRule.getType())
                 .build();
     }
+
+    private ProductRuleDto toDtoWithoutPaperStock(ProductRule productRule) {
+        List<BusinessUnitProcessDto> processListDto = null;
+        if (productRule.getProcessList() != null) {
+            processListDto = productRule.getProcessList().stream()
+                    .map(businessUnitProcessMapper::toProcessDto)
+                    .collect(Collectors.toList());
+        }
+
+        List<JobProcessedDetailsDto> processedDetailListDto = null;
+        if (productRule.getProcessedDetailList() != null) {
+            processedDetailListDto = productRule.getProcessedDetailList().stream()
+                    .map(detailMapper::toDto)
+                    .collect(Collectors.toList());
+        }
+
+        List<RoleDto> roleDtoList = null;
+        if (productRule.getVisibleTo() != null) {
+            roleDtoList = productRule.getVisibleTo().stream()
+                    .map(roleService::toDto)
+                    .collect(Collectors.toList());
+        }
+
+        return ProductRuleDto.builder()
+                .id(productRule.getId())
+                .productName(productRule.getProductName())
+                .businessCategory(productRule.getBusinessCategory())
+                .sizeCategory(productRule.getSizeCategory())
+                .size(productRule.getSize())
+                .quantity(productRule.getQuantity())
+                .impositionValue(productRule.getImpositionValue())
+                .status(productRule.getStatus())
+                .pressMachine(pressMachineRepository.findById(productRule.getPressMachine().getId())
+                        .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")))
+                .ctp(ctpRepository.findById(productRule.getCtp().getId())
+                        .orElseThrow(() -> new RecordNotFoundException("Ctp not found")))
+                .processList(processListDto)
+                .processedDetailList(processedDetailListDto)
+                .type(productRule.getType())
+
+                .visibleTo(roleDtoList)
+                .groupSheet(productRule.getGroupSheet())
+                .predefined(productRule.getPredefined())
+                .custom(productRule.getCustom())
+                .up(productRule.getUp())
+                .build();
+    }
+
 
     public ProductRule toEntity(ProductRuleDto productRuleDto) {
         List<ProductRulePaperStockDto> productRulePaperStockList = productRuleDto.getProductRulePaperStockList();
@@ -126,6 +184,14 @@ public class ProductRuleMapper {
                         .orElseThrow(() -> new RecordNotFoundException("Ctp not found")))
                 .productRulePaperStockList(productRulePaperStocks)
                 .type(productRuleDto.getType())
+
+                .visibleTo(productRuleDto.getVisibleTo().stream()
+                        .map(roleService::toEntity)
+                        .collect(Collectors.toList()))
+                .groupSheet(productRuleDto.getGroupSheet())
+                .predefined(productRuleDto.getPredefined())
+                .custom(productRuleDto.getCustom())
+                .up(productRuleDto.getUp())
                 .build();
     }
 
@@ -143,6 +209,14 @@ public class ProductRuleMapper {
                         .map(detailMapper::toEntity)
                         .collect(Collectors.toList()))
                 .type(productRuleDto.getType())
+
+                .visibleTo(productRuleDto.getVisibleTo().stream()
+                        .map(roleService::toEntity)
+                        .collect(Collectors.toList()))
+                .groupSheet(productRuleDto.getGroupSheet())
+                .predefined(productRuleDto.getPredefined())
+                .custom(productRuleDto.getCustom())
+                .up(productRuleDto.getUp())
                 .build();
     }
 

@@ -12,6 +12,7 @@ public interface ProductRuleService {
     List<ProductRuleDto> searchByName(String productName);
     ProductRuleDto getProductRuleById(Long id);
     ProductRuleDto update(Long id,ProductRuleDto productRuleDto);
+    List<ProductRuleDto> getAllProductRuleInGroupSheet();
     void deleteById(Long id);
 
     PaginationResponse getAllPaginatedProductRule(Integer pageNumber, Integer pageSize, ProductRuleDto searchCriteria);

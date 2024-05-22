@@ -52,5 +52,17 @@ public class ProductRule {
     @OneToMany(mappedBy = "productRule", cascade = CascadeType.ALL)
     private List<JobProcessedDetails> processedDetailList;
     private String type;
-    private Long groupSheetOf;
+
+    @ManyToMany
+    @JoinTable(
+            name = "list_of_role_visibleTo",
+            joinColumns = @JoinColumn(name = "product_rule_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> visibleTo;
+    private Boolean groupSheet;
+    private Boolean predefined;
+    private Boolean custom;
+    private Integer up;
+
 }

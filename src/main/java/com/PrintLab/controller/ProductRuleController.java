@@ -51,6 +51,13 @@ public class ProductRuleController {
         return ResponseEntity.ok(productRuleDtoList);
     }
 
+    @GetMapping("/product-rule/all-groupSheet")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<ProductRuleDto>> getAllProductRuleByGroupSheetIsTrue(@PathVariable String productName) {
+        List<ProductRuleDto> productRuleDtoList = productRuleService.getAllProductRuleInGroupSheet();
+        return ResponseEntity.ok(productRuleDtoList);
+    }
+
     @DeleteMapping("/product-rule/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteProductRule(@PathVariable Long id) {
