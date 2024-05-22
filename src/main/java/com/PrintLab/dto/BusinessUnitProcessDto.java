@@ -16,6 +16,6 @@ public class BusinessUnitProcessDto {
     private String process;
     private String type;
     private List<VendorDto> vendors;
-    private List<ProductRuleDto> productRuleJobList;
+    private List<ProductRuleDto> productRuleList;
     private BusinessUnitCategoryDto category;
 }

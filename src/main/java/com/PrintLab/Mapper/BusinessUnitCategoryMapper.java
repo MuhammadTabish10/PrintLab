@@ -37,7 +37,7 @@ public class BusinessUnitCategoryMapper {
                             .build();
 
                     if (process.getProductRuleList() != null) {
-                        processDto.setProductRuleJobList(process.getProductRuleList().stream()
+                        processDto.setProductRuleList(process.getProductRuleList().stream()
                                 .map(productRuleMapper::toDto)
                                 .collect(Collectors.toList()));
                     }

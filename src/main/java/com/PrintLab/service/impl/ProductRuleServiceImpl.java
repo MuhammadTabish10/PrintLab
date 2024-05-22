@@ -130,6 +130,14 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     }
 
     @Override
+    public List<ProductRuleDto> getAllProductRuleInGroupSheet() {
+        List<ProductRule> productRuleList = productRuleRepository.findAllAndGroupSheetIsTrue();
+        return productRuleList.stream()
+                .map(productRuleMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public ProductRuleDto update(Long id, ProductRuleDto productRuleDto) {
         Optional<ProductRule> optionalProductRule = productRuleRepository.findById(id);

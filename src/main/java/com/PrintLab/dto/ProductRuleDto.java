@@ -31,4 +31,10 @@ public class ProductRuleDto {
     private List<JobProcessedDetailsDto> processedDetailList;
     private List<ProductRulePaperStockDto> productRulePaperStockList;
     private String type;
+
+    private List<RoleDto> visibleTo;
+    private Boolean groupSheet;
+    private Boolean predefined;
+    private Boolean custom;
+    private Integer up;
 }
