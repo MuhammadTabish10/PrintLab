@@ -42,6 +42,10 @@ export class ProductRuleService {
     return this.http.post<PaginationResponse<ProductRule>>(`${this._url}/get-paginated-productRule`, body ? body : {}, { params });
   }
 
+  public getAllProductRuleWhereIsGroupSheetAndManualType(): Observable<ProductRule[]> {
+    return this.http.get<ProductRule[]>(`${this._url}/product-rule/all-groupSheet`);
+  }
+
   deleteProduct(id: any) {
     let url = `${this._url}/product-rule/${id}`
     return this.http.delete(url)

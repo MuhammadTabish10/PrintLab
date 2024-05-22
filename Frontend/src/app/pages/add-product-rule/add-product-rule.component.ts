@@ -577,7 +577,7 @@ export class AddProductRuleComponent implements OnInit {
     const updatePressId = this.press.machines.find((el: any) => el.vendor.name === this.pressVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
     const commonPayload = {
-      status: "InActive",
+      status: "Active",
       productName: this.productName,
       businessCategory: "Offset",
       sizeCategory: JSON.stringify(this.category),
@@ -604,6 +604,7 @@ export class AddProductRuleComponent implements OnInit {
         productRulePaperStockList: this.containers.map((container: any) => this.getPaperStockList(container)),
       };
 
+      debugger
     if (!this.idFromQueryParam) {
       if (!this.result) {
         this.productRuleService.postProductRule(payload).subscribe(

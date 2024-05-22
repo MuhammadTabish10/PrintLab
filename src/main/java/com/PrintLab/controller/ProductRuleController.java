@@ -53,7 +53,7 @@ public class ProductRuleController {
 
     @GetMapping("/product-rule/all-groupSheet")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ProductRuleDto>> getAllProductRuleByGroupSheetIsTrue(@PathVariable String productName) {
+    public ResponseEntity<List<ProductRuleDto>> getAllProductRuleByGroupSheetIsTrue() {
         List<ProductRuleDto> productRuleDtoList = productRuleService.getAllProductRuleInGroupSheet();
         return ResponseEntity.ok(productRuleDtoList);
     }

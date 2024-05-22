@@ -1,3 +1,4 @@
+import { ProductRuleService } from './../../../services/product-rule.service';
 import { RequestBody } from './../../product-rule/RequestBody';
 import { Component, OnInit } from '@angular/core';
 import { BusinessUnitService } from '../../business-unit-and-processes/Service/business-unit.service';
@@ -15,14 +16,17 @@ import { Roles } from '../../orders/orders.component';
 export class ProductRuleOfGroupSheetComponent implements OnInit {
 
   productRule: ProductRule = { ...RequestBody.productRuleBody };
+  productRuleList: ProductRule[] = [];
   categoryList: BusinessUnit[] = [];
   roleList: Roles[] = [];
   constructor(
     private businessUnitService: BusinessUnitService,
+    private productRuleService: ProductRuleService,
     private errorService: ErrorHandleService,
   ) { }
   ngOnInit(): void {
-
+    this.getCategoryList();
+    this.getAllProductRule();
   }
 
   private getCategoryList(): void {
@@ -33,6 +37,14 @@ export class ProductRuleOfGroupSheetComponent implements OnInit {
         this.errorService.showError(error.error.error);
       }
     );
+  }
+  private getAllProductRule(): void {
+    this.productRuleService.getAllProductRuleWhereIsGroupSheetAndManualType()
+      .subscribe((res: ProductRule[]) => {
+        this.productRuleList = res;
+      }, (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      })
   }
 
   public submit(): void { }

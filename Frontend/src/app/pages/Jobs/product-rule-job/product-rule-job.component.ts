@@ -41,7 +41,7 @@ export class ProductRuleJobComponent implements OnInit {
   idFromQueryParam: number | null | undefined;
   orderType: string | null | undefined;
   roleList: Roles[] = [];
-
+  selectedStatus: boolean = false;
 
   constructor
     (
@@ -211,7 +211,8 @@ export class ProductRuleJobComponent implements OnInit {
     this.productRuleJob.sizeCategory = JSON.stringify(this.category);
     this.productRuleJob.size = JSON.stringify(this.upping);
     this.productRuleJob.processList = this.targetProducts;
-
+    this.selectedStatus === true ? this.productRuleJob.status = 'Active' : this.productRuleJob.status = 'Inactive';
+    debugger
     const serviceToCall = this.idFromQueryParam
       ? this.productRuleService.updateProductRule(this.idFromQueryParam!, this.productRuleJob)
       : this.productRuleService.postProductRule(this.productRuleJob);

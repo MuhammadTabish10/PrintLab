@@ -33,9 +33,11 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     private final ProductRuleMapper productRuleMapper;
     private final BusinessUnitProcessRepository businessUnitProcessRepository;
     private final JobProcessedDetailsRepository jobProcessedDetailsRepository;
+    private final PressMachineRepository pressMachineRepository;
+    private final CtpRepository ctpRepository;
     private final EntityManager entityManager;
 
-    public ProductRuleServiceImpl(EntityManager entityManager, ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, ProductRulePaperStockRepository productRulePaperStockRepository, ProductRuleMapper productRuleMapper, BusinessUnitProcessRepository businessUnitProcessRepository, JobProcessedDetailsRepository jobProcessedDetailsRepository) {
+    public ProductRuleServiceImpl(EntityManager entityManager, ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, ProductRulePaperStockRepository productRulePaperStockRepository, ProductRuleMapper productRuleMapper, BusinessUnitProcessRepository businessUnitProcessRepository, JobProcessedDetailsRepository jobProcessedDetailsRepository, PressMachineRepository pressMachineRepository, CtpRepository ctpRepository) {
         this.productRuleRepository = productRuleRepository;
         this.vendorRepository = vendorRepository;
         this.productRulePaperStockRepository = productRulePaperStockRepository;
@@ -43,6 +45,8 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         this.businessUnitProcessRepository = businessUnitProcessRepository;
         this.jobProcessedDetailsRepository = jobProcessedDetailsRepository;
         this.entityManager = entityManager;
+        this.pressMachineRepository = pressMachineRepository;
+        this.ctpRepository = ctpRepository;
     }
 
     @Transactional
@@ -122,7 +126,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public List<ProductRuleDto> getAllProductRuleInGroupSheet() {
-        List<ProductRule> productRuleList = productRuleRepository.findAllAndGroupSheetIsTrueAndType("manual");
+        List<ProductRule> productRuleList = productRuleRepository.findByGroupSheetTrueAndType("manual");
         return productRuleList.stream()
                 .map(productRuleMapper::toDto)
                 .collect(Collectors.toList());
@@ -153,10 +157,28 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     }
 
     private void updateProductRuleFields(ProductRule existingProductRule, ProductRuleDto productRuleDto) {
-        existingProductRule.setProductName(productRuleDto.getProductName());
         existingProductRule.setBusinessCategory(productRuleDto.getBusinessCategory());
         existingProductRule.setSizeCategory(productRuleDto.getSizeCategory());
+        existingProductRule.setProductName(productRuleDto.getProductName());
+        existingProductRule.setStatus(productRuleDto.getStatus());
         existingProductRule.setSize(productRuleDto.getSize());
+        existingProductRule.setPrintSide(existingProductRule.getPrintSide());
+        existingProductRule.setJobColorFront(existingProductRule.getJobColorFront());
+        existingProductRule.setJobColorBack(existingProductRule.getJobColorBack());
+        existingProductRule.setQuantity(existingProductRule.getQuantity());
+        if(existingProductRule.getPrintSide().equals(DOUBLE_SIDED)){
+            existingProductRule.setImpositionValue(existingProductRule.getImpositionValue());
+        }
+        else{
+            existingProductRule.setImpositionValue(false);
+        }
+        existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
+                .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")));
+        existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
+                .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")));
+        existingProductRule.setCtp(ctpRepository.findById(productRuleDto.getCtp().getId())
+                .orElseThrow(() -> new RecordNotFoundException("Ctp not found")));
+        existingProductRule.setType(productRuleDto.getType());
     }
 
     private void updateProcessListAndDetails(ProductRule existingProductRule, ProductRuleDto productRuleDto) {

@@ -15,6 +15,7 @@ export interface ProductRule {
   jobColorFront: string | null | undefined;
   jobColorBack: string | null | undefined;
   sizeCategory: string | null | undefined;
+  groupSheetOf: number | null | undefined;
   groupSheet: Boolean | null | undefined;
   predefined: Boolean | null | undefined;
   productName: string | null | undefined;

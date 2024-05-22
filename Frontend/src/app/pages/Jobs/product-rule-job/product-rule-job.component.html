@@ -51,7 +51,6 @@
                   [(ngModel)]="productRuleJob.visibleTo"
                   [required]="true"
                   optionLabel="name"
-                  optionValue="name"
                   display="chip"
                   name="roles"
                 ></p-multiSelect>
@@ -64,7 +63,7 @@
                     type="checkbox"
                     id="flexSwitchCheckChecked"
                     name="impositionValueChecked"
-                    [(ngModel)]="productRuleJob.status"
+                    [(ngModel)]="selectedStatus"
                   />
                 </div>
               </div>

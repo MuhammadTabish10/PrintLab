@@ -11,6 +11,7 @@ export const RequestBody = {
     pressMachine: null,
     jobColorBack: null,
     sizeCategory: null,
+    groupSheetOf: null,
     productName: null,
     groupSheet: null,
     predefined: null,
