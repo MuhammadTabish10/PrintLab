@@ -1,5 +1,7 @@
 package com.PrintLab.Mapper;
 
+import com.PrintLab.dto.BusinessUnitProcessDto;
+import com.PrintLab.dto.JobProcessedDetailsDto;
 import com.PrintLab.dto.ProductRuleDto;
 import com.PrintLab.dto.ProductRulePaperStockDto;
 import com.PrintLab.exception.RecordNotFoundException;
@@ -44,6 +46,20 @@ public class ProductRuleMapper {
                     return productRulePaperStockDto;
                 }).collect(Collectors.toList());
 
+        List<BusinessUnitProcessDto> processListDto = null;
+        if (productRule.getProcessList() != null) {
+            processListDto = productRule.getProcessList().stream()
+                    .map(businessUnitProcessMapper::toProcessDto)
+                    .collect(Collectors.toList());
+        }
+
+        List<JobProcessedDetailsDto> processedDetailListDto = null;
+        if (productRule.getProcessedDetailList() != null) {
+            processedDetailListDto = productRule.getProcessedDetailList().stream()
+                    .map(detailMapper::toDto)
+                    .collect(Collectors.toList());
+        }
+
         return ProductRuleDto.builder()
                 .id(productRule.getId())
                 .productName(productRule.getProductName())
@@ -51,6 +67,7 @@ public class ProductRuleMapper {
                 .jobColorBack(productRule.getJobColorBack())
                 .jobColorFront(productRule.getJobColorFront())
                 .sizeCategory(productRule.getSizeCategory())
+                .businessCategory(productRule.getBusinessCategory())
                 .size(productRule.getSize())
                 .quantity(productRule.getQuantity())
                 .impositionValue(productRule.getImpositionValue())
@@ -59,16 +76,13 @@ public class ProductRuleMapper {
                         .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")))
                 .ctp(ctpRepository.findById(productRule.getCtp().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Ctp not found")))
-                .processList(productRule.getProcessList().stream()
-                        .map(businessUnitProcessMapper::toProcessDto)
-                        .collect(Collectors.toList()))
-                .processedDetailList(productRule.getProcessedDetailList().stream()
-                        .map(detailMapper::toDto)
-                        .collect(Collectors.toList()))
+                .processList(processListDto)
+                .processedDetailList(processedDetailListDto)
                 .productRulePaperStockList(productRulePaperStockDtoList)
                 .type(productRule.getType())
                 .build();
     }
+
     public ProductRule toEntity(ProductRuleDto productRuleDto) {
         List<ProductRulePaperStockDto> productRulePaperStockList = productRuleDto.getProductRulePaperStockList();
 

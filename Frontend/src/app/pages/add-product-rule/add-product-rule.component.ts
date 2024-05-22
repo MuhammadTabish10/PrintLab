@@ -105,16 +105,16 @@ export class AddProductRuleComponent implements OnInit {
         this.buttonName = 'Add';
       } else {
         this.productRuleService.getProductRuleById(this.idFromQueryParam!).subscribe((res: any) => {
-          this.productName = res?.title;
+          this.productName = res?.productName;
           if (this.categoryArray && this.sideOptions) {
-            const parsedCategories = JSON.parse(res?.category);
+            const parsedCategories = JSON.parse(res?.sizeCategory);
 
             this.category = parsedCategories
             this.sideValue = this.sideOptions?.productFieldValuesList?.find((option: any) => option.name === res?.printSide)
             if (this.category) {
               this.onCategoryChange(this.category);
             } else {
-              this.category = this.categoryArray?.productFieldValuesList?.find((el: any) => el.name.toLowerCase() === res?.category.toLowerCase());
+              this.category = this.categoryArray?.productFieldValuesList?.find((el: any) => el.name.toLowerCase() === res?.sizeCategory.toLowerCase());
               return
             }
             if (this.sideValue) {
@@ -577,8 +577,10 @@ export class AddProductRuleComponent implements OnInit {
     const updatePressId = this.press.machines.find((el: any) => el.vendor.name === this.pressVendor.name)
     const ctpId = this.ctpVendors.find((el: any) => el.plateDimension === this.plates.name)
     const commonPayload = {
-      title: this.productName,
-      category: JSON.stringify(this.category),
+      status: "InActive",
+      productName: this.productName,
+      businessCategory: "Offset",
+      sizeCategory: JSON.stringify(this.category),
       size: JSON.stringify(this.upping),
       quantity: JSON.stringify(this.qty.map((qtys: any) => qtys.name)),
       printSide: this.sideValue.name,

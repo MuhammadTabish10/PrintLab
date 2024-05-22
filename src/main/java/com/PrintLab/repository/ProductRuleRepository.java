@@ -9,10 +9,7 @@ import java.util.List;
 @Repository
 public interface ProductRuleRepository extends JpaRepository<ProductRule,Long> {
     List<ProductRule> findByStatus(String active);
-
     List<ProductRule> findProductRuleByProductName(String productName);
-
-    Boolean existsByProductNameAndStatusIsTrue(String productName);
-
     ProductRule findByProductNameAndStatus(String productValue, String active);
+    Boolean existsByProductNameAndStatus(String productName, String active);
 }

@@ -40,7 +40,7 @@ export class ProductRuleService {
       params = params.set('page-number', 0);
       params = params.set('page-size', 10);
     }
-    return this.http.post<PaginationResponse<ProductRule>>(`${this._url}/product-rule`, body, { params });
+    return this.http.post<PaginationResponse<ProductRule>>(`${this._url}/get-paginated-productRule`, body ? body : {}, { params });
   }
 
   deleteProduct(id: any) {
@@ -60,8 +60,8 @@ export class ProductRuleService {
     return this.http.get<ProductRule[]>(`${this._url}/product-rule/names/${name}`);
   }
 
-  checkUniqueProduct(title: any) {
-    let url = `${this._url}/product-rule/check-title/${title}`
-    return this.http.get(url)
+  checkUniqueProduct(productName: string) {
+    let url = `${this._url}/product-rule/check-title/${productName}`;
+    return this.http.get(url);
   }
 }

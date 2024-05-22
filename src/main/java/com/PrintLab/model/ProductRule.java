@@ -22,6 +22,7 @@ public class ProductRule {
     private String printSide;
     private String jobColorFront;
     private String jobColorBack;
+    @Column(columnDefinition = "TEXT")
     private String sizeCategory;
     @Column(columnDefinition = "TEXT")
     private String size;

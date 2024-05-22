@@ -10,6 +10,7 @@ import { BusinessUnitService } from '../../business-unit-and-processes/Service/b
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { UpingService } from 'src/app/services/uping.service';
+import { ProductRuleService } from 'src/app/services/product-rule.service';
 
 @Component({
   selector: 'app-product-rule-job',
@@ -51,10 +52,10 @@ export class ProductRuleJobComponent implements OnInit {
     (
       private productFieldService: ProductDefinitionService,
       private businessUnitService: BusinessUnitService,
+      private productRuleService: ProductRuleService,
       private successService: SuccessMessageService,
       private errorService: ErrorHandleService,
       private getUpping: UpingService,
-      private jobService: JobService,
       private route: ActivatedRoute,
       private router: Router,
     ) { }
@@ -77,8 +78,7 @@ export class ProductRuleJobComponent implements OnInit {
   }
 
   onFocusOutEvent(productName: string) {
-    this.jobService.checkUniqueProduct(productName).subscribe((result: boolean) => {
-
+    this.productRuleService.checkUniqueProduct(productName).subscribe((result: any) => {
       this.isExist = result;
       if (result === true) {
         const error = "This product already exist.";
@@ -173,9 +173,8 @@ export class ProductRuleJobComponent implements OnInit {
   }
 
   getProductRuleJobById(id: number) {
-    this.jobService.getProductRuleJobById(id).subscribe(
-      (res: ProductRuleJob) => {
-
+    this.productRuleService.getProductRuleById(id).subscribe(
+      (res: any) => {
         this.productRuleJob.category = res.category;
         res.sizeCategory = JSON.parse(res.sizeCategory!);
         const sizeArray = JSON.parse(res.size!);
@@ -228,9 +227,9 @@ export class ProductRuleJobComponent implements OnInit {
     this.productRuleJob.processList = this.targetProducts;
 
     const serviceToCall = this.idFromQueryParam
-      ? this.jobService.updateProductRuleJob(this.idFromQueryParam!, this.productRuleJob)
-      : this.jobService.postProductRuleJob(this.productRuleJob);
-    serviceToCall.subscribe((res: ProductRuleJob) => {
+      ? this.productRuleService.updateProductRule(this.idFromQueryParam!, this.productRuleJob)
+      : this.productRuleService.postProductRule(this.productRuleJob);
+    serviceToCall.subscribe((res: any) => {
       this.successService.showSuccess("Process defined successfully");
       setTimeout(() => {
         this.router.navigate(['/ProductRule']);

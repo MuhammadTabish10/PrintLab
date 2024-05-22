@@ -1,6 +1,5 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.dto.OrderDto;
 import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.dto.ProductRuleDto;
 import com.PrintLab.service.ProductRuleService;
@@ -25,7 +24,7 @@ public class ProductRuleController {
         return ResponseEntity.ok(productRuleService.save(productRuleDto));
     }
 
-    @GetMapping("/product-rule/check-title/{title}")
+    @GetMapping("/product-rule/check-title/{productName}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Boolean> checkTitle(@PathVariable String productName){
         return ResponseEntity.ok(productRuleService.checkTitle(productName));

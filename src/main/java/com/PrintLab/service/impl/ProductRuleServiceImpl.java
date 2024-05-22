@@ -3,8 +3,10 @@ package com.PrintLab.service.impl;
 import com.PrintLab.Mapper.ProductRuleMapper;
 import com.PrintLab.dto.*;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.model.*;
-import com.PrintLab.model.Order;
+import com.PrintLab.model.BusinessUnitProcess;
+import com.PrintLab.model.JobProcessedDetails;
+import com.PrintLab.model.ProductRule;
+import com.PrintLab.model.ProductRulePaperStock;
 import com.PrintLab.repository.*;
 import com.PrintLab.service.ProductRuleService;
 import org.springframework.data.domain.PageRequest;
@@ -15,9 +17,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,13 +48,15 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     @Transactional
     @Override
     public ProductRuleDto save(ProductRuleDto productRuleDto) {
-        List<ProductRulePaperStockDto> productRulePaperStockList = productRuleDto.getProductRulePaperStockList();
 
-        if (productRulePaperStockList != null && !productRulePaperStockList.isEmpty()) {
-            return saveProductRuleWithPaperStock(productRuleDto);
-        } else {
-            return saveProductRuleWithoutPaperStock(productRuleDto);
-        }
+            List<ProductRulePaperStockDto> productRulePaperStockList = productRuleDto.getProductRulePaperStockList();
+
+            if (productRulePaperStockList != null && !productRulePaperStockList.isEmpty()) {
+                return saveProductRuleWithPaperStock(productRuleDto);
+            } else {
+                return saveProductRuleWithoutPaperStock(productRuleDto);
+            }
+
     }
 
     private ProductRuleDto saveProductRuleWithPaperStock(ProductRuleDto productRuleDto) {
@@ -85,7 +90,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public Boolean checkTitle(String productName) {
-        return(productRuleRepository.existsByProductNameAndStatusIsTrue(productName));
+        return(productRuleRepository.existsByProductNameAndStatus(productName, "Active"));
     }
 
     @Override
