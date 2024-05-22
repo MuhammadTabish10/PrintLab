@@ -1,6 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { ProductRule } from '../Model/ProductRule';
+import { PaginatorState } from 'primeng/paginator';
+import { PaginationResponse } from '../Model/PaginationResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +31,16 @@ export class ProductRuleService {
     return this.http.post(url, obj)
   }
 
-  getProductRuleTable() {
-    let url = `${this._url}/product-rule`
-    return this.http.get(url)
+  public getProductRuleTable(pageState?: PaginatorState, body?: ProductRule): Observable<PaginationResponse<ProductRule>> {
+    let params = new HttpParams();
+    if (pageState?.hasOwnProperty('page') && pageState?.hasOwnProperty('rows')) {
+      params = params.set('page-number', pageState?.page!);
+      params = params.set('page-size', pageState?.rows!);
+    } else {
+      params = params.set('page-number', 0);
+      params = params.set('page-size', 10);
+    }
+    return this.http.post<PaginationResponse<ProductRule>>(`${this._url}/product-rule`, body, { params });
   }
 
   deleteProduct(id: any) {
@@ -45,9 +56,8 @@ export class ProductRuleService {
     return this.http.put(url, obj)
   }
 
-  searchProduct(name: any) {
-    let url = `${this._url}/product-rule/names/${name}`
-    return this.http.get(url)
+  searchProduct(name: string): Observable<ProductRule[]> {
+    return this.http.get<ProductRule[]>(`${this._url}/product-rule/names/${name}`);
   }
 
   checkUniqueProduct(title: any) {

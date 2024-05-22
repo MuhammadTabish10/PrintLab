@@ -13,14 +13,14 @@
           placeholder="Search by Product Size"
           [(ngModel)]="search"
           class="order-search form-control"
-          (keyup)="searchProductRule($event.target)"
+          (input)="searchProductRule($event.target)"
         />
         <div>
           <p-panelMenu [model]="items" class="custom" />
         </div>
       </div>
       <div class="order-table overflow-auto pt-0">
-        <table class="table table-responsive text-center">
+        <!-- <table class="table table-responsive text-center">
           <thead>
             <tr>
               <th scope="col" class="col">ID</th>
@@ -36,32 +36,24 @@
             </tr>
             <tr *ngFor="let product of tableData; let i = index">
               <td>{{ product.id }}</td>
-              <td>
-                <ng-container
-                  *ngIf="product.type === 'auto'; else manualCategory"
-                >
-                  Offset
-                </ng-container>
-                <ng-template #manualCategory>
-                  {{ product.category }}
-                </ng-template>
-              </td>
+              <td>{{ product.businessCategory }}</td>
 
-              <td>{{ product.title }}</td>
+              <td>{{ product.productName }}</td>
+              <td>{{ product.type }}</td>
               <td>{{ product.type }}</td>
               <td>
                 <div class="btn-group" role="group">
                   <button
                     type="button"
                     class="btn order-table-btn"
-                    (click)="editProduct(product.id, product.type)"
+                    (click)="editProduct(product.id!, product.type!)"
                   >
                     <i class="fa-solid fa-pen pe-lg-2"></i><small>Edit</small>
                   </button>
                   <button
                     type="button"
                     class="btn order-table-btn"
-                    (click)="viewProduct(product.id)"
+                    (click)="viewProduct(product.id!)"
                   >
                     <i class="fa-solid fa-hand-pointer pe-lg-2"></i>&nbsp;<small
                       >View</small
@@ -70,7 +62,7 @@
                   <button
                     type="button"
                     class="btn order-table-btn"
-                    (click)="deleteProduct(product.id, product.type)"
+                    (click)="deleteProduct(product.id!)"
                   >
                     <i class="fa-solid fa-trash pe-lg-2"></i
                     ><small class="">Delete</small>
@@ -79,7 +71,206 @@
               </td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
+        <p-table
+          #dt1
+          [value]="paginatedProductRule?.content!"
+          dataKey="id"
+          [globalFilterFields]="[
+            'id',
+            'businessCategory',
+            'product',
+            'size',
+            'quantity',
+            'unit',
+            'amount',
+            'status',
+            'createdBy.name',
+            'timeStamp',
+            'businesses'
+          ]"
+        >
+          <ng-template pTemplate="caption">
+            <div class="flex">
+              <button
+                pButton
+                label="Clear"
+                class="btn btn-dark"
+                icon="pi pi-filter-slash"
+                (click)="clearSearch()"
+              ></button>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width: 15rem">
+                <div class="flex align-items-center">ID</div>
+              </th>
+              <th style="min-width: 15rem">
+                <div class="flex align-items-center">
+                  Category
+                  <p-columnFilter type="text" field="category" display="menu">
+                    <ng-template pTemplate="header">
+                      <div class="px-3 pt-3 pb-0">
+                        <span class="font-bold">Category</span>
+                      </div>
+                    </ng-template>
+                    <ng-template
+                      pTemplate="filter"
+                      let-value
+                      let-filter="filterCallback"
+                    >
+                      <input
+                        type="text"
+                        [(ngModel)]="productRuleBody.businessCategory"
+                        (input)="getProductRule(undefined, productRuleBody)"
+                      />
+                    </ng-template>
+                  </p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 15rem">
+                <div class="flex align-items-center">
+                  Product
+                  <p-columnFilter type="text" field="product" display="menu">
+                    <ng-template pTemplate="header">
+                      <div class="px-3 pt-3 pb-0">
+                        <span class="font-bold">Product name</span>
+                      </div>
+                    </ng-template>
+                    <ng-template
+                      pTemplate="filter"
+                      let-value
+                      let-filter="filterCallback"
+                    >
+                      <input
+                        type="text"
+                        [(ngModel)]="productRuleBody.productName"
+                        (input)="getProductRule(undefined, productRuleBody)"
+                      />
+                    </ng-template>
+                  </p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 15rem">
+                <div class="flex align-items-center">
+                  Type
+                  <p-columnFilter type="text" field="type" display="menu">
+                    <ng-template pTemplate="header">
+                      <div class="px-3 pt-3 pb-0">
+                        <span class="font-bold">Type</span>
+                      </div>
+                    </ng-template>
+                    <ng-template
+                      pTemplate="filter"
+                      let-value
+                      let-filter="filterCallback"
+                    >
+                      <input
+                        type="text"
+                        [(ngModel)]="productRuleBody.type"
+                        (input)="getProductRule(undefined, productRuleBody)"
+                      />
+                    </ng-template>
+                  </p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 15rem">
+                <div class="flex align-items-center">
+                  Status
+                  <p-columnFilter type="text" field="status" display="menu">
+                    <ng-template pTemplate="header">
+                      <div class="px-3 pt-3 pb-0">
+                        <span class="font-bold">Status</span>
+                      </div>
+                    </ng-template>
+                    <ng-template
+                      pTemplate="filter"
+                      let-value
+                      let-filter="filterCallback"
+                    >
+                      <input
+                        type="text"
+                        [(ngModel)]="productRuleBody.status"
+                        (input)="getProductRule(undefined, productRuleBody)"
+                      />
+                    </ng-template>
+                  </p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 15rem">
+                <div class="flex align-items-center">Actions</div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-product>
+            <tr>
+              <td>
+                {{ product.id }}
+              </td>
+              <td>
+                {{ product.businessCategory }}
+              </td>
+              <td>
+                {{ product.productName }}
+              </td>
+              <td>
+                {{ product.type }}
+              </td>
+              <td>
+                {{ product.status }}
+              </td>
+              <td class="order-table-btns-container">
+                <div class="btn-group" role="group">
+                  <button
+                    type="button"
+                    class="btn order-table-btn"
+                    (click)="editProduct(product.id!, product.type!)"
+                  >
+                    <i class="fa-solid fa-pen pe-lg-2"></i><small>Edit</small>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn order-table-btn"
+                    (click)="viewProduct(product.id!)"
+                  >
+                    <i class="fa-solid fa-hand-pointer pe-lg-2"></i>&nbsp;<small
+                      >View</small
+                    >
+                  </button>
+                  <button
+                    type="button"
+                    class="btn order-table-btn"
+                    (click)="deleteProduct(product.id!)"
+                  >
+                    <i class="fa-solid fa-trash pe-lg-2"></i
+                    ><small class="">Delete</small>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No customers found.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <p-paginator
+          [rows]="paginatedProductRule?.pageSize!"
+          [totalRecords]="paginatedProductRule?.totalElements!"
+          (onPageChange)="getProductRule($event)"
+          [rowsPerPageOptions]="[5, 10, 15]"
+          currentPageReportTemplate="Showing {{
+            paginatedProductRule?.pageNumber! * paginatedProductRule?.pageSize!
+          }} to {{
+            (paginatedProductRule?.pageNumber! + 1) *
+              paginatedProductRule?.pageSize!
+          }} of {{ paginatedProductRule?.totalElements! }} entries"
+          [alwaysShow]="true"
+          [pageLinkSize]="5"
+          [showCurrentPageReport]="true"
+        ></p-paginator>
       </div>
     </div>
   </div>

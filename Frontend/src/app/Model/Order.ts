@@ -1,3 +1,4 @@
+import { Timestamp } from "rxjs";
 import { Business } from "./Business";
 import { BusinessUnitProcessDto } from "./BusinessUnit";
 import { Customer } from "./Customer";
@@ -29,7 +30,7 @@ export interface Order {
   production: User | undefined | null;
   plateSetter: User | undefined | null;
   isRejected: boolean;
-  timeStamp: Date | undefined | null;
+  timeStamp: Date | string | undefined | null | [number, number, number, number, number, number, number];
   createdBy: User | undefined | null;
   assignedBy: User | undefined | null;
   customer: Customer | undefined | null;

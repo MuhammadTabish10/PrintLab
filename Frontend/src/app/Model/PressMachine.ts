@@ -1,6 +1,6 @@
 import { Vendor } from "./Vendor";
 
-export interface Pressmachine {
+export interface PressMachine {
   id: number | null | undefined;
   name: string | null | undefined;
   plateDimension: string | null | undefined;

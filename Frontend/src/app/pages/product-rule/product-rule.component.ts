@@ -4,9 +4,12 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { ProductRuleService } from 'src/app/services/product-rule.service';
 import { JobService } from '../Jobs/Service/job.service';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
-import { forkJoin } from 'rxjs';
-import { ProductRuleJob } from 'src/app/Model/ProductRuleJob';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
+import { ProductRule } from 'src/app/Model/ProductRule';
+import { ErrorHandleService } from 'src/app/services/error-handle.service';
+import { RequestBody } from './RequestBody';
+import { PaginatorState } from 'primeng/paginator';
+import { PaginationResponse } from 'src/app/Model/PaginationResponse';
 
 @Component({
   selector: 'app-product-rule',
@@ -14,26 +17,27 @@ import { SuccessMessageService } from 'src/app/services/success-message.service'
   styleUrls: ['./product-rule.component.css']
 })
 export class ProductRuleComponent implements OnInit {
-  productDefinitionArray: any
-  tableData: any
-  gsm: any = [];
-  search: any
-  brand: any;
-  dimension: any;
-  madeIn: any;
-  paperStock: any;
-  tableProduct: any;
+  productRuleBody: ProductRule =
+    { ...RequestBody.productRuleBody };
+  paginatedProductRule: PaginationResponse<ProductRule> | undefined;
+  gsm: string[] = [];
+  search: string | undefined | null;
   items: MenuItem[] | undefined;
 
   constructor(
     private productRuleService: ProductRuleService,
     private successService: SuccessMessageService,
+    private errorService: ErrorHandleService,
     private messageService: MessageService,
     private jobService: JobService,
     private router: Router,
   ) { }
 
   ngOnInit(): void {
+    this.initializeItems();
+    this.getProductRule();
+  }
+  initializeItems() {
     this.items = [
       {
         label: 'Add',
@@ -54,83 +58,42 @@ export class ProductRuleComponent implements OnInit {
         ]
       },
     ]
-    this.getProductRule();
   }
 
-  editProduct(id: any, type: string) {
+  editProduct(id: number, type: string) {
     const conditionalRoute = type === 'auto' ? '/addProductRule' : '/add-product-rule-job';
     this.router.navigate([conditionalRoute], { queryParams: { id: id, orderType: type } });
   }
-
-  deleteProduct(id: any, orderType: string) {
-
-    if (orderType === 'auto') {
-      this.productRuleService.deleteProduct(id).subscribe((res: any) => {
-        this.getProductRule();
-      }, (err) => {
-        this.showError(err);
-      })
-    } else {
-      this.jobService.deleteProductRuleJob(id).subscribe((res: void) => {
-        const message = `Product Rule ${id} deleted successfully`;
-        this.successService.showSuccess(message);
-        this.getProductRule();
-      }, (error: any) => {
-        this.showError(error);
-      })
-    }
-  }
-  // getProductRule() {
-  //   const productRuleAuto$ = this.productRuleService.getProductRuleTable();
-  //   const productRuleManual$ = this.jobService.getAllProductRuleJob();
-
-  //   forkJoin([productRuleAuto$, productRuleManual$]).subscribe(
-  //     ([autoData, manualData]: [any, ProductRuleJob[]]) => {
-
-  //       autoData.forEach((item: any) => {
-  //         item.category = JSON.parse(item.category);
-  //       });
-
-  //       manualData = manualData.map((item: ProductRuleJob) => {
-  //         return {
-  //           ...item,
-  //           title: item.productName
-  //         };
-  //       });
-  //       const mergedData = [...autoData, ...manualData];
-  //       // Assign mergedData to your tableData
-  //       this.tableData = mergedData;
-  //       console.log(this.tableData);
-  //     },
-  //     (error: any) => {
-  //       this.showError(error);
-  //     }
-  //   );
-
-  // }
-private getProductRule(): void{
-  this.productRuleService.getProductRuleTable().subscribe((res:any)=>{
-    this.tableData = res;
-  },(error: BackendErrorResponse)=>{});
-}
-
-  viewProduct(id: any) {
+  viewProduct(id: number) {
     this.router.navigate(['/viewProductRule'], { queryParams: { id: id } });
+  }
+  deleteProduct(id: number) {
+    this.productRuleService.deleteProduct(id).subscribe(
+      () => {
+        this.getProductRule();
+      },
+      (err: BackendErrorResponse) => {
+        this.errorService.showError(err.error.error);
+      }
+    );
+  }
+
+  public getProductRule(pageState?: PaginatorState, body?: ProductRule): void {
+    this.productRuleService.getProductRuleTable(pageState, body).subscribe(
+      (res: PaginationResponse<ProductRule>) => {
+        this.paginatedProductRule = res;
+      }, (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      });
   }
 
   searchProductRule(name: any) {
-    if (this.search === '') {
-      this.getProductRule();
-    } else {
-      this.productRuleService.searchProduct(name.value).subscribe(res => {
-        this.tableData = res
-      }, error => {
-        this.showError(error);
+    this.productRuleService.searchProduct(name.value).subscribe(
+      (res: ProductRule[]) => {
+        // this.tableData = res
+      }, (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
       })
-    }
   }
-
-  showError(error: any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
-  }
+  public clearSearch() { }
 }

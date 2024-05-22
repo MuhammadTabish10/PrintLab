@@ -296,22 +296,33 @@ public class BusinessUnitCategoryImpl implements BusinessUnitCategoryService {
     }
 
     @Override
-    public BusinessUnitCategoryDto updateProcessReorder(Long categoryId, BusinessUnitCategoryDto category) {
-
-        Optional<BusinessUnitCategory> existCategoryOptional = categoryRepository.findById(categoryId);
-
-        if (existCategoryOptional.isPresent()) {
-            BusinessUnitCategory existCategory = existCategoryOptional.get();
-
-            existCategory.setProcessList(categoryMapper.toEntity(category).getProcessList());
-
-            categoryRepository.save(existCategory);
-
-            return categoryMapper.toDto(existCategory);
-        } else {
-            throw new IllegalArgumentException("Category not found");
+    @Transactional
+    public BusinessUnitCategoryDto updateProcessReorder(Long categoryId, BusinessUnitCategoryDto categoryDto) {
+        if (categoryId == null) {
+            throw new IllegalArgumentException("Category ID cannot be null");
         }
+
+        BusinessUnitCategory existCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+
+        List<BusinessUnitProcess> existingProcesses = existCategory.getProcessList();
+        if (existingProcesses != null && !existingProcesses.isEmpty()) {
+            processRepository.deleteAll(existingProcesses);
+        }
+
+        List<BusinessUnitProcess> updatedProcessList = categoryMapper.toEntity(categoryDto).getProcessList();
+        for (BusinessUnitProcess process : updatedProcessList) {
+            process.setId(null);
+            process.setCategory(existCategory);
+        }
+        existCategory.setProcessList(updatedProcessList);
+
+        categoryRepository.save(existCategory);
+
+        return categoryMapper.toDto(existCategory);
     }
+
+
 
 }
 

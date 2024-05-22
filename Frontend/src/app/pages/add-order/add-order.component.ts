@@ -1,3 +1,4 @@
+import { GlobalVariables } from './GlobalVariables';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, TreeNode } from 'primeng/api';
@@ -43,7 +44,7 @@ export class AddOrderComponent implements OnInit {
   designValue = true
   imgUrl: string = ''
   pdfUrl: string = ''
-  idFromQueryParam!: number
+  idFromQueryParam: number | undefined | null;
   buttonName: string = 'Add'
   orderToUpdate: any
   productToUpdate: any
@@ -86,66 +87,12 @@ export class AddOrderComponent implements OnInit {
   selectedBusinesses: Business[] = [];
   selectedBranches: BusinessBranch[] = [];
   orderType: string | undefined | null;
-  job: Order = {
-    id: undefined,
-    customer: undefined,
-    businessCategory: undefined,
-    productionUser: undefined,
-    processList: [],
-    jobId: undefined,
-    productCategory: undefined,
-    product: undefined,
-    description: undefined,
-    rate: undefined,
-    amount: undefined,
-    linkedInvoice: undefined,
-    privateNotes: undefined,
-    orderTrackingNotes: undefined,
-    productionNotes: undefined,
-    ctpFileName: undefined,
-    locationOfFile: undefined,
-    sentOn: undefined,
-    designPackageFile: undefined,
-    locationOfDesignFile: undefined,
-    jobStartDate: undefined,
-    productionStartDate: undefined,
-    productionEndDate: undefined,
-    packingAndQADate: undefined,
-    deliveryDate: undefined,
-    sendTo: undefined,
-    expiryDate: undefined,
-    processedDetailList: [],
-    sizeCategory: undefined,
-    size: undefined,
-    type: undefined,
-    paper: undefined,
-    gsm: undefined,
-    quantity: undefined,
-    jobColorsFront: undefined,
-    sideOptionValue: undefined,
-    impositionValue: undefined,
-    jobColorsBack: undefined,
-    providedDesign: undefined,
-    url: undefined,
-    productRule: undefined,
-    status: undefined,
-    ctpProcess: undefined,
-    pressMachineProcess: undefined,
-    paperMarketProcess: undefined,
-    designer: undefined,
-    production: undefined,
-    plateSetter: undefined,
-    isRejected: false,
-    timeStamp: undefined,
-    createdBy: undefined,
-    assignedBy: undefined,
-    titleId: undefined
-  }
+  job: Order = { ...GlobalVariables.order }
   categoryList: BusinessUnit[] = [];
-  // productAndServiceList: ProductService[] = [];
   productRuleJobList: ProductRuleJob[] = [];
 
-  constructor(private orderService: OrdersService, private router: Router,
+  constructor(
+    private orderService: OrdersService, private router: Router,
     private productRuleService: ProductRuleService, private route: ActivatedRoute,
     private customerService: CustomerService, private messageService: MessageService,
     private businessUnitService: BusinessUnitService,
@@ -155,21 +102,20 @@ export class AddOrderComponent implements OnInit {
     private cdr: ChangeDetectorRef,
   ) { }
 
+
   ngOnInit(): void {
     this.getCustomerList();
     this.getUserDetails();
     this.route.queryParams.subscribe(param => {
       this.idFromQueryParam = +param['id']
       this.orderType = param['orderType']
-      console.log(this.orderType);
-
-      if (Number.isNaN(this.idFromQueryParam)) {
+      if (!this.idFromQueryParam) {
         this.buttonName = 'Add'
         this.orderType === 'auto' ? this.getProducts() : this.getProductList();
       } else {
         this.buttonName = 'Update'
         if (this.orderType === 'auto') {
-          this.orderService.getOrderByIdAndType(this.idFromQueryParam,this.orderType).subscribe(res => {
+          this.orderService.getOrderByIdAndType(this.idFromQueryParam, this.orderType).subscribe(res => {
             this.orderToUpdate = res
             this.selectedCustomer = this.orderToUpdate.customer
             this.totalAmount = this.orderToUpdate.price
@@ -373,7 +319,6 @@ export class AddOrderComponent implements OnInit {
   getProducts() {
     this.productRuleService.getProductRuleTable().subscribe(res => {
       this.productArray = res;
-
       if (this.productArray.length === 1) {
         this.toggleFields(this.productArray[0]);
       }
@@ -594,7 +539,7 @@ export class AddOrderComponent implements OnInit {
     this.businessUnitService.getBusinessUnitById(id).subscribe(
       (res: BusinessUnit) => {
         if (res.processList) {
-           // Initialize a Map to store unique items keyed by productName
+          // Initialize a Map to store unique items keyed by productName
           const uniqueProductRuleJobList = new Map<string, ProductRuleJob>();
           res.processList?.forEach((element: BusinessUnitProcessDto) => {
             if (element.productRuleJobList) {
@@ -606,7 +551,7 @@ export class AddOrderComponent implements OnInit {
               });
             }
           });
-           // Convert Map values to an array
+          // Convert Map values to an array
           this.productRuleJobList = Array.from(uniqueProductRuleJobList.values());
         }
       },

@@ -12,9 +12,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BusinessServiceImpl implements BusinessService {
@@ -35,7 +34,13 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public List<Business> getAllBusinesses() {
-        return businessRepository.findAll();
+        List<Business> allBusinesses = businessRepository.findAll();
+
+        // Use LinkedHashSet to maintain the insertion order and filter unique business names
+        Set<String> seenNames = new LinkedHashSet<>();
+        return allBusinesses.stream()
+                .filter(business -> seenNames.add(business.getBusinessName()))
+                .collect(Collectors.toList());
     }
 
     @Override

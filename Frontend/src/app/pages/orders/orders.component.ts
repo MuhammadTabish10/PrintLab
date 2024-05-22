@@ -9,6 +9,10 @@ import { Table } from 'primeng/table';
 import { Order } from 'src/app/Model/Order';
 import { PaginatorState } from 'primeng/paginator';
 import { PaginationResponse } from 'src/app/Model/PaginationResponse';
+import { DatePipe } from '@angular/common';
+import { Business } from 'src/app/Model/Business';
+import { CustomerService } from 'src/app/services/customer.service';
+import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 
 export interface Roles {
   name?: string;
@@ -72,7 +76,17 @@ export class OrdersComponent implements OnInit {
     plateSetter: undefined,
     isRejected: false,
     timeStamp: undefined,
-    createdBy: undefined,
+    createdBy: {
+      id: undefined,
+      name: undefined,
+      email: undefined,
+      password: undefined,
+      phone: undefined,
+      cnic: undefined,
+      status: undefined,
+      createdAt: undefined,
+      roles: [],
+    },
     assignedBy: undefined,
     customer: undefined,
     businessCategory: undefined,
@@ -98,17 +112,19 @@ export class OrdersComponent implements OnInit {
     deliveryDate: undefined,
     expiryDate: undefined,
     sendTo: undefined,
-    processedDetailList: []
+    processedDetailList: [],
+    businesses: [],
   }
-
+  businessList: Business[] = []
   constructor(
-    private orderService: OrdersService,
-    private jobService: JobService,
-    private router: Router,
-    private authService: AuthguardService,
+    private customerService: CustomerService,
     private messageService: MessageService,
+    private authService: AuthguardService,
+    private orderService: OrdersService,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private datePipe: DatePipe,
+    private router: Router,
   ) { }
 
 
@@ -134,6 +150,7 @@ export class OrdersComponent implements OnInit {
       },
     ]
     this.getOrders()
+    this.getBusinessList();
     this.getUserDetails();
     this.cdr.detectChanges();
 
@@ -148,11 +165,20 @@ export class OrdersComponent implements OnInit {
       this.showError(error);
     })
   }
+  getBusinessList() {
+    this.customerService.getAllBusinesses().subscribe(
+      (res: Business[]) => {
+        this.businessList = res;
+      }, (error: BackendErrorResponse) => {
+        this.showError(error.error.error);
+      }
+    )
+  }
 
-  getOrders(pageState?: PaginatorState, order?: Order): void {
-    debugger
+  public getOrders(pageState?: PaginatorState, order?: Order): void {
     this.orderService.getOrders(pageState, order!).pipe(takeUntil(this.destroy$)).subscribe(
       (res: PaginationResponse<Order>) => {
+        this.paginatedOrders = res;
         if (this.paginatedOrders?.content) {
           if (this.role !== "ROLE_ADMIN") {
             this.paginatedOrders.content = res.content.filter(
@@ -164,6 +190,7 @@ export class OrdersComponent implements OnInit {
             this.paginatedOrders.content = res.content;
           }
           this.tableData = this.paginatedOrders.content.length === 0;
+          this.paginatedOrders.content = this.transformTimeStamp(this.paginatedOrders.content);
           this.paginatedOrders.content.forEach((element: Order) => {
             if (element.size && this.isJsonString(element.size)) {
               debugger
@@ -367,5 +394,33 @@ export class OrdersComponent implements OnInit {
     this.role = this.currentUserDetail.authorities[0].authority;
   }
 
-  public clear(table: Table): void { }
+  public clear(): void { }
+  private transformTimeStamp(orderList: Order[]): Order[] {
+    return orderList.map((el: Order) => {
+      debugger
+      const dateArray = el.timeStamp;
+      if (dateArray && Array.isArray(dateArray)) {
+        const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5], dateArray[6] / 1000000);
+        el.timeStamp = this.datePipe.transform(date, 'EEEE, MMMM d, yyyy, h:mm a');
+      }
+      return el;
+    });
+  }
+  onDateSelect(date: any): void {
+    const uiDate = new Date(date);
+    const formattedDate = this.formatDateToCustomString(uiDate);
+    console.log(formattedDate);
+    this.order.timeStamp = formattedDate;
+    this.getOrders(undefined, this.order);
+  }
+  formatDateToCustomString(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
 }
