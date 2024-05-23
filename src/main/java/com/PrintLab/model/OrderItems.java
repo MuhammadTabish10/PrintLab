@@ -1,10 +1,7 @@
 package com.PrintLab.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -20,8 +17,10 @@ public class OrderItems {
     private Long id;
     private String name;
     private String quantity;
-    @JsonIgnore
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
+    @ToString.Exclude
+    @JsonIgnore
     private Order order;
 }

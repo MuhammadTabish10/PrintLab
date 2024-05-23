@@ -9,8 +9,6 @@ import com.PrintLab.model.ProductRule;
 import com.PrintLab.model.ProductRulePaperStock;
 import com.PrintLab.repository.*;
 import com.PrintLab.service.ProductRuleService;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -53,13 +51,13 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     @Override
     public ProductRuleDto save(ProductRuleDto productRuleDto) {
 
-            List<ProductRulePaperStockDto> productRulePaperStockList = productRuleDto.getProductRulePaperStockList();
+        List<ProductRulePaperStockDto> productRulePaperStockList = productRuleDto.getProductRulePaperStockList();
 
-            if (productRulePaperStockList != null && !productRulePaperStockList.isEmpty()) {
-                return saveProductRuleWithPaperStock(productRuleDto);
-            } else {
-                return saveProductRuleWithoutPaperStock(productRuleDto);
-            }
+        if (productRulePaperStockList != null && !productRulePaperStockList.isEmpty()) {
+            return saveProductRuleWithPaperStock(productRuleDto);
+        } else {
+            return saveProductRuleWithoutPaperStock(productRuleDto);
+        }
 
     }
 
@@ -94,7 +92,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public Boolean checkTitle(String productName) {
-        return(productRuleRepository.existsByProductNameAndStatus(productName, "Active"));
+        return (productRuleRepository.existsByProductNameAndStatus(productName, "Active"));
     }
 
     @Override
@@ -146,7 +144,9 @@ public class ProductRuleServiceImpl implements ProductRuleService {
             updateProcessListAndDetails(existingProductRule, productRuleDto);
 
             // Update ProductRulePaperStock entities
-            updateProductRulePaperStocks(existingProductRule, productRuleDto.getProductRulePaperStockList());
+            if (existingProductRule.getType().equalsIgnoreCase("auto")) {
+                updateProductRulePaperStocks(existingProductRule, productRuleDto.getProductRulePaperStockList());
+            }
 
             // Save the updated ProductRule
             ProductRule updatedProductRule = productRuleRepository.save(existingProductRule);
@@ -162,23 +162,23 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         existingProductRule.setProductName(productRuleDto.getProductName());
         existingProductRule.setStatus(productRuleDto.getStatus());
         existingProductRule.setSize(productRuleDto.getSize());
-        existingProductRule.setPrintSide(existingProductRule.getPrintSide());
-        existingProductRule.setJobColorFront(existingProductRule.getJobColorFront());
-        existingProductRule.setJobColorBack(existingProductRule.getJobColorBack());
-        existingProductRule.setQuantity(existingProductRule.getQuantity());
-        if(existingProductRule.getPrintSide().equals(DOUBLE_SIDED)){
-            existingProductRule.setImpositionValue(existingProductRule.getImpositionValue());
+        if (existingProductRule.getType().equalsIgnoreCase("auto")) {
+            existingProductRule.setPrintSide(productRuleDto.getPrintSide());
+            existingProductRule.setJobColorFront(productRuleDto.getJobColorFront());
+            existingProductRule.setJobColorBack(productRuleDto.getJobColorBack());
+            existingProductRule.setQuantity(productRuleDto.getQuantity());
+            if (existingProductRule.getPrintSide().equals(DOUBLE_SIDED)) {
+                existingProductRule.setImpositionValue(productRuleDto.getImpositionValue());
+            } else {
+                existingProductRule.setImpositionValue(false);
+            }
+            existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
+                    .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")));
+            existingProductRule.setCtp(ctpRepository.findById(productRuleDto.getCtp().getId())
+                    .orElseThrow(() -> new RecordNotFoundException("Ctp not found")));
         }
-        else{
-            existingProductRule.setImpositionValue(false);
-        }
-        existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
-                .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")));
-        existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
-                .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")));
-        existingProductRule.setCtp(ctpRepository.findById(productRuleDto.getCtp().getId())
-                .orElseThrow(() -> new RecordNotFoundException("Ctp not found")));
         existingProductRule.setType(productRuleDto.getType());
+
     }
 
     private void updateProcessListAndDetails(ProductRule existingProductRule, ProductRuleDto productRuleDto) {
@@ -285,7 +285,6 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public PaginationResponse getAllPaginatedProductRule(Integer pageNumber, Integer pageSize, ProductRuleDto searchCriteria) {
-        Pageable page = PageRequest.of(pageNumber, pageSize);
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ProductRule> cq = criteriaBuilder.createQuery(ProductRule.class);
         Root<ProductRule> leadsRoot = cq.from(ProductRule.class);
@@ -302,6 +301,15 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         List<ProductRuleDto> dtoList = mapToDto(resultList);
 
         return createPaginationResponse(dtoList, pageNumber, pageSize, totalElements);
+    }
+
+    @Override
+    public List<ProductRuleDto> findAllByType(String type) {
+        List<ProductRule> productRuleList = productRuleRepository.findByTypeAndStatus(type,"Active");
+        return productRuleList.stream()
+                .map(productRuleMapper::toDto)
+                .collect(Collectors.toList());
+
     }
 
     private void applyPagination(TypedQuery<?> query, Integer pageNumber, Integer pageSize) {

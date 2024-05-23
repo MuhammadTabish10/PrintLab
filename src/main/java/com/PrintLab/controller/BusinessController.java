@@ -18,8 +18,8 @@ public class BusinessController {
     private BusinessService businessService;
 
     @GetMapping
-    public ResponseEntity<List<Business>> getAllBusinesses() {
-        List<Business> businesses = businessService.getAllBusinesses();
+    public ResponseEntity<List<BusinessDto>> getAllBusinesses() {
+        List<BusinessDto> businesses = businessService.getAllBusinesses();
         return ResponseEntity.ok(businesses);
     }
 

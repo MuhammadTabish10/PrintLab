@@ -1,14 +1,23 @@
 .highlighted {
   background-color: lightgray;
 }
-::ng-deep.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-action {
+::ng-deep.p-panelmenu
+  .p-panelmenu-header
+  .p-panelmenu-header-content
+  .p-panelmenu-header-action {
   color: white;
   padding: 1rem;
   font-weight: 700;
   background-color: black;
-  border-radius:3%;
+  border-radius: 3%;
 }
 ::ng-deep.p-column-filter-overlay-menu .p-column-filter-add-rule {
   padding: 0.75rem 1.25rem;
   display: none;
 }
+/* Apply light gray background color on row hover */
+
+::ng-deep.p-datatable .p-datatable-tbody > tr.order-table-row-hover:hover {
+  background-color: lightgray; /* Change this to your desired color */
+}
+

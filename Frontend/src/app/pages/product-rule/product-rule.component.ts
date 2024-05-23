@@ -67,7 +67,8 @@ export class ProductRuleComponent implements OnInit {
   }
 
   editProduct(id: number, type: string) {
-    const conditionalRoute = type === 'auto' ? '/addProductRule' : '/add-product-rule-job';
+    const conditionalRoute = type === 'auto' ? '/addProductRule' : type === 'manual' ?
+    '/add-product-rule-job' : '/add-product-rule-group-sheet';
     this.router.navigate([conditionalRoute], { queryParams: { id: id, orderType: type } });
   }
   viewProduct(id: number) {

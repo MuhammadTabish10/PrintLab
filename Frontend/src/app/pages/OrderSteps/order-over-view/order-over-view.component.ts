@@ -59,7 +59,7 @@ export class OrderOverViewComponent implements OnInit {
           this.orderById.size = this.orderById.size.inch;
         } else {
           this.orderById = data;
-          this.getCategoryById(+this.orderById.productCategory);
+          this.getCategoryById(+this.orderById.businessCategory);
         }
       },
       (error) => {
@@ -70,8 +70,10 @@ export class OrderOverViewComponent implements OnInit {
 
 
   getCategoryById(id: number): void {
+    debugger
     this.businessUnitService.getBusinessUnitById(id).subscribe(
       (data: BusinessUnit) => {
+
         this.category = data.name;
       },
       (error: BackendErrorResponse) => {

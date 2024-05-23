@@ -1,5 +1,6 @@
 package com.PrintLab.service.impl;
 
+import com.PrintLab.Mapper.BusinessAndBranchMapper;
 import com.PrintLab.Mapper.OrderItemsMapper;
 import com.PrintLab.dto.BusinessDto;
 import com.PrintLab.dto.OrderDto;
@@ -33,6 +34,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -43,8 +46,9 @@ public class OrderServiceImpl implements OrderService {
     private final EntityManager entityManager;
     private final EmailUtils emailUtils;
     private final OrderItemsMapper orderItemsMapper;
+    private final BusinessAndBranchMapper businessAndBranchMapper;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper, BusinessAndBranchMapper businessAndBranchMapper) {
         this.customerRepository = customerRepository;
         this.businessRepository = businessRepository;
         this.orderRepository = orderRepository;
@@ -52,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
         this.entityManager = entityManager;
         this.emailUtils = emailUtils;
         this.orderItemsMapper = orderItemsMapper;
+        this.businessAndBranchMapper = businessAndBranchMapper;
     }
 
 
@@ -60,29 +65,30 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto save(OrderDto orderDto, Long loggedInUserId) {
         User loggedInUser = userRepository.findById(loggedInUserId)
                 .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
-        if (orderDto.getSideOptionValue() == null) {
-            orderDto.setSideOptionValue("SINGLE_SIDED");
+        if (orderDto.getType().equalsIgnoreCase("auto")) {
+            if (orderDto.getSideOptionValue() == null) {
+                orderDto.setSideOptionValue("SINGLE_SIDED");
+            }
+            if (!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+                if (orderDto.getJobColorsFront() == null) {
+                    orderDto.setJobColorsFront(1L);
+                }
+                if (orderDto.getJobColorsBack() == null) {
+                    orderDto.setJobColorsBack(1L);
+                }
+            } else if (orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+                if (orderDto.getJobColorsFront() == null) {
+                    orderDto.setJobColorsFront(1L);
+                }
+            } else if (orderDto.getSideOptionValue().equals("SINGLE_SIDED")) {
+                if (orderDto.getJobColorsFront() == null) {
+                    orderDto.setJobColorsFront(1L);
+                }
+            }
+            if (orderDto.getQuantity() == null) {
+                orderDto.setQuantity(1000.0);
+            }
         }
-        if (!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
-            if (orderDto.getJobColorsFront() == null) {
-                orderDto.setJobColorsFront(1L);
-            }
-            if (orderDto.getJobColorsBack() == null) {
-                orderDto.setJobColorsBack(1L);
-            }
-        } else if (orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
-            if (orderDto.getJobColorsFront() == null) {
-                orderDto.setJobColorsFront(1L);
-            }
-        } else if (orderDto.getSideOptionValue().equals("SINGLE_SIDED")) {
-            if (orderDto.getJobColorsFront() == null) {
-                orderDto.setJobColorsFront(1L);
-            }
-        }
-        if (orderDto.getQuantity() == null) {
-            orderDto.setQuantity(1000.0);
-        }
-
         orderDto.setStatus("New / Unassigned");
         orderDto.setCreatedBy(loggedInUser);
         ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
@@ -155,6 +161,7 @@ public class OrderServiceImpl implements OrderService {
                 existingOrder.setPaper(orderDto.getPaper());
                 existingOrder.setSize(orderDto.getSize());
                 existingOrder.setSizeCategory(orderDto.getSizeCategory());
+                existingOrder.setBusinessCategory(orderDto.getBusinessCategory());
                 existingOrder.setGsm(orderDto.getGsm());
                 existingOrder.setQuantity(orderDto.getQuantity());
                 existingOrder.setAmount(orderDto.getAmount());
@@ -168,8 +175,8 @@ public class OrderServiceImpl implements OrderService {
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found at id => " + orderDto.getCustomer().getId())));
             } else {
                 updateProductionJobFields(existingOrder, orderDto);
-                updateBusinesses(existingOrder, orderDto);
             }
+            updateBusinesses(existingOrder, orderDto);
             Order updatedOrder = orderRepository.save(existingOrder);
             return toDto(updatedOrder);
         } else {
@@ -308,112 +315,190 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    @Override
     public PaginationResponse getAllPaginatedOrders(Integer pageNumber, Integer pageSize, OrderDto searchCriteria) {
+        // Create a Pageable object to handle pagination
         Pageable page = PageRequest.of(pageNumber, pageSize);
+
+        // Create a CriteriaBuilder instance from the entity manager
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+        // Create a CriteriaQuery object for the Order entity
         CriteriaQuery<Order> cq = criteriaBuilder.createQuery(Order.class);
-        Root<Order> leadsRoot = cq.from(Order.class);
 
-        List<Predicate> predicates = buildPredicates(criteriaBuilder, leadsRoot, searchCriteria);
+        // Define the root of the query (the Order entity)
+        Root<Order> orderRoot = cq.from(Order.class);
+
+        // Build the predicates based on the search criteria
+        List<Predicate> predicates = buildPredicates(criteriaBuilder, orderRoot, cq, searchCriteria);
+
+        // Set the where clause of the query with the predicates
         cq.where(predicates.toArray(new Predicate[0]));
-        cq.orderBy(criteriaBuilder.desc(leadsRoot.get("id")));
 
+        // Set the order by clause to order by id in descending order
+        cq.orderBy(criteriaBuilder.desc(orderRoot.get("id")));
+
+        // Log the generated predicates for debugging
+        LOGGER.info("Generated Predicates: " + predicates);
+
+        // Create a TypedQuery instance to execute the query
         TypedQuery<Order> query = entityManager.createQuery(cq);
+
+        // Apply pagination to the query
         applyPagination(query, pageNumber, pageSize);
 
+        // Execute the query and get the result list
         List<Order> resultList = query.getResultList();
+
+        // Count the total number of elements that match the criteria
         Long totalElements = countTotalElements(criteriaBuilder, searchCriteria);
+
+        // Map the result list to DTOs
         List<OrderDto> dtoList = mapToDto(resultList);
 
+        // Log the result list for debugging
+        LOGGER.info("Result List: " + resultList);
+
+        // Create and return the pagination response
         return createPaginationResponse(dtoList, pageNumber, pageSize, totalElements);
     }
 
+
+    // Method to apply pagination settings to the query
     private void applyPagination(TypedQuery<?> query, Integer pageNumber, Integer pageSize) {
+        // Calculate the index of the first result to retrieve for the current page
         int firstResult = pageNumber * pageSize;
+        // Set the position of the first result to retrieve
         query.setFirstResult(firstResult);
+        // Set the maximum number of results to retrieve (page size)
         query.setMaxResults(pageSize);
     }
 
+    // Method to create a PaginationResponse object with paginated data and metadata
     private PaginationResponse createPaginationResponse(List<OrderDto> dtoList, Integer pageNumber, Integer pageSize, Long totalElements) {
+        // Initialize a new PaginationResponse object
         PaginationResponse paginationResponse = new PaginationResponse();
+        // Set the content (list of OrderDto objects) for the current page
         paginationResponse.setContent(dtoList);
+        // Set the current page number
         paginationResponse.setPageNumber(pageNumber);
+        // Set the size of each page (number of records per page)
         paginationResponse.setPageSize(pageSize);
+        // Set the total number of elements (records) that match the search criteria
         paginationResponse.setTotalElements(totalElements.intValue());
-        paginationResponse.setTotalPages((int) Math.ceil((double) totalElements / pageSize));
-        paginationResponse.setLastPage(pageNumber >= (Math.ceil((double) totalElements / pageSize) - 1));
+        // Calculate the total number of pages by dividing totalElements by pageSize and rounding up
+        int totalPages = (int) Math.ceil((double) totalElements / pageSize);
+        // Set the total number of pages
+        paginationResponse.setTotalPages(totalPages);
+        // Set the lastPage flag to true if the current page is the last page
+        paginationResponse.setLastPage(pageNumber >= totalPages - 1);
 
+        // Return the populated PaginationResponse object
         return paginationResponse;
     }
 
 
-    private List<OrderDto> mapToDto(List<Order> leadsList) {
-        return leadsList.stream()
+    // Method to map a list of Order entities to a list of OrderDto objects
+    // Method to map a list of Order entities to a list of OrderDto objects
+    private List<OrderDto> mapToDto(List<Order> orderList) {
+        return orderList.stream()
+                // Sort the Order entities based on their timestamps in descending order
+                .sorted(Comparator.comparing(Order::getId).reversed())
+                // Map each sorted Order entity to its corresponding OrderDto object using the toDto method
                 .map(this::toDto)
-                .sorted(Comparator.comparing(OrderDto::getTimeStamp).reversed())
+                // Collect the mapped OrderDto objects into a list
                 .collect(Collectors.toList());
     }
 
-    private Long countTotalElements(CriteriaBuilder criteriaBuilder, OrderDto searchCriteria) {
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Order> root = countQuery.from(Order.class);
-        countQuery.select(criteriaBuilder.count(root));
 
-        List<Predicate> predicates = buildPredicates(criteriaBuilder, root, searchCriteria);
+    // Method to count the total number of elements (records) that match the search criteria
+    private Long countTotalElements(CriteriaBuilder criteriaBuilder, OrderDto searchCriteria) {
+        // Create a CriteriaQuery for Long to perform a count query
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        // Create a root for the Order entity
+        Root<Order> root = countQuery.from(Order.class);
+        // Select the count of distinct entities
+        countQuery.select(criteriaBuilder.countDistinct(root));
+
+        // Build predicates based on the search criteria
+        List<Predicate> predicates = buildPredicates(criteriaBuilder, root, countQuery, searchCriteria);
+        // Add the predicates to the countQuery
         countQuery.where(predicates.toArray(new Predicate[0]));
 
+        // Execute the countQuery and return the result (total count of matching records)
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 
 
-    private List<Predicate> buildPredicates(CriteriaBuilder criteriaBuilder, Root<Order> orderRoot, OrderDto searchCriteria) {
+    // Method to build predicates based on the search criteria provided
+    private List<Predicate> buildPredicates(CriteriaBuilder criteriaBuilder, Root<Order> orderRoot, CriteriaQuery<?> criteriaQuery, OrderDto searchCriteria) {
         List<Predicate> predicates = new ArrayList<>();
 
+        // Add like predicates for string attributes if they are present in the search criteria
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getBusinessCategory(), orderRoot.get("businessCategory"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getProduct(), orderRoot.get("product"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), orderRoot.get("status"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getType(), orderRoot.get("type"));
 
-        Optional.ofNullable(searchCriteria.getCreatedBy())
-                .ifPresent(createdBy -> addCreatedByPredicate(criteriaBuilder, predicates, orderRoot, createdBy));
+        // Add a predicate to filter by the user who created the order, if createdBy field is present in the search criteria
+        if (searchCriteria.getCreatedBy() != null && searchCriteria.getCreatedBy().getName() != null) {
+            addCreatedByPredicate(criteriaBuilder, predicates, orderRoot, searchCriteria.getCreatedBy());
+        }
 
-        Optional.ofNullable(searchCriteria.getTimeStamp())
-                .ifPresent(timeStamp -> addTimeStampPredicate(criteriaBuilder, predicates, orderRoot, timeStamp));
+        // Add a predicate to filter by timestamp, if timeStamp field is present in the search criteria
+        if (searchCriteria.getTimeStamp() != null) {
+            addTimeStampPredicate(criteriaBuilder, predicates, orderRoot, searchCriteria.getTimeStamp());
+        }
 
-        Optional.ofNullable(searchCriteria.getBusinesses())
-                .ifPresent(businesses -> addBusinessPredicate(criteriaBuilder, predicates, orderRoot, businesses));
+        // Add a predicate to filter by business names, if businesses field is present in the search criteria
+        if (searchCriteria.getBusinesses() != null && !searchCriteria.getBusinesses().isEmpty()) {
+            addBusinessPredicate(criteriaBuilder, criteriaQuery, predicates, orderRoot, searchCriteria.getBusinesses());
+        }
 
         return predicates;
     }
 
-
+    // Method to add a like predicate to the list of predicates if the value is present
     private void addLikePredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, String value, Path<String> path) {
-        Optional.ofNullable(value)
-                .ifPresent(v -> predicates.add(criteriaBuilder.like(path, "%" + v + "%")));
+        if (value != null && !value.trim().isEmpty()) {
+            predicates.add(criteriaBuilder.like(path, "%" + value + "%"));
+        }
     }
 
+    // Method to add a predicate to filter by the user who created the order
     private void addCreatedByPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, User createdBy) {
         Join<Order, User> createdByJoin = orderRoot.join("createdBy");
         predicates.add(criteriaBuilder.like(createdByJoin.get("name"), "%" + createdBy.getName() + "%"));
     }
 
+    // Method to add a predicate to filter by timestamp
     private void addTimeStampPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, LocalDateTime timeStamp) {
         LocalDate userEnteredDate = timeStamp.toLocalDate();
         LocalDate currentLocalDate = LocalDate.now();
         predicates.add(criteriaBuilder.between(orderRoot.get("timeStamp").as(LocalDate.class), userEnteredDate, currentLocalDate));
     }
 
-    private void addBusinessPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, List<BusinessDto> businessesDto) {
-        Join<Order, Business> orderBusinessJoin = orderRoot.join("businesses");
-        predicates.add(orderBusinessJoin.in(businessesDto));
+    // Method to add a predicate to filter by business names
+    private void addBusinessPredicate(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery, List<Predicate> predicates, Root<Order> orderRoot, List<BusinessDto> businessesDto) {
+        if (businessesDto != null && !businessesDto.isEmpty()) {
+            Join<Order, Business> orderBusinessJoin = orderRoot.join("businesses");
+
+            List<String> businessNames = businessesDto.stream()
+                    .map(BusinessDto::getBusinessName)
+                    .collect(Collectors.toList());
+
+            // Make the query distinct
+            criteriaQuery.distinct(true);
+
+            // Add the predicate to filter by business names
+            predicates.add(orderBusinessJoin.get("businessName").in(businessNames));
+        }
     }
 
 
     public OrderDto toDto(Order order) {
 
         List<OrderItemsDto> orderItems = null;
-        if(order.getOrderItems() != null){
+        if (order.getOrderItems() != null) {
             orderItems = order.getOrderItems().stream()
                     .map(orderItemsMapper::toDto)
                     .collect(Collectors.toList());
@@ -425,6 +510,8 @@ public class OrderServiceImpl implements OrderService {
                 .paper(order.getPaper())
                 .size(order.getSize())
                 .sizeCategory(order.getSizeCategory())
+                .businessCategory(order.getBusinessCategory())
+                .rate(order.getRate())
                 .gsm(order.getGsm())
                 .quantity(order.getQuantity())
                 .amount(order.getAmount())
@@ -439,6 +526,7 @@ public class OrderServiceImpl implements OrderService {
                 .paperMarketProcess(order.getPaperMarketProcess())
                 .production(order.getProduction())
                 .designer(order.getDesigner())
+                .description(order.getDescription())
                 .plateSetter(order.getPlateSetter())
                 .status(order.getStatus())
                 .timeStamp(order.getTimeStamp())
@@ -448,6 +536,9 @@ public class OrderServiceImpl implements OrderService {
                 .type(order.getType())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
+                .businesses(order.getBusinesses().stream()
+                        .map(businessAndBranchMapper::toBusinessDto)
+                        .collect(Collectors.toList()))
                 .orderItems(orderItems)
                 .build();
     }
@@ -455,7 +546,7 @@ public class OrderServiceImpl implements OrderService {
     public Order toEntity(OrderDto orderDto) {
 
         List<OrderItems> orderItems = null;
-        if(orderDto.getOrderItems() != null){
+        if (orderDto.getOrderItems() != null) {
             orderItems = orderDto.getOrderItems().stream()
                     .map(orderItemsMapper::toEntity)
                     .collect(Collectors.toList());
@@ -467,6 +558,9 @@ public class OrderServiceImpl implements OrderService {
                 .paper(orderDto.getPaper())
                 .size(orderDto.getSize())
                 .sizeCategory(orderDto.getSizeCategory())
+                .rate(orderDto.getRate())
+                .description(orderDto.getDescription())
+                .businessCategory(orderDto.getBusinessCategory())
                 .gsm(orderDto.getGsm())
                 .quantity(orderDto.getQuantity())
                 .amount(orderDto.getAmount())
@@ -487,6 +581,9 @@ public class OrderServiceImpl implements OrderService {
                 .type(orderDto.getType())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
+                .businesses(orderDto.getBusinesses().stream()
+                        .map(businessAndBranchMapper::toBusinessEntity)
+                        .collect(Collectors.toList()))
                 .orderItems(orderItems)
                 .build();
     }

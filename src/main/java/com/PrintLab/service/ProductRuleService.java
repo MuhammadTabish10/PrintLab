@@ -16,4 +16,6 @@ public interface ProductRuleService {
     void deleteById(Long id);
 
     PaginationResponse getAllPaginatedProductRule(Integer pageNumber, Integer pageSize, ProductRuleDto searchCriteria);
+
+    List<ProductRuleDto> findAllByType(String type);
 }

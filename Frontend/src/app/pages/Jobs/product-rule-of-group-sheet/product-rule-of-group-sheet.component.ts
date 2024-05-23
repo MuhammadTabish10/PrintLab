@@ -7,6 +7,9 @@ import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { ProductRule } from 'src/app/Model/ProductRule';
 import { Roles } from '../../orders/orders.component';
+import { RolesService } from 'src/app/services/roles.service';
+import { SuccessMessageService } from 'src/app/services/success-message.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-rule-of-group-sheet',
@@ -16,17 +19,50 @@ import { Roles } from '../../orders/orders.component';
 export class ProductRuleOfGroupSheetComponent implements OnInit {
 
   productRule: ProductRule = { ...RequestBody.productRuleBody };
+  idFromQueryParams: number | null | undefined;
   productRuleList: ProductRule[] = [];
   categoryList: BusinessUnit[] = [];
   roleList: Roles[] = [];
+  selectedProductRule: ProductRule | undefined | null;
+  selectedStatus: boolean = false;
   constructor(
     private businessUnitService: BusinessUnitService,
+    private succesMsgService: SuccessMessageService,
     private productRuleService: ProductRuleService,
     private errorService: ErrorHandleService,
+    private roleService: RolesService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
   ngOnInit(): void {
+    this.getQueryParams();
     this.getCategoryList();
-    this.getAllProductRule();
+    this.getAllRoles();
+    if (this.idFromQueryParams) {
+      this.patchValues(this.idFromQueryParams);
+    } else {
+      this.getAllProductRule();
+    }
+  }
+  private getQueryParams() {
+    this.route.queryParams.subscribe(
+      (param: Params) => {
+        this.productRule.type = param['orderType'];
+        this.idFromQueryParams = param['id'];
+      }, (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      })
+  }
+  patchValues(id: number) {
+    this.productRuleService.getProductRuleById(id).subscribe(
+      (res: ProductRule) => {
+        this.getSelectedProductRule(res.groupSheetOf);
+        this.productRule = res;
+        this.productRule.status === 'Active' ? this.selectedStatus = true : this.selectedStatus = false;
+      }, (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      }
+    )
   }
 
   private getCategoryList(): void {
@@ -47,5 +83,38 @@ export class ProductRuleOfGroupSheetComponent implements OnInit {
       })
   }
 
-  public submit(): void { }
+  private getAllRoles(): void {
+    this.roleService.getRoles().subscribe(
+      (res: any) => {
+        this.roleList = res;
+      }, (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      }
+    );
+  }
+
+  private getSelectedProductRule(groupSheetOf: number | null | undefined): void {
+    this.productRuleService.getProductRuleById(groupSheetOf).subscribe(
+      (res: ProductRule) => {
+        this.selectedProductRule = res;
+        this.getAllProductRule();
+      }, (error: BackendErrorResponse) => {
+        this.errorService.showError(error.error.error);
+      }
+    )
+  }
+  public submit(): void {
+    this.productRule.groupSheetOf = this.selectedProductRule?.id;
+    this.productRule.productName = this.selectedProductRule?.productName;
+    this.selectedStatus === true ? this.productRule.status = 'Active' : this.productRule.status = 'Inactive';
+    this.productRuleService.postProductRule(this.productRule).subscribe((res: any) => {
+      this.succesMsgService.showSuccess('Product Rule Added Successfully');
+      setTimeout(() => {
+        this.router.navigate(['/ProductRule']);
+      }, 2000);
+    }, (error: BackendErrorResponse) => {
+      this.errorService.showError(error.error.error);
+    })
+  }
 }
+

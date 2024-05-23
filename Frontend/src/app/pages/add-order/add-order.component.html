@@ -18,13 +18,13 @@
                     <p-dropdown
                       styleClass="w-100"
                       [options]="productArray"
-                      optionLabel="title"
+                      optionLabel="productName"
                       [(ngModel)]="productToUpdate"
                       (onChange)="toggleFields($event.value)"
                       [placeholder]="
                         productArray.length !== 1
                           ? placeholderText.product
-                          : productArray[0].title
+                          : productArray[0].productName
                       "
                     ></p-dropdown>
                   </div>
@@ -35,7 +35,7 @@
                         categoryArray?.length === 1 &&
                         size?.length === 1 &&
                         gsms?.length === 1 &&
-                        jobFront?.length === 1 &&
+                        jobFront?.length === 1 ||
                         jobColorBack?.length === 1 &&
                         printSide?.length === 1 &&
                         quantity?.length === 1
@@ -172,7 +172,7 @@
                     <label class="add-order-label m-0 d-block">Category</label>
                     <p-dropdown
                       styleClass="w-100"
-                      [(ngModel)]="job.productCategory"
+                      [(ngModel)]="job.businessCategory"
                       [options]="categoryList"
                       (ngModelChange)="getProductNameList($event)"
                       optionLabel="name"
@@ -185,7 +185,7 @@
                     <p-dropdown
                       styleClass="w-100"
                       [(ngModel)]="job.product"
-                      [options]="productRuleJobList"
+                      [options]="productRuleList"
                       (ngModelChange)="getDetails($event)"
                       optionLabel="productName"
                       optionValue="productName"

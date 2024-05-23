@@ -242,7 +242,7 @@
           <th style="min-width: 15rem">
             <div class="flex align-items-center">
               Created by
-              <p-columnFilter type="text" field="createdBy.name" display="menu">
+              <p-columnFilter type="text" field="createdBy" display="menu">
                 <ng-template pTemplate="header">
                   <div class="px-3 pt-3 pb-0">
                     <span class="font-bold">Created by</span>
@@ -293,7 +293,7 @@
             <div class="flex align-items-center">
               businesses
               <p-columnFilter
-                field="business"
+                field="businesses"
                 matchMode="in"
                 display="menu"
                 [showMatchModes]="false"
@@ -314,7 +314,7 @@
                     [(ngModel)]="order.businesses"
                     [options]="businessList"
                     placeholder="Any"
-                    (onChange)="filter($event.value)"
+                    (onChange)="getOrders(undefined, order)"
                     optionLabel="businessName"
                   >
                     <ng-template let-option pTemplate="item">
@@ -333,7 +333,10 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-order>
-        <tr>
+        <tr
+          class="text-nowrap order-table-row-hover"
+          (click)="onRowClick($event, order.id, order.type)"
+        >
           <td>
             {{ order.id }}
           </td>
@@ -349,7 +352,7 @@
           <td>
             {{ order.quantity }}
           </td>
-          <td>{{ order.rate }}</td>
+          <td>{{ order.rate || order.amount / order.quantity }}</td>
           <td>
             {{ order.amount }}
           </td>
@@ -366,7 +369,7 @@
             {{ order.timeStamp }}
           </td>
           <td>
-            {{ order.business | joinWithCommaSeparated : "businessName" }}
+            {{ order.businesses | joinWithCommaSeparated : "businessName" }}
           </td>
           <td class="order-table-btns-container" *ngIf="buttonOption">
             <div class="btn-group mr-2" role="group" aria-label="Second group">
@@ -412,8 +415,8 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="7">No customers found.</td>
+        <tr class="text-center">
+          <td class="text-center" colspan="13">No Orders found.</td>
         </tr>
       </ng-template>
     </p-table>

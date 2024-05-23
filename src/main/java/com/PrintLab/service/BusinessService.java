@@ -6,7 +6,7 @@ import com.PrintLab.model.Business;
 import java.util.List;
 
 public interface BusinessService {
-    List<Business> getAllBusinesses();
+    List<BusinessDto> getAllBusinesses();
 
     Business getBusinessById(Long id);
 

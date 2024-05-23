@@ -11,7 +11,7 @@ export interface BusinessUnitProcessDto {
   id: number | undefined | null;
   process: string | undefined | null;
   type: string | undefined | null;
-  productRuleJobList?: ProductRule[];
+  productRuleList?: ProductRule[];
   vendors?: Vendor[];
 }
 

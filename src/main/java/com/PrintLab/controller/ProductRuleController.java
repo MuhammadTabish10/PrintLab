@@ -82,4 +82,11 @@ public class ProductRuleController {
         PaginationResponse paginationResponse = productRuleService.getAllPaginatedProductRule(pageNumber, pageSize, productRuleDto);
         return ResponseEntity.ok(paginationResponse);
     }
+
+    @GetMapping("/product-rule-by-type/{type}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<ProductRuleDto>> getProductRuleByType(@RequestParam String type) {
+        List<ProductRuleDto> productRuleDtoList = productRuleService.findAllByType(type);
+        return ResponseEntity.ok(productRuleDtoList);
+    }
 }

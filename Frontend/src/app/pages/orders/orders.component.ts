@@ -4,7 +4,7 @@ import { OrdersService } from 'src/app/services/orders.service';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { JobService } from '../Jobs/Service/job.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, map, takeUntil } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Order } from 'src/app/Model/Order';
 import { PaginatorState } from 'primeng/paginator';
@@ -13,6 +13,8 @@ import { DatePipe } from '@angular/common';
 import { Business } from 'src/app/Model/Business';
 import { CustomerService } from 'src/app/services/customer.service';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
+import { BusinessUnitService } from '../business-unit-and-processes/Service/business-unit.service';
+import { BusinessUnit } from 'src/app/Model/BusinessUnit';
 
 export interface Roles {
   name?: string;
@@ -117,6 +119,7 @@ export class OrdersComponent implements OnInit {
   }
   businessList: Business[] = []
   constructor(
+    private businessUnitService: BusinessUnitService,
     private customerService: CustomerService,
     private messageService: MessageService,
     private authService: AuthguardService,
@@ -169,6 +172,7 @@ export class OrdersComponent implements OnInit {
     this.customerService.getAllBusinesses().subscribe(
       (res: Business[]) => {
         this.businessList = res;
+        debugger
       }, (error: BackendErrorResponse) => {
         this.showError(error.error.error);
       }
@@ -176,27 +180,25 @@ export class OrdersComponent implements OnInit {
   }
 
   public getOrders(pageState?: PaginatorState, order?: Order): void {
-    this.orderService.getOrders(pageState, order!).pipe(takeUntil(this.destroy$)).subscribe(
-      (res: PaginationResponse<Order>) => {
+    this.orderService.getOrders(pageState, order!).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(
+      async (res: PaginationResponse<Order>) => {
         this.paginatedOrders = res;
         if (this.paginatedOrders?.content) {
           if (this.role !== "ROLE_ADMIN") {
-            this.paginatedOrders.content = res.content.filter(
-              (order: Order) => {
-                return this.doesCreatedByMatch(order);
-              });
+            this.paginatedOrders.content = res.content.filter((order: Order) => {
+              return this.doesCreatedByMatch(order);
+            });
             this.buttonOption = false;
           } else {
             this.paginatedOrders.content = res.content;
           }
+
+          // Transform orders asynchronously
+          await this.transformOrders();
+
           this.tableData = this.paginatedOrders.content.length === 0;
-          this.paginatedOrders.content = this.transformTimeStamp(this.paginatedOrders.content);
-          this.paginatedOrders.content.forEach((element: Order) => {
-            if (element.size && this.isJsonString(element.size)) {
-              debugger
-              element.size = JSON.parse(element.size!).inch;
-            }
-          });
           console.log(this.paginatedOrders.content);
         }
       },
@@ -204,6 +206,41 @@ export class OrdersComponent implements OnInit {
         this.showError(error);
         this.visible = true;
       }
+    );
+  }
+
+  public async transformOrders() {
+    if (this.paginatedOrders?.content) {
+      for (const element of this.paginatedOrders.content) {
+        const businessCategoryId = parseInt(element.businessCategory!);
+        if (!isNaN(businessCategoryId)) {
+          // businessCategory is a string containing a number, transform it
+          try {
+            const businessCategory = await this.getBusinessCategoryById(businessCategoryId).toPromise();
+            element.businessCategory = businessCategory ?? '';
+          } catch (error) {
+            // Handle error
+            console.error(error);
+            element.businessCategory = '';
+          }
+        }
+        this.transformTimeStamp(this.paginatedOrders.content);
+        if (element.size && this.isJsonString(element.size)) {
+          element.size = JSON.parse(element.size!).inch;
+        }
+      }
+    }
+  }
+
+  getBusinessCategoryById(businessCategory: number): Observable<string | null | undefined> {
+    return this.businessUnitService.getBusinessUnitById(businessCategory).pipe(
+      map((res: BusinessUnit) => {
+        return res.name;
+      }),
+      catchError((error) => {
+        this.showError(error);
+        throw error;
+      })
     );
   }
 
@@ -215,6 +252,8 @@ export class OrdersComponent implements OnInit {
       return false;
     }
   }
+
+  // Function doesCreatedByMatch and getUsersByRole remains unchanged
 
   // private getOrders(): void {
 
@@ -397,7 +436,7 @@ export class OrdersComponent implements OnInit {
   public clear(): void { }
   private transformTimeStamp(orderList: Order[]): Order[] {
     return orderList.map((el: Order) => {
-      debugger
+
       const dateArray = el.timeStamp;
       if (dateArray && Array.isArray(dateArray)) {
         const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5], dateArray[6] / 1000000);

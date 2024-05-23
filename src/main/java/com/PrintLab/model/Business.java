@@ -16,14 +16,20 @@ public class Business {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String businessName;
+
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
     private List<BusinessBranch> businessBranchList;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    @JsonIgnore
     @ToString.Exclude
-    private Customer customer;
-    @ManyToMany(mappedBy = "businesses")
     @JsonIgnore
-    private List<Order> order;
+    private Customer customer;
+
+    @ManyToMany(mappedBy = "businesses")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<Order> orders;
 }

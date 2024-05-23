@@ -64,4 +64,8 @@ export class ProductRuleService {
   checkUniqueProduct(productName: string): Observable<boolean> {
     return this.http.get<boolean>(`${this._url}/product-rule/check-title/${productName}`);
   }
+  getAllProductRuleByType(type: string | null | undefined) {
+    const params = new HttpParams().set('type', type!);
+    return this.http.get<ProductRule[]>(`${this._url}/product-rule-by-type/${type}`, { params });
+  }
 }

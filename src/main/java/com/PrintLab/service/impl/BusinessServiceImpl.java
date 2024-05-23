@@ -33,13 +33,12 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public List<Business> getAllBusinesses() {
+    public List<BusinessDto> getAllBusinesses() {
         List<Business> allBusinesses = businessRepository.findAll();
-
-        // Use LinkedHashSet to maintain the insertion order and filter unique business names
         Set<String> seenNames = new LinkedHashSet<>();
         return allBusinesses.stream()
                 .filter(business -> seenNames.add(business.getBusinessName()))
+                .map(businessMapper::toBusinessDto)
                 .collect(Collectors.toList());
     }
 

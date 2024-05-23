@@ -5,7 +5,7 @@
     <p-accordion [multiple]="true" [activeIndex]="[0]">
       <p-accordionTab header="Details:">
         <div class="container-fluid my-3">
-          <div class="card">
+          <div class="card py-3">
             <div class="row mx-3">
               <div class="col-3">
                 <label class="add-order-label m-0">Category</label>
@@ -19,19 +19,17 @@
                   name="category"
                 ></p-dropdown>
               </div>
-              <!-- <div class="col-3">
+              <div class="col-3">
                 <label class="add-order-label m-0">Group Sheet</label>
                 <p-dropdown
                   styleClass="w-100"
                   [options]="productRuleList"
-                  [(ngModel)]="productRule.groupSheetOf"
+                  [(ngModel)]="selectedProductRule"
                   [required]="true"
-                  optionLabel="name"
-                  optionValue="name"
+                  optionLabel="productName"
                   name="category"
                 ></p-dropdown>
-              </div> -->
-
+              </div>
               <div class="col-4">
                 <label class="add-order-label m-0">Visible to</label>
                 <p-multiSelect
@@ -41,7 +39,6 @@
                   [(ngModel)]="productRule.visibleTo"
                   [required]="true"
                   optionLabel="name"
-                  optionValue="name"
                   display="chip"
                   name="roles"
                 ></p-multiSelect>
@@ -54,7 +51,7 @@
                     type="checkbox"
                     id="flexSwitchCheckChecked"
                     name="impositionValueChecked"
-                    [(ngModel)]="productRule.status"
+                    [(ngModel)]="selectedStatus"
                   />
                 </div>
               </div>
@@ -63,5 +60,12 @@
         </div>
       </p-accordionTab>
     </p-accordion>
+  </div>
+  <div class="container-fluid mt-3">
+    <div class="row justify-content-end">
+      <div class="col-1">
+        <button class="btn btn-dark w-100" type="submit">Save</button>
+      </div>
+    </div>
   </div>
 </form>

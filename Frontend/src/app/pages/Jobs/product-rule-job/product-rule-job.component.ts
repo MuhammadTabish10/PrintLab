@@ -128,20 +128,29 @@ export class ProductRuleJobComponent implements OnInit {
   //     }
   //   )
   // }
-  onCategoryChange(category: string): void {
+  onCategoryChange(category: string, id?: number | null | undefined): void {
     this.businessUnitService.processListByCategoryName(category).subscribe(
       (res: BusinessUnit[]) => {
         this.processCategory = res;
-        const allProcesses = res.flatMap(element => element.processList || []);
-        console.log(allProcesses);
-        this.sourceProducts = allProcesses.filter(process => process.type?.toUpperCase() === ("Optional").toUpperCase());
-        this.targetProducts = allProcesses.filter(process => process.type?.toUpperCase() === ("Compulsory").toUpperCase());
+        debugger
+        if (id) {
+          res.forEach((element: BusinessUnit) => {
+            debugger
+            this.sourceProducts = element.processList?.filter(process => !this.targetProducts.some(target => target.id === process.id))!;
+          })
+        } else {
+          const allProcesses: BusinessUnitProcessDto[] | undefined = res.flatMap(element => element.processList ? element.processList : []);
+          this.sourceProducts = allProcesses?.filter(process => process.type?.toUpperCase() === ("Optional").toUpperCase());
+          this.targetProducts = allProcesses?.filter(process => process.type?.toUpperCase() === ("Compulsory").toUpperCase());
+        }
       },
       (error: BackendErrorResponse) => {
         this.errorService.showError(error.error.error);
       }
     );
   }
+
+
 
 
   onSizeCategoryChange(event: any) {
@@ -184,8 +193,8 @@ export class ProductRuleJobComponent implements OnInit {
 
   getProductRuleJobById(id: number) {
     this.productRuleService.getProductRuleById(id).subscribe(
-      (res: any) => {
-        this.productRuleJob.businessCategory = res.businessCategory;
+      (res: ProductRule) => {
+        this.onCategoryChange(res.businessCategory!, id);
         res.sizeCategory = JSON.parse(res.sizeCategory!);
         const sizeArray = JSON.parse(res.size!);
         this.category = res.sizeCategory;
@@ -198,7 +207,8 @@ export class ProductRuleJobComponent implements OnInit {
             this.upping = matchingUppingArray;
           }
         });
-        this.productRuleJob.productName = res.productName;
+        this.productRuleJob = res;
+        this.productRuleJob.status === 'Active' ? this.selectedStatus = true : this.selectedStatus = false;
         this.targetProducts = res.processList!;
       },
       (error: BackendErrorResponse) => {

@@ -17,6 +17,7 @@ import { BusinessUnitService } from '../business-unit-and-processes/Service/busi
 import { BusinessUnit, BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
 import { Order } from 'src/app/Model/Order';
 import { ProductRule } from 'src/app/Model/ProductRule';
+import { PaginationResponse } from 'src/app/Model/PaginationResponse';
 
 @Component({
   selector: 'app-add-order',
@@ -27,7 +28,7 @@ export class AddOrderComponent implements OnInit {
 
   productArray: any = []
   productName: any = ''
-  selectedCustomer: string | undefined | null
+  selectedCustomer: number | string | undefined | null
   customerDesign: string = 'Customer will provide the design'
   printLabDesign: string = 'Design by PrintLab'
   totalAmount: any
@@ -86,7 +87,7 @@ export class AddOrderComponent implements OnInit {
   orderType: string | undefined | null;
   job: Order = { ...GlobalVariables.order }
   categoryList: BusinessUnit[] = [];
-  productRuleJobList: ProductRule[] = [];
+  productRuleList: ProductRule[] = [];
 
   constructor(
     private orderService: OrdersService, private router: Router,
@@ -114,7 +115,16 @@ export class AddOrderComponent implements OnInit {
         if (this.orderType === 'auto') {
           this.orderService.getOrderByIdAndType(this.idFromQueryParam, this.orderType).subscribe(res => {
             this.orderToUpdate = res
-            this.selectedCustomer = this.orderToUpdate.customer
+            debugger
+            this.selectedCustomer = this.orderToUpdate.customer.id;
+            this.getBusinessList(this.selectedCustomer!);
+            this.selectedBusinesses = this.orderToUpdate.businesses;
+            if (this.selectedBusinesses.some(item => item.businessName)) {
+              this.getBrancheList(this.selectedBusinesses);
+              this.selectedBusinesses.forEach(business => {
+                this.selectedBranches = this.selectedBranches.concat(business.businessBranchList!);
+              })
+            }
             this.totalAmount = this.orderToUpdate.price
             this.imgUrl = this.orderToUpdate.url
             this.designValue = this.orderToUpdate.providedDesign
@@ -125,8 +135,26 @@ export class AddOrderComponent implements OnInit {
             this.visible = true;
           })
         } else {
+          this.getProductList();
+          this.getOrderByIdAndType(this.idFromQueryParam, this.orderType!);
         }
       }
+    })
+  }
+  getOrderByIdAndType(id: number, type: string) {
+    this.orderService.getOrderByIdAndType(id, type).subscribe(res => {
+      this.job = res;
+      this.job.businessCategory = this.categoryList.find(item => item.id === this.job.businessCategory)?.id?.toString();
+      this.selectedCustomer = this.customerList.find(item => item.id === this.job.customer?.id)?.id;
+      this.getBusinessList(this.selectedCustomer!);
+      this.selectedBusinesses = this.job.businesses!;
+      if (this.selectedBusinesses.some(item => item.businessName)) {
+        this.getBrancheList(this.selectedBusinesses);
+        this.selectedBusinesses.forEach(business => {
+          this.selectedBranches = this.selectedBranches.concat(business.businessBranchList!);
+        })
+      }
+      this.calculateAmount(this.job);
     })
   }
 
@@ -168,6 +196,7 @@ export class AddOrderComponent implements OnInit {
 
     if (Number.isNaN(this.idFromQueryParam)) {
       let obj = {
+        businessCategory: "Offset",
         product: this.productName,
         productRule: this.productRuleId,
         paper: this.paperStockItem.paperStock,
@@ -175,9 +204,10 @@ export class AddOrderComponent implements OnInit {
         size: JSON.stringify(this.sizeValue),
         gsm: +this.selectedGsm.name,
         quantity: +this.qtyValue.name,
-        price: this.totalAmount,
+        amount: this.totalAmount,
         providedDesign: this.designValue,
         url: this.imgUrl,
+        businesses: this.selectedBusinesses,
         sideOptionValue: this.sideOptionValue.name,
         impositionValue: this.impositionValue,
         jobColorsFront: +this.jobFrontValue.name,
@@ -194,14 +224,16 @@ export class AddOrderComponent implements OnInit {
     } else {
       let obj = {
         id: this.idFromQueryParam,
+        businessCategory: "Offset",
         product: this.productName,
         paper: this.paperStockItem.paperStock,
         category: this.category.name,
         size: JSON.stringify(this.sizeValue),
         gsm: +this.selectedGsm.name,
         quantity: +this.qtyValue.name,
-        price: this.totalAmount,
+        amount: this.totalAmount,
         providedDesign: this.designValue,
+        businesses: this.selectedBusinesses,
         url: this.imgUrl,
         sideOptionValue: this.sideOptionValue.name,
         impositionValue: this.impositionValue,
@@ -220,17 +252,17 @@ export class AddOrderComponent implements OnInit {
   }
 
 
-  toggleFields(title: any) {
+  toggleFields(title: ProductRule) {
     this.emptyAllFields()
     this.cdr.detectChanges();
 
-    this.productRuleId = title.id;
-    this.productName = title.title;
-    this.machineId = title.pressMachine.id;
+    this.productRuleId = title.id!;
+    this.productName = title.productName;
+    this.machineId = title.pressMachine?.id!;
     this.paperStock = title.productRulePaperStockList ? title.productRulePaperStockList : null;
 
-    if (typeof title.category === 'string') {
-      const categories = JSON.parse(title.category)
+    if (typeof title.sizeCategory === 'string') {
+      const categories = JSON.parse(title.sizeCategory)
       const name = categories.map((item: any) => ({ name: item.name }));
       this.categoryArray = name;
     } else {
@@ -251,6 +283,7 @@ export class AddOrderComponent implements OnInit {
     if (this.size.length === 1) {
       this.sizeValue = this.size[0];
     }
+
     const parsedQty = title.quantity ? JSON.parse(title.quantity) : null;
     if (parsedQty) {
       this.quantity = parsedQty.map((item: any) => ({ name: item }));
@@ -258,6 +291,7 @@ export class AddOrderComponent implements OnInit {
       this.quantity = null;
     }
     if (this.quantity.length === 1) {
+
       this.qtyValue = this.quantity[0];
     }
     this.impositionValue = title.impositionValue;
@@ -314,16 +348,17 @@ export class AddOrderComponent implements OnInit {
   }
 
   getProducts() {
-    this.productRuleService.getProductRuleTable().subscribe(res => {
-      this.productArray = res;
-      if (this.productArray.length === 1) {
-        this.toggleFields(this.productArray[0]);
-      }
-      !Number.isNaN(this.idFromQueryParam) ? this.putValuesOnUpdate() : null
-    }, error => {
-      this.showError(error);
-      this.visible = true;
-    })
+    this.productRuleService.getAllProductRuleByType(this.orderType).subscribe(
+      (res: ProductRule[]) => {
+        this.productArray = res;
+        if (this.productArray.length === 1) {
+          this.toggleFields(this.productArray[0]);
+        }
+        !Number.isNaN(this.idFromQueryParam) ? this.putValuesOnUpdate() : null
+      }, error => {
+        this.showError(error);
+        this.visible = true;
+      })
   }
 
   private getCustomerList() {
@@ -408,10 +443,10 @@ export class AddOrderComponent implements OnInit {
 
   putValuesOnUpdate() {
     this.productArray.forEach((el: any) => {
-      el.title == this.orderToUpdate.product ? this.productToUpdate = el : null
+      el.productName == this.orderToUpdate.product ? this.productToUpdate = el : null
     })
     this.toggleFields(this.productToUpdate)
-
+    debugger
     const conditionBackColor = this.orderToUpdate.jobColorsBack ? this.orderToUpdate.jobColorsBack.toString() : ''
     const foundPaperStockItem = this.paperStock != null ? this.paperStock.find((item: { paperStock: any; }) => item.paperStock === this.orderToUpdate.paper) : null;
     this.gsmFields(foundPaperStockItem)
@@ -472,7 +507,8 @@ export class AddOrderComponent implements OnInit {
     this.currentUserDetail = JSON.parse(this.authService.token).userDetails
   }
 
-  getBusinessList(id: string): void {
+  getBusinessList(id: string | number): void {
+    debugger
     this.branchList = [];
     this.selectedBranches = [];
     this.selectedBusinesses = [];
@@ -500,15 +536,18 @@ export class AddOrderComponent implements OnInit {
 
     selectedBusiness.forEach((business: Business) => {
       if (business.businessBranchList && business.businessBranchList.length > 0) {
+        debugger
         business.businessBranchList.forEach((branch: BusinessBranch) => {
-          this.branchList.push(branch);
+          if (branch.branchName) {
+            this.branchList.push(branch);
+          }
         });
       }
     });
   }
 
   // Define a method to find the customer object by id
-  findCustomerById(id: string | undefined | null): Customer | undefined {
+  findCustomerById(id: string | undefined | null | number): Customer | undefined {
     return this.customerList?.find(customer => customer?.id === id);
   }
 
@@ -528,8 +567,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   getProductNameList(id: number): void {
-    debugger
-    this.productRuleJobList = [];
+    this.productRuleList = [];
     this.job.product = null;
     this.job.sizeCategory = null;
     this.job.size = null;
@@ -539,8 +577,9 @@ export class AddOrderComponent implements OnInit {
           // Initialize a Map to store unique items keyed by productName
           const uniqueProductRuleJobList = new Map<string, ProductRule>();
           res.processList?.forEach((element: BusinessUnitProcessDto) => {
-            if (element.productRuleJobList) {
-              element.productRuleJobList.forEach((item) => {
+            debugger
+            if (element.productRuleList) {
+              element.productRuleList.forEach((item) => {
                 // Use productName as key to ensure uniqueness
                 if (item.productName) {
                   uniqueProductRuleJobList.set(item.productName, item as ProductRule);
@@ -549,7 +588,7 @@ export class AddOrderComponent implements OnInit {
             }
           });
           // Convert Map values to an array
-          this.productRuleJobList = Array.from(uniqueProductRuleJobList.values());
+          this.productRuleList = Array.from(uniqueProductRuleJobList.values());
         }
       },
       (err: BackendErrorResponse) => {
@@ -582,9 +621,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   transformProductCategory(): void {
-    if (this.job?.productCategory.label) {
-      this.job.productCategory = this.job.productCategory.label;
-    }
+    // this.job.businessCategory = this.categoryList.find(item => item.id === this.job.businessCategory)?.name;
   }
 
   assignJobProperties(): void {
@@ -597,14 +634,15 @@ export class AddOrderComponent implements OnInit {
   }
 
   handleSuccessForJob(res: ProductionJob): void {
-    this.successService.showSuccess("Job created successfully");
+    const successMsg = this.idFromQueryParam ? 'Order updated successfully' : 'Order created successfully';
+    this.successService.showSuccess(successMsg);
     setTimeout(() => {
       this.router.navigate(['/order-overview'], { queryParams: { id: res.id, orderType: 'manual' } });
     }, 2000);
   }
 
   getDetails(name: string): void {
-    const productRule = this.productRuleJobList.find(item => item.productName === name);
+    const productRule = this.productRuleList.find(item => item.productName === name);
     if (productRule) {
       this.categoryArray = JSON.parse(productRule.sizeCategory!)
       this.size = JSON.parse(productRule.size!)

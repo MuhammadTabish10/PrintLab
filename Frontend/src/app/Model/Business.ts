@@ -1,6 +1,8 @@
 export interface Business {
   id: number | null;
   businessName: string | null;
+  customer?: null;
+  order?: null;
   businessBranchList?: BusinessBranch[];
 }
 

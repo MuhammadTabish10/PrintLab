@@ -54,6 +54,7 @@ export const GlobalVariables = {
     deliveryDate: undefined,
     expiryDate: undefined,
     sendTo: undefined,
-    processedDetailList: []
+    processedDetailList: [],
+    businesses:[],
   }
 };
