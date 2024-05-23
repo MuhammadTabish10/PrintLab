@@ -31,14 +31,14 @@
                   <div
                     [ngClass]="{
                       'd-none':
-                        paperStock?.length === 1 &&
-                        categoryArray?.length === 1 &&
-                        size?.length === 1 &&
-                        gsms?.length === 1 &&
-                        jobFront?.length === 1 ||
-                        jobColorBack?.length === 1 &&
-                        printSide?.length === 1 &&
-                        quantity?.length === 1
+                        (paperStock?.length === 1 &&
+                          categoryArray?.length === 1 &&
+                          size?.length === 1 &&
+                          gsms?.length === 1 &&
+                          jobFront?.length === 1) ||
+                        (jobColorBack?.length === 1 &&
+                          printSide?.length === 1 &&
+                          quantity?.length === 1)
                     }"
                   >
                     <div *ngIf="paperStock" class="my-3">
@@ -165,7 +165,7 @@
                   </button>
                 </div>
                 <div
-                  class="order-body py-2 px-3"
+                  class="order-body py-2 px-3 clearfix"
                   *ngIf="orderType === 'manual'"
                 >
                   <div class="col-lg-12 col-md-12 col-sm-6">
@@ -215,13 +215,19 @@
                       name="size"
                     ></p-dropdown>
                   </div>
+                  <span
+                    *ngIf="sizeBoolean.isCustomSize"
+                    class="float-end cursor-pointer"
+                    (click)="showDialog()"
+                    ><u>Custom Size</u></span
+                  >
                   <div class="col-lg-12 col-md-12 col-sm-6">
                     <label class="add-order-label m-0 d-block"
                       >Description</label
                     >
                     <textarea
                       rows="1"
-                      cols="86"
+                      cols="85"
                       pInputTextarea
                       name="description"
                       [autoResize]="true"
@@ -431,7 +437,9 @@
               <h6 class="fw-normal" *ngIf="job.description">
                 Quantity: {{ job.quantity }}
               </h6>
-              <h6 class="fw-normal" *ngIf="job.quantity">rate: {{ job.rate }}</h6>
+              <h6 class="fw-normal" *ngIf="job.quantity">
+                rate: {{ job.rate }}
+              </h6>
             </div>
             <div class="mt-4">
               <span>Total: </span>
@@ -513,3 +521,59 @@
   </div>
 </div>
 <p-toast></p-toast>
+
+<p-dialog
+  header="Header"
+  [modal]="true"
+  [(visible)]="visible2"
+  [style]="{ width: '50rem' }"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [maximizable]="true"
+>
+  <div class="col-lg-12 col-md-12 col-sm-6 mb-3">
+    <label class="add-order-label m-0">L1</label>
+    <p-inputNumber
+      [(ngModel)]="job12.L1"
+      inputId="l1Amount"
+      [min]="0"
+      [format]="true"
+      mode="decimal"
+      name="l1"
+      [required]="true"
+    ></p-inputNumber>
+  </div>
+
+  <div class="col-lg-12 col-md-12 col-sm-6 mb-3">
+    <label class="add-order-label m-0">L2</label>
+    <p-inputNumber
+      [(ngModel)]="job12.L2"
+      inputId="l2Amount"
+      [min]="0"
+      [format]="true"
+      mode="decimal"
+      name="l2"
+      [required]="true"
+    ></p-inputNumber>
+  </div>
+
+  <div class="col-lg-12 col-md-12 col-sm-6 mb-3">
+    <label class="add-order-label m-0">Unit</label>
+    <p-dropdown
+      styleClass="w-100"
+      [(ngModel)]="selectedUnit12"
+      [options]="unitOptions12"
+      optionLabel="name"
+      optionValue="id"
+      name="unit"
+    ></p-dropdown>
+  </div>
+  <br />
+  <button
+    class="w-100"
+    style="background-color: black"
+    pButton
+    type="button"
+    label="Add"
+    (click)="onSubmit()"
+  ></button>
+</p-dialog>

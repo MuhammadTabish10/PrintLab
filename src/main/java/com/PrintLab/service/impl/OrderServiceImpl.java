@@ -398,7 +398,6 @@ public class OrderServiceImpl implements OrderService {
 
 
     // Method to map a list of Order entities to a list of OrderDto objects
-    // Method to map a list of Order entities to a list of OrderDto objects
     private List<OrderDto> mapToDto(List<Order> orderList) {
         return orderList.stream()
                 // Sort the Order entities based on their timestamps in descending order

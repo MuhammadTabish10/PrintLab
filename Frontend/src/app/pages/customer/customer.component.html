@@ -1,5 +1,4 @@
-
-<div class="container-fluid ps-6">
+<div class="container-fluid p-6">
   <app-dashboard-head></app-dashboard-head>
   <div class="main-container">
     <div>
@@ -13,8 +12,8 @@
         [globalFilterFields]="['name']"
       >
         <ng-template pTemplate="caption">
-          <div class="flex clearfix">
-            <span class="p-input-icon-right ml-auto">
+          <div class="d-flex flex-wrap justify-content-between">
+            <span class="p-input-icon-right mb-2">
               <i class="pi pi-search"></i>
               <input
                 pInputText
@@ -26,7 +25,7 @@
             <button
               pButton
               label="Add"
-              class="p-button-dark bg-dark float-end"
+              class="p-button-dark bg-dark mb-2"
               icon="pi pi-plus"
               routerLink="/addCustomer"
             ></button>
@@ -81,13 +80,13 @@
             </td>
             <td class="text-center">
               <div
-                class="btn-group mr-2"
+                class="btn-group"
                 role="group"
-                aria-label="Second group"
+                aria-label="Action buttons"
               >
                 <button
                   type="button"
-                  class="btn order-table-btn"
+                  class="p-button-dark bg-dark mb-2 text-white"
                   (click)="editCustomer(customer?.id)"
                   [disabled]="!buttonOption"
                 >
@@ -95,7 +94,7 @@
                 </button>
                 <button
                   type="button"
-                  class="btn order-table-btn"
+                  class="p-button-dark bg-dark mb-2 text-white"
                   (click)="deleteCustomer(customer?.id)"
                   [disabled]="!buttonOption"
                 >
@@ -103,7 +102,7 @@
                 </button>
                 <button
                   type="button"
-                  class="btn order-table-btn"
+                  class="p-button-dark bg-dark mb-2 text-white"
                   (click)="viewCustomer(customer?.id)"
                 >
                   <i class="fa-solid fa-hand-pointer"></i>&nbsp;View

@@ -1,8 +1,6 @@
 import { ProductRuleService } from 'src/app/services/product-rule.service';
-import { GlobalVariables } from './../../add-order/GlobalVariables';
 import { Component, Input, OnInit } from '@angular/core';
 import { BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
-import { JobService } from '../Service/job.service';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { JobProcessedDetails } from 'src/app/Model/ProcessDetails';
 import { MenuItem } from 'primeng/api';
@@ -13,9 +11,10 @@ import { AuthguardService } from 'src/app/services/authguard.service';
 import { DatePipe } from '@angular/common';
 import { Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { OrdersService } from 'src/app/services/orders.service';
-import { ProductRule } from 'src/app/Model/ProductRule';
+import { SharedStateService } from '../../OrderSteps/shared-state.service';
 import { Order } from 'src/app/Model/Order';
+import { ProductRule } from 'src/app/Model/ProductRule';
+import { OrdersService } from 'src/app/services/orders.service';
 
 @Component({
   selector: 'app-job-requests',
@@ -61,12 +60,12 @@ export class JobRequestsComponent implements OnInit {
     private errorHandleService: ErrorHandleService,
     private ProductRuleService: ProductRuleService,
     private successMsgService: SuccessMessageService,
+    private sharedStateService : SharedStateService
   ) { }
 
-  onActiveIndexChange(event: number) {
-    this.activeIndex = event;
+  onCheckboxChange(event: any) {
+    this.sharedStateService.setButtonActive(event.target.checked);
   }
-
   @Input() jobProcessedActive: boolean = false;
   paymentActive: boolean = false;
   confirmationActive: boolean = false;

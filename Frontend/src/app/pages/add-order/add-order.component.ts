@@ -23,6 +23,7 @@ import { PaginationResponse } from 'src/app/Model/PaginationResponse';
   selector: 'app-add-order',
   templateUrl: './add-order.component.html',
   styleUrls: ['./add-order.component.css']
+
 })
 export class AddOrderComponent implements OnInit {
 
@@ -88,6 +89,13 @@ export class AddOrderComponent implements OnInit {
   job: Order = { ...GlobalVariables.order }
   categoryList: BusinessUnit[] = [];
   productRuleList: ProductRule[] = [];
+  sizeBoolean: {
+    isPredefinedSize: Boolean,
+    isCustomSize: Boolean
+  } = {
+      isPredefinedSize: false,
+      isCustomSize: false
+    };
 
   constructor(
     private orderService: OrdersService, private router: Router,
@@ -99,6 +107,46 @@ export class AddOrderComponent implements OnInit {
     private authService: AuthguardService,
     private cdr: ChangeDetectorRef,
   ) { }
+
+  job12: any = {
+    L1: null,
+    L2: null,
+    size: null
+  };
+  selectedUnit12: string = '';
+  unitOptions12: any[] = [
+    { id: 'inch', name: 'Inch' },
+    { id: 'mm', name: 'Millimeter' }
+  ];
+
+  // Method to add the concatenated string as a dropdown option
+  addConcatenatedValue(l1: number, l2: number, unit: string): void {
+    // Clear the sizeValue array
+    this.sizeValue = [];
+
+    // Construct the concatenated value
+    const concatenatedValue = {
+      productSize: `${l1} x ${l2} ${unit}`,
+      inch: `${l1} x ${l2} ${unit}`
+    };
+
+    // Push the concatenated value to the dropdown options array
+    this.sizeValue.push(concatenatedValue);
+  }
+
+  onSubmit() {
+    const l1 = this.job12.L1;
+    const l2 = this.job12.L2;
+    const unit = this.selectedUnit12;
+
+    if (l1 !== null && l2 !== null && unit) {
+      // Call method to add concatenated value as a dropdown option
+      this.addConcatenatedValue(l1, l2, unit);
+      this.visible2 = false;
+    } else {
+      console.error('L1, L2, or unit is not properly defined.');
+    }
+  }
 
 
   ngOnInit(): void {
@@ -640,13 +688,18 @@ export class AddOrderComponent implements OnInit {
       this.router.navigate(['/order-overview'], { queryParams: { id: res.id, orderType: 'manual' } });
     }, 2000);
   }
-
+  visible2: boolean = false;
+  showDialog() {
+    this.visible2 = true;
+  }
   getDetails(name: string): void {
     const productRule = this.productRuleList.find(item => item.productName === name);
     if (productRule) {
       this.categoryArray = JSON.parse(productRule.sizeCategory!)
       this.size = JSON.parse(productRule.size!)
       this.sizeValue = this.size;
+      this.sizeBoolean.isPredefinedSize = productRule.predefined!;
+      this.sizeBoolean.isCustomSize = productRule.custom!;
       console.log(this.sizeValue);
     }
   }

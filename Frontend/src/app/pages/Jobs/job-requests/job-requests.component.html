@@ -102,6 +102,7 @@
                         [disabled]="disabledTabs[i]"
                         [name]="'impositionValueChecked[' + i + ']'"
                         (change)="submit(category, i, $event.target!)"
+                        (change)="onCheckboxChange($event)"
                         [(ngModel)]="
                           productRule.processedDetailList[i].jobProcessed
                         "

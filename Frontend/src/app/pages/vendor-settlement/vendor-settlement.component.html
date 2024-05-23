@@ -1,4 +1,3 @@
-
 <div class="body-position">
   <app-dashboard-head></app-dashboard-head>
   <div class="main-container">
@@ -6,7 +5,7 @@
       <h3>{{ vendorName }} Settlement</h3>
     </div>
 
-    <div class="card text-nowrap">
+    <div class="card text-nowrap overflow-x-scroll">
       <p-table
         #dt1
         [value]="vendorSettlementRecords"
@@ -14,9 +13,9 @@
         [globalFilterFields]="['name']"
       >
         <ng-template pTemplate="caption">
-          <div class="flex clearfix">
-            <form #f="ngForm" (ngSubmit)="onSubmit(f)">
-              <span class="p-input-icon-right ml-auto">
+          <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="d-flex flex-wrap w-100">
+              <div class="d-flex flex-column me-2">
                 <label class="d-block">Debit:</label>
                 <input
                   pInputText
@@ -24,9 +23,10 @@
                   placeholder="Add Debit"
                   name="debit"
                   [(ngModel)]="debitValue"
+                  class="mb-2"
                 />
-              </span>
-              <span class="p-input-icon-right ms-2">
+              </div>
+              <div class="d-flex flex-column me-2">
                 <label class="d-block">Credit:</label>
                 <input
                   pInputText
@@ -34,9 +34,10 @@
                   placeholder="Add Credit"
                   name="credit"
                   [(ngModel)]="creditValue"
+                  class="mb-2"
                 />
-              </span>
-              <span class="p-input-icon-right ms-2">
+              </div>
+              <div class="d-flex flex-column me-2">
                 <label class="d-block">Order Id:</label>
                 <input
                   pInputText
@@ -45,68 +46,43 @@
                   name="orderId"
                   required
                   [(ngModel)]="orderId"
+                  class="mb-2"
                 />
-              </span>
-
-              <button
-                [disabled]="!f.valid"
-                pButton
-                [label]="editMode ? 'Update' : 'Add'"
-                class="p-button-dark bg-dark float-end"
-                [icon]="editMode ? 'pi pi-check' : 'pi pi-plus'"
-                type="submit"
-              ></button>
+              </div>
+              <div class="ms-auto mt-2">
+                <button
+                  [disabled]="!f.valid"
+                  pButton
+                  [label]="editMode ? 'Update' : 'Add'"
+                  class="p-button-dark bg-dark"
+                  [icon]="editMode ? 'pi pi-check' : 'pi pi-plus'"
+                  type="submit"
+                ></button>
+              </div>
             </form>
           </div>
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th class="col">
-              <div class="d-flex justify-content-center">Vendor Id</div>
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Debit</div>
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Credit</div>
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Date And Time</div>
-            </th>
-            <!-- <th class="col">
-              <div class="d-flex justify-content-center">Time</div>
-            </th> -->
-            <th class="col">
-              <div class="d-flex justify-content-center">Order Id</div>
-            </th>
-            <th class="col">
-              <div class="d-flex justify-content-center">Action</div>
-            </th>
+            <th class="text-center">Vendor Id</th>
+            <th class="text-center">Debit</th>
+            <th class="text-center">Credit</th>
+            <th class="text-center">Date And Time</th>
+            <th class="text-center">Order Id</th>
+            <th class="text-center">Action</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-element let-i="rowIndex">
           <tr>
-            <td class="text-center">
-              {{ element?.vendor?.id }}
-            </td>
-            <td class="text-center">
-              {{ debit[i] }}
-            </td>
-            <td class="text-center">
-              {{ credit[i] }}
-            </td>
-            <td class="text-center">
-              {{ element?.dateAndTime }}
-            </td>
+            <td class="text-center">{{ element?.vendor?.id }}</td>
+            <td class="text-center">{{ debit[i] }}</td>
+            <td class="text-center">{{ credit[i] }}</td>
+            <td class="text-center">{{ element?.dateAndTime }}</td>
             <td class="text-center cursor-pointer" (click)="getOrderId(element.order?.id)">
               {{ element?.order?.id }}
             </td>
             <td class="text-center">
-              <div
-                class="btn-group mr-2"
-                role="group"
-                aria-label="Second group"
-              >
+              <div class="btn-group" role="group" aria-label="Action buttons">
                 <button
                   type="button"
                   class="btn order-table-btn"
@@ -128,23 +104,23 @@
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="6" class="text-center">
-              No Vendor Settlement Record Is Found For {{ vendorName }} !
+              No Vendor Settlement Record Is Found For {{ vendorName }}!
             </td>
           </tr>
         </ng-template>
       </p-table>
     </div>
-    <div class="card flex justify-content-center">
-      <p-card header="Total :">
+    <div class="card d-flex justify-content-center">
+      <p-card header="Total:">
         <div class="row mx-auto text-center">
           <div class="col">
-            <h4>Total Debit:{{ totalDebit }}</h4>
+            <h4>Total Debit: {{ totalDebit }}</h4>
           </div>
           <div class="col">
-            <h4>Total Credit:{{ totalCredit }}</h4>
+            <h4>Total Credit: {{ totalCredit }}</h4>
           </div>
           <div class="col">
-            <h4>Total:{{ totalDebit - totalCredit }}</h4>
+            <h4>Total: {{ totalDebit - totalCredit }}</h4>
           </div>
         </div>
       </p-card>
