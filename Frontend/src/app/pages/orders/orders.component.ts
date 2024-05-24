@@ -15,6 +15,7 @@ import { CustomerService } from 'src/app/services/customer.service';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { BusinessUnitService } from '../business-unit-and-processes/Service/business-unit.service';
 import { BusinessUnit } from 'src/app/Model/BusinessUnit';
+import { GlobalVariables } from '../add-order/GlobalVariables';
 
 export interface Roles {
   name?: string;
@@ -450,7 +451,6 @@ export class OrdersComponent implements OnInit {
     this.role = this.currentUserDetail.authorities[0].authority;
   }
 
-  public clear(): void { }
   private transformTimeStamp(orderList: Order[]): Order[] {
     return orderList.map((el: Order) => {
 
@@ -478,5 +478,9 @@ export class OrdersComponent implements OnInit {
     const seconds = date.getSeconds().toString().padStart(2, '0');
 
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+  public clearOrderTable(): void {
+    this.order = { ...GlobalVariables.order };
+    this.getOrders(undefined,this.order);
   }
 }

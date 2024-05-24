@@ -115,21 +115,6 @@ export class ProductRuleJobComponent implements OnInit {
     );
   }
 
-  // onCategoryChange(category: string): void {
-  //   this.businessUnitService.processListByCategoryName(category).subscribe(
-  //     (res: BusinessUnit[]) => {
-  //       this.processCategory = res;
-  //       res.forEach((element: BusinessUnit) => {
-  //         if (element.processList?.includes(type === "Optional")) {
-  //           this.sourceProducts = element.processList!;
-  //         }
-  //       })
-
-  //     }, (error: BackendErrorResponse) => {
-  //       this.errorService.showError(error.error.error);
-  //     }
-  //   )
-  // }
   onCategoryChange(category: string, id?: number | null | undefined): void {
     this.businessUnitService.processListByCategoryName(category).subscribe(
       (res: BusinessUnit[]) => {

@@ -25,6 +25,7 @@ export class ProductRuleOfGroupSheetComponent implements OnInit {
   roleList: Roles[] = [];
   selectedProductRule: ProductRule | undefined | null;
   selectedStatus: boolean = false;
+  isExist: boolean = false;
   constructor(
     private businessUnitService: BusinessUnitService,
     private succesMsgService: SuccessMessageService,
@@ -116,5 +117,22 @@ export class ProductRuleOfGroupSheetComponent implements OnInit {
       this.errorService.showError(error.error.error);
     })
   }
+
+  public onProductRuleChange(productRule: ProductRule) {
+    debugger
+    this.productRuleService.checkUniqueProduct(productRule.productName!, 'manual').subscribe((result: boolean) => {
+      this.isExist = result;
+      if (result === true) {
+        const error = "This product already exist in " + this.productRule.type + " type";
+        this.errorService.showError(error);
+      } else {
+        const success = 'This is a new product in ' + this.productRule.type + ' type';
+        this.succesMsgService.showSuccess(success);
+      }
+    }, (err: BackendErrorResponse) => {
+      this.errorService.showError(err.error.error)
+    });
+  }
+
 }
 

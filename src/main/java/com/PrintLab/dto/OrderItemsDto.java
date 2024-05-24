@@ -13,5 +13,5 @@ public class OrderItemsDto {
     private Long id;
     private String name;
     private String quantity;
-    private OrderDto orderDto;
+    private OrderDto order;
 }

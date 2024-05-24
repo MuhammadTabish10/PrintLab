@@ -21,84 +21,6 @@
 </div>
 <div class="container-fluid">
   <div class="card">
-    <!-- <table class="table table-fixed table-responsive text-center">
-      <thead>
-        <tr>
-          <th scope="col" class="col-1">ID</th>
-          <th scope="col" class="col-3"></th>
-          <th scope="col" class="col-3">Customer Name</th>
-          <th scope="col" class="col-3">Category Name</th>
-          <th scope="col" class="col-3">Product Name</th>
-          <th scope="col" class="col-2">Price</th>
-          <th scope="col" class="col-2">Type</th>
-          <th scope="col" class="col-2">Size</th>
-          <th scope="col" class="col-3" *ngIf="buttonOption">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="order-table-404" colspan="8" *ngIf="tableData">
-            No record found
-          </td>
-        </tr>
-        <tr
-          *ngFor="let order of ordersArray"
-          class="order-table-row-hover"
-          (click)="onRowClick($event, order.id, order.type)"
-          [ngClass]="{ highlighted: order?.id === idFromQueryParam }"
-        >
-          <th scope="row" class="tracking-id">{{ order?.id }}</th>
-          <td>{{ order?.createdBy?.name }}</td>
-          <td>{{ order?.customer?.name || order?.client?.name }}</td>
-          <td>{{ order?.productCategory }}</td>
-          <td>{{ order?.product || order?.productName }}</td>
-          <td>Rs. {{ order?.price || order?.amount }}</td>
-          <td>{{ order?.type }}</td>
-          <td>{{ order?.size }}</td>
-          <td class="order-table-btns-container" *ngIf="buttonOption">
-            <div class="btn-group mr-2" role="group" aria-label="Second group">
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="viewOrder(order.id, order.type)"
-              >
-                <i class="fa-solid fa-hand-pointer"></i>&nbsp;<small
-                  >View</small
-                >
-              </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="editOrder(order.id, order.type)"
-              >
-                <i class="fa-solid fa-pen"></i>&nbsp;<small>Edit</small>
-              </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="deleteOrder(order.id, order.type)"
-              >
-                <i class="fa-solid fa-trash"></i>&nbsp;<small>Delete</small>
-              </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="assignOrder(order.id)"
-              >
-                <i class="pi pi-plus"></i>&nbsp;<small>Assign Order</small>
-              </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="orderProcessCtp(order?.id)"
-              >
-                <i class="pi pi-list"></i>&nbsp;<small>Order Process Ctp</small>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table> -->
     <p-table
       #dt1
       [value]="paginatedOrders?.content!"
@@ -124,7 +46,7 @@
             label="Clear"
             class="btn btn-dark"
             icon="pi pi-filter-slash"
-            (click)="clear()"
+            (click)="clearOrderTable()"
           ></button>
         </div>
       </ng-template>

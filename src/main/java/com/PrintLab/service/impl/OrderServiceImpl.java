@@ -9,10 +9,7 @@ import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.Order;
 import com.PrintLab.model.*;
-import com.PrintLab.repository.BusinessRepository;
-import com.PrintLab.repository.CustomerRepository;
-import com.PrintLab.repository.OrderRepository;
-import com.PrintLab.repository.UserRepository;
+import com.PrintLab.repository.*;
 import com.PrintLab.service.OrderService;
 import com.PrintLab.utils.EmailUtils;
 import org.springframework.data.domain.PageRequest;
@@ -43,17 +40,19 @@ public class OrderServiceImpl implements OrderService {
     private final BusinessRepository businessRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final OrderItemsRepository orderItemsRepository;
     private final EntityManager entityManager;
     private final EmailUtils emailUtils;
     private final OrderItemsMapper orderItemsMapper;
     private final BusinessAndBranchMapper businessAndBranchMapper;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper, BusinessAndBranchMapper businessAndBranchMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, OrderItemsRepository orderItemsRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper, BusinessAndBranchMapper businessAndBranchMapper) {
         this.customerRepository = customerRepository;
         this.businessRepository = businessRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.entityManager = entityManager;
+        this.orderItemsRepository = orderItemsRepository;
         this.emailUtils = emailUtils;
         this.orderItemsMapper = orderItemsMapper;
         this.businessAndBranchMapper = businessAndBranchMapper;
@@ -66,28 +65,7 @@ public class OrderServiceImpl implements OrderService {
         User loggedInUser = userRepository.findById(loggedInUserId)
                 .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
         if (orderDto.getType().equalsIgnoreCase("auto")) {
-            if (orderDto.getSideOptionValue() == null) {
-                orderDto.setSideOptionValue("SINGLE_SIDED");
-            }
-            if (!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
-                if (orderDto.getJobColorsFront() == null) {
-                    orderDto.setJobColorsFront(1L);
-                }
-                if (orderDto.getJobColorsBack() == null) {
-                    orderDto.setJobColorsBack(1L);
-                }
-            } else if (orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
-                if (orderDto.getJobColorsFront() == null) {
-                    orderDto.setJobColorsFront(1L);
-                }
-            } else if (orderDto.getSideOptionValue().equals("SINGLE_SIDED")) {
-                if (orderDto.getJobColorsFront() == null) {
-                    orderDto.setJobColorsFront(1L);
-                }
-            }
-            if (orderDto.getQuantity() == null) {
-                orderDto.setQuantity(1000.0);
-            }
+            setDefaultValuesOfTypeAuto(orderDto);
         }
         orderDto.setStatus("New / Unassigned");
         orderDto.setCreatedBy(loggedInUser);
@@ -98,7 +76,43 @@ public class OrderServiceImpl implements OrderService {
         orderDto.setPressMachineProcess(false);
         orderDto.setPaperMarketProcess(false);
         Order order = orderRepository.save(toEntity(orderDto));
+        associateOrderItemsWithOrder(orderDto.getOrderItems(), order);
         return toDto(order);
+    }
+
+    private void setDefaultValuesOfTypeAuto(OrderDto orderDto) {
+        if (orderDto.getSideOptionValue() == null) {
+            orderDto.setSideOptionValue("SINGLE_SIDED");
+        }
+        if (!orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+            if (orderDto.getJobColorsFront() == null) {
+                orderDto.setJobColorsFront(1L);
+            }
+            if (orderDto.getJobColorsBack() == null) {
+                orderDto.setJobColorsBack(1L);
+            }
+        } else if (orderDto.getImpositionValue() && orderDto.getSideOptionValue().equals("DOUBLE_SIDED")) {
+            if (orderDto.getJobColorsFront() == null) {
+                orderDto.setJobColorsFront(1L);
+            }
+        } else if (orderDto.getSideOptionValue().equals("SINGLE_SIDED")) {
+            if (orderDto.getJobColorsFront() == null) {
+                orderDto.setJobColorsFront(1L);
+            }
+        }
+        if (orderDto.getQuantity() == null) {
+            orderDto.setQuantity(1000.0);
+        }
+    }
+
+    private void associateOrderItemsWithOrder(List<OrderItemsDto> orderItemsDtoList, Order order) {
+        if (orderItemsDtoList != null) {
+            for (OrderItemsDto orderItemsDto : orderItemsDtoList) {
+                OrderItems orderItems = orderItemsMapper.toEntity(orderItemsDto);
+                orderItems.setOrder(order);
+                orderItemsRepository.save(orderItems);
+            }
+        }
     }
 
     @Override

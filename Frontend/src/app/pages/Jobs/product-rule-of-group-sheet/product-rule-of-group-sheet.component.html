@@ -26,6 +26,7 @@
                   [options]="productRuleList"
                   [(ngModel)]="selectedProductRule"
                   [required]="true"
+                  (ngModelChange)="onProductRuleChange($event)"
                   optionLabel="productName"
                   name="category"
                 ></p-dropdown>

@@ -104,7 +104,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public List<ProductRuleDto> searchByName(String productName) {
-        List<ProductRule> productRuleList = productRuleRepository.findProductRuleByProductName(productName);
+        List<ProductRule> productRuleList = productRuleRepository.findProductRuleByProductNameAndTypeAndStatus(productName,"manual","Active");
         return productRuleList.stream()
                 .map(productRuleMapper::toDto)
                 .collect(Collectors.toList());
@@ -123,7 +123,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public List<ProductRuleDto> getAllProductRuleInGroupSheet() {
-        List<ProductRule> productRuleList = productRuleRepository.findByGroupSheetTrueAndType("manual");
+        List<ProductRule> productRuleList = productRuleRepository.findByTypeAndStatusAndGroupSheetTrue("manual","Active");
         return productRuleList.stream()
                 .map(productRuleMapper::toDto)
                 .collect(Collectors.toList());

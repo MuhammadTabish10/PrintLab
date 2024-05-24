@@ -15,7 +15,7 @@ import { JobService } from '../Jobs/Service/job.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { BusinessUnitService } from '../business-unit-and-processes/Service/business-unit.service';
 import { BusinessUnit, BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
-import { Order } from 'src/app/Model/Order';
+import { Order, OrderItem } from 'src/app/Model/Order';
 import { ProductRule } from 'src/app/Model/ProductRule';
 
 @Component({
@@ -195,6 +195,14 @@ export class AddOrderComponent implements OnInit {
   getOrderByIdAndType(id: number, type: string) {
     this.orderService.getOrderByIdAndType(id, type).subscribe(res => {
       this.job = res;
+      if (this.job.quantity) {
+        debugger
+        this.availableQty = this.job.quantity;
+        this.job.orderItems?.forEach((item: OrderItem) => {
+          debugger
+          this.availableQty! -= item.quantity!;
+        })
+      }
       this.job.businessCategory = this.categoryList.find(item => item.id === this.job.businessCategory)?.id?.toString();
       this.selectedCustomer = this.customerList.find(item => item.id === this.job.customer?.id)?.id;
       this.getBusinessList(this.selectedCustomer!);
@@ -649,7 +657,9 @@ export class AddOrderComponent implements OnInit {
 
 
   calculateAmount(value: Order) {
-    this.availableQty = this.job.quantity
+    if (!this.idFromQueryParam) {
+      this.availableQty = this.job.quantity;
+    }
     if (value.quantity && value.rate) {
       value.amount = value.quantity * value.rate;
       this.totalAmount = value.amount;
@@ -657,6 +667,7 @@ export class AddOrderComponent implements OnInit {
       value.amount = 0;
     }
   }
+
 
   addJob(): void {
     this.transformProductCategory();
@@ -718,16 +729,26 @@ export class AddOrderComponent implements OnInit {
       id: null,
       name: null,
       quantity: null,
-    })
+    });
   }
 
   public removeRow(index: number) {
     debugger
     this.job.orderItems?.splice(index, 1);
+    this.calculateTotalQty();
   }
-  public subtractFromTotalQty(qty: number): void {
-    if (this.job.quantity && qty <= this.job.quantity) {
-      this.availableQty = this.job.quantity! - qty;
-    }
+
+  public subtractFromTotalQty(qty: number, index: number): void {
+    debugger
+    this.job.orderItems![index].quantity = qty;
+    this.calculateTotalQty();
   }
+
+
+
+  public calculateTotalQty(): void {
+    let totalItemQty = this.job.orderItems?.reduce((acc, item) => acc + (item.quantity || 0), 0);
+    this.availableQty = this.job.quantity! - totalItemQty!;
+  }
+
 }
