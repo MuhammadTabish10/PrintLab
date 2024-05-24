@@ -31,11 +31,11 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     private final ProductRuleMapper productRuleMapper;
     private final BusinessUnitProcessRepository businessUnitProcessRepository;
     private final JobProcessedDetailsRepository jobProcessedDetailsRepository;
-    private final PressMachineRepository pressMachineRepository;
-    private final CtpRepository ctpRepository;
     private final EntityManager entityManager;
 
-    public ProductRuleServiceImpl(EntityManager entityManager, ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, ProductRulePaperStockRepository productRulePaperStockRepository, ProductRuleMapper productRuleMapper, BusinessUnitProcessRepository businessUnitProcessRepository, JobProcessedDetailsRepository jobProcessedDetailsRepository, PressMachineRepository pressMachineRepository, CtpRepository ctpRepository) {
+    private final RoleServiceImpl roleService;
+
+    public ProductRuleServiceImpl(EntityManager entityManager, ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, ProductRulePaperStockRepository productRulePaperStockRepository, ProductRuleMapper productRuleMapper, BusinessUnitProcessRepository businessUnitProcessRepository, JobProcessedDetailsRepository jobProcessedDetailsRepository, RoleServiceImpl roleService) {
         this.productRuleRepository = productRuleRepository;
         this.vendorRepository = vendorRepository;
         this.productRulePaperStockRepository = productRulePaperStockRepository;
@@ -43,8 +43,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         this.businessUnitProcessRepository = businessUnitProcessRepository;
         this.jobProcessedDetailsRepository = jobProcessedDetailsRepository;
         this.entityManager = entityManager;
-        this.pressMachineRepository = pressMachineRepository;
-        this.ctpRepository = ctpRepository;
+        this.roleService = roleService;
     }
 
     @Transactional
@@ -162,23 +161,26 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         existingProductRule.setProductName(productRuleDto.getProductName());
         existingProductRule.setStatus(productRuleDto.getStatus());
         existingProductRule.setSize(productRuleDto.getSize());
-        if (existingProductRule.getType().equalsIgnoreCase("auto")) {
+        existingProductRule.setVisibleTo(productRuleDto.getVisibleTo().stream()
+                .map(roleService::toEntity)
+                .collect(Collectors.toList()));
+        existingProductRule.setGroupSheet(productRuleDto.getGroupSheet());
+        existingProductRule.setPredefined(productRuleDto.getPredefined());
+        existingProductRule.setCustom(productRuleDto.getCustom());
+        existingProductRule.setUp(productRuleDto.getUp());
+
+        // Update attributes applicable only when type is not "auto"
+        if (!existingProductRule.getType().equalsIgnoreCase("auto")) {
             existingProductRule.setPrintSide(productRuleDto.getPrintSide());
             existingProductRule.setJobColorFront(productRuleDto.getJobColorFront());
             existingProductRule.setJobColorBack(productRuleDto.getJobColorBack());
             existingProductRule.setQuantity(productRuleDto.getQuantity());
-            if (existingProductRule.getPrintSide().equals(DOUBLE_SIDED)) {
-                existingProductRule.setImpositionValue(productRuleDto.getImpositionValue());
-            } else {
-                existingProductRule.setImpositionValue(false);
-            }
-            existingProductRule.setPressMachine(pressMachineRepository.findById(productRuleDto.getPressMachine().getId())
-                    .orElseThrow(() -> new RecordNotFoundException("PressMachine not found")));
-            existingProductRule.setCtp(ctpRepository.findById(productRuleDto.getCtp().getId())
-                    .orElseThrow(() -> new RecordNotFoundException("Ctp not found")));
+            existingProductRule.setImpositionValue(productRuleDto.getImpositionValue());
+            existingProductRule.setPressMachine(productRuleDto.getPressMachine());
+            existingProductRule.setCtp(productRuleDto.getCtp());
         }
-        existingProductRule.setType(productRuleDto.getType());
 
+        existingProductRule.setType(productRuleDto.getType());
     }
 
     private void updateProcessListAndDetails(ProductRule existingProductRule, ProductRuleDto productRuleDto) {
@@ -352,6 +354,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         List<Predicate> predicates = new ArrayList<>();
 
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getBusinessCategory(), productRuleRoot.get("businessCategory"));
+        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getProductName(), productRuleRoot.get("productName"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getType(), productRuleRoot.get("type"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), productRuleRoot.get("status"));
 

@@ -18,7 +18,7 @@ public class OrderItems {
     private String name;
     private String quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "order_id")
     @ToString.Exclude
     @JsonIgnore
