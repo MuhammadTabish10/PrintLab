@@ -56,5 +56,6 @@ export const GlobalVariables = {
     sendTo: undefined,
     processedDetailList: [],
     businesses:[],
+    orderItems:[],
   }
 };

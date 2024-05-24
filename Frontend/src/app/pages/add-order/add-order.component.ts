@@ -17,7 +17,6 @@ import { BusinessUnitService } from '../business-unit-and-processes/Service/busi
 import { BusinessUnit, BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
 import { Order } from 'src/app/Model/Order';
 import { ProductRule } from 'src/app/Model/ProductRule';
-import { PaginationResponse } from 'src/app/Model/PaginationResponse';
 
 @Component({
   selector: 'app-add-order',
@@ -96,6 +95,9 @@ export class AddOrderComponent implements OnInit {
       isPredefinedSize: false,
       isCustomSize: false
     };
+  hideSizeCategory: boolean = false;
+  rows: { item: string, qty: number }[] = [];
+  availableQty: number | null | undefined;
 
   constructor(
     private orderService: OrdersService, private router: Router,
@@ -142,6 +144,7 @@ export class AddOrderComponent implements OnInit {
     if (l1 !== null && l2 !== null && unit) {
       // Call method to add concatenated value as a dropdown option
       this.addConcatenatedValue(l1, l2, unit);
+      this.hideSizeCategory = true;
       this.visible2 = false;
     } else {
       console.error('L1, L2, or unit is not properly defined.');
@@ -646,6 +649,7 @@ export class AddOrderComponent implements OnInit {
 
 
   calculateAmount(value: Order) {
+    this.availableQty = this.job.quantity
     if (value.quantity && value.rate) {
       value.amount = value.quantity * value.rate;
       this.totalAmount = value.amount;
@@ -700,6 +704,7 @@ export class AddOrderComponent implements OnInit {
       this.sizeValue = this.size;
       this.sizeBoolean.isPredefinedSize = productRule.predefined!;
       this.sizeBoolean.isCustomSize = productRule.custom!;
+      debugger
       console.log(this.sizeValue);
     }
   }
@@ -707,6 +712,22 @@ export class AddOrderComponent implements OnInit {
     this.sizeValue = this.size.filter((item: any) => item.category === name);
     this.cdr.detectChanges();
     console.log(this.sizeValue);
+  }
+  public addRow(): void {
+    this.job.orderItems?.push({
+      id: null,
+      name: null,
+      quantity: null,
+    })
+  }
 
+  public removeRow(index: number) {
+    debugger
+    this.job.orderItems?.splice(index, 1);
+  }
+  public subtractFromTotalQty(qty: number): void {
+    if (this.job.quantity && qty <= this.job.quantity) {
+      this.availableQty = this.job.quantity! - qty;
+    }
   }
 }

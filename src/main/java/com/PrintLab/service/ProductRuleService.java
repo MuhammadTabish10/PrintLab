@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ProductRuleService {
     ProductRuleDto save(ProductRuleDto productRuleDto);
-    Boolean checkTitle(String productName);
+    Boolean checkTitle(String productName, String type);
     List<ProductRuleDto> getAllProductRule();
     List<ProductRuleDto> searchByName(String productName);
     ProductRuleDto getProductRuleById(Long id);

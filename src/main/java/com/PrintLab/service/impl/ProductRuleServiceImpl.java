@@ -91,8 +91,8 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     }
 
     @Override
-    public Boolean checkTitle(String productName) {
-        return (productRuleRepository.existsByProductNameAndStatus(productName, "Active"));
+    public Boolean checkTitle(String productName, String type) {
+        return (productRuleRepository.existsByProductNameAndStatusAndType(productName, "Active", type));
     }
 
     @Override
@@ -305,7 +305,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public List<ProductRuleDto> findAllByType(String type) {
-        List<ProductRule> productRuleList = productRuleRepository.findByTypeAndStatus(type,"Active");
+        List<ProductRule> productRuleList = productRuleRepository.findByTypeAndStatus(type, "Active");
         return productRuleList.stream()
                 .map(productRuleMapper::toDto)
                 .collect(Collectors.toList());

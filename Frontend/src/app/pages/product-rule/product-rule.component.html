@@ -11,11 +11,11 @@
         <input
           type="text"
           placeholder="Search by Product Size"
-          [(ngModel)]="search"
+          [(ngModel)]="productRuleBody.productName"
           class="order-search form-control"
-          (input)="searchProductRule($event.target)"
+          (input)="getProductRule(undefined, productRuleBody)"
         />
-        <div >
+        <div>
           <p-panelMenu [model]="items" class="custom" />
         </div>
       </div>
@@ -78,27 +78,7 @@
                 </div>
               </th>
               <th style="min-width: 15rem">
-                <div class="flex align-items-center">
-                  Product
-                  <!-- <p-columnFilter type="text" field="product" display="menu">
-                    <ng-template pTemplate="header">
-                      <div class="px-3 pt-3 pb-0">
-                        <span class="font-bold">Product name</span>
-                      </div>
-                    </ng-template>
-                    <ng-template
-                      pTemplate="filter"
-                      let-value
-                      let-filter="filterCallback"
-                    >
-                      <input
-                        type="text"
-                        [(ngModel)]="productRuleBody.productName"
-                        (input)="getProductRule(undefined, productRuleBody)"
-                      />
-                    </ng-template>
-                  </p-columnFilter> -->
-                </div>
+                <div class="flex align-items-center">Product</div>
               </th>
               <th style="min-width: 15rem">
                 <div class="flex align-items-center">
@@ -126,7 +106,7 @@
               <th style="min-width: 15rem">
                 <div class="flex align-items-center">
                   Status
-                  <p-columnFilter type="text" field="status" display="menu">
+                  <p-columnFilter type="boolean" field="status" display="menu">
                     <ng-template pTemplate="header">
                       <div class="px-3 pt-3 pb-0">
                         <span class="font-bold">Status</span>
@@ -137,11 +117,13 @@
                       let-value
                       let-filter="filterCallback"
                     >
-                      <input
-                        type="text"
-                        [(ngModel)]="productRuleBody.status"
-                        (input)="getProductRule(undefined, productRuleBody)"
-                      />
+                      <div class="flex flex-column">
+                        <p-triStateCheckbox
+                          [(ngModel)]="selectedStatus"
+                          (onChange)="onStatusChange()"
+                          inputId="tricheckbox"
+                        ></p-triStateCheckbox>
+                      </div>
                     </ng-template>
                   </p-columnFilter>
                 </div>
@@ -166,7 +148,13 @@
                 {{ product.type }}
               </td>
               <td>
-                {{ product.status }}
+                <i
+                  *ngIf="product.status === 'Active'; else inactiveIcon"
+                  class="pi pi-check text-success fw-bolder fs-5"
+                ></i>
+                <ng-template #inactiveIcon>
+                  <i class="pi pi-times text-danger fw-bolder fs-5"></i>
+                </ng-template>
               </td>
               <td class="order-table-btns-container">
                 <div class="btn-group" role="group">

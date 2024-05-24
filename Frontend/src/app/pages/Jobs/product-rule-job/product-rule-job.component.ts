@@ -54,7 +54,9 @@ export class ProductRuleJobComponent implements OnInit {
       private getUpping: UpingService,
       private route: ActivatedRoute,
       private router: Router,
-    ) { }
+    ) {
+    this.productRuleJob.predefined = true;
+  }
 
 
   ngOnInit(): void {
@@ -75,13 +77,13 @@ export class ProductRuleJobComponent implements OnInit {
   }
 
   onFocusOutEvent(productName: string) {
-    this.productRuleService.checkUniqueProduct(productName).subscribe((result: boolean) => {
+    this.productRuleService.checkUniqueProduct(productName, 'manual').subscribe((result: boolean) => {
       this.isExist = result;
       if (result === true) {
-        const error = "This product already exist.";
+        const error = "This product already exist in " + this.orderType + " type";
         this.errorService.showError(error);
       } else {
-        const success = 'This is a new product';
+        const success = 'This is a new product in ' + this.orderType + ' type';
         this.successService.showSuccess(success);
       }
     }, (err: BackendErrorResponse) => {
@@ -132,10 +134,10 @@ export class ProductRuleJobComponent implements OnInit {
     this.businessUnitService.processListByCategoryName(category).subscribe(
       (res: BusinessUnit[]) => {
         this.processCategory = res;
-        debugger
+
         if (id) {
           res.forEach((element: BusinessUnit) => {
-            debugger
+
             this.sourceProducts = element.processList?.filter(process => !this.targetProducts.some(target => target.id === process.id))!;
           })
         } else {
@@ -222,7 +224,7 @@ export class ProductRuleJobComponent implements OnInit {
     this.productRuleJob.size = JSON.stringify(this.upping);
     this.productRuleJob.processList = this.targetProducts;
     this.selectedStatus === true ? this.productRuleJob.status = 'Active' : this.productRuleJob.status = 'Inactive';
-    debugger
+
     const serviceToCall = this.idFromQueryParam
       ? this.productRuleService.updateProductRule(this.idFromQueryParam!, this.productRuleJob)
       : this.productRuleService.postProductRule(this.productRuleJob);
@@ -261,4 +263,17 @@ export class ProductRuleJobComponent implements OnInit {
       }
     );
   }
+
+  public checkIsAllClose(changedSwitch: string): void {
+    if (!this.productRuleJob.predefined && !this.productRuleJob.custom) {
+      // If both switches are off, turn on the switch that was just turned off
+      if (changedSwitch === 'predefined') {
+        this.productRuleJob.custom = true;
+      } else if (changedSwitch === 'custom') {
+        this.productRuleJob.predefined = true;
+      }
+    }
+  }
+  
+  
 }

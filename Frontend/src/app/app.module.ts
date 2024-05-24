@@ -136,6 +136,7 @@ import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-r
 import { JsonParsePipe } from './CustomPipes/JsonParsePipe.pipe';
 import { SizeFormatPipe } from './CustomPipes/size-format.pipe';
 import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
+import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 
 @NgModule({
   declarations: [
@@ -276,6 +277,7 @@ import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-g
     ConfirmDialogModule,
     BreadcrumbModule,
     PanelMenuModule,
+    TriStateCheckboxModule,
   ],
   providers: [AuthInterceptorProvider, InterceptorService, MessageService, ConfirmationService,
     provideRouter(routes, withHashLocation()), DatePipe],

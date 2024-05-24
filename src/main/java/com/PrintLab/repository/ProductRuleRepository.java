@@ -15,4 +15,6 @@ public interface ProductRuleRepository extends JpaRepository<ProductRule,Long> {
     List<ProductRule> findByGroupSheetTrueAndType(String manual);
 
     List<ProductRule> findByTypeAndStatus(String type, String active);
+
+    Boolean existsByProductNameAndStatusAndType(String productName, String active, String type);
 }

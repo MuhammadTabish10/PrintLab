@@ -2,3 +2,6 @@
   width: 55px;
   height: 25px;
 }
+::ng-deep.p-inputnumber-input {
+  width: 1%;
+}

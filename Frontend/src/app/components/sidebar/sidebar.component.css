@@ -11,3 +11,6 @@ li{
   background-color:black;
   color:white
 }
+a,span {
+  text-transform: uppercase !important;
+}

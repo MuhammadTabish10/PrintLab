@@ -15108,13 +15108,24 @@ input:checked + .slider:before {
   .p-accordion-header:not(.p-disabled).p-highlight
   .p-accordion-header-link {
   background-color: black !important;
-  padding: 0.5rem 1.25rem !important;
   color: white !important;
+  text-transform: uppercase !important;
 }
 .p-accordion .p-accordion-header .p-accordion-header-link{
-  padding: 0.5rem 1.25rem !important;
+  text-transform: uppercase !important;
 }
-
+tr>th{
+  text-transform: uppercase !important;
+}
+.p-picklist .p-picklist-header {
+  background: black;
+  color: white;
+  border: 1px solid #dee2e6;
+  padding: 1.25rem;
+  border-bottom: 0 none;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+}
 /* .badge .p-badge.p-badge-success {
   background-color: black;
   color: #ffffff;
@@ -15140,6 +15151,7 @@ fa {
   vertical-align: middle;
   font-size: 20px;
 }
+
 
 /* html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */

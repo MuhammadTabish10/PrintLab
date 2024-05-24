@@ -23,6 +23,7 @@ export class ProductRuleComponent implements OnInit {
   gsm: string[] = [];
   search: string | undefined | null;
   items: MenuItem[] | undefined;
+  selectedStatus: boolean | undefined | null;
 
   constructor(
     private productRuleService: ProductRuleService,
@@ -68,7 +69,7 @@ export class ProductRuleComponent implements OnInit {
 
   editProduct(id: number, type: string) {
     const conditionalRoute = type === 'auto' ? '/addProductRule' : type === 'manual' ?
-    '/add-product-rule-job' : '/add-product-rule-group-sheet';
+      '/add-product-rule-job' : '/add-product-rule-group-sheet';
     this.router.navigate([conditionalRoute], { queryParams: { id: id, orderType: type } });
   }
   viewProduct(id: number) {
@@ -86,6 +87,7 @@ export class ProductRuleComponent implements OnInit {
   }
 
   public getProductRule(pageState?: PaginatorState, body?: ProductRule): void {
+    debugger
     this.productRuleService.getProductRuleTable(pageState, body).subscribe(
       (res: PaginationResponse<ProductRule>) => {
         this.paginatedProductRule = res;
@@ -93,14 +95,18 @@ export class ProductRuleComponent implements OnInit {
         this.errorService.showError(error.error.error);
       });
   }
-
-  searchProductRule(name: any) {
-    this.productRuleService.searchProduct(name.value).subscribe(
-      (res: ProductRule[]) => {
-        // this.tableData = res
-      }, (error: BackendErrorResponse) => {
-        this.errorService.showError(error.error.error);
-      })
+  public clearSearch() {
+    this.productRuleBody = { ...RequestBody.productRuleBody };
+    this.getProductRule(undefined, this.productRuleBody);
   }
-  public clearSearch() { }
+  onStatusChange(): void {
+    if (this.selectedStatus === true) {
+      this.productRuleBody.status = 'Active';
+    } else if (this.selectedStatus === false) {
+      this.productRuleBody.status = 'inActive';
+    } else {
+      this.productRuleBody.status = null;
+    }
+    this.getProductRule(undefined, this.productRuleBody);
+  }
 }

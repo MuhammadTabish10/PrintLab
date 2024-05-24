@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { OrdersService } from 'src/app/services/orders.service';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AuthguardService } from 'src/app/services/authguard.service';
@@ -132,6 +132,33 @@ export class OrdersComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.cdr.detectChanges();
+    this.accessQueryParams();
+    this.initializeItems();
+    this.initializeRoles();
+    this.getBusinessList();
+    this.getUserDetails();
+    this.getOrders()
+  }
+
+  private accessQueryParams(): void {
+    this.route.queryParams.subscribe(
+      (param: Params) => {
+        this.idFromQueryParam = +param['id'];
+      }, error => {
+        this.showError(error);
+      })
+  }
+
+  private initializeRoles(): void {
+    this.roleArray = [
+      { name: "ROLE_DESIGNER" },
+      { name: "ROLE_PRODUCTION" },
+      { name: "ROLE_PLATE_SETTER" }
+    ]
+  }
+
+  private initializeItems(): void {
     this.items = [
       {
         label: 'Add Order',
@@ -148,25 +175,15 @@ export class OrdersComponent implements OnInit {
             icon: 'pi pi-wrench',
             routerLink: '/addOrder',
             queryParams: { orderType: 'manual' }
-          }
+          },
+          {
+            label: 'Group Sheet',
+            icon: 'pi pi-id-card',
+            queryParams: { orderType: 'groupSheet' }
+          },
         ]
       },
     ]
-    this.getOrders()
-    this.getBusinessList();
-    this.getUserDetails();
-    this.cdr.detectChanges();
-
-    this.roleArray = [
-      { name: "ROLE_DESIGNER" },
-      { name: "ROLE_PRODUCTION" },
-      { name: "ROLE_PLATE_SETTER" }
-    ]
-    this.route.queryParams.subscribe(param => {
-      this.idFromQueryParam = +param['id'];
-    }, error => {
-      this.showError(error);
-    })
   }
   getBusinessList() {
     this.customerService.getAllBusinesses().subscribe(

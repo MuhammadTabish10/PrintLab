@@ -31,6 +31,8 @@
                     class="form-control"
                     id="formGroupExampleInput"
                     name="productname"
+                    [disabled]="mode === 'Update'"
+                    [ngClass]="{ 'border-0 bg-white fs-5': mode === 'Update' }"
                     [(ngModel)]="productRuleJob.productName"
                     required
                   />
@@ -93,6 +95,7 @@
                   class="form-check-input"
                   type="checkbox"
                   id="flexSwitchCheckChecked3"
+                  (change)="checkIsAllClose('predefined')"
                   name="impositionValueChecked3"
                   [(ngModel)]="productRuleJob.predefined"
                 />
@@ -105,13 +108,14 @@
                   class="form-check-input"
                   type="checkbox"
                   id="flexSwitchCheckChecked4"
+                  (change)="checkIsAllClose('custom')"
                   name="impositionValueChecked4"
                   [(ngModel)]="productRuleJob.custom"
                 />
               </div>
             </div>
           </div>
-          <div class="row mx-3">
+          <div class="row mx-3" *ngIf="productRuleJob.predefined === true">
             <div class="col-12">
               <label class="add-order-label m-0">Category</label>
               <p-multiSelect
@@ -190,16 +194,16 @@
                   <p-pickList
                     [source]="sourceProducts"
                     [target]="targetProducts"
-                    sourceHeader="Available"
-                    targetHeader="Selected"
+                    sourceHeader="Optional Processes"
+                    targetHeader="Selected Processes"
                     name="processes"
                     [dragdrop]="true"
                     [responsive]="true"
                     [sourceStyle]="{ height: '19rem' }"
                     [targetStyle]="{ height: '19rem' }"
                     filterBy="name"
-                    sourceFilterPlaceholder="Search by name"
-                    targetFilterPlaceholder="Search by name"
+                    sourceFilterPlaceholder=""
+                    targetFilterPlaceholder=""
                     breakpoint="1400px"
                   >
                     <ng-template let-product pTemplate="item">

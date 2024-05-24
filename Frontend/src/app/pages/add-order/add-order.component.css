@@ -8,3 +8,14 @@
   word-wrap: break-word; /* Break long words and wrap onto the next line */
 }
 
+::ng-deep.p-accordion
+  .p-accordion-header:not(.p-disabled).p-highlight
+  .p-accordion-header-link {
+  padding: 0.4rem 1.25rem !important;
+}
+::ng-deep.p-accordion .p-accordion-header .p-accordion-header-link{
+  padding: 0.4rem 1.25rem !important;
+}
+::ng-deep.p-inputnumber-input {
+  width: 1%;
+}

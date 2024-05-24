@@ -58,6 +58,12 @@ export interface Order {
   deliveryDate: Date | undefined | null;
   expiryDate: Date | undefined | null;
   sendTo: string | undefined | null;
+  orderItems?: OrderItem[];
   processedDetailList: JobProcessedDetails[];
   processList?: BusinessUnitProcessDto[];
+}
+export interface OrderItem {
+  id: number | undefined | null;
+  name: string | undefined | null;
+  quantity: number | undefined | null;
 }

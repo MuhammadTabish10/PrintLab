@@ -24,10 +24,10 @@ public class ProductRuleController {
         return ResponseEntity.ok(productRuleService.save(productRuleDto));
     }
 
-    @GetMapping("/product-rule/check-title/{productName}")
+    @GetMapping("/product-rule/check-title")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Boolean> checkTitle(@PathVariable String productName){
-        return ResponseEntity.ok(productRuleService.checkTitle(productName));
+    public ResponseEntity<Boolean> checkTitle(@RequestParam String productName, @RequestParam String type) {
+        return ResponseEntity.ok(productRuleService.checkTitle(productName, type));
     }
 
     @GetMapping("/product-rule")

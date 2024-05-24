@@ -30,6 +30,16 @@
                   name="category"
                 ></p-dropdown>
               </div>
+              <div class="col-1">
+                <label class="add-order-label m-0">Up</label>
+                <p-inputNumber
+                  [(ngModel)]="productRule.up"
+                  mode="decimal"
+                  inputId="withoutgrouping"
+                  name="up"
+                  [useGrouping]="false"
+                />
+              </div>
               <div class="col-4">
                 <label class="add-order-label m-0">Visible to</label>
                 <p-multiSelect

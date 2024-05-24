@@ -16,3 +16,11 @@
   padding: 0.65rem 0.75rem;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
+::ng-deep.p-accordion
+  .p-accordion-header:not(.p-disabled).p-highlight
+  .p-accordion-header-link {
+  padding: 0.90rem 1.25rem !important;
+}
+::ng-deep.p-accordion .p-accordion-header .p-accordion-header-link{
+  padding: 0.80rem 1.25rem !important;
+}

@@ -12,9 +12,11 @@
               type="text"
               class="form-control"
               id="formGroupExampleInput"
+              [disabled]="idFromQueryParam ? true : false"
               placeholder="Enter title"
               name="titleInput"
               [(ngModel)]="productName"
+              [ngClass]="{'border-0 bg-white fs-5': idFromQueryParam}"
               required
             />
             <div class="invalid-feedback">Please fill out this field.</div>

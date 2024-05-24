@@ -2,8 +2,7 @@
   <app-dashboard-head></app-dashboard-head>
   <div class="main-container ms-lg-1">
     <div>
-      <h4>Business Unit & Processes</h4>
-      <p class="page-intro">Whole data about your business here</p>
+      <h4 class="text-uppercase">Production Units & Processes</h4>
     </div>
 
     <div class="order-body py-2 px-3 card">
@@ -211,7 +210,7 @@
       </div>
       <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
         <div class="col-12">
-          <label class="add-order-label m-0">Billable</label>
+          <label class="add-order-label m-0">Type</label>
           <p-dropdown
             [options]="types?.productFieldValuesList"
             styleClass="w-100"

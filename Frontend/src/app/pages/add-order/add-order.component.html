@@ -192,7 +192,10 @@
                       name="productName"
                     ></p-dropdown>
                   </div>
-                  <div class="col-lg-12 col-md-12 col-sm-6">
+                  <div
+                    class="col-lg-12 col-md-12 col-sm-6"
+                    *ngIf="!hideSizeCategory"
+                  >
                     <label class="add-order-label m-0">Size Category</label>
                     <p-dropdown
                       styleClass="w-100"
@@ -227,7 +230,7 @@
                     >
                     <textarea
                       rows="1"
-                      cols="85"
+                      class="w-100"
                       pInputTextarea
                       name="description"
                       [autoResize]="true"
@@ -307,13 +310,72 @@
                       </div>
                     </div>
                   </div>
-                  <!-- <button
-                    type="submit"
-                    class="btn order-table-btn btn-search-panel w-100"
-                    (click)="calculate()"
-                  >
-                    Calculate
-                  </button> -->
+                  <div class="container fluid" *ngIf="job.quantity">
+                    <div class="row">
+                      <table>
+                        <thead class="border">
+                          <tr>
+                            <th class="border ps-2">Available QTY</th>
+                            <th class="border ps-2 text-end">
+                              {{ availableQty }}
+                            </th>
+                          </tr>
+                        </thead>
+                      </table>
+                    </div>
+                    <div class="row mt-3">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th class="ps-2 col-9">ITEMS</th>
+                            <th class="ps-2 col-2 text-start">QTY</th>
+                            <th class="ps-2 col-1">
+                              <button
+                                class="btn btn-dark btn-sm"
+                                (click)="addRow()"
+                              >
+                                <i class="pi pi-plus text-white"></i>
+                              </button>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let row of job.orderItems; let i = index">
+                            <td class="ps-2 col-9">
+                              <input
+                                type="text"
+                                pInputText
+                                class="w-100"
+                                [name]="'name[' + i + ']'"
+                                [(ngModel)]="row.name"
+                              />
+                            </td>
+                            <td class="ps-2 col-2">
+                              <p-inputNumber
+                                [(ngModel)]="row.quantity"
+                                (onInput)="subtractFromTotalQty(row.quantity!)"
+                                mode="decimal"
+                                [min]="1"
+                                [max]="job.quantity"
+                                [format]="true"
+                                [name]="'qty[' + i + ']'"
+                                inputId="withoutgrouping"
+                                [useGrouping]="false"
+                              />
+                            </td>
+                            <td class="col-1">
+                              <button
+                                type="button"
+                                pButton
+                                class="pointer-event border-0 bg-white px-3 pi pi-trash text-danger"
+                                (click)="removeRow(i)"
+                              ></button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
