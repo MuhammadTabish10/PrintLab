@@ -57,7 +57,7 @@ export class ProductRuleService {
     return this.http.put<ProductRule>(`${this._url}/product-rule/${id}`, obj)
   }
 
-  searchProduct(name: string): Observable<ProductRule> {
+  searchProduct(name: string): Observable<ProductRule[]> {
     return this.http.get<ProductRule[]>(`${this._url}/product-rule/names/${name}`);
   }
 
