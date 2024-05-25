@@ -250,8 +250,20 @@ export class ProductRuleJobComponent implements OnInit {
   }
 
   public checkIsAllClose(changedSwitch: string): void {
+    if (changedSwitch === 'predefined') {
+      // If predefined is turned on, turn off custom
+      if (this.productRuleJob.predefined) {
+        this.productRuleJob.custom = false;
+      }
+    } else if (changedSwitch === 'custom') {
+      // If custom is turned on, turn off predefined
+      if (this.productRuleJob.custom) {
+        this.productRuleJob.predefined = false;
+      }
+    }
+
+    // If both switches are off, turn on the switch that was just turned off
     if (!this.productRuleJob.predefined && !this.productRuleJob.custom) {
-      // If both switches are off, turn on the switch that was just turned off
       if (changedSwitch === 'predefined') {
         this.productRuleJob.custom = true;
       } else if (changedSwitch === 'custom') {
@@ -259,6 +271,7 @@ export class ProductRuleJobComponent implements OnInit {
       }
     }
   }
-  
-  
+
+
+
 }

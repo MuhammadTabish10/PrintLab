@@ -3,9 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { OrdersService } from 'src/app/services/orders.service';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AuthguardService } from 'src/app/services/authguard.service';
-import { JobService } from '../Jobs/Service/job.service';
 import { Observable, Subject, catchError, map, takeUntil } from 'rxjs';
-import { Table } from 'primeng/table';
 import { Order } from 'src/app/Model/Order';
 import { PaginatorState } from 'primeng/paginator';
 import { PaginationResponse } from 'src/app/Model/PaginationResponse';
@@ -16,6 +14,8 @@ import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { BusinessUnitService } from '../business-unit-and-processes/Service/business-unit.service';
 import { BusinessUnit } from 'src/app/Model/BusinessUnit';
 import { GlobalVariables } from '../add-order/GlobalVariables';
+import { ErrorHandleService } from 'src/app/services/error-handle.service';
+import { SuccessMessageService } from 'src/app/services/success-message.service';
 
 export interface Roles {
   name?: string;
@@ -53,76 +53,14 @@ export class OrdersComponent implements OnInit {
   items: MenuItem[] | undefined;
   private destroy$ = new Subject<void>();
   paginatedOrders: PaginationResponse<Order> | undefined | null;
-  order: Order = {
-    id: undefined,
-    product: undefined,
-    paper: undefined,
-    sizeCategory: undefined,
-    size: undefined,
-    gsm: undefined,
-    quantity: undefined,
-    amount: undefined,
-    jobColorsFront: undefined,
-    sideOptionValue: undefined,
-    impositionValue: undefined,
-    jobColorsBack: undefined,
-    providedDesign: undefined,
-    url: undefined,
-    productRule: undefined,
-    status: undefined,
-    type: undefined,
-    ctpProcess: undefined,
-    pressMachineProcess: undefined,
-    paperMarketProcess: undefined,
-    designer: undefined,
-    production: undefined,
-    plateSetter: undefined,
-    isRejected: false,
-    timeStamp: undefined,
-    createdBy: {
-      id: undefined,
-      name: undefined,
-      email: undefined,
-      password: undefined,
-      phone: undefined,
-      cnic: undefined,
-      status: undefined,
-      createdAt: undefined,
-      roles: [],
-    },
-    assignedBy: undefined,
-    customer: undefined,
-    businessCategory: undefined,
-    productionUser: undefined,
-    titleId: undefined,
-    jobId: undefined,
-    productCategory: undefined,
-    description: undefined,
-    rate: undefined,
-    linkedInvoice: undefined,
-    privateNotes: undefined,
-    orderTrackingNotes: undefined,
-    productionNotes: undefined,
-    ctpFileName: undefined,
-    locationOfFile: undefined,
-    sentOn: undefined,
-    designPackageFile: undefined,
-    locationOfDesignFile: undefined,
-    jobStartDate: undefined,
-    productionStartDate: undefined,
-    productionEndDate: undefined,
-    packingAndQADate: undefined,
-    deliveryDate: undefined,
-    expiryDate: undefined,
-    sendTo: undefined,
-    processedDetailList: [],
-    businesses: [],
-  }
+  order: Order = { ...GlobalVariables.order }
   businessList: Business[] = []
+  renderTableNow: boolean = false;
   constructor(
+    private successHandleService: SuccessMessageService,
     private businessUnitService: BusinessUnitService,
+    private errorHandleService: ErrorHandleService,
     private customerService: CustomerService,
-    private messageService: MessageService,
     private authService: AuthguardService,
     private orderService: OrdersService,
     private cdr: ChangeDetectorRef,
@@ -146,8 +84,8 @@ export class OrdersComponent implements OnInit {
     this.route.queryParams.subscribe(
       (param: Params) => {
         this.idFromQueryParam = +param['id'];
-      }, error => {
-        this.showError(error);
+      }, (error) => {
+        throw new Error(error);
       })
   }
 
@@ -190,14 +128,14 @@ export class OrdersComponent implements OnInit {
     this.customerService.getAllBusinesses().subscribe(
       (res: Business[]) => {
         this.businessList = res;
-        debugger
       }, (error: BackendErrorResponse) => {
-        this.showError(error.error.error);
+        this.errorHandleService.showError(error.error.error);
       }
     )
   }
 
   public getOrders(pageState?: PaginatorState, order?: Order): void {
+    this.renderTableNow = false;
     this.orderService.getOrders(pageState, order!).pipe(
       takeUntil(this.destroy$)
     ).subscribe(
@@ -212,16 +150,14 @@ export class OrdersComponent implements OnInit {
           } else {
             this.paginatedOrders.content = res.content;
           }
-
-          // Transform orders asynchronously
           await this.transformOrders();
-
-          this.tableData = this.paginatedOrders.content.length === 0;
-          console.log(this.paginatedOrders.content);
+          if (this.isAllReady()) {
+            this.renderTableNow = true;
+          }
         }
       },
-      error => {
-        this.showError(error);
+      (error: BackendErrorResponse) => {
+        this.errorHandleService.showError(error.error.error);
         this.visible = true;
       }
     );
@@ -250,13 +186,18 @@ export class OrdersComponent implements OnInit {
     }
   }
 
+  private isAllReady(): boolean {
+    // Check if all necessary data is ready
+    return !!this.paginatedOrders && !!this.paginatedOrders.content;
+  }
+
   getBusinessCategoryById(businessCategory: number): Observable<string | null | undefined> {
     return this.businessUnitService.getBusinessUnitById(businessCategory).pipe(
       map((res: BusinessUnit) => {
         return res.name;
       }),
-      catchError((error) => {
-        this.showError(error);
+      catchError((error: BackendErrorResponse) => {
+        this.errorHandleService.showError(error.error.error);
         throw error;
       })
     );
@@ -271,49 +212,11 @@ export class OrdersComponent implements OnInit {
     }
   }
 
-  // Function doesCreatedByMatch and getUsersByRole remains unchanged
-
-  // private getOrders(): void {
-
-  //   const orderAuto$ = this.orderService.getOrders();
-  //   const jobManual$ = this.jobService.getAllProductionJobs();
-
-  //   forkJoin([orderAuto$, jobManual$]).subscribe(
-  //     ([autoData, manualData]: [any, ProductionJob[]]) => {
-  //       // Process autoData
-  //       if (this.role !== "ROLE_ADMIN") {
-  //         this.ordersArray = autoData.filter((order: any) => this.doesCreatedByMatch(order));
-  //         this.buttonOption = false;
-  //       } else {
-  //         this.ordersArray = autoData;
-  //       }
-
-  //       // Process manualData
-  //       manualData = manualData.map((item: ProductionJob) => ({
-  //         ...item,
-  //         title: item.productName
-  //       }));
-
-  //       // Merge data
-  //       const mergedData = [...autoData, ...manualData];
-
-  //       // Assign mergedData to your tableData
-  //       this.ordersArray = mergedData;
-  //       console.log(this.ordersArray);
-  //     },
-  //     (error: any) => {
-  //       this.showError(error);
-  //       this.visible = true;
-  //     }
-  //   );
-  // }
-
-
   getUsersByRole(role: any) {
     this.orderService.getUserByRole(role.name).subscribe(res => {
       this.userArray = res
-    }, error => {
-      this.showError(error);
+    }, (error: BackendErrorResponse) => {
+      this.errorHandleService.showError(error.error.error);
     })
   }
 
@@ -326,69 +229,25 @@ export class OrdersComponent implements OnInit {
   }
 
   deleteOrder(id: number, type: string) {
-    // if (type === 'auto') {
-    //   this.deleteAutoOrder(id);
-    // } else {
-    //   this.deleteManualOrder(id);
-    // }
     this.orderService.deleteOrder(id).subscribe(() => {
       this.getOrders()
     }, error => {
-      this.showError(error);
+      this.errorHandleService.showError(error.error.error);
       this.visible = true
     })
   }
 
-  deleteAutoOrder(id: number) {
-    this.orderService.deleteOrder(id).subscribe(() => {
-      this.getOrders()
-    }, error => {
-      this.showError(error);
-      this.visible = true
-    })
-  }
-
-  // deleteManualOrder(id: number) {
-  //   this.jobService.deleteProductionJob(id).subscribe(() => {
-  //     this.getOrders()
-  //   }, error => {
-  //     this.showError(error);
-  //     this.visible = true
-  //   })
-  // }
-
-  statusSorting(find: any) {
-    this.orderService.statusSorting(find).subscribe(
-      (res: any) => {
-        this.paginatedOrders = res
-      }, error => {
-        this.showError(error);
-        this.visible = true
-      })
-  }
-
-  searchOrder(order: any) {
-    if (this.search == '') {
-      this.getOrders()
-    } else {
-      this.orderService.searchById(order.value).subscribe(
-        (res: any) => {
-          this.paginatedOrders = res
-        }, error => {
-          this.showError(error);
-          this.visible = true
-        })
-    }
-  }
   assignOrder(getById: number) {
     this.showDialog(getById);
   }
+
   showDialog(getById: number) {
     this.selectedRole = null;
     this.selectedUser = null;
     this.visible = true;
     this.selectedOrderId = getById;
   }
+
   saveOrder(user?: any, role?: any, orderId?: number, logedInUser?: any) {
     this.orderService.saveAssignedUser(user?.id, role?.name, orderId ? orderId : 0, logedInUser?.userId).subscribe(
       (res: any) => {
@@ -399,27 +258,12 @@ export class OrdersComponent implements OnInit {
         this.plzSelect = true;
       });
   }
-
-  // processes(orderId: number) {
-  //   this.processOptions = true;
-  //   this.orderId = orderId;
-  // }
-
   orderProcessCtp(orderId: number) {
     this.router.navigate(['/order-timeline'], { queryParams: { id: orderId } });
   }
 
-  // orderProcessPress() {
-  //   this.router.navigate(['/orderProcessPress'], { queryParams: { id: this.orderId } });
-  // }
-
-  // orderProcessPaperMarket() {
-  //   this.router.navigate(['/orderProcessPaperMarket'], { queryParams: { id: this.orderId } });
-  // }
-
   onRowClick(event: MouseEvent, orderId: number, type: string): void {
     // Check if the click occurred on a button
-
     const isButton = (event.target as HTMLElement).tagName === 'BUTTON' ||
       (event.target as HTMLElement).tagName === 'SMALL' ||
       (event.target as HTMLElement).tagName === 'I';
@@ -436,15 +280,10 @@ export class OrdersComponent implements OnInit {
     }
   }
 
-  showError(error: any) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
-  }
-
   private doesCreatedByMatch(order: any): boolean {
     return (order.createdBy && order.createdBy.id === this.currentUserDetail.userId) ||
       (order.designer && order.designer.id === this.currentUserDetail.userId);
   }
-
 
   private getUserDetails(): void {
     this.currentUserDetail = JSON.parse(this.authService.token).userDetails;
@@ -453,7 +292,6 @@ export class OrdersComponent implements OnInit {
 
   private transformTimeStamp(orderList: Order[]): Order[] {
     return orderList.map((el: Order) => {
-
       const dateArray = el.timeStamp;
       if (dateArray && Array.isArray(dateArray)) {
         const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5], dateArray[6] / 1000000);
@@ -481,6 +319,6 @@ export class OrdersComponent implements OnInit {
   }
   public clearOrderTable(): void {
     this.order = { ...GlobalVariables.order };
-    this.getOrders(undefined,this.order);
+    this.getOrders(undefined, this.order);
   }
 }

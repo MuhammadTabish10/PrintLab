@@ -12,6 +12,18 @@
             <div class="order-body py-2 px-3">
               <div class="main-container">
                 <div class="order-body py-2 px-3" *ngIf="orderType === 'auto'">
+                  <div class="col-lg-12 col-md-12 col-sm-6 mb-1">
+                    <h4>Client</h4>
+                    <p-dropdown
+                      styleClass="w-100"
+                      [(ngModel)]="selectedCustomer"
+                      [options]="customerList"
+                      optionLabel="name"
+                      optionValue="id"
+                      (ngModelChange)="getBusinessList($event)"
+                      name="client"
+                    ></p-dropdown>
+                  </div>
                   <h4>Product</h4>
                   <div class="my-3">
                     <label class="add-order-label m-0">Name</label>
@@ -169,6 +181,18 @@
                   *ngIf="orderType === 'manual'"
                 >
                   <div class="col-lg-12 col-md-12 col-sm-6">
+                    <label class="add-order-label m-0">Client</label>
+                    <p-dropdown
+                      styleClass="w-100"
+                      [(ngModel)]="selectedCustomer"
+                      [options]="customerList"
+                      optionLabel="name"
+                      optionValue="id"
+                      (ngModelChange)="getBusinessList($event)"
+                      name="client"
+                    ></p-dropdown>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6">
                     <label class="add-order-label m-0 d-block">Category</label>
                     <p-dropdown
                       styleClass="w-100"
@@ -192,52 +216,74 @@
                       name="productName"
                     ></p-dropdown>
                   </div>
-                  <div
-                    class="col-lg-12 col-md-12 col-sm-6"
-                    *ngIf="!hideSizeCategory"
-                  >
-                    <label class="add-order-label m-0">Size Category</label>
-                    <p-dropdown
-                      styleClass="w-100"
-                      [(ngModel)]="job.sizeCategory"
-                      [options]="categoryArray"
-                      (ngModelChange)="getSize($event)"
-                      optionLabel="name"
-                      optionValue="name"
-                      name="sizeCategory"
-                    ></p-dropdown>
+                  <div class="row" *ngIf="sizeBoolean.isPredefinedSize">
+                    <div class="col-lg-12 col-md-12 col-sm-6">
+                      <label class="add-order-label m-0">Size Category</label>
+                      <p-dropdown
+                        styleClass="w-100"
+                        [(ngModel)]="job.sizeCategory"
+                        [options]="categoryArray"
+                        (ngModelChange)="getSize($event)"
+                        optionLabel="name"
+                        optionValue="name"
+                        name="sizeCategory"
+                      ></p-dropdown>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-6">
+                      <label class="add-order-label m-0">Size</label>
+                      <p-dropdown
+                        styleClass="w-100"
+                        [(ngModel)]="job.size"
+                        [options]="sizeValue"
+                        optionLabel="productSize"
+                        optionValue="inch"
+                        name="size"
+                      ></p-dropdown>
+                    </div>
                   </div>
-                  <div class="col-lg-12 col-md-12 col-sm-6">
-                    <label class="add-order-label m-0">Size</label>
-                    <p-dropdown
-                      styleClass="w-100"
-                      [(ngModel)]="job.size"
-                      [options]="sizeValue"
-                      optionLabel="productSize"
-                      optionValue="inch"
-                      name="size"
-                    ></p-dropdown>
+                  <div class="row mt-1" *ngIf="sizeBoolean.isCustomSize">
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                      <label class="add-order-label m-0">L1</label>
+                      <p-inputNumber
+                        [(ngModel)]="job12.L1"
+                        inputId="l1Amount"
+                        [min]="0"
+                        (onInput)="concatinate(job12)"
+                        [format]="true"
+                        mode="decimal"
+                        name="l1"
+                        [required]="true"
+                      ></p-inputNumber>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                      <label class="add-order-label m-0">L2</label>
+                      <p-inputNumber
+                        [(ngModel)]="job12.L2"
+                        inputId="l2Amount"
+                        [min]="0"
+                        (onInput)="concatinate(job12)"
+                        [format]="true"
+                        mode="decimal"
+                        name="l2"
+                        [required]="true"
+                      ></p-inputNumber>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                      <label class="add-order-label m-0">Unit</label>
+                      <p-dropdown
+                        styleClass="w-100"
+                        [(ngModel)]="selectedUnit12"
+                        [options]="unitOptions12"
+                        (ngModelChange)="concatinate(job12)"
+                        optionLabel="name"
+                        optionValue="id"
+                        name="unit"
+                      ></p-dropdown>
+                    </div>
                   </div>
-                  <span
-                    *ngIf="sizeBoolean.isCustomSize"
-                    class="float-end cursor-pointer"
-                    (click)="showDialog()"
-                    ><u>Custom Size</u></span
-                  >
-                  <div class="col-lg-12 col-md-12 col-sm-6">
-                    <label class="add-order-label m-0 d-block"
-                      >Description</label
-                    >
-                    <textarea
-                      rows="1"
-                      class="w-100"
-                      pInputTextarea
-                      name="description"
-                      [autoResize]="true"
-                      [(ngModel)]="job.description"
-                    ></textarea>
-                  </div>
-                  <div class="col-lg-12 col-md-12 col-sm-6">
+                  <div class="col-lg-12 col-md-12 col-sm-6" *ngIf="!locked">
                     <label class="add-order-label m-0 d-block">Quantity</label>
                     <p-inputNumber
                       [(ngModel)]="job.quantity"
@@ -315,11 +361,13 @@
 
                   <div class="container fluid" *ngIf="job.quantity">
                     <div class="row">
-                      <table>
+                      <table class="text-center">
                         <thead class="border">
-                          <tr>
-                            <th class="border ps-2">Available QTY</th>
-                            <th class="border ps-2 text-end">
+                          <tr class="bg-dark text-white border border-rounded">
+                            <th class="border py-2 col-9">
+                              Available Quantity
+                            </th>
+                            <th class="border py-2">
                               {{ availableQty }}
                             </th>
                           </tr>
@@ -328,24 +376,35 @@
                     </div>
 
                     <div class="row mt-3">
-                      <table>
+                      <table class="text-center">
                         <thead>
                           <tr>
-                            <th class="ps-2 col-9">ITEMS</th>
-                            <th class="ps-2 col-2 text-start">QTY</th>
-                            <th class="ps-2 col-1">
+                            <th class="col-9">ITEMS</th>
+                            <th class="col-2">QTY</th>
+                            <th class="col-1">
                               <button
-                                class="btn btn-dark btn-sm"
-                                (click)="addRow()"
-                              >
-                                <i class="pi pi-plus text-white"></i>
-                              </button>
+                                type="button"
+                                [ngClass]="
+                                  locked
+                                    ? 'pi pi-lock text-dark'
+                                    : 'pi pi-plus text-dark pointer-event bg-white border-0'
+                                "
+                                pButton
+                                [pTooltip]="
+                                  locked
+                                    ? 'No more rows can be added'
+                                    : 'Add new row'
+                                "
+                                tooltipPosition="top"
+                                class="pointer-event border-0 bg-white px-3"
+                                (click)="!locked ? addRow() : null"
+                              ></button>
                             </th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr *ngFor="let row of job.orderItems; let i = index">
-                            <td class="ps-2 col-9">
+                            <td class="col-9">
                               <input
                                 type="text"
                                 pInputText
@@ -354,7 +413,7 @@
                                 [(ngModel)]="row.name"
                               />
                             </td>
-                            <td class="ps-2 col-2">
+                            <td class="col-2">
                               <p-inputNumber
                                 [(ngModel)]="row.quantity"
                                 (onInput)="
@@ -362,7 +421,7 @@
                                 "
                                 mode="decimal"
                                 [min]="1"
-                                [max]="job.quantity"
+                                [max]="row.quantity!"
                                 [format]="true"
                                 [name]="'qty[' + i + ']'"
                                 inputId="withoutgrouping"
@@ -545,18 +604,6 @@
 
             <div class="row">
               <div class="col-lg-4 col">
-                <label class="add-order-label m-0">Client</label>
-                <p-dropdown
-                  styleClass="w-100"
-                  [(ngModel)]="selectedCustomer"
-                  [options]="customerList"
-                  optionLabel="name"
-                  optionValue="id"
-                  (ngModelChange)="getBusinessList($event)"
-                  name="client"
-                ></p-dropdown>
-              </div>
-              <div class="col-lg-4 col">
                 <label class="add-order-label m-0">Business</label>
                 <p-multiSelect
                   styleClass="w-100"
@@ -590,7 +637,7 @@
 </div>
 <p-toast></p-toast>
 
-<p-dialog
+<!-- <p-dialog
   header="Header"
   [modal]="true"
   [(visible)]="visible2"
@@ -598,43 +645,6 @@
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
   [maximizable]="true"
 >
-  <div class="col-lg-12 col-md-12 col-sm-6 mb-3">
-    <label class="add-order-label m-0">L1</label>
-    <p-inputNumber
-      [(ngModel)]="job12.L1"
-      inputId="l1Amount"
-      [min]="0"
-      [format]="true"
-      mode="decimal"
-      name="l1"
-      [required]="true"
-    ></p-inputNumber>
-  </div>
-
-  <div class="col-lg-12 col-md-12 col-sm-6 mb-3">
-    <label class="add-order-label m-0">L2</label>
-    <p-inputNumber
-      [(ngModel)]="job12.L2"
-      inputId="l2Amount"
-      [min]="0"
-      [format]="true"
-      mode="decimal"
-      name="l2"
-      [required]="true"
-    ></p-inputNumber>
-  </div>
-
-  <div class="col-lg-12 col-md-12 col-sm-6 mb-3">
-    <label class="add-order-label m-0">Unit</label>
-    <p-dropdown
-      styleClass="w-100"
-      [(ngModel)]="selectedUnit12"
-      [options]="unitOptions12"
-      optionLabel="name"
-      optionValue="id"
-      name="unit"
-    ></p-dropdown>
-  </div>
   <br />
   <button
     class="w-100"
@@ -644,4 +654,4 @@
     label="Add"
     (click)="onSubmit()"
   ></button>
-</p-dialog>
+</p-dialog> -->

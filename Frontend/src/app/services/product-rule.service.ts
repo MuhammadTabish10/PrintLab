@@ -57,9 +57,10 @@ export class ProductRuleService {
     return this.http.put<ProductRule>(`${this._url}/product-rule/${id}`, obj)
   }
 
-  searchProduct(name: string): Observable<ProductRule> {
-    return this.http.get<ProductRule[]>(`${this._url}/product-rule/names/${name}`);
-  }
+  searchProduct(name: string): Observable<ProductRule[]> {
+    const params = new HttpParams().set('productName', name);
+    return this.http.get<ProductRule[]>(`${this._url}/product-rule/names`, { params });
+}
 
   checkUniqueProduct(productName: string, type: string): Observable<boolean> {
     const params = new HttpParams().set('productName', productName).set('type', type);

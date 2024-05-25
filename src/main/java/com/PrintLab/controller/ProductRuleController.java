@@ -44,12 +44,13 @@ public class ProductRuleController {
         return ResponseEntity.ok(productRuleDto);
     }
 
-    @GetMapping("/product-rule/names/{name}")
+    @GetMapping("/product-rule/names")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ProductRuleDto>> getProductRuleByName(@PathVariable String productName) {
+    public ResponseEntity<List<ProductRuleDto>> getProductRuleByName(@RequestParam String productName) {
         List<ProductRuleDto> productRuleDtoList = productRuleService.searchByName(productName);
         return ResponseEntity.ok(productRuleDtoList);
     }
+
 
     @GetMapping("/product-rule/all-groupSheet")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

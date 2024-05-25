@@ -104,7 +104,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
 
     @Override
     public List<ProductRuleDto> searchByName(String productName) {
-        List<ProductRule> productRuleList = productRuleRepository.findProductRuleByProductNameAndTypeAndStatus(productName,"manual","Active");
+        List<ProductRule> productRuleList = productRuleRepository.findProductRuleByProductNameAndTypeAndStatus(productName, "manual", "Active");
         return productRuleList.stream()
                 .map(productRuleMapper::toDto)
                 .collect(Collectors.toList());
@@ -356,9 +356,14 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getBusinessCategory(), productRuleRoot.get("businessCategory"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getProductName(), productRuleRoot.get("productName"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getType(), productRuleRoot.get("type"));
-        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), productRuleRoot.get("status"));
+        addEqualPredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), productRuleRoot.get("status"));
 
         return predicates;
+    }
+
+    private void addEqualPredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, String status, Path<Object> path) {
+        Optional.ofNullable(status)
+                .ifPresent(v -> predicates.add(criteriaBuilder.equal(path, v)));
     }
 
     private void addLikePredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, String value, Path<String> path) {

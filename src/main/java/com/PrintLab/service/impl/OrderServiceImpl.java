@@ -449,7 +449,8 @@ public class OrderServiceImpl implements OrderService {
         // Add like predicates for string attributes if they are present in the search criteria
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getBusinessCategory(), orderRoot.get("businessCategory"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getProduct(), orderRoot.get("product"));
-        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), orderRoot.get("status"));
+        addEqualPredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), orderRoot.get("status"),String.class);
+        addEqualPredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getId(), orderRoot.get("id"), Long.class);
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getType(), orderRoot.get("type"));
 
         // Add a predicate to filter by the user who created the order, if createdBy field is present in the search criteria
@@ -469,6 +470,14 @@ public class OrderServiceImpl implements OrderService {
 
         return predicates;
     }
+
+    private <T> void addEqualPredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, T value, Path<T> path, Class<T> valueType) {
+        if (value != null) {
+            predicates.add(criteriaBuilder.equal(path, value));
+        }
+    }
+
+
 
     // Method to add a like predicate to the list of predicates if the value is present
     private void addLikePredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, String value, Path<String> path) {

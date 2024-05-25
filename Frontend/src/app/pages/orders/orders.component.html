@@ -8,12 +8,12 @@
     <form class="order-search-panel py-0 px-0">
       <input
         class="order-search form-control"
-        type="search"
-        placeholder="Search Order"
+        type="number"
+        placeholder="Search by order id"
         aria-label="Search"
         name="search"
-        [(ngModel)]="search"
-        (keyup)="searchOrder($event.target)"
+        [(ngModel)]="order.id"
+        (input)="getOrders(undefined, order)"
       />
       <p-panelMenu [model]="items" class="" />
     </form>
@@ -259,86 +259,94 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-order>
-        <tr
-          class="text-nowrap order-table-row-hover"
-          (click)="onRowClick($event, order.id, order.type)"
-        >
-          <td>
-            {{ order.id }}
-          </td>
-          <td>
-            {{ order.businessCategory }}
-          </td>
-          <td>
-            {{ order.product }}
-          </td>
-          <td>
-            {{ order.size }}
-          </td>
-          <td>
-            {{ order.quantity }}
-          </td>
-          <td>{{ order.rate || order.amount / order.quantity }}</td>
-          <td>
-            {{ order.amount }}
-          </td>
-          <td>
-            {{ order.status }}
-          </td>
-          <td>
-            {{ order.type }}
-          </td>
-          <td>
-            {{ order.createdBy.name }}
-          </td>
-          <td>
-            {{ order.timeStamp }}
-          </td>
-          <td>
-            {{ order.businesses | joinWithCommaSeparated : "businessName" }}
-          </td>
-          <td class="order-table-btns-container" *ngIf="buttonOption">
-            <div class="btn-group mr-2" role="group" aria-label="Second group">
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="viewOrder(order.id, order.type)"
+        <ng-container *ngIf="renderTableNow">
+          <tr
+            class="text-nowrap order-table-row-hover"
+            (click)="onRowClick($event, order.id, order.type)"
+          >
+            <td>
+              {{ order.id }}
+            </td>
+            <td>
+              {{ order.businessCategory }}
+            </td>
+            <td>
+              {{ order.product }}
+            </td>
+            <td>
+              {{ order.size }}
+            </td>
+            <td>
+              {{ order.quantity }}
+            </td>
+            <td>{{ order.rate || order.amount / order.quantity }}</td>
+            <td>
+              {{ order.amount }}
+            </td>
+            <td>
+              {{ order.status }}
+            </td>
+            <td>
+              {{ order.type }}
+            </td>
+            <td>
+              {{ order.createdBy.name }}
+            </td>
+            <td>
+              {{ order.timeStamp }}
+            </td>
+            <td>
+              {{ order.businesses | joinWithCommaSeparated : "businessName" }}
+            </td>
+            <td class="order-table-btns-container" *ngIf="buttonOption">
+              <div
+                class="btn-group mr-2"
+                role="group"
+                aria-label="Second group"
               >
-                <i class="fa-solid fa-hand-pointer"></i>&nbsp;<small
-                  >View</small
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="viewOrder(order.id, order.type)"
                 >
-              </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="editOrder(order.id, order.type)"
-              >
-                <i class="fa-solid fa-pen"></i>&nbsp;<small>Edit</small>
-              </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="deleteOrder(order.id, order.type)"
-              >
-                <i class="fa-solid fa-trash"></i>&nbsp;<small>Delete</small>
-              </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="assignOrder(order.id)"
-              >
-                <i class="pi pi-plus"></i>&nbsp;<small>Assign Order</small>
-              </button>
-              <button
-                type="button"
-                class="btn order-table-btn"
-                (click)="orderProcessCtp(order?.id)"
-              >
-                <i class="pi pi-list"></i>&nbsp;<small>Order Process Ctp</small>
-              </button>
-            </div>
-          </td>
-        </tr>
+                  <i class="fa-solid fa-hand-pointer"></i>&nbsp;<small
+                    >View</small
+                  >
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="editOrder(order.id, order.type)"
+                >
+                  <i class="fa-solid fa-pen"></i>&nbsp;<small>Edit</small>
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="deleteOrder(order.id, order.type)"
+                >
+                  <i class="fa-solid fa-trash"></i>&nbsp;<small>Delete</small>
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="assignOrder(order.id)"
+                >
+                  <i class="pi pi-plus"></i>&nbsp;<small>Assign Order</small>
+                </button>
+                <button
+                  type="button"
+                  class="btn order-table-btn"
+                  (click)="orderProcessCtp(order?.id)"
+                >
+                  <i class="pi pi-list"></i>&nbsp;<small
+                    >Order Process Ctp</small
+                  >
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr class="text-center">

@@ -95,7 +95,7 @@ export class AddOrderComponent implements OnInit {
       isPredefinedSize: false,
       isCustomSize: false
     };
-  hideSizeCategory: boolean = false;
+  locked: boolean = false;
   rows: { item: string, qty: number }[] = [];
   availableQty: number | null | undefined;
 
@@ -110,11 +110,13 @@ export class AddOrderComponent implements OnInit {
     private cdr: ChangeDetectorRef,
   ) { }
 
-  job12: any = {
-    L1: null,
-    L2: null,
-    size: null
-  };
+  job12: {
+    L1: number | null, L2: number | null, size: string | null
+  } = {
+      L1: null,
+      L2: null,
+      size: null
+    };
   selectedUnit12: string = '';
   unitOptions12: any[] = [
     { id: 'inch', name: 'Inch' },
@@ -122,34 +124,33 @@ export class AddOrderComponent implements OnInit {
   ];
 
   // Method to add the concatenated string as a dropdown option
-  addConcatenatedValue(l1: number, l2: number, unit: string): void {
-    // Clear the sizeValue array
-    this.sizeValue = [];
+  // addConcatenatedValue(l1: number, l2: number, unit: string): void {
+  //   // Clear the sizeValue array
+  //   this.sizeValue = [];
 
-    // Construct the concatenated value
-    const concatenatedValue = {
-      productSize: `${l1} x ${l2} ${unit}`,
-      inch: `${l1} x ${l2} ${unit}`
-    };
+  //   // Construct the concatenated value
+  //   const concatenatedValue = {
+  //     productSize: `${l1} x ${l2} ${unit}`,
+  //     inch: `${l1} x ${l2} ${unit}`
+  //   };
 
-    // Push the concatenated value to the dropdown options array
-    this.sizeValue.push(concatenatedValue);
-  }
+  //   // Push the concatenated value to the dropdown options array
+  //   this.sizeValue.push(concatenatedValue);
+  // }
 
-  onSubmit() {
-    const l1 = this.job12.L1;
-    const l2 = this.job12.L2;
-    const unit = this.selectedUnit12;
+  // onSubmit() {
+  //   const l1 = this.job12.L1;
+  //   const l2 = this.job12.L2;
+  //   const unit = this.selectedUnit12;
 
-    if (l1 !== null && l2 !== null && unit) {
-      // Call method to add concatenated value as a dropdown option
-      this.addConcatenatedValue(l1, l2, unit);
-      this.hideSizeCategory = true;
-      this.visible2 = false;
-    } else {
-      console.error('L1, L2, or unit is not properly defined.');
-    }
-  }
+  //   if (l1 !== null && l2 !== null && unit) {
+  //     // Call method to add concatenated value as a dropdown option
+  //     this.addConcatenatedValue(l1, l2, unit);
+  //     this.visible2 = false;
+  //   } else {
+  //     console.error('L1, L2, or unit is not properly defined.');
+  //   }
+  // }
 
 
   ngOnInit(): void {
@@ -166,7 +167,7 @@ export class AddOrderComponent implements OnInit {
         if (this.orderType === 'auto') {
           this.orderService.getOrderByIdAndType(this.idFromQueryParam, this.orderType).subscribe(res => {
             this.orderToUpdate = res
-            debugger
+
             this.selectedCustomer = this.orderToUpdate.customer.id;
             this.getBusinessList(this.selectedCustomer!);
             this.selectedBusinesses = this.orderToUpdate.businesses;
@@ -195,14 +196,19 @@ export class AddOrderComponent implements OnInit {
   getOrderByIdAndType(id: number, type: string) {
     this.orderService.getOrderByIdAndType(id, type).subscribe(res => {
       this.job = res;
-      if (this.job.quantity) {
-        debugger
-        this.availableQty = this.job.quantity;
-        this.job.orderItems?.forEach((item: OrderItem) => {
-          debugger
-          this.availableQty! -= item.quantity!;
-        })
+      if (this.job.quantity && this.job.orderItems) {
+        const lastIndex = this.job.orderItems.length - 1;
+        this.calculateTotalQty(lastIndex);
       }
+      // Parse the size string back to its components
+      const parsedSize = this.parseSizeForPatch(this.job.size!);
+      const obj = {
+        L1: +parsedSize.L1,
+        L2: +parsedSize.L2,
+        size: parsedSize.unit,
+      };
+      this.selectedUnit12 = parsedSize.unit;
+      this.job12 = obj;
       this.job.businessCategory = this.categoryList.find(item => item.id === this.job.businessCategory)?.id?.toString();
       this.selectedCustomer = this.customerList.find(item => item.id === this.job.customer?.id)?.id;
       this.getBusinessList(this.selectedCustomer!);
@@ -211,11 +217,12 @@ export class AddOrderComponent implements OnInit {
         this.getBrancheList(this.selectedBusinesses);
         this.selectedBusinesses.forEach(business => {
           this.selectedBranches = this.selectedBranches.concat(business.businessBranchList!);
-        })
+        });
       }
       this.calculateAmount(this.job);
-    })
+    });
   }
+
 
   calculate() {
 
@@ -505,7 +512,7 @@ export class AddOrderComponent implements OnInit {
       el.productName == this.orderToUpdate.product ? this.productToUpdate = el : null
     })
     this.toggleFields(this.productToUpdate)
-    debugger
+
     const conditionBackColor = this.orderToUpdate.jobColorsBack ? this.orderToUpdate.jobColorsBack.toString() : ''
     const foundPaperStockItem = this.paperStock != null ? this.paperStock.find((item: { paperStock: any; }) => item.paperStock === this.orderToUpdate.paper) : null;
     this.gsmFields(foundPaperStockItem)
@@ -567,7 +574,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   getBusinessList(id: string | number): void {
-    debugger
+
     this.branchList = [];
     this.selectedBranches = [];
     this.selectedBusinesses = [];
@@ -595,7 +602,7 @@ export class AddOrderComponent implements OnInit {
 
     selectedBusiness.forEach((business: Business) => {
       if (business.businessBranchList && business.businessBranchList.length > 0) {
-        debugger
+
         business.businessBranchList.forEach((branch: BusinessBranch) => {
           if (branch.branchName) {
             this.branchList.push(branch);
@@ -636,7 +643,7 @@ export class AddOrderComponent implements OnInit {
           // Initialize a Map to store unique items keyed by productName
           const uniqueProductRuleJobList = new Map<string, ProductRule>();
           res.processList?.forEach((element: BusinessUnitProcessDto) => {
-            debugger
+
             if (element.productRuleList) {
               element.productRuleList.forEach((item) => {
                 // Use productName as key to ensure uniqueness
@@ -672,6 +679,7 @@ export class AddOrderComponent implements OnInit {
   addJob(): void {
     this.transformProductCategory();
     this.assignJobProperties();
+
     const serviceToCall = this.job.id
       ? this.orderService.updateOrder(this.idFromQueryParam!, this.job)
       : this.orderService.addOrder(this.job, this.currentUserDetail.userId);
@@ -715,7 +723,7 @@ export class AddOrderComponent implements OnInit {
       this.sizeValue = this.size;
       this.sizeBoolean.isPredefinedSize = productRule.predefined!;
       this.sizeBoolean.isCustomSize = productRule.custom!;
-      debugger
+
       console.log(this.sizeValue);
     }
   }
@@ -733,22 +741,61 @@ export class AddOrderComponent implements OnInit {
   }
 
   public removeRow(index: number) {
-    debugger
     this.job.orderItems?.splice(index, 1);
     this.calculateTotalQty();
   }
 
   public subtractFromTotalQty(qty: number, index: number): void {
-    debugger
     this.job.orderItems![index].quantity = qty;
-    this.calculateTotalQty();
+    this.calculateTotalQty(index);
   }
 
-
-
-  public calculateTotalQty(): void {
+  public calculateTotalQty(changedIndex?: number): void {
+    debugger
     let totalItemQty = this.job.orderItems?.reduce((acc, item) => acc + (item.quantity || 0), 0);
     this.availableQty = this.job.quantity! - totalItemQty!;
+    if (this.availableQty < 0) {
+      this.job.orderItems![changedIndex!].quantity! += this.availableQty;
+      this.availableQty = 0;
+    }
+
+    if (this.availableQty <= 0 && changedIndex !== undefined && this.job.orderItems) {
+      this.locked = true;
+      // Loop through the order items and remove extra rows
+      for (let i = this.job.orderItems.length - 1; i > changedIndex; i--) {
+        this.job.orderItems.splice(i, 1);
+      }
+    } else {
+      this.locked = false;
+    }
   }
 
+
+  concatinate(obj: { L1: number | null, L2: number | null, size: string | null }): void {
+
+    if (this.selectedUnit12) {
+      obj.size = this.selectedUnit12;
+      this.job.size = obj.L1 + ' ' + 'x' + ' ' + obj.L2 + ' ' + obj.size;
+    }
+  }
+
+  // Call this function to parse the size string when edit mode is entered
+  private parseSizeForPatch(sizeString: string): { L1: string, L2: string, unit: string } {
+    const sizeParts = sizeString.split(' x ');
+
+    if (sizeParts.length === 2) {
+      const L1 = sizeParts[0];
+      const remainingParts = sizeParts[1].split(' ');
+
+      if (remainingParts.length === 2) {
+        const L2 = remainingParts[0];
+        const unit = remainingParts[1];
+
+        return { L1, L2, unit };
+      }
+    }
+
+    // Return a default object if parsing fails
+    return { L1: '', L2: '', unit: '' };
+  }
 }

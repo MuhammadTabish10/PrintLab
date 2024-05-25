@@ -152,7 +152,7 @@
               <div *ngIf="!upping" class="text-danger ps-2">{{ invalid }}</div>
             </div>
           </div>
-          <div class="row mx-3 my-1">
+          <div class="row mx-3 my-1" *ngIf="productRuleJob.predefined === true">
             <div *ngIf="selectedCategories.length > 0" class="mb-3">
               <label class="add-order-label m-0"
                 >Selected Categories and Sizes:</label

@@ -99,7 +99,8 @@ export class ProductRuleComponent implements OnInit {
     this.productRuleBody = { ...RequestBody.productRuleBody };
     this.getProductRule(undefined, this.productRuleBody);
   }
-  onStatusChange(): void {
+  public onStatusChange(): void {
+    debugger
     if (this.selectedStatus === true) {
       this.productRuleBody.status = 'Active';
     } else if (this.selectedStatus === false) {

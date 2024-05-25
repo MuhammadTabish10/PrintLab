@@ -5,4 +5,7 @@ public enum Type {
     TEXTFIELD,
     MULTIDROPDOWN,
     TOGGLE,
+    manual,
+    auto,
+    groupSheet
 }

@@ -1,3 +1,11 @@
 .bg-gray{
   background-color: #808080!important;
 }
+::ng-deep.p-accordion
+  .p-accordion-header:not(.p-disabled).p-highlight
+  .p-accordion-header-link {
+  padding: 0.80rem 1.25rem !important;
+}
+::ng-deep.p-accordion .p-accordion-header .p-accordion-header-link{
+  padding: 0.80rem 1.25rem !important;
+}
