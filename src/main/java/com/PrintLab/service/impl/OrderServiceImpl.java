@@ -11,16 +11,24 @@ import com.PrintLab.model.Order;
 import com.PrintLab.model.*;
 import com.PrintLab.repository.*;
 import com.PrintLab.service.OrderService;
+import com.PrintLab.service.PdfGenerationService;
 import com.PrintLab.utils.EmailUtils;
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfCopy;
+import com.lowagie.text.pdf.PdfReader;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -45,8 +53,9 @@ public class OrderServiceImpl implements OrderService {
     private final EmailUtils emailUtils;
     private final OrderItemsMapper orderItemsMapper;
     private final BusinessAndBranchMapper businessAndBranchMapper;
+    private final PdfGenerationService pdfGenerationService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, OrderItemsRepository orderItemsRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper, BusinessAndBranchMapper businessAndBranchMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, OrderItemsRepository orderItemsRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper, BusinessAndBranchMapper businessAndBranchMapper, PdfGenerationService pdfGenerationService) {
         this.customerRepository = customerRepository;
         this.businessRepository = businessRepository;
         this.orderRepository = orderRepository;
@@ -56,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
         this.emailUtils = emailUtils;
         this.orderItemsMapper = orderItemsMapper;
         this.businessAndBranchMapper = businessAndBranchMapper;
+        this.pdfGenerationService = pdfGenerationService;
     }
 
 
@@ -608,5 +618,44 @@ public class OrderServiceImpl implements OrderService {
                         .collect(Collectors.toList()))
                 .orderItems(orderItems)
                 .build();
+    }
+
+    @Override
+    public byte[] downloadOrderConfirmationPdf(String fileName, Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", id)));
+
+        Model model = new ExtendedModelMap();
+        model.addAttribute("id", id);
+        model.addAttribute("customer", order.getCustomer());
+        model.addAttribute("business", order.getBusinesses().stream()
+                .filter(business -> !business.getBusinessName().isEmpty())
+                .collect(Collectors.toList()));
+        model.addAttribute("businessBranch", order.getBusinesses().stream()
+                .filter(business -> !business.getBusinessBranchList().isEmpty())
+                .collect(Collectors.toList()));
+        model.addAttribute("product", order.getProduct());
+        model.addAttribute("size", order.getSizeCategory());
+        model.addAttribute("quantity", order.getQuantity());
+        model.addAttribute("unit", order.getOrderItems());
+        model.addAttribute("amount", order.getAmount());
+
+        try (ByteArrayOutputStream mergedOutputStream = new ByteArrayOutputStream()) {
+            Document document = new Document();
+            PdfCopy copy = new PdfCopy(document, mergedOutputStream);
+            document.open();
+
+            byte[] individualPdf = pdfGenerationService.generatePdf("OrderConfirmation", model, id);
+
+            PdfReader reader = new PdfReader(new ByteArrayInputStream(individualPdf));
+            for (int pageNum = 1; pageNum <= reader.getNumberOfPages(); pageNum++) {
+                copy.addPage(copy.getImportedPage(reader, pageNum));
+            }
+
+            document.close();
+            return mergedOutputStream.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error merging PDFs: " + e.getMessage(), e);
+        }
     }
 }
