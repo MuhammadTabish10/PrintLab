@@ -4,10 +4,7 @@ import com.PrintLab.dto.OrderDto;
 import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.model.Order;
 import com.PrintLab.service.OrderService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +22,7 @@ public class OrderController {
     @PostMapping("/order")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
     public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto, @RequestParam Long loggedInUser) {
-        return ResponseEntity.ok(orderService.save(orderDto,loggedInUser));
+        return ResponseEntity.ok(orderService.save(orderDto, loggedInUser));
     }
 
     @GetMapping("/order")
@@ -45,7 +42,7 @@ public class OrderController {
             @PathVariable Long id,
             @RequestParam String type
     ) {
-        OrderDto orderDto = orderService.findByIdAndType(id,type);
+        OrderDto orderDto = orderService.findByIdAndType(id, type);
         return ResponseEntity.ok(orderDto);
     }
 
@@ -128,21 +125,22 @@ public class OrderController {
             @RequestParam(value = "page-size", defaultValue = "10", required = false) Integer pageSize,
             @RequestBody OrderDto orderDto
     ) {
-        PaginationResponse paginationResponse = orderService.getAllPaginatedOrders(pageNumber, pageSize,orderDto);
+        PaginationResponse paginationResponse = orderService.getAllPaginatedOrders(pageNumber, pageSize, orderDto);
         return ResponseEntity.ok(paginationResponse);
     }
 
 
-    @GetMapping("/invoice/pdf/{fileName}/{orderId}")
-    public ResponseEntity<byte[]> getInvoicePdf(
-            @PathVariable("fileName") String fileName,
-            @PathVariable("orderId") Long orderId
+    @GetMapping("/order/pdf/{fileName}/{id}")
+    public ResponseEntity<byte[]> getOrderConfirmationPdf(
+            @PathVariable String fileName,
+            @PathVariable Long id
     ) {
         try {
-            byte[] pdf = orderService.downloadOrderConfirmationPdf(fileName, orderId);
-
-             return new ResponseEntity<>(pdf, HttpStatus.OK);
-
+            byte[] pdf = orderService.downloadOrderConfirmationPdf(fileName, id);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDisposition(ContentDisposition.inline().filename(fileName + ".pdf").build());
+            return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new byte[0]);
         }

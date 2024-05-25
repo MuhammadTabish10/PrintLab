@@ -206,3 +206,65 @@ body {
   font-weight: 700;
   z-index: 1001;
 }
+/* Container Styles */
+.container {
+    max-width: 1200px; /* Adjust as needed */
+    margin: 0 auto;
+}
+
+/* Image Styles */
+.w-50 {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Section Heading Styles */
+.section-heading {
+    background-color: light-gray; /* Light gray background */
+    border: 1px solid light-gray; /* Light border */
+    border-radius: 3px; /* Rounded corners */
+    padding: 5px 10px; /* Padding */
+}
+
+/* Label Styles */
+label {
+    font-weight: normal;
+    display: inline;
+    vertical-align: middle;
+}
+
+/* Section Specific Styles */
+.bg-light {
+    background-color: #f0f0f0; /* Light gray background */
+}
+
+.border {
+    border: 1px solid #ccc; /* Add a border */
+}
+
+.rounded-1 {
+    border-radius: 5px; /* Rounded corners */
+}
+
+.ps-2 {
+    padding-left: 0.5rem; /* Left padding */
+    padding-right: 0.5rem; /* Right padding */
+}
+
+.py-1 {
+    padding-top: 0.25rem; /* Top padding */
+    padding-bottom: 0.25rem; /* Bottom padding */
+}
+
+/* Text Styles */
+.text-uppercase {
+    text-transform: uppercase;
+}
+h5{
+    font-weight: bolder;
+    display: inline;
+    vertical-align: middle;
+}
+h3{
+padding-left:10px;
+}

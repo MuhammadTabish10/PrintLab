@@ -459,7 +459,7 @@ public class OrderServiceImpl implements OrderService {
         // Add like predicates for string attributes if they are present in the search criteria
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getBusinessCategory(), orderRoot.get("businessCategory"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getProduct(), orderRoot.get("product"));
-        addEqualPredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), orderRoot.get("status"),String.class);
+        addEqualPredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), orderRoot.get("status"), String.class);
         addEqualPredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getId(), orderRoot.get("id"), Long.class);
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getType(), orderRoot.get("type"));
 
@@ -486,7 +486,6 @@ public class OrderServiceImpl implements OrderService {
             predicates.add(criteriaBuilder.equal(path, value));
         }
     }
-
 
 
     // Method to add a like predicate to the list of predicates if the value is present
@@ -626,19 +625,30 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new RecordNotFoundException(String.format("Order not found for id => %d", id)));
 
         Model model = new ExtendedModelMap();
+
+        List<String> businessNames = order.getBusinesses().stream()
+                .map(Business::getBusinessName)
+                .filter(businessName -> !businessName.isEmpty())
+                .collect(Collectors.toList());
+
+        List<String> branchNames = order.getBusinesses().stream()
+                .flatMap(business -> business.getBusinessBranchList().stream()
+                        .map(BusinessBranch::getBranchName))
+                .collect(Collectors.toList());
+
+        // Join business and branch names into comma-separated strings
+        String businessNamesString = String.join(", ", businessNames);
+        String branchNamesString = String.join(", ", branchNames);
         model.addAttribute("id", id);
-        model.addAttribute("customer", order.getCustomer());
-        model.addAttribute("business", order.getBusinesses().stream()
-                .filter(business -> !business.getBusinessName().isEmpty())
-                .collect(Collectors.toList()));
-        model.addAttribute("businessBranch", order.getBusinesses().stream()
-                .filter(business -> !business.getBusinessBranchList().isEmpty())
-                .collect(Collectors.toList()));
+        model.addAttribute("customer", order.getCustomer().getName());
+        model.addAttribute("businessNames", businessNamesString);
+        model.addAttribute("branchNames", branchNamesString);
         model.addAttribute("product", order.getProduct());
-        model.addAttribute("size", order.getSizeCategory());
-        model.addAttribute("quantity", order.getQuantity());
-        model.addAttribute("unit", order.getOrderItems());
+        model.addAttribute("size", order.getSize());
+        model.addAttribute("qty", order.getQuantity());
+        model.addAttribute("rate", order.getRate());
         model.addAttribute("amount", order.getAmount());
+
 
         try (ByteArrayOutputStream mergedOutputStream = new ByteArrayOutputStream()) {
             Document document = new Document();

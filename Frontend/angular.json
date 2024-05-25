@@ -16,7 +16,7 @@
             "outputPath": "dist/print-lab",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "allowedCommonJsDependencies":["quill"],
+            "allowedCommonJsDependencies":["quill","file-saver"],
             "polyfills": [
               "zone.js"
             ],

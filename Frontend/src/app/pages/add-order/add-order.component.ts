@@ -209,6 +209,7 @@ export class AddOrderComponent implements OnInit {
       };
       this.selectedUnit12 = parsedSize.unit;
       this.job12 = obj;
+      this.concatinate(this.job12);
       this.job.businessCategory = this.categoryList.find(item => item.id === this.job.businessCategory)?.id?.toString();
       this.selectedCustomer = this.customerList.find(item => item.id === this.job.customer?.id)?.id;
       this.getBusinessList(this.selectedCustomer!);
@@ -679,7 +680,7 @@ export class AddOrderComponent implements OnInit {
   addJob(): void {
     this.transformProductCategory();
     this.assignJobProperties();
-
+    debugger
     const serviceToCall = this.job.id
       ? this.orderService.updateOrder(this.idFromQueryParam!, this.job)
       : this.orderService.addOrder(this.job, this.currentUserDetail.userId);
@@ -776,6 +777,7 @@ export class AddOrderComponent implements OnInit {
     if (this.selectedUnit12) {
       obj.size = this.selectedUnit12;
       this.job.size = obj.L1 + ' ' + 'x' + ' ' + obj.L2 + ' ' + obj.size;
+      debugger
     }
   }
 
