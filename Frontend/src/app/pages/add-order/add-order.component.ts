@@ -708,7 +708,7 @@ export class AddOrderComponent implements OnInit {
     const successMsg = this.idFromQueryParam ? 'Order updated successfully' : 'Order created successfully';
     this.successService.showSuccess(successMsg);
     setTimeout(() => {
-      this.router.navigate(['/order-overview'], { queryParams: { id: res.id, orderType: 'manual' } });
+      this.router.navigate(['/order-confirmation-screen'], { queryParams: { id: res.id } });
     }, 2000);
   }
   visible2: boolean = false;

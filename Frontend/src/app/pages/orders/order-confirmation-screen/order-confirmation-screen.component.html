@@ -1,0 +1,134 @@
+<!-- Header Section -->
+<app-dashboard-head></app-dashboard-head>
+
+<!-- Body Section -->
+<section>
+  <!-- Image Section -->
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <img
+        src="../../../../assets/images/OrderConfirmation.png "
+        alt="PrintLab"
+        class="img-fluid w-50"
+      />
+    </div>
+  </div>
+
+  <!-- Client Section -->
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6">
+        <h3 class="bg-light border rounded-1 ps-2 py-1">CLIENT</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6 d-flex ms-2 my-1 align-items-baseline">
+        <h5 class="fw-bolder">CLIENT:</h5>
+        <label class="ps-2 fw-medium align-content-center">{{
+          order.customer?.name
+        }}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6 d-flex ms-2 my-1 align-items-baseline">
+        <h5 class="fw-bolder text-uppercase">Businesses:</h5>
+        <label class="ps-2 fw-medium align-content-center">{{
+          order.businesses | joinWithCommaSeparated : "businessName"
+        }}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6 d-flex ms-2 my-1 align-items-baseline">
+        <h5 class="fw-bolder text-uppercase">Branch:</h5>
+        <label class="ps-2 fw-medium align-content-center">{{
+          branchesList | joinWithCommaSeparated : "branchName"
+        }}</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Section -->
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6">
+        <h3 class="bg-light border rounded-1 ps-2 py-1">PRODUCT</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6 d-flex ms-2 my-1 align-items-baseline">
+        <h5 class="fw-bolder text-uppercase">Product:</h5>
+        <label class="ps-2 fw-medium align-content-center">{{
+          order.product
+        }}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6 d-flex ms-2 my-1 align-items-baseline">
+        <h5 class="fw-bolder text-uppercase">Size:</h5>
+        <label class="ps-2 fw-medium align-content-center">{{
+          order.size
+        }}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6 d-flex ms-2 my-1 align-items-baseline">
+        <h5 class="fw-bolder text-uppercase">Quantity:</h5>
+        <label class="ps-2 fw-medium align-content-center">{{ "Usama" }}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6 d-flex ms-2 my-1 align-items-baseline">
+        <h5 class="fw-bolder text-uppercase">Unit:</h5>
+        <label class="ps-2 fw-medium align-content-center">{{
+          order.rate
+        }}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6 d-flex ms-2 my-1 align-items-baseline">
+        <h5 class="fw-bolder text-uppercase">Amount:</h5>
+        <label class="ps-2 fw-medium align-content-center">{{
+          order.amount
+        }}</label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Section -->
+<section>
+  <div class="container mt-3 mb-5">
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-2" *ngIf="idFromParam">
+        <button
+          type="submit"
+          pButton
+          class="pointer-event border-0 px-3 bg-dark w-100 text-white pi pi-download"
+          (click)="download(idFromParam)"
+        >
+          Download
+        </button>
+      </div>
+      <div class="col-2">
+        <button
+          type="button"
+          pButton
+          class="pointer-event border-0 px-3 bg-dark w-100 text-white pi pi-list"
+        >
+          View order
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/Environments/environment';
-import { User } from '../Model/User';
 import { Order } from '../Model/Order';
 import { PaginationResponse } from '../Model/PaginationResponse';
 import { PaginatorState } from 'primeng/paginator';
@@ -94,4 +93,16 @@ export class OrdersService {
     return this.http.post(url, formData, { responseType: 'text' })
   }
 
+  // Download Order Confirmation Report
+
+  downloadOrderConfirmationReport(fileName: string, id: number | null | undefined): Observable<Blob> {
+    const headers = new HttpHeaders({
+      'Accept': 'application/pdf',
+    });
+    return this.http.get(`${this._url}/order/pdf/${fileName}/${id}`,
+    {
+      headers: headers,
+      responseType: 'blob',
+    });
+  }
 }

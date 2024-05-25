@@ -137,6 +137,7 @@ import { JsonParsePipe } from './CustomPipes/JsonParsePipe.pipe';
 import { SizeFormatPipe } from './CustomPipes/size-format.pipe';
 import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
+import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmation-screen/order-confirmation-screen.component';
 
 @NgModule({
   declarations: [
@@ -231,6 +232,7 @@ import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
     JsonParsePipe,
     SizeFormatPipe,
     ProductRuleOfGroupSheetComponent,
+    OrderConfirmationScreenComponent,
   ],
   imports: [
     BrowserModule,

@@ -71,6 +71,7 @@ import { JobRequestsComponent } from './pages/Jobs/job-requests/job-requests.com
 import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.component';
 import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-rule-job.component';
 import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
+import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmation-screen/order-confirmation-screen.component';
 
 export const routes: Routes = [
   {
@@ -434,6 +435,11 @@ export const routes: Routes = [
   {
     path: 'add-product-rule-group-sheet',
     component: ProductRuleOfGroupSheetComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'order-confirmation-screen',
+    component: OrderConfirmationScreenComponent,
     canActivate: [AuthguardService]
   },
 ];
