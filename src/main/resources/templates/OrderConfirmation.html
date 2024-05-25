@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:background-color="http://www.w3.org/1999/xhtml"
+      xmlns:margin="http://www.w3.org/1999/xhtml" xmlns:display="http://www.w3.org/1999/xhtml"
+      xmlns:justify-content="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <title>DPD Template</title>
+    <link th:href="@{classpath:/static/styles.css}" rel="stylesheet" media="all" type="text/css"></link>
+</head>
+<body STYLE=" margin-left: 20%; margin-right: 20%; ">
+<div class="container">
+    <img th:src="@{classpath:/static/images/OrderConfirmation.png}" alt="PrintLab" style="width: 50%; padding-top: 20px;">
+    <div class="text" STYLE="background-color: #D3D3D3; font-size: 40px; margin: 0;">
+        <h6>CLIENT</h6>
+    </div>
+
+    <h6 style="padding:0;margin:0;margin-bottom:5px" th:text="${customer}">CLIENT: </h6>
+    <h6 style="padding:0;margin:0;margin-bottom:5px"  th:text="${business}">BUSINESSES: </h6>
+    <h6 style="padding:0;margin:0;margin-bottom:5px"  th:text="${businessBranch}">BRANCH: </h6>
+
+    <div class="text" STYLE="background-color: #D3D3D3; font-size: 40px; margin: 0;">
+        <h6>PRODUCT</h6>
+    </div>
+    <h6 style="padding:0;margin:0;margin-bottom:5px" th:text="${product}">PRODUCT: </h6>
+    <h6 style="padding:0;margin:0;margin-bottom:5px"  th:text="${size}">SIZE: </h6>
+    <h6 style="padding:0;margin:0;margin-bottom:5px"  th:text="${quantity}">QUANTITY: </h6>
+    <h6 style="padding:0;margin:0;margin-bottom:5px"  th:text="${unit}">UNIT: </h6>
+    <h6 style="padding:0;margin:0;margin-bottom:5px"  th:text="${amount}">AMOUNT: </h6>
+
+</div>
+</body>
+</html>

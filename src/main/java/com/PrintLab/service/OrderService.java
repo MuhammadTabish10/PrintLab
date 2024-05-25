@@ -30,6 +30,8 @@ public interface OrderService {
     void reject(Long id, Boolean rejected);
 
     PaginationResponse getAllPaginatedOrders(Integer pageNumber, Integer pageSize, OrderDto orderDto);
+
+    byte[] downloadOrderConfirmationPdf(String fileName, Long id);
 }
 
 

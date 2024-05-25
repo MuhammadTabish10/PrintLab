@@ -4,6 +4,9 @@ import com.PrintLab.dto.OrderDto;
 import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.model.Order;
 import com.PrintLab.service.OrderService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -127,6 +130,22 @@ public class OrderController {
     ) {
         PaginationResponse paginationResponse = orderService.getAllPaginatedOrders(pageNumber, pageSize,orderDto);
         return ResponseEntity.ok(paginationResponse);
+    }
+
+
+    @GetMapping("/invoice/pdf/{fileName}/{orderId}")
+    public ResponseEntity<byte[]> getInvoicePdf(
+            @PathVariable("fileName") String fileName,
+            @PathVariable("orderId") Long orderId
+    ) {
+        try {
+            byte[] pdf = orderService.downloadOrderConfirmationPdf(fileName, orderId);
+
+             return new ResponseEntity<>(pdf, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new byte[0]);
+        }
     }
 
 }
