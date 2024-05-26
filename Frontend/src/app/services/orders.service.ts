@@ -45,14 +45,12 @@ export class OrdersService {
 
   saveAssignedUser(userId: number, role: string, orderId: number, logedInUser: number) {
     const url = `${this._url}/order/assignUser`;
-
     const params = {
       orderId: orderId,
       userId: userId,
       role: role,
       loggedInUser: logedInUser
     };
-
     return this.http.post(url, null, { params });
   }
 
@@ -63,9 +61,8 @@ export class OrdersService {
     return this.http.get(url);
   }
 
-  getOrderByIdAndType(id: number, type: string): Observable<Order> {
-    const params = new HttpParams().set('type', type);
-    return this.http.get<Order>(`${this._url}/order/${id}`, { params });
+  getOrderById(id: number): Observable<Order> {
+    return this.http.get<Order>(`${this._url}/order/${id}`);
   }
 
   deleteOrder(id: any) {
@@ -100,9 +97,9 @@ export class OrdersService {
       'Accept': 'application/pdf',
     });
     return this.http.get(`${this._url}/order/pdf/${fileName}/${id}`,
-    {
-      headers: headers,
-      responseType: 'blob',
-    });
+      {
+        headers: headers,
+        responseType: 'blob',
+      });
   }
 }

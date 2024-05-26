@@ -35,7 +35,7 @@ export class OrderConfirmationScreenComponent implements OnInit {
   }
 
   private getOrderById(id: number) {
-    this.orderService.getOrderByIdAndType(id, 'manual').subscribe(
+    this.orderService.getOrderById(id).subscribe(
       (response: Order) => {
         this.order = response;
         this.branchesList = this.extractBranches(this.order);

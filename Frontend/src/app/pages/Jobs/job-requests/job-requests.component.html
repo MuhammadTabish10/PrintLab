@@ -7,7 +7,7 @@
     <div class="order-body">
       <div *ngIf="jobProcessedActive">
         <div class="container-fluid card p-3" *ngIf="productRule?.processList">
-          <p-accordion [multiple]="true" [activeIndex]="openTabIndex">
+          <p-accordion [multiple]="true" [activeIndex]="[0]">
             <p-accordionTab
               *ngFor="let category of productRule?.processList; let i = index"
               [selected]="i === openTabIndex"
@@ -20,71 +20,91 @@
                 </span>
               </ng-template>
               <div class="card px-1" *ngIf="productRule">
-                <div class="row my-3">
-                  <div class="col-6">
-                    <label class="d-block add-order-label m-0 fw-bolder">Amount</label>
-                    <p-inputNumber
-                      [min]="0"
-                      [format]="true"
-                      mode="currency"
-                      currency="PKR"
-                      [disabled]="disabledTabs[i]"
-                      [style]="{ width: '10%' }"
-                      [name]="'amount[' + i + ']'"
-                      [required]="true"
-                      [(ngModel)]="productRule.processedDetailList[i].amount"
-                    ></p-inputNumber>
-                  </div>
-                </div>
-
-                <div class="row my-3">
-                  <div class="col-lg-2 col-md-4 col-12">
-                    <label class="d-block add-order-label m-0 fw-bolder">Vendor</label>
-                    <p-dropdown
-                      [options]="category.vendors"
-                      styleClass="w-100"
-                      optionLabel="name"
-                      optionValue="name"
-                      [disabled]="disabledTabs[i]"
-                      [(ngModel)]="productRule.processedDetailList[i].vendor"
-                      [filter]="true"
-                      filterBy="name"
-                      [name]="'vendor[' + i + ']'"
-                    ></p-dropdown>
-                  </div>
-                </div>
-                <div class="row my-3">
-                  <div class="col-lg-2 col-md-4 col-12">
-                    <label class="d-block add-order-label m-0 fw-bolder">Payment</label>
-                    <p-dropdown
-                      [options]="paymentMethods"
-                      styleClass="w-100"
-                      [disabled]="disabledTabs[i]"
-                      optionValue="name"
-                      [(ngModel)]="productRule.processedDetailList[i].payment"
-                      optionLabel="name"
-                      [filter]="true"
-                      filterBy="name"
-                      [name]="'payment[' + i + ']'"
-                    ></p-dropdown>
-                  </div>
-                </div>
-                <div class="row my-3">
-                  <div class="col-lg-2 col-md-4 col-12">
-                    <label class="d-block add-order-label m-0 fw-bolder">Update</label>
-                    <div class="form-check form-switch form-switch-lg pointer">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        [id]="'flexSwitchCheckChecked[' + i + ']'"
+                <form #detailProcessForm="ngForm" novalidate>
+                  <div class="row my-3">
+                    <div class="col-9">
+                      <label class="d-block add-order-label m-0 fw-bolder"
+                        >Amount</label
+                      >
+                      <p-inputNumber
+                        [min]="1"
+                        [format]="true"
+                        mode="currency"
+                        styleClass="custom"
+                        currency="PKR"
+                        [minFractionDigits]="0"
+                        [maxFractionDigits]="0"
                         [disabled]="disabledTabs[i]"
-                        [name]="'impositionValueChecked[' + i + ']'"
-                        (change)="submit(category, i, $event.target!)"
-                        [(ngModel)]="productRule.processedDetailList[i].jobProcessed"
-                      />
+                        [name]="'amount[' + i + ']'"
+                        [required]="true"
+                        [(ngModel)]="productRule.processedDetailList[i].amount"
+                      ></p-inputNumber>
                     </div>
                   </div>
-                </div>
+
+                  <div class="row my-3">
+                    <div class="col-lg-2 col-md-4 col-12">
+                      <label class="d-block add-order-label m-0 fw-bolder"
+                        >Vendor</label
+                      >
+                      <p-dropdown
+                        [options]="category.vendors"
+                        styleClass="w-100"
+                        optionLabel="name"
+                        [required]="true"
+                        optionValue="name"
+                        [disabled]="disabledTabs[i]"
+                        [(ngModel)]="productRule.processedDetailList[i].vendor"
+                        [filter]="true"
+                        filterBy="name"
+                        [name]="'vendor[' + i + ']'"
+                      ></p-dropdown>
+                    </div>
+                  </div>
+                  <div class="row my-3">
+                    <div class="col-lg-2 col-md-4 col-12">
+                      <label class="d-block add-order-label m-0 fw-bolder"
+                        >Payment</label
+                      >
+                      <p-dropdown
+                        [options]="paymentMethods"
+                        styleClass="w-100"
+                        [disabled]="disabledTabs[i]"
+                        optionValue="name"
+                        [(ngModel)]="productRule.processedDetailList[i].payment"
+                        optionLabel="name"
+                        [filter]="true"
+                        [required]="true"
+                        filterBy="name"
+                        [name]="'payment[' + i + ']'"
+                      ></p-dropdown>
+                    </div>
+                  </div>
+                  <div class="row my-3">
+                    <div class="col-lg-2 col-md-4 col-12">
+                      <label class="d-block add-order-label m-0 fw-bolder"
+                        >Update</label
+                      >
+                      <div
+                        class="form-check form-switch form-switch-lg pointer"
+                      >
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [id]="'flexSwitchCheckChecked[' + i + ']'"
+                          [disabled]="
+                            disabledTabs[i] || !detailProcessForm.valid
+                          "
+                          [name]="'impositionValueChecked[' + i + ']'"
+                          (change)="submit(category, i, $event.target!)"
+                          [(ngModel)]="
+                            productRule.processedDetailList[i].jobProcessed
+                          "
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </form>
               </div>
             </p-accordionTab>
           </p-accordion>

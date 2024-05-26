@@ -4,45 +4,50 @@
     <p-accordionTab header="Details">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-3">
+          <div class="col-2">
             <h3>Category</h3>
             <h6 *ngIf="orderType === 'auto'">Offset printing</h6>
             <h6 *ngIf="orderType === 'manual'">{{ category }}</h6>
           </div>
-          <div class="col-4">
+          <div class="col-2">
             <h3>Product</h3>
-            <h6>{{ orderById.product || orderById.productName }}</h6>
+            <h6>{{ orderById.product }}</h6>
           </div>
           <div class="col-2">
             <h3>Size</h3>
             <h6>
-              {{ orderById.size + " in" | sizeFormat }}
+              {{
+                orderById.size?.includes("inch") ||
+                orderById.size?.includes("mm")
+                  ? orderById.size
+                  : (orderById.size + " inch" | sizeFormat)
+              }}
             </h6>
           </div>
-          <div class="col-1 text-end">
+          <div class="col-2 text-end">
             <h3>Quantity</h3>
-            <h6>{{ orderById.quantity || orderById.qty }}</h6>
+            <h6 class="pe-3">{{ orderById.quantity }}</h6>
           </div>
-          <div class="col-1 text-end">
+          <div class="col-2 text-end">
             <h3>Unit</h3>
             <h6
               *ngIf="
-                orderById.price / orderById.quantity && orderType === 'auto'
+                orderById?.amount! / orderById?.quantity! &&
+                orderType === 'auto'
               "
             >
-              {{ "PKR " + (orderById.price / orderById.quantity).toFixed(2) }}
+              {{
+                "PKR " + (orderById.amount! / orderById.quantity!).toFixed(2)
+              }}
             </h6>
             <h6 *ngIf="orderType === 'manual'">
               {{ "PKR " + orderById.rate }}
             </h6>
           </div>
-          <div class="col-1 text-end">
+          <div class="col-2 text-end">
             <h3>Amount</h3>
-            <h6 *ngIf="orderById.price">
-              {{ "PKR " + orderById.price?.toFixed(2) }}
-            </h6>
             <h6 *ngIf="orderById.amount">
-              {{ "PKR " + orderById.amount }}
+              {{ "PKR " + orderById.amount.toFixed(2) }}
             </h6>
           </div>
         </div>

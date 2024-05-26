@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { ProductDefinitionService } from 'src/app/services/product-definition.service';
 import { ProductField } from 'src/app/Model/ProductField';
-import { ProductCategory, parent } from 'src/app/Model/ProductCategory';
+import { ProductCategory, Parent } from 'src/app/Model/ProductCategory';
 
 @Component({
   selector: 'app-product-services',
@@ -17,7 +17,7 @@ import { ProductCategory, parent } from 'src/app/Model/ProductCategory';
 export class ProductServicesComponent {
   productList: ProductService[] = [];
   categories: ProductCategory[] = [];
-  subCategories: parent[] = [];
+  subCategories: Parent[] = [];
   productService: ProductService = {
     id: undefined,
     name: undefined,
@@ -42,7 +42,7 @@ export class ProductServicesComponent {
   rowId: number | undefined | null;
   mode: string = 'Save';
   productTypes: ProductField | undefined | null;
-  subCategory: parent[] | null | undefined;
+  subCategory: Parent[] | null | undefined;
 
   constructor(
     private service: ServiceService,

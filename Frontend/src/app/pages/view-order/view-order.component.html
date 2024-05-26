@@ -1,137 +1,158 @@
-<div class="body-position">
+<!-- Header Section -->
+<section>
   <app-dashboard-head></app-dashboard-head>
+  <p-toast></p-toast>
+</section>
 
-  <div class="main-container">
-    <div>
-      <h4>Order</h4>
-    </div>
+<!-- Body Section -->
+<section>
+  <!-- Order View Section -->
+  <section>
+    <div class="container-fluid mt-3">
+      <div class="row">
+        <h3 class="text-uppercase">
+          <u
+            ><i>{{ orderType }} Order view</i></u
+          >
+        </h3>
+      </div>
 
-    <div>
-      <div class="order-body p-3 my-3">
+      <div class="row mt-4">
+        <h4 class="text-uppercase">Order</h4>
+      </div>
+
+      <div class="card">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-6 my-2">
+            <div class="col-4 my-2">
               <h4>Product</h4>
-              <div>{{ order?.product || order?.productName }}</div>
+              <div>{{ order.product }}</div>
             </div>
-            <div class="col-6 my-2">
+            <div class="col-4 my-2">
               <h4>Customer name</h4>
-              <div>{{ order?.customer?.name || order?.client?.name }}</div>
+              <div>{{ order.customer?.name }}</div>
             </div>
-            <div class="col-6 my-2">
+            <div class="col-4 my-2">
               <h4>Customer Business</h4>
               <div>
                 {{
-                  order?.customer?.businessName || order?.businessName
+                  order.customer?.customerBusinessName
                     | joinWithCommaSeparated : "businessName"
                 }}
               </div>
             </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
               <h4>Paper</h4>
-              <div>{{ order?.paper }}</div>
+              <div>{{ order.paper }}</div>
             </div>
-            <div class="col-6 my-2">
-              <h4 *ngIf="orderType === 'auto'">Category</h4>
-              <h4 *ngIf="orderType === 'manual'">Size category</h4>
+            <div class="col-4 my-2" *ngIf="order.sizeCategory">
+              <h4>Size category</h4>
               <div>
-                {{ order?.category || order?.sizeCategory }}
+                {{ order.sizeCategory }}
               </div>
             </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
               <h4>GSM</h4>
-              <div>{{ order?.gsm }}</div>
+              <div>{{ order.gsm }}</div>
             </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
               <h4>Design</h4>
-              <div>{{ order?.providedDesign }}</div>
+              <div>{{ order.providedDesign }}</div>
             </div>
-            <div class="col-6 my-2">
+            <div class="col-4 my-2" *ngIf="order.size">
               <h4>Size</h4>
-              <div *ngIf="order">
-                {{ order?.size?.label || order?.size + " in" | sizeFormat }}
-              </div>
-            </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
-              <h4>Print Side</h4>
-              <div>{{ order?.sideOptionValue }}</div>
-            </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
-              <h4>Front Colors</h4>
-              <div>{{ order?.jobColorsFront }}</div>
-            </div>
-            <div
-              class="col-6 my-2"
-              *ngIf="
-                order?.sideOptionValue !== 'SINGLE_SIDED' &&
-                orderType === 'auto'
-              "
-            >
-              <h4>Back Colors</h4>
-              <div>{{ order?.jobColorsBack }}</div>
-            </div>
-            <div class="col-6 my-2">
-              <h4>Quantity</h4>
-              <div>{{ order?.quantity || order?.qty }}</div>
-            </div>
-            <div class="col-6 my-2">
-              <h4>Price</h4>
-              <div>{{ order?.price || order?.amount }}</div>
-            </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
-              <h4>Plate Dimension</h4>
-              <div>{{ productRule?.ctp?.plateDimension }}</div>
-            </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'manual'">
-              <h4>Category</h4>
-              <div>{{ productRule?.category }}</div>
-            </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'manual'">
-              <h4>Available process</h4>
               <div>
                 {{
-                  productRule?.processList | joinWithCommaSeparated : "process"
+                  order.size.includes("inch") || order.size.includes("mm")
+                    ? order.size
+                    : (order.size + " inch" | sizeFormat)
                 }}
               </div>
             </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
-              <h4>CTP Vendor</h4>
-              <div>{{ productRule?.ctp?.vendor?.name }}</div>
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
+              <h4>Print Side</h4>
+              <div>{{ order.sideOptionValue }}</div>
             </div>
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
-              <h4>Ctp Vendor Processes Materials</h4>
-              <div>
-                {{ getFormattedMaterials() }}
-              </div>
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
+              <h4>Front Colors</h4>
+              <div>{{ order.jobColorsFront }}</div>
+            </div>
+            <div
+              class="col-4 my-2"
+              *ngIf="
+                order.sideOptionValue !== 'SINGLE_SIDED' && orderType === 'auto'
+              "
+            >
+              <h4>Back Colors</h4>
+              <div>{{ order.jobColorsBack }}</div>
+            </div>
+            <div class="col-4 my-2">
+              <h4>Quantity</h4>
+              <div>{{ order.quantity }}</div>
+            </div>
+            <div class="col-4 my-2">
+              <h4>Total Amount</h4>
+              <div>{{ order.amount }}</div>
             </div>
 
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
-              <h4>Press Machine</h4>
-              <div>{{ productRule?.pressMachine?.vendor?.name }}</div>
-            </div>
-            <!-- <div class="col-6 my-2">
-              <h4>Brand</h4>
-              <div>{{ "" }}</div>
-            </div>
-            <div class="col-6 my-2">
-              <h4>Made In</h4>
-              <div>{{ "" }}</div>
-            </div> -->
-            <div class="col-6 my-2" *ngIf="orderType === 'auto'">
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
               <h4>Image URL</h4>
               <div>
-                <img src="{{ order?.url }}" alt="PrintLab" width="600" />
+                <img src="{{ order.url }}" alt="PrintLab" width="600" />
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+  </section>
 
-<!-- <p-dialog header="Error" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
-  [draggable]="false" [resizable]="false">
-  <h5 class="error-modal-head">{{error}}</h5>
-</p-dialog> -->
-<p-toast></p-toast>
+  <!-- Product Rule In Order Section -->
+  <section>
+    <div class="container-fluid my-5">
+      <div class="row">
+        <h4 class="text-uppercase">Product Rule In Order</h4>
+      </div>
+
+      <div class="card">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
+              <h4>Plate Dimension</h4>
+              <div>{{ productRule.ctp?.plateDimension }}</div>
+            </div>
+            <div class="col-4 my-2">
+              <h4>Category</h4>
+              <div>{{ productRule.businessCategory }}</div>
+            </div>
+            <div class="col-4 my-2" *ngIf="orderType === 'manual'">
+              <h4>Available process</h4>
+              <div>
+                {{
+                  productRule.processList | joinWithCommaSeparated : "process"
+                }}
+              </div>
+            </div>
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
+              <h4>CTP Vendor</h4>
+              <div>{{ productRule.ctp?.vendor?.name }}</div>
+            </div>
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
+              <h4>Press Machine</h4>
+              <div>{{ productRule.pressMachine?.vendor?.name }}</div>
+            </div>
+            <div class="col-4 my-2" *ngIf="orderType === 'auto'">
+              <h4>Ctp Vendor Processes Materials</h4>
+              <div>
+                {{
+                  productRule.ctp?.vendor?.vendorProcessList
+                    | joinWithCommaSeparated : "materialType"
+                }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>

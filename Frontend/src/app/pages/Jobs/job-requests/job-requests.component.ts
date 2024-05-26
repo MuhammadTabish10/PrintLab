@@ -61,7 +61,7 @@ export class JobRequestsComponent implements OnInit {
    */
   private async getProcessList(id: number) {
     try {
-      const productionJob = await this.getOrderByIdAndType(id, "manual");
+      const productionJob = await this.getOrderByIdAndType(id);
       this.orderById = productionJob;
 
       if (productionJob) {
@@ -82,8 +82,8 @@ export class JobRequestsComponent implements OnInit {
    * @param type The type of the order.
    * @returns The fetched order.
    */
-  private async getOrderByIdAndType(id: number, type: string): Promise<Order | undefined> {
-    return this.orderService.getOrderByIdAndType(id, type).toPromise();
+  private async getOrderByIdAndType(id: number): Promise<Order | undefined> {
+    return this.orderService.getOrderById(id).toPromise();
   }
 
   /**

@@ -67,28 +67,6 @@ public class InvoiceController {
         return ResponseEntity.ok(updatedInvoice);
     }
 
-//    @PostMapping("/generate-pdf-and-send")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public ResponseEntity<byte[]> generatePdfAndSendToEmail(@RequestBody PrintData printData) {
-//        try {
-//            byte[] pdfBytes = pdfGenerationService.generatePdf(printData.getHtmlContent());
-//
-//            boolean emailSent = emailUtils.sendEmailWithAttachment(
-//                    printData.getEmail(), "Print PDF", "Please find attached the print PDF.", pdfBytes, "print.pdf");
-//
-//            if (emailSent) {
-//            return ResponseEntity.ok()
-//                    .contentType(MediaType.APPLICATION_PDF)
-//                    .header("Content-Disposition", "inline; filename=print.pdf")
-//                    .body(pdfBytes);
-//            } else {
-//                return ResponseEntity.status(500).body(new byte[0]);
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body(new byte[0]);
-//        }
-//    }
-
     @GetMapping("/invoice/pdf/{fileName}/{invoiceId}")
     public ResponseEntity<byte[]> getInvoicePdf(
             @PathVariable("fileName") String fileName,

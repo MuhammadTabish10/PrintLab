@@ -13,13 +13,13 @@ public interface OrderService {
 
     List<OrderDto> searchByProduct(String product);
 
-    OrderDto findByIdAndType(Long id,String type);
+    OrderDto findById(Long id);
 
     String deleteById(Long id);
 
     OrderDto updateOrder(Long id, OrderDto orderDto);
 
-    OrderDto assignOrderToUser(Long orderId, Long userId, String role, Long logedInUser);
+    OrderDto assignOrderToUser(Long orderId, Long userId, String role, Long loggedInUser);
 
     List<Order> getAssignedOrdersForLoggedInUser();
 

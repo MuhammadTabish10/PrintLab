@@ -19,3 +19,6 @@
 .form-switch-lg input[type="checkbox"]:hover {
   cursor: pointer !important;
 }
+::ng-deep.custom>.p-inputnumber-input {
+  width: 14.8rem;
+}

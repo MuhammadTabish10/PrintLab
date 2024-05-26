@@ -141,7 +141,6 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> searchByProduct(String product) {
         List<Order> orderList = orderRepository.findOrderByProduct(product);
         List<OrderDto> orderDtoList = new ArrayList<>();
-
         for (Order order : orderList) {
             OrderDto orderDto = toDto(order);
             orderDtoList.add(orderDto);
@@ -150,12 +149,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto findByIdAndType(Long id, String type) {
-        Optional<Order> optionalOrder = orderRepository.findByIdAndType(id, type);
+    public OrderDto findById(Long id) {
+        Optional<Order> optionalOrder = orderRepository.findById(id);
 
         if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-            return toDto(order);
+            return toDto(optionalOrder.get());
         } else {
             throw new RecordNotFoundException(String.format("Order not found for id => %d", id));
         }

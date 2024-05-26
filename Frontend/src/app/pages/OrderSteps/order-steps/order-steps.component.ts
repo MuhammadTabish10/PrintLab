@@ -67,7 +67,7 @@ export class OrderStepsComponent implements OnInit, OnDestroy {
   }
 
   private getOrderById(id: number): void {
-    this.orderService.getOrderByIdAndType(id, this.orderType!)
+    this.orderService.getOrderById(id)
       .subscribe(
         (data: Order) => {
           this.orderById = data;

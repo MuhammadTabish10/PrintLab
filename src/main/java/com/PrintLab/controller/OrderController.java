@@ -38,11 +38,8 @@ public class OrderController {
             "'ROLE_DESIGNER', 'ROLE_PLATE_SETTER'," +
             "'ROLE_CUSTOMER_SUPPORT'" +
             ")")
-    public ResponseEntity<OrderDto> getOrderById(
-            @PathVariable Long id,
-            @RequestParam String type
-    ) {
-        OrderDto orderDto = orderService.findByIdAndType(id, type);
+    public ResponseEntity<OrderDto> getOrderById(@PathVariable Long id) {
+        OrderDto orderDto = orderService.findById(id);
         return ResponseEntity.ok(orderDto);
     }
 
@@ -145,5 +142,4 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new byte[0]);
         }
     }
-
 }

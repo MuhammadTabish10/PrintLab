@@ -35,7 +35,7 @@
         class="nav-link active rounded-0 text-center"
         data-bs-toggle="tab"
         href="#overview"
-        (click)="active = 'overview'"
+        (click)="active = 'overview'; jobProcessedActive = false"
         >OVERVIEW</a
       >
     </li>
@@ -47,7 +47,11 @@
         class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#design"
-        (click)="active = 'design'"
+        (click)="
+          active = 'design';
+          jobProcessedActive = false;
+          nestedActive = 'overviewDesign'
+        "
         >DESIGN</a
       >
     </li>
@@ -61,7 +65,8 @@
         class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#pre-production"
-        (click)="active = 'pre-production'"
+        (click)="active = 'pre-production'; jobProcessedActive = false;
+        nestedActive = 'overviewPreProduction'"
         >PRE PRODUCTION</a
       >
     </li>
@@ -73,7 +78,8 @@
         class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#production"
-        (click)="active = 'production'"
+        (click)="active = 'production'; jobProcessedActive = false;
+        nestedActive = 'production'"
         >PRODUCTION</a
       >
     </li>
@@ -85,7 +91,8 @@
         class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#packing-qa"
-        (click)="active = 'packing-qa'"
+        (click)="active = 'packing-qa'; jobProcessedActive = false;
+        nestedActive = 'overviewPackingQa'"
         >PACKING & QA</a
       >
     </li>
@@ -97,7 +104,8 @@
         class="nav-link rounded-0 text-center"
         data-bs-toggle="tab"
         href="#delivery"
-        (click)="active = 'delivery'"
+        (click)="active = 'delivery'; jobProcessedActive = false;
+        nestedActive = 'delivery'"
         >DELIVERY</a
       >
     </li>
@@ -122,7 +130,7 @@
             class="nav-link active rounded-0 text-center"
             data-bs-toggle="tab"
             href="#overviewProduction"
-            (click)="getTimeLine()"
+            (click)="getTimeLine(); jobProcessedActive = false"
             >OVERVIEW</a
           >
         </li>
@@ -136,14 +144,16 @@
             class="nav-link rounded-0 text-center"
             data-bs-toggle="tab"
             href="#jobProocessDetails"
-            (click)="jobProcessedActive = true; nestedActive = 'jobProocessDetails'"
+            (click)="
+              jobProcessedActive = true; nestedActive = 'jobProocessDetails'
+            "
             >PROCESS</a
           >
         </li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane fade show active" id="overviewProduction">
-          <div *ngIf="overviewActive" >
+          <div *ngIf="overviewActive">
             <div class="card p-5">
               <p-timeline [value]="events">
                 <ng-template pTemplate="content" let-event>
@@ -155,21 +165,21 @@
               </p-timeline>
             </div>
           </div>
-          </div>
         </div>
       </div>
-      <div class="tab-content">
-        <div
-          class="tab-pane fade show active"
-          id="jobProocessDetails"
-          *ngIf="jobProcessedActive"
-        >
-          <app-job-requests
-            [jobProcessedActive]="jobProcessedActive"
-          ></app-job-requests>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="packing-qa"></div>
-      <div class="tab-pane fade" id="delivery"></div>
     </div>
+    <div class="tab-content">
+      <div
+        class="tab-pane fade show active"
+        id="jobProocessDetails"
+        *ngIf="jobProcessedActive"
+      >
+        <app-job-requests
+          [jobProcessedActive]="jobProcessedActive"
+        ></app-job-requests>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="packing-qa"></div>
+    <div class="tab-pane fade" id="delivery"></div>
   </div>
+</div>

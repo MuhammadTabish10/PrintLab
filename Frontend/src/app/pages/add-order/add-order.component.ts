@@ -6,7 +6,6 @@ import { environment } from 'src/Environments/environment';
 import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
 import { Business, BusinessBranch } from 'src/app/Model/Business';
 import { Customer } from 'src/app/Model/Customer';
-import { ProductionJob } from 'src/app/Model/ProductionJob';
 import { AuthguardService } from 'src/app/services/authguard.service';
 import { CustomerService } from 'src/app/services/customer.service';
 import { OrdersService } from 'src/app/services/orders.service';
@@ -165,9 +164,8 @@ export class AddOrderComponent implements OnInit {
       } else {
         this.buttonName = 'Update'
         if (this.orderType === 'auto') {
-          this.orderService.getOrderByIdAndType(this.idFromQueryParam, this.orderType).subscribe(res => {
+          this.orderService.getOrderById(this.idFromQueryParam).subscribe(res => {
             this.orderToUpdate = res
-
             this.selectedCustomer = this.orderToUpdate.customer.id;
             this.getBusinessList(this.selectedCustomer!);
             this.selectedBusinesses = this.orderToUpdate.businesses;
@@ -188,13 +186,13 @@ export class AddOrderComponent implements OnInit {
           })
         } else {
           this.getProductList();
-          this.getOrderByIdAndType(this.idFromQueryParam, this.orderType!);
+          this.getOrderByIdAndType(this.idFromQueryParam);
         }
       }
     })
   }
-  getOrderByIdAndType(id: number, type: string) {
-    this.orderService.getOrderByIdAndType(id, type).subscribe(res => {
+  getOrderByIdAndType(id: number) {
+    this.orderService.getOrderById(id).subscribe(res => {
       this.job = res;
       if (this.job.quantity && this.job.orderItems) {
         const lastIndex = this.job.orderItems.length - 1;
@@ -705,7 +703,7 @@ export class AddOrderComponent implements OnInit {
     this.job.businesses = this.selectedBusinesses;
   }
 
-  handleSuccessForJob(res: ProductionJob): void {
+  handleSuccessForJob(res: Order): void {
     const successMsg = this.idFromQueryParam ? 'Order updated successfully' : 'Order created successfully';
     this.successService.showSuccess(successMsg);
     setTimeout(() => {
