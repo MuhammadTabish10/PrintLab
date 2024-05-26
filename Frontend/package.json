@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "delete-specs": "powershell -Command \"Get-ChildItem -Path src -Recurse -Filter *.spec.ts | Remove-Item\""
   },
   "private": true,
   "dependencies": {
