@@ -193,7 +193,7 @@ export const routes: Routes = [
     canActivate: [AuthguardService]
   },
   {
-    path: 'uping',
+    path: 'paper-sizes',
     component: UpingComponent,
     canActivate: [AuthguardService]
   },

@@ -93,10 +93,6 @@ export class AuthguardService implements CanActivate {
         '/add-product-rule-job', '/add-product-rule-group-sheet'],
       permissions: 'ProductRule'
     }
-    // const productObj = {
-    //   url: ['/products', '/addProduct'],
-    //   permissions: 'Products'
-    // }
     const addproductObj = {
       url: ['/addProduct'],
       permissions: 'Products'
@@ -113,10 +109,6 @@ export class AuthguardService implements CanActivate {
       url: ['/paperStock', '/addPaperStock'],
       permissions: 'PaperStock'
     }
-    // const addPaperStock = {
-    //   url: [],
-    //   permissions: 'AddPaperStock'
-    // }
     const permissionConfiguration_Product_Field = {
       url: ['/productField', '/addProductField'],
       permissions: 'Configuration_Product_Field'
@@ -150,7 +142,7 @@ export class AuthguardService implements CanActivate {
       permissions: 'Configuration_Paper_Market_Rate'
     }
     const permissionConfiguration_Uping = {
-      url: ['/uping', '/addUping', '/uping-view'],
+      url: ['/paper-sizes', '/addUping', '/uping-view'],
       permissions: 'Configuration_Uping'
     }
     const permissionConfiguration_Product_Process = {

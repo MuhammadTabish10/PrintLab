@@ -16,8 +16,6 @@ import com.PrintLab.utils.EmailUtils;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfReader;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ExtendedModelMap;
@@ -72,22 +70,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDto save(OrderDto orderDto, Long loggedInUserId) {
-        User loggedInUser = userRepository.findById(loggedInUserId)
-                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
         if (orderDto.getType().equalsIgnoreCase("auto")) {
             setDefaultValuesOfTypeAuto(orderDto);
         }
+        setCommonValues(orderDto, loggedInUserId);
+        Order order = orderRepository.save(toEntity(orderDto));
+        associateOrderItemsWithOrder(orderDto.getOrderItems(), order);
+        return toDto(order);
+    }
+
+    private void setCommonValues(OrderDto orderDto, Long loggedInUserId) {
+        User loggedInUser = userRepository.findById(loggedInUserId)
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
         orderDto.setStatus("New / Unassigned");
         orderDto.setCreatedBy(loggedInUser);
         ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
         LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
         orderDto.setTimeStamp(timeStampUtc);
-        orderDto.setCtpProcess(false);
-        orderDto.setPressMachineProcess(false);
-        orderDto.setPaperMarketProcess(false);
-        Order order = orderRepository.save(toEntity(orderDto));
-        associateOrderItemsWithOrder(orderDto.getOrderItems(), order);
-        return toDto(order);
     }
 
     private void setDefaultValuesOfTypeAuto(OrderDto orderDto) {
@@ -113,6 +112,9 @@ public class OrderServiceImpl implements OrderService {
         if (orderDto.getQuantity() == null) {
             orderDto.setQuantity(1000.0);
         }
+        orderDto.setCtpProcess(false);
+        orderDto.setPressMachineProcess(false);
+        orderDto.setPaperMarketProcess(false);
     }
 
     private void associateOrderItemsWithOrder(List<OrderItemsDto> orderItemsDtoList, Order order) {
@@ -128,30 +130,22 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDto> getAll() {
         List<Order> orderList = orderRepository.findAllByOrderByIdDesc();
-        List<OrderDto> orderDtoList = new ArrayList<>();
-
-        for (Order order : orderList) {
-            OrderDto orderDto = toDto(order);
-            orderDtoList.add(orderDto);
-        }
-        return orderDtoList;
+        return orderList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<OrderDto> searchByProduct(String product) {
         List<Order> orderList = orderRepository.findOrderByProduct(product);
-        List<OrderDto> orderDtoList = new ArrayList<>();
-        for (Order order : orderList) {
-            OrderDto orderDto = toDto(order);
-            orderDtoList.add(orderDto);
-        }
-        return orderDtoList;
+        return orderList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public OrderDto findById(Long id) {
         Optional<Order> optionalOrder = orderRepository.findById(id);
-
         if (optionalOrder.isPresent()) {
             return toDto(optionalOrder.get());
         } else {
@@ -163,7 +157,6 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public String deleteById(Long id) {
         Optional<Order> optionalOrder = orderRepository.findById(id);
-
         if (optionalOrder.isPresent()) {
             orderRepository.deleteById(id);
         } else {
@@ -179,24 +172,10 @@ public class OrderServiceImpl implements OrderService {
         if (optionalOrder.isPresent()) {
             Order existingOrder = optionalOrder.get();
             if (existingOrder.getType().equalsIgnoreCase("auto")) {
-                existingOrder.setProduct(orderDto.getProduct());
-                existingOrder.setPaper(orderDto.getPaper());
-                existingOrder.setSize(orderDto.getSize());
-                existingOrder.setSizeCategory(orderDto.getSizeCategory());
-                existingOrder.setBusinessCategory(orderDto.getBusinessCategory());
-                existingOrder.setGsm(orderDto.getGsm());
-                existingOrder.setQuantity(orderDto.getQuantity());
-                existingOrder.setAmount(orderDto.getAmount());
-                existingOrder.setJobColorsFront(orderDto.getJobColorsFront());
-                existingOrder.setSideOptionValue(orderDto.getSideOptionValue());
-                existingOrder.setImpositionValue(orderDto.getImpositionValue());
-                existingOrder.setJobColorsBack(orderDto.getJobColorsBack());
-                existingOrder.setProvidedDesign(orderDto.getProvidedDesign());
-                existingOrder.setUrl(orderDto.getUrl());
-                existingOrder.setCustomer(customerRepository.findById(orderDto.getCustomer().getId())
-                        .orElseThrow(() -> new RecordNotFoundException("Customer not found at id => " + orderDto.getCustomer().getId())));
+                updateOrderTypeAuto(existingOrder, orderDto);
             } else {
-                updateProductionJobFields(existingOrder, orderDto);
+                updateOrderTypeManual(existingOrder, orderDto);
+                updateOrderItems(existingOrder, toEntity(orderDto));
             }
             updateBusinesses(existingOrder, orderDto);
             Order updatedOrder = orderRepository.save(existingOrder);
@@ -206,91 +185,26 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    @Override
-    @Transactional
-    public OrderDto assignOrderToUser(Long orderId, Long userId, String role, Long loggedInUserId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + userId));
-        User loggedInUser = userRepository.findById(loggedInUserId)
-                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
-
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
-
-        if (role.equalsIgnoreCase("ROLE_PRODUCTION")) {
-            order.setProduction(user);
-            emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
-        } else if (role.equalsIgnoreCase("ROLE_DESIGNER")) {
-            order.setDesigner(user);
-            emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
-        } else if (role.equalsIgnoreCase("ROLE_PLATE_SETTER")) {
-            order.setPlateSetter(user);
-            emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
-        }
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
-        LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
-        order.setTimeStamp(timeStampUtc);
-        order.setStatus("Connected");
-        order.setAssignedBy(loggedInUser);
-        orderRepository.save(order);
-        return toDto(order);
+    private void updateOrderTypeAuto(Order existingOrder, OrderDto orderDto) {
+        existingOrder.setProduct(orderDto.getProduct());
+        existingOrder.setPaper(orderDto.getPaper());
+        existingOrder.setSize(orderDto.getSize());
+        existingOrder.setSizeCategory(orderDto.getSizeCategory());
+        existingOrder.setBusinessCategory(orderDto.getBusinessCategory());
+        existingOrder.setGsm(orderDto.getGsm());
+        existingOrder.setQuantity(orderDto.getQuantity());
+        existingOrder.setAmount(orderDto.getAmount());
+        existingOrder.setJobColorsFront(orderDto.getJobColorsFront());
+        existingOrder.setSideOptionValue(orderDto.getSideOptionValue());
+        existingOrder.setImpositionValue(orderDto.getImpositionValue());
+        existingOrder.setJobColorsBack(orderDto.getJobColorsBack());
+        existingOrder.setProvidedDesign(orderDto.getProvidedDesign());
+        existingOrder.setUrl(orderDto.getUrl());
+        existingOrder.setCustomer(customerRepository.findById(orderDto.getCustomer().getId())
+                .orElseThrow(() -> new RecordNotFoundException("Customer not found at id => " + orderDto.getCustomer().getId())));
     }
 
-    @Override
-    public List<Order> getAssignedOrdersForLoggedInUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Order> assignedOrders = new ArrayList<>();
-
-        if (principal instanceof CustomUserDetail) {
-            String email = ((CustomUserDetail) principal).getEmail();
-            User user = userRepository.findByEmailAndStatusIsTrue(email);
-
-            if (user != null) {
-                for (Role role : user.getRoles()) {
-                    if ("ROLE_PRODUCTION".equals(role.getName())) {
-                        assignedOrders.addAll(orderRepository.findByProduction(user));
-                    } else if ("ROLE_DESIGNER".equals(role.getName())) {
-                        assignedOrders.addAll(orderRepository.findByDesigner(user));
-                    } else if ("ROLE_PLATE_SETTER".equals(role.getName())) {
-                        assignedOrders.addAll(orderRepository.findByPlateSetter(user));
-                    }
-                }
-            }
-        }
-        return assignedOrders;
-    }
-
-    @Override
-    @Transactional
-    public void updateCtpProcess(Long id, Boolean isDone) {
-        orderRepository.setCtpMarkAsDone(id, isDone);
-    }
-
-    @Override
-    @Transactional
-    public void updatePaperMarketProcess(Long id, Boolean isDone) {
-        orderRepository.setPaperMarketProcessProcessMarkAsDone(id, isDone);
-    }
-
-    @Override
-    @Transactional
-    public void updatePressMachineProcess(Long id, Boolean isDone) {
-        orderRepository.setPressMachineProcessMarkAsDone(id, isDone);
-    }
-
-    @Override
-    public void reject(Long id, Boolean rejected) {
-        Optional<Order> optionalOrder = orderRepository.findById(id);
-        if (optionalOrder.isPresent()) {
-            Order existingOrder = optionalOrder.get();
-            existingOrder.setIsRejected(rejected);
-            orderRepository.save(existingOrder);
-        } else {
-            throw new RecordNotFoundException(String.format("Order not found for id => %d", id));
-        }
-    }
-
-    private void updateProductionJobFields(Order productionJob, OrderDto productionJobDto) {
+    private void updateOrderTypeManual(Order productionJob, OrderDto productionJobDto) {
         productionJob.setCustomer(productionJobDto.getCustomer());
         productionJob.setBusinessCategory(productionJobDto.getBusinessCategory());
         productionJob.setProductionUser(productionJobDto.getProductionUser());
@@ -323,24 +237,126 @@ public class OrderServiceImpl implements OrderService {
         productionJob.setCreatedBy(productionJobDto.getCreatedBy());
     }
 
-    private void updateBusinesses(Order productionJob, OrderDto productionJobDto) {
-        if (productionJobDto.getBusinesses() != null) {
+    private void updateOrderItems(Order existingOrder, Order order) {
+        List<OrderItems> existingOrderItems = existingOrder.getOrderItems();
+        List<OrderItems> newOrderItems = order.getOrderItems();
+        List<OrderItems> valuesToRemove = getValuesToRemove(existingOrderItems, newOrderItems);
+
+        removeValuesFromDatabase(valuesToRemove);
+        existingOrderItems.removeAll(valuesToRemove);
+
+        List<OrderItems> newValuesToAdd = getNewValuesToAdd(existingOrder, existingOrderItems, newOrderItems);
+        existingOrderItems.addAll(newValuesToAdd);
+    }
+
+    private List<OrderItems> getValuesToRemove(List<OrderItems> existingValues, List<OrderItems> newValues) {
+        return existingValues.stream()
+                .filter(existingValue -> !newValues.contains(existingValue))
+                .collect(Collectors.toList());
+    }
+
+    private void removeValuesFromDatabase(List<OrderItems> valuesToRemove) {
+        valuesToRemove.forEach(orderItemsRepository::delete);
+    }
+
+    private List<OrderItems> getNewValuesToAdd(Order existingOrder, List<OrderItems> existingValues, List<OrderItems> newValues) {
+        return newValues.stream()
+                .filter(newValue -> !existingValues.contains(newValue))
+                .peek(newValue -> newValue.setOrder(existingOrder))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public OrderDto assignOrderToUser(Long orderId, Long currentUserId, String role, Long loggedInUserId) {
+        User user = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + currentUserId));
+        User loggedInUser = userRepository.findById(loggedInUserId)
+                .orElseThrow(() -> new RecordNotFoundException("User not found at id: " + loggedInUserId));
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
+
+        if (role.equalsIgnoreCase("ROLE_PRODUCTION")) {
+            order.setProduction(user);
+            emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
+        } else if (role.equalsIgnoreCase("ROLE_DESIGNER")) {
+            order.setDesigner(user);
+            emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
+        } else if (role.equalsIgnoreCase("ROLE_PLATE_SETTER")) {
+            order.setPlateSetter(user);
+            emailUtils.sendOrderAssignedEmail(user.getEmail(), order);
+        }
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        LocalDateTime timeStampUtc = zonedDateTime.toLocalDateTime();
+        order.setTimeStamp(timeStampUtc);
+        order.setStatus("Connected");
+        order.setAssignedBy(loggedInUser);
+        orderRepository.save(order);
+        return toDto(order);
+    }
+
+    @Override
+    public List<Order> getAssignedOrdersForLoggedInUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Order> assignedOrders = new ArrayList<>();
+        if (principal instanceof CustomUserDetail) {
+            String email = ((CustomUserDetail) principal).getEmail();
+            User user = userRepository.findByEmailAndStatusIsTrue(email);
+            if (user != null) {
+                for (Role role : user.getRoles()) {
+                    if ("ROLE_PRODUCTION".equals(role.getName())) {
+                        assignedOrders.addAll(orderRepository.findByProduction(user));
+                    } else if ("ROLE_DESIGNER".equals(role.getName())) {
+                        assignedOrders.addAll(orderRepository.findByDesigner(user));
+                    } else if ("ROLE_PLATE_SETTER".equals(role.getName())) {
+                        assignedOrders.addAll(orderRepository.findByPlateSetter(user));
+                    }
+                }
+            }
+        }
+        return assignedOrders;
+    }
+    @Override
+    @Transactional
+    public void updateCtpProcess(Long id, Boolean isDone) {
+        orderRepository.setCtpMarkAsDone(id, isDone);
+    }
+    @Override
+    @Transactional
+    public void updatePaperMarketProcess(Long id, Boolean isDone) {
+        orderRepository.setPaperMarketProcessProcessMarkAsDone(id, isDone);
+    }
+    @Override
+    @Transactional
+    public void updatePressMachineProcess(Long id, Boolean isDone) {
+        orderRepository.setPressMachineProcessMarkAsDone(id, isDone);
+    }
+    @Override
+    public void reject(Long id, Boolean rejected) {
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+        if (optionalOrder.isPresent()) {
+            Order existingOrder = optionalOrder.get();
+            existingOrder.setIsRejected(rejected);
+            orderRepository.save(existingOrder);
+        } else {
+            throw new RecordNotFoundException(String.format("Order not found for id => %d", id));
+        }
+    }
+    private void updateBusinesses(Order order, OrderDto orderDto) {
+        if (orderDto.getBusinesses() != null) {
             List<Business> updatedBusinesses = new ArrayList<>();
-            for (BusinessDto businessDto : productionJobDto.getBusinesses()) {
+            for (BusinessDto businessDto : orderDto.getBusinesses()) {
                 Business business = businessRepository.findById(businessDto.getId())
                         .orElseThrow(() -> new RecordNotFoundException("Business not found for id => " + businessDto.getId()));
                 if (business != null) {
                     updatedBusinesses.add(business);
                 }
             }
-            productionJob.setBusinesses(updatedBusinesses);
+            order.setBusinesses(updatedBusinesses);
         }
     }
-
     public PaginationResponse getAllPaginatedOrders(Integer pageNumber, Integer pageSize, OrderDto searchCriteria) {
-        // Create a Pageable object to handle pagination
-        Pageable page = PageRequest.of(pageNumber, pageSize);
-
         // Create a CriteriaBuilder instance from the entity manager
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
@@ -355,9 +371,6 @@ public class OrderServiceImpl implements OrderService {
 
         // Set the where clause of the query with the predicates
         cq.where(predicates.toArray(new Predicate[0]));
-
-        // Set the order by clause to order by id in descending order
-        cq.orderBy(criteriaBuilder.desc(orderRoot.get("id")));
 
         // Log the generated predicates for debugging
         LOGGER.info("Generated Predicates: " + predicates);
@@ -375,7 +388,7 @@ public class OrderServiceImpl implements OrderService {
         Long totalElements = countTotalElements(criteriaBuilder, searchCriteria);
 
         // Map the result list to DTOs
-        List<OrderDto> dtoList = mapToDto(resultList);
+        List<OrderDto> dtoList = mapAndSortInDescendingOrder(resultList);
 
         // Log the result list for debugging
         LOGGER.info("Result List: " + resultList);
@@ -383,8 +396,6 @@ public class OrderServiceImpl implements OrderService {
         // Create and return the pagination response
         return createPaginationResponse(dtoList, pageNumber, pageSize, totalElements);
     }
-
-
     // Method to apply pagination settings to the query
     private void applyPagination(TypedQuery<?> query, Integer pageNumber, Integer pageSize) {
         // Calculate the index of the first result to retrieve for the current page
@@ -394,7 +405,6 @@ public class OrderServiceImpl implements OrderService {
         // Set the maximum number of results to retrieve (page size)
         query.setMaxResults(pageSize);
     }
-
     // Method to create a PaginationResponse object with paginated data and metadata
     private PaginationResponse createPaginationResponse(List<OrderDto> dtoList, Integer pageNumber, Integer pageSize, Long totalElements) {
         // Initialize a new PaginationResponse object
@@ -417,20 +427,16 @@ public class OrderServiceImpl implements OrderService {
         // Return the populated PaginationResponse object
         return paginationResponse;
     }
-
-
     // Method to map a list of Order entities to a list of OrderDto objects
-    private List<OrderDto> mapToDto(List<Order> orderList) {
+    private List<OrderDto> mapAndSortInDescendingOrder(List<Order> orderList) {
         return orderList.stream()
-                // Sort the Order entities based on their timestamps in descending order
+                // Sort the Order entities based on their Ids in descending order
                 .sorted(Comparator.comparing(Order::getId).reversed())
                 // Map each sorted Order entity to its corresponding OrderDto object using the toDto method
                 .map(this::toDto)
                 // Collect the mapped OrderDto objects into a list
                 .collect(Collectors.toList());
     }
-
-
     // Method to count the total number of elements (records) that match the search criteria
     private Long countTotalElements(CriteriaBuilder criteriaBuilder, OrderDto searchCriteria) {
         // Create a CriteriaQuery for Long to perform a count query
@@ -448,8 +454,6 @@ public class OrderServiceImpl implements OrderService {
         // Execute the countQuery and return the result (total count of matching records)
         return entityManager.createQuery(countQuery).getSingleResult();
     }
-
-
     // Method to build predicates based on the search criteria provided
     private List<Predicate> buildPredicates(CriteriaBuilder criteriaBuilder, Root<Order> orderRoot, CriteriaQuery<?> criteriaQuery, OrderDto searchCriteria) {
         List<Predicate> predicates = new ArrayList<>();
@@ -457,7 +461,7 @@ public class OrderServiceImpl implements OrderService {
         // Add like predicates for string attributes if they are present in the search criteria
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getBusinessCategory(), orderRoot.get("businessCategory"));
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getProduct(), orderRoot.get("product"));
-        addEqualPredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), orderRoot.get("status"), String.class);
+        addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getStatus(), orderRoot.get("status"));
         addEqualPredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getId(), orderRoot.get("id"), Long.class);
         addLikePredicateIfPresent(criteriaBuilder, predicates, searchCriteria.getType(), orderRoot.get("type"));
 
@@ -478,34 +482,28 @@ public class OrderServiceImpl implements OrderService {
 
         return predicates;
     }
-
     private <T> void addEqualPredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, T value, Path<T> path, Class<T> valueType) {
         if (value != null) {
             predicates.add(criteriaBuilder.equal(path, value));
         }
     }
-
-
     // Method to add a like predicate to the list of predicates if the value is present
     private void addLikePredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, String value, Path<String> path) {
         if (value != null && !value.trim().isEmpty()) {
             predicates.add(criteriaBuilder.like(path, "%" + value + "%"));
         }
     }
-
     // Method to add a predicate to filter by the user who created the order
     private void addCreatedByPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, User createdBy) {
         Join<Order, User> createdByJoin = orderRoot.join("createdBy");
         predicates.add(criteriaBuilder.like(createdByJoin.get("name"), "%" + createdBy.getName() + "%"));
     }
-
     // Method to add a predicate to filter by timestamp
     private void addTimeStampPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, LocalDateTime timeStamp) {
         LocalDate userEnteredDate = timeStamp.toLocalDate();
         LocalDate currentLocalDate = LocalDate.now();
         predicates.add(criteriaBuilder.between(orderRoot.get("timeStamp").as(LocalDate.class), userEnteredDate, currentLocalDate));
     }
-
     // Method to add a predicate to filter by business names
     private void addBusinessPredicate(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery, List<Predicate> predicates, Root<Order> orderRoot, List<BusinessDto> businessesDto) {
         if (businessesDto != null && !businessesDto.isEmpty()) {
@@ -522,8 +520,6 @@ public class OrderServiceImpl implements OrderService {
             predicates.add(orderBusinessJoin.get("businessName").in(businessNames));
         }
     }
-
-
     public OrderDto toDto(Order order) {
 
         List<OrderItemsDto> orderItems = null;
@@ -643,9 +639,16 @@ public class OrderServiceImpl implements OrderService {
         model.addAttribute("branchNames", branchNamesString);
         model.addAttribute("product", order.getProduct());
         model.addAttribute("size", order.getSize());
-        model.addAttribute("qty", order.getQuantity());
-        model.addAttribute("rate", order.getRate());
-        model.addAttribute("amount", order.getAmount());
+//        model.addAttribute("qty", order.getQuantity());
+//        model.addAttribute("rate", order.getRate());
+//        model.addAttribute("amount", order.getAmount());
+
+        Double quantity = order.getQuantity();
+        model.addAttribute("qty", quantity != null ? quantity.intValue() : 0);
+        Double rate = order.getRate();
+        model.addAttribute("rate", rate != null ? rate.intValue() : 0);
+        Double amount = order.getAmount();
+        model.addAttribute("amount", amount != null ? amount.intValue() : 0);
 
 
         try (ByteArrayOutputStream mergedOutputStream = new ByteArrayOutputStream()) {

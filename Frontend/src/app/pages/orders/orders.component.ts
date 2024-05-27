@@ -153,6 +153,7 @@ export class OrdersComponent implements OnInit {
           await this.transformOrders();
           if (this.isAllReady()) {
             this.renderTableNow = true;
+            
           }
         }
       },
@@ -173,9 +174,7 @@ export class OrdersComponent implements OnInit {
             const businessCategory = await this.getBusinessCategoryById(businessCategoryId).toPromise();
             element.businessCategory = businessCategory ?? '';
           } catch (error) {
-            // Handle error
             console.error(error);
-            element.businessCategory = '';
           }
         }
         this.transformTimeStamp(this.paginatedOrders.content);

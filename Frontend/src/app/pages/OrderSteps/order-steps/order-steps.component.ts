@@ -51,6 +51,7 @@ export class OrderStepsComponent implements OnInit, OnDestroy {
   isButtonActive: boolean = true;
   private subscription !: Subscription;
   ngOnInit(): void {
+    this.active = 'overview';
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params: Params) => {
       this.idFromQueryParam = +params['id'];
       this.orderType = params['orderType'];

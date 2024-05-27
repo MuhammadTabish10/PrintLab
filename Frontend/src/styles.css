@@ -15126,10 +15126,6 @@ tr>th{
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
 }
-/* .badge .p-badge.p-badge-success {
-  background-color: black;
-  color: #ffffff;
-} */
 
 .p-steps .p-steps-item .p-menuitem-link .p-steps-number:hover{
   cursor: pointer !important;
@@ -15140,6 +15136,12 @@ tr>th{
   .p-timeline-event {
     justify-content:flex-end;
   }
+}
+
+.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-action .p-submenu-icon{
+  position:absolute;
+  top:34%;
+  left:87%;
 }
 
 fa {

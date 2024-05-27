@@ -13,6 +13,7 @@ public class JobProcessedDetailsMapper {
                 .amount(entity.getAmount())
                 .vendor(entity.getVendor())
                 .payment(entity.getPayment())
+                .description(entity.getDescription())
                 .status(entity.isStatus())
                 .jobProcessed(entity.isJobProcessed())
                 .processName(entity.getProcessName())
@@ -26,6 +27,7 @@ public class JobProcessedDetailsMapper {
         entity.setAmount(dto.getAmount());
         entity.setVendor(dto.getVendor());
         entity.setPayment(dto.getPayment());
+        entity.setDescription(dto.getDescription());
         entity.setStatus(dto.isStatus());
         entity.setJobProcessed(dto.isJobProcessed());
         entity.setProcessName(dto.getProcessName());

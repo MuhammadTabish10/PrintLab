@@ -1,21 +1,22 @@
-import { GlobalVariables } from './GlobalVariables';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { environment } from 'src/Environments/environment';
-import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
-import { Business, BusinessBranch } from 'src/app/Model/Business';
-import { Customer } from 'src/app/Model/Customer';
-import { AuthguardService } from 'src/app/services/authguard.service';
-import { CustomerService } from 'src/app/services/customer.service';
-import { OrdersService } from 'src/app/services/orders.service';
-import { ProductRuleService } from 'src/app/services/product-rule.service';
-import { JobService } from '../Jobs/Service/job.service';
-import { SuccessMessageService } from 'src/app/services/success-message.service';
 import { BusinessUnitService } from '../business-unit-and-processes/Service/business-unit.service';
 import { BusinessUnit, BusinessUnitProcessDto } from 'src/app/Model/BusinessUnit';
-import { Order, OrderItem } from 'src/app/Model/Order';
+import { SuccessMessageService } from 'src/app/services/success-message.service';
+import { BackendErrorResponse } from 'src/app/Model/BackendErrorResponse';
+import { ProductRuleService } from 'src/app/services/product-rule.service';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AuthguardService } from 'src/app/services/authguard.service';
+import { Business, BusinessBranch } from 'src/app/Model/Business';
+import { CustomerService } from 'src/app/services/customer.service';
+import { OrdersService } from 'src/app/services/orders.service';
+import { environment } from 'src/Environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
+import { JobService } from '../Jobs/Service/job.service';
 import { ProductRule } from 'src/app/Model/ProductRule';
+import { GlobalVariables } from './GlobalVariables';
+import { Customer } from 'src/app/Model/Customer';
+import { MessageService } from 'primeng/api';
+import { Order } from 'src/app/Model/Order';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-add-order',
@@ -122,36 +123,6 @@ export class AddOrderComponent implements OnInit {
     { id: 'mm', name: 'Millimeter' }
   ];
 
-  // Method to add the concatenated string as a dropdown option
-  // addConcatenatedValue(l1: number, l2: number, unit: string): void {
-  //   // Clear the sizeValue array
-  //   this.sizeValue = [];
-
-  //   // Construct the concatenated value
-  //   const concatenatedValue = {
-  //     productSize: `${l1} x ${l2} ${unit}`,
-  //     inch: `${l1} x ${l2} ${unit}`
-  //   };
-
-  //   // Push the concatenated value to the dropdown options array
-  //   this.sizeValue.push(concatenatedValue);
-  // }
-
-  // onSubmit() {
-  //   const l1 = this.job12.L1;
-  //   const l2 = this.job12.L2;
-  //   const unit = this.selectedUnit12;
-
-  //   if (l1 !== null && l2 !== null && unit) {
-  //     // Call method to add concatenated value as a dropdown option
-  //     this.addConcatenatedValue(l1, l2, unit);
-  //     this.visible2 = false;
-  //   } else {
-  //     console.error('L1, L2, or unit is not properly defined.');
-  //   }
-  // }
-
-
   ngOnInit(): void {
     this.getCustomerList();
     this.getUserDetails();
@@ -185,13 +156,14 @@ export class AddOrderComponent implements OnInit {
             this.visible = true;
           })
         } else {
+          this.job.orderItems = [];
           this.getProductList();
-          this.getOrderByIdAndType(this.idFromQueryParam);
+          this.getOrderById(this.idFromQueryParam);
         }
       }
     })
   }
-  getOrderByIdAndType(id: number) {
+  getOrderById(id: number) {
     this.orderService.getOrderById(id).subscribe(res => {
       this.job = res;
       if (this.job.quantity && this.job.orderItems) {
@@ -206,8 +178,8 @@ export class AddOrderComponent implements OnInit {
         size: parsedSize.unit,
       };
       this.selectedUnit12 = parsedSize.unit;
+
       this.job12 = obj;
-      this.concatinate(this.job12);
       this.job.businessCategory = this.categoryList.find(item => item.id === this.job.businessCategory)?.id?.toString();
       this.selectedCustomer = this.customerList.find(item => item.id === this.job.customer?.id)?.id;
       this.getBusinessList(this.selectedCustomer!);
@@ -427,13 +399,23 @@ export class AddOrderComponent implements OnInit {
   }
 
   private getCustomerList() {
-    this.customerService.getCustomer().subscribe(
+    this.customerService.getCustomer().pipe(
+      map((customers: Customer[]) => {
+        return customers.map((customer, index) => ({
+          ...customer,
+          displayNameWithId: `${index + 1} ${customer.name}`
+        }));
+      })
+    ).subscribe(
       (res: Customer[]) => {
         this.customerList = res;
-      }, (error: BackendErrorResponse) => {
+      },
+      (error: BackendErrorResponse) => {
         this.showError(error.error.error);
-      });
+      }
+    );
   }
+
 
   uploadFile(event: any) {
     const fileList: FileList = event.target.files;
@@ -635,7 +617,6 @@ export class AddOrderComponent implements OnInit {
     this.productRuleList = [];
     this.job.product = null;
     this.job.sizeCategory = null;
-    this.job.size = null;
     this.businessUnitService.getBusinessUnitById(id).subscribe(
       (res: BusinessUnit) => {
         if (res.processList) {
@@ -678,7 +659,6 @@ export class AddOrderComponent implements OnInit {
   addJob(): void {
     this.transformProductCategory();
     this.assignJobProperties();
-    debugger
     const serviceToCall = this.job.id
       ? this.orderService.updateOrder(this.idFromQueryParam!, this.job)
       : this.orderService.addOrder(this.job, this.currentUserDetail.userId);
@@ -750,7 +730,7 @@ export class AddOrderComponent implements OnInit {
   }
 
   public calculateTotalQty(changedIndex?: number): void {
-    debugger
+
     let totalItemQty = this.job.orderItems?.reduce((acc, item) => acc + (item.quantity || 0), 0);
     this.availableQty = this.job.quantity! - totalItemQty!;
     if (this.availableQty < 0) {
@@ -775,18 +755,17 @@ export class AddOrderComponent implements OnInit {
     if (this.selectedUnit12) {
       obj.size = this.selectedUnit12;
       this.job.size = obj.L1 + ' ' + 'x' + ' ' + obj.L2 + ' ' + obj.size;
-      debugger
     }
   }
 
   // Call this function to parse the size string when edit mode is entered
   private parseSizeForPatch(sizeString: string): { L1: string, L2: string, unit: string } {
-    const sizeParts = sizeString.split(' x ');
-
+    // Split the string by '×' or 'x' and trim each part
+    const sizeParts = sizeString.split(/[×x]/).map(part => part.trim());
     if (sizeParts.length === 2) {
       const L1 = sizeParts[0];
-      const remainingParts = sizeParts[1].split(' ');
-
+      // Split the second part by space and trim each part
+      const remainingParts = sizeParts[1].split(' ').map(part => part.trim());
       if (remainingParts.length === 2) {
         const L2 = remainingParts[0];
         const unit = remainingParts[1];
@@ -798,4 +777,5 @@ export class AddOrderComponent implements OnInit {
     // Return a default object if parsing fails
     return { L1: '', L2: '', unit: '' };
   }
+
 }
