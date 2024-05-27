@@ -33,7 +33,10 @@
         'quantity',
         'unit',
         'amount',
-        'status'
+        'status',
+        'createdBy.name',
+        'timeStamp',
+        'businesses'
       ]"
     >
       <ng-template pTemplate="caption">
@@ -52,13 +55,13 @@
           <th style="min-width: 5rem">
             <div class="flex align-items-center">ID</div>
           </th>
-          <th style="min-width: 15rem">
+          <th style="min-width: 10rem">
             <div class="flex align-items-center">
-              Category
+              Product
               <p-columnFilter type="text" field="category" display="menu">
                 <ng-template pTemplate="header">
                   <div class="px-3 pt-3 pb-0">
-                    <span class="font-bold">Category</span>
+                    <span class="font-bold">Product & Category</span>
                   </div>
                 </ng-template>
                 <ng-template
@@ -66,39 +69,33 @@
                   let-value
                   let-filter="filterCallback"
                 >
-                  <input
-                    type="text"
-                    [(ngModel)]="order.businessCategory"
-                    (input)="getOrders(undefined, order)"
-                  />
-                </ng-template>
-              </p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 15rem">
-            <div class="flex align-items-center">
-              Product
-              <p-columnFilter type="text" field="product" display="menu">
-                <ng-template pTemplate="header">
-                  <div class="px-3 pt-3 pb-0">
-                    <span class="font-bold">Product name</span>
+                  <div class="p-fluid">
+                    <div class="p-field">
+                      <label for="product">Product</label>
+                      <input
+                        id="product"
+                        type="text"
+                        [(ngModel)]="order.product"
+                        (input)="getOrders(undefined, order)"
+                        class="p-inputtext p-component"
+                      />
+                    </div>
+                    <div class="p-field">
+                      <label for="category">Category</label>
+                      <input
+                        id="category"
+                        type="text"
+                        [(ngModel)]="order.businessCategory"
+                        (input)="getOrders(undefined, order)"
+                        class="p-inputtext p-component"
+                      />
+                    </div>
                   </div>
                 </ng-template>
-                <ng-template
-                  pTemplate="filter"
-                  let-value
-                  let-filter="filterCallback"
-                >
-                  <input
-                    type="text"
-                    [(ngModel)]="order.product"
-                    (input)="getOrders(undefined, order)"
-                  />
-                </ng-template>
               </p-columnFilter>
             </div>
           </th>
-          <th style="min-width: 15rem">
+          <th style="min-width: 10rem">
             <div class="flex align-items-center">Size</div>
           </th>
           <th pSortableColumn="quantity" style="min-width: 10rem">
@@ -106,17 +103,17 @@
               Quantity <p-sortIcon field="quantity" />
             </div>
           </th>
-          <th pSortableColumn="rate" style="min-width: 10rem">
+          <th pSortableColumn="rate" style="min-width: 7rem">
             <div class="flex align-items-center">
               Unit <p-sortIcon field="rate" />
             </div>
           </th>
-          <th pSortableColumn="amount" style="min-width: 10rem">
+          <th pSortableColumn="amount" style="min-width: 9rem">
             <div class="flex align-items-center">
               Amount <p-sortIcon field="amount" />
             </div>
           </th>
-          <th style="min-width: 15rem">
+          <th style="min-width: 5rem">
             <div class="flex align-items-center">
               Status
               <p-columnFilter type="text" field="status" display="menu">
@@ -139,86 +136,14 @@
               </p-columnFilter>
             </div>
           </th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-order>
-        <ng-container *ngIf="renderTableNow">
-          <tr
-            class="text-nowrap order-table-row-hover"
-            (click)="onRowClick($event, order.id, order.type)"
-          >
-            <td>
-              {{ order.id }}
-            </td>
-            <td>
-              {{ order.businessCategory }}
-            </td>
-            <td>
-              {{ order.product }}
-            </td>
-            <td>
-              {{ order.size }}
-            </td>
-            <td>
-              {{ order.quantity }}
-            </td>
-            <td>{{ order.rate || order.amount / order.quantity }}</td>
-            <td>
-              {{ order.amount }}
-            </td>
-            <td>
-              {{ order.status }}
-            </td>
-          </tr>
-        </ng-container>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr class="text-center">
-          <td class="text-center" colspan="13">No Orders found.</td>
-        </tr>
-      </ng-template>
-    </p-table>
-    <p-table
-      #dt2
-      [value]="paginatedOrders?.content!"
-      dataKey="id"
-      [globalFilterFields]="['createdBy.name', 'timeStamp', 'businesses']"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th style="min-width: 5rem">
-            <div class="flex align-items-center">ID</div>
-          </th>
-          <th style="min-width: 15rem">
-            <div class="flex align-items-center">
-              Type
-              <p-columnFilter type="text" field="type" display="menu">
-                <ng-template pTemplate="header">
-                  <div class="px-3 pt-3 pb-0">
-                    <span class="font-bold">Type</span>
-                  </div>
-                </ng-template>
-                <ng-template
-                  pTemplate="filter"
-                  let-value
-                  let-filter="filterCallback"
-                >
-                  <input
-                    type="text"
-                    [(ngModel)]="order.type"
-                    (input)="getOrders(undefined, order)"
-                  />
-                </ng-template>
-              </p-columnFilter>
-            </div>
-          </th>
+          <!-- Combined Filter Column Header -->
           <th style="min-width: 15rem">
             <div class="flex align-items-center">
               Created by
-              <p-columnFilter type="text" field="createdBy" display="menu">
+              <p-columnFilter type="text" display="menu">
                 <ng-template pTemplate="header">
                   <div class="px-3 pt-3 pb-0">
-                    <span class="font-bold">Created by</span>
+                    <span class="font-bold">Filters</span>
                   </div>
                 </ng-template>
                 <ng-template
@@ -226,43 +151,35 @@
                   let-value
                   let-filter="filterCallback"
                 >
-                  <input
-                    type="text"
-                    [(ngModel)]="order.createdBy!.name"
-                    (input)="getOrders(undefined, order)"
-                  />
-                </ng-template>
-              </p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 15rem">
-            <div class="flex align-items-center">
-              Timestamp
-              <p-columnFilter
-                type="date"
-                field="date"
-                display="menu"
-                [showAddButton]="false"
-              >
-                <ng-template pTemplate="header">
-                  <div class="px-3 pt-3 pb-0">
-                    <span class="font-bold">Date Picker</span>
+                  <div class="p-fluid">
+                    <!-- Created By Filter -->
+                    <div class="p-field">
+                      <label for="createdBy">Created By</label>
+                      <input
+                        id="createdBy"
+                        type="text"
+                        [(ngModel)]="createdBy.name"
+                        (input)="getOrders(undefined, order)"
+                        class="p-inputtext p-component"
+                      />
+                    </div>
+                    <!-- Type Filter -->
+                    <div class="p-field">
+                      <label for="type">Type</label>
+                      <input
+                        id="type"
+                        type="text"
+                        [(ngModel)]="order.type"
+                        (input)="getOrders(undefined, order)"
+                        class="p-inputtext p-component"
+                      />
+                    </div>
                   </div>
                 </ng-template>
-                <ng-template
-                  pTemplate="filter"
-                  let-value
-                  let-filter="filterCallback"
-                >
-                  <p-calendar
-                    (onSelect)="onDateSelect($event)"
-                    placeholder="Calendar"
-                  ></p-calendar>
-                </ng-template>
               </p-columnFilter>
             </div>
           </th>
-          <th style="min-width: 15rem">
+          <th style="min-width: 10rem">
             <div class="flex align-items-center">
               businesses
               <p-columnFilter
@@ -314,20 +231,36 @@
             <td>
               {{ order.id }}
             </td>
-
             <td>
-              {{ order.type }}
+              <div>{{ order.product }}</div>
+              <div>{{ order.businessCategory }}</div>
             </td>
             <td>
-              {{ order.createdBy.name }}
+              {{ order.size }}
             </td>
             <td>
-              {{ order.timeStamp }}
+              {{ order.quantity }}
+            </td>
+            <td>PKR {{ order.rate || order.amount / order.quantity }}</td>
+            <td>PKR {{ order.amount }}</td>
+            <td>
+              {{ order.status }}
             </td>
             <td>
-              {{ order.businesses | joinWithCommaSeparated : "businessName" }}
+              <div>{{ order.createdBy.name }}</div>
+              <div>{{ order.type.toUpperCase() + " Order" }}</div>
+              <div>{{ order.timeStamp }}</div>
             </td>
-            <td class="order-table-btns-container" *ngIf="buttonOption">
+            <td>
+              <div>{{ order.customer.name }}</div>
+              <div>
+                {{ order.businesses | joinWithCommaSeparated : "businessName" }}
+              </div>
+            </td>
+            <td
+              class="order-table-btns-container text-end"
+              *ngIf="buttonOption"
+            >
               <div
                 class="btn-group mr-2"
                 role="group"
@@ -338,39 +271,35 @@
                   class="btn order-table-btn"
                   (click)="viewOrder(order.id, order.type)"
                 >
-                  <i class="fa-solid fa-hand-pointer"></i>&nbsp;<small
-                    >View</small
-                  >
+                  <i class="fa-solid fa-hand-pointer"></i>
                 </button>
                 <button
                   type="button"
                   class="btn order-table-btn"
                   (click)="editOrder(order.id, order.type)"
                 >
-                  <i class="fa-solid fa-pen"></i>&nbsp;<small>Edit</small>
+                  <i class="fa-solid fa-pen"></i>
                 </button>
                 <button
                   type="button"
                   class="btn order-table-btn"
                   (click)="deleteOrder(order.id, order.type)"
                 >
-                  <i class="fa-solid fa-trash"></i>&nbsp;<small>Delete</small>
+                  <i class="fa-solid fa-trash"></i>
                 </button>
                 <button
                   type="button"
                   class="btn order-table-btn"
                   (click)="assignOrder(order.id)"
                 >
-                  <i class="pi pi-plus"></i>&nbsp;<small>Assign Order</small>
+                  <i class="pi pi-plus"></i>
                 </button>
                 <button
                   type="button"
                   class="btn order-table-btn"
                   (click)="orderProcessCtp(order?.id)"
                 >
-                  <i class="pi pi-list"></i>&nbsp;<small
-                    >Order Process Ctp</small
-                  >
+                  <i class="pi pi-list"></i>
                 </button>
               </div>
             </td>
@@ -383,6 +312,7 @@
         </tr>
       </ng-template>
     </p-table>
+
     <p-paginator
       [rows]="paginatedOrders?.pageSize!"
       [totalRecords]="paginatedOrders?.totalElements!"

@@ -16,6 +16,7 @@ import { BusinessUnit } from 'src/app/Model/BusinessUnit';
 import { GlobalVariables } from '../add-order/GlobalVariables';
 import { ErrorHandleService } from 'src/app/services/error-handle.service';
 import { SuccessMessageService } from 'src/app/services/success-message.service';
+import { User } from 'src/app/Model/User';
 
 export interface Roles {
   name?: string;
@@ -56,6 +57,19 @@ export class OrdersComponent implements OnInit {
   order: Order = { ...GlobalVariables.order }
   businessList: Business[] = []
   renderTableNow: boolean = false;
+  combinedFilterValue: string = '';
+  selectedDate: Date | null = null;
+  createdBy: User = {
+    id: undefined,
+    createdAt: undefined,
+    name: undefined,
+    email: undefined,
+    password: undefined,
+    phone: undefined,
+    cnic: undefined,
+    roles: [],
+    status: undefined
+  };
   constructor(
     private successHandleService: SuccessMessageService,
     private businessUnitService: BusinessUnitService,
@@ -135,6 +149,9 @@ export class OrdersComponent implements OnInit {
   }
 
   public getOrders(pageState?: PaginatorState, order?: Order): void {
+    if (this.createdBy && order) {
+      this.order.createdBy = this.createdBy;
+    }
     this.renderTableNow = false;
     this.orderService.getOrders(pageState, order!).pipe(
       takeUntil(this.destroy$)
@@ -153,7 +170,7 @@ export class OrdersComponent implements OnInit {
           await this.transformOrders();
           if (this.isAllReady()) {
             this.renderTableNow = true;
-            
+
           }
         }
       },
@@ -319,5 +336,17 @@ export class OrdersComponent implements OnInit {
   public clearOrderTable(): void {
     this.order = { ...GlobalVariables.order };
     this.getOrders(undefined, this.order);
+  }
+
+  updateCombinedFilter(date: Date | null) {
+    // This method updates the combined filter value when the date is selected from the calendar
+    if (date) {
+      // Format the selected date as needed
+      const formattedDate = date.toISOString().slice(0, 10); // Assuming ISO date format YYYY-MM-DD
+      this.combinedFilterValue = formattedDate;
+    } else {
+      this.combinedFilterValue = ''; // Reset filter value if date is cleared
+    }
+    this.getOrders(); // Update orders based on combined filter value
   }
 }
