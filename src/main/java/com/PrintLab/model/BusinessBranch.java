@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,4 +27,9 @@ public class BusinessBranch {
     @JsonIgnore
     @ToString.Exclude
     private Business business;
+
+    @ManyToMany(mappedBy = "businessBranch")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<OrderPaymentHistory> orderPaymentHistoryList;
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -26,4 +27,5 @@ public class UserDto {
     private Set<Role> roles = new HashSet<>();
     private VendorDto vendor;
     private String userStatus;
+    private List<OrderPaymentHistoryDto> orderPaymentHistoryDtoList;
 }

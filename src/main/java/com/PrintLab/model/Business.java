@@ -32,4 +32,9 @@ public class Business {
     @ToString.Exclude
     @JsonIgnore
     private List<Order> orders;
+
+    @ManyToMany(mappedBy = "business")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<OrderPaymentHistory> orderPaymentHistoryList;
 }

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +18,5 @@ public class BusinessBranchDto {
     private String city;
     private String pointOfContact;
     private String phoneNumber;
+    private List<OrderPaymentHistoryDto> orderPaymentHistoryDtoList;
 }

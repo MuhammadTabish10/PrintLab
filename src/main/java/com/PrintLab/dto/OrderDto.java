@@ -70,4 +70,5 @@ public class OrderDto
     private Date expiryDate;
     private String sendTo;
     private List<OrderItemsDto> orderItems;
+    private List<OrderPaymentHistoryDto> orderPaymentHistory;
 }

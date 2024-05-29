@@ -16,4 +16,5 @@ public class BusinessDto {
     private List<BusinessBranchDto> businessBranchList;
     private CustomerDto customer;
     private List<OrderDto> order;
+    private List<OrderPaymentHistoryDto> orderPaymentHistoryDtoList;
 }

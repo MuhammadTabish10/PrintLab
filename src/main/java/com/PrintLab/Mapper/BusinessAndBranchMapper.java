@@ -49,14 +49,23 @@ public class BusinessAndBranchMapper {
                 .build();
     }
 
-//    public BusinessBranch toBusinessBranchEntity(BusinessBranchDto businessBranchDto) {
-//        return BusinessBranch.builder()
-//                .id(businessBranchDto.getId())
-//                .address(businessBranchDto.getAddress())
-//                .city(businessBranchDto.getCity())
-//                .pointOfContact(businessBranchDto.getPointOfContact())
-//                .phoneNumber(businessBranchDto.getPhoneNumber())
-//                .build();
-//    }
+    public BusinessBranch toBusinessBranchEntity(BusinessBranchDto businessBranchDto) {
+        return BusinessBranch.builder()
+                .id(businessBranchDto.getId())
+                .address(businessBranchDto.getAddress())
+                .city(businessBranchDto.getCity())
+                .pointOfContact(businessBranchDto.getPointOfContact())
+                .phoneNumber(businessBranchDto.getPhoneNumber())
+                .build();
+    }
 
+    public BusinessBranchDto toBusinessBranchDto(BusinessBranch businessBranch) {
+        return BusinessBranchDto.builder()
+                .id(businessBranch.getId())
+                .address(businessBranch.getAddress())
+                .city(businessBranch.getCity())
+                .pointOfContact(businessBranch.getPointOfContact())
+                .phoneNumber(businessBranch.getPhoneNumber())
+                .build();
+    }
 }

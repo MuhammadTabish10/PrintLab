@@ -116,4 +116,12 @@ public class Order {
     @ToString.Exclude
     @JsonIgnore
     private List<OrderItems> orderItems;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private MasterCustomerStatement masterCustomerStatement;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<OrderPaymentHistory> orderPaymentHistory;
 }
