@@ -72,6 +72,7 @@ import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.
 import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-rule-job.component';
 import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
 import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmation-screen/order-confirmation-screen.component';
+import { MasterCustomerStatementComponent } from './pages/customer/master-customer-statement/master-customer-statement.component';
 
 export const routes: Routes = [
   {
@@ -440,6 +441,11 @@ export const routes: Routes = [
   {
     path: 'order-confirmation-screen',
     component: OrderConfirmationScreenComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'master-statements/customer',
+    component: MasterCustomerStatementComponent,
     canActivate: [AuthguardService]
   },
 ];

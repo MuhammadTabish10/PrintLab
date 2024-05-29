@@ -116,4 +116,19 @@ public class Order {
     @ToString.Exclude
     @JsonIgnore
     private List<OrderItems> orderItems;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<OrderPaymentHistory> orderPaymentHistory;
+
+    @ManyToMany
+    @JoinTable(
+            name = "order_master_customer_statement",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "master_customer_statement_id")
+    )
+    @ToString.Exclude
+    @JsonIgnore
+    private List<MasterCustomerStatement> masterCustomerStatements;
 }
