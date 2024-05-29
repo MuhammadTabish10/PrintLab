@@ -41,8 +41,7 @@ export class ProductRuleComponent implements OnInit {
   initializeItems() {
     this.items = [
       {
-        label: 'Add',
-        icon: 'pi pi-plus',
+        label: '+ New Product',
         items: [
           {
             label: 'Auto',

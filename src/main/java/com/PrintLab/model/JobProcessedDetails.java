@@ -18,6 +18,8 @@ public class JobProcessedDetails {
     private Long id;
     private Double amount;
     private String vendor;
+    @Column(columnDefinition = "TEXT")
+    private String description;
     private String payment;
     private boolean status;
     @Column(name = "is_job_processed")

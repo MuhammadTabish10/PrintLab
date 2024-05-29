@@ -226,6 +226,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                     processedDetails.setJobProcessed(processedDetailsDto.isJobProcessed());
                     processedDetails.setProcessName(processedDetailsDto.getProcessName());
                     processedDetails.setTimeStamp(processedDetailsDto.getTimeStamp());
+                    processedDetails.setDescription(processedDetailsDto.getDescription());
                     updatedProcessedDetails.add(processedDetails);
                 }
             }

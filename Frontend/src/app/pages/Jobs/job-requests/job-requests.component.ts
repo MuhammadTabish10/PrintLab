@@ -131,7 +131,8 @@ export class JobRequestsComponent implements OnInit {
       jobProcessed: undefined,
       status: undefined,
       processName: undefined,
-      timeStamp: undefined
+      timeStamp: undefined,
+      description: undefined
     }));
   }
 

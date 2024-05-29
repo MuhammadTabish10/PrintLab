@@ -1,0 +1,77 @@
+<!-- Header Section -->
+<section>
+  <app-dashboard-head></app-dashboard-head>
+  <div class="container-fluid">
+    <div class="row bg-dark">
+      <h3 class="text-white p-3 ps-5">Master Customer Statement</h3>
+    </div>
+  </div>
+</section>
+
+<!-- Filter Section -->
+<section>
+  <div class="container-fluid">
+    <div class="row justify-content-evenly align-items-end bg-light pt-2 pb-4">
+      <div class="col-3">
+        <label for="fromDate" class="add-order-label m-0 d-block">From</label>
+        <p-calendar
+          styleClass="w-100"
+          [(ngModel)]="dateFilter.fromDate"
+          name="fromDate"
+          [showIcon]="true"
+        ></p-calendar>
+      </div>
+      <div class="col-3">
+        <label for="toDate" class="add-order-label m-0 d-block">To</label>
+        <p-calendar
+          styleClass="w-100"
+          [(ngModel)]="dateFilter.toDate"
+          [minDate]="dateFilter.fromDate!"
+          name="toDate"
+          [showIcon]="true"
+        ></p-calendar>
+      </div>
+      <div class="col-2 text-end">
+        <button class="btn btn-dark" type="button" (click)="generateRecord()">
+          Generate
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Body Section -->
+<section>
+  <div class="container-fluid mt-5">
+    <div class="row text-center">
+      <p *ngIf="statementFrom && statementTo" class="fs-5">
+        <span class="fw-bolder pe-1">From:</span>
+        <span class="px-1">{{ statementFrom }}</span>
+        <span class="px-2">-</span>
+        <span class="fw-bolder px-1">To:</span>
+        <span class="px-1">{{ statementTo }}</span>
+      </p>
+    </div>
+    <div class="row">
+      <p-table
+        [value]="paginatedCustomerStatement?.content!"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Description</th>
+            <th>Reference</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>Balance</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-statement>
+          <tr></tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</section>

@@ -20,6 +20,8 @@ public class JobProcessedDetailsDto {
 
     private String payment;
 
+    private String description;
+
     private boolean status;
 
     private boolean jobProcessed;

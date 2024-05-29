@@ -138,6 +138,7 @@ import { SizeFormatPipe } from './CustomPipes/size-format.pipe';
 import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmation-screen/order-confirmation-screen.component';
+import { MasterCustomerStatementComponent } from './pages/customer/master-customer-statement/master-customer-statement.component';
 
 @NgModule({
   declarations: [
@@ -233,6 +234,7 @@ import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmat
     SizeFormatPipe,
     ProductRuleOfGroupSheetComponent,
     OrderConfirmationScreenComponent,
+    MasterCustomerStatementComponent,
   ],
   imports: [
     BrowserModule,
