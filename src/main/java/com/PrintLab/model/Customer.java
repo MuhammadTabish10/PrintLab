@@ -29,7 +29,7 @@ public class Customer {
     private Date since;
     private String leadOwner;
     private boolean clientStatus;
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Business> customerBusinessName;
     private String clientPreferred;
     @Column(columnDefinition = "TEXT")

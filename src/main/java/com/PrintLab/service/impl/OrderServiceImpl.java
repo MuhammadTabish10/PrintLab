@@ -27,10 +27,7 @@ import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -52,8 +49,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemsMapper orderItemsMapper;
     private final BusinessAndBranchMapper businessAndBranchMapper;
     private final PdfGenerationService pdfGenerationService;
+    private final MasterCustomerStatementRepository masterCustomerStatementRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, OrderItemsRepository orderItemsRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper, BusinessAndBranchMapper businessAndBranchMapper, PdfGenerationService pdfGenerationService) {
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, OrderItemsRepository orderItemsRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper, BusinessAndBranchMapper businessAndBranchMapper, PdfGenerationService pdfGenerationService, MasterCustomerStatementRepository masterCustomerStatementRepository) {
         this.customerRepository = customerRepository;
         this.businessRepository = businessRepository;
         this.orderRepository = orderRepository;
@@ -64,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
         this.orderItemsMapper = orderItemsMapper;
         this.businessAndBranchMapper = businessAndBranchMapper;
         this.pdfGenerationService = pdfGenerationService;
+        this.masterCustomerStatementRepository = masterCustomerStatementRepository;
     }
 
 
@@ -76,6 +75,16 @@ public class OrderServiceImpl implements OrderService {
         setCommonValues(orderDto, loggedInUserId);
         Order order = orderRepository.save(toEntity(orderDto));
         associateOrderItemsWithOrder(orderDto.getOrderItems(), order);
+        MasterCustomerStatement customerStatement = MasterCustomerStatement.builder()
+                .date(LocalDate.now())
+                .time(LocalTime.now())
+                .description("Order Received")
+                .order(order)
+                .credit(order.getAmount())
+                .balance(order.getAmount())
+                .build();
+
+        masterCustomerStatementRepository.save(customerStatement);
         return toDto(order);
     }
 
@@ -317,21 +326,25 @@ public class OrderServiceImpl implements OrderService {
         }
         return assignedOrders;
     }
+
     @Override
     @Transactional
     public void updateCtpProcess(Long id, Boolean isDone) {
         orderRepository.setCtpMarkAsDone(id, isDone);
     }
+
     @Override
     @Transactional
     public void updatePaperMarketProcess(Long id, Boolean isDone) {
         orderRepository.setPaperMarketProcessProcessMarkAsDone(id, isDone);
     }
+
     @Override
     @Transactional
     public void updatePressMachineProcess(Long id, Boolean isDone) {
         orderRepository.setPressMachineProcessMarkAsDone(id, isDone);
     }
+
     @Override
     public void reject(Long id, Boolean rejected) {
         Optional<Order> optionalOrder = orderRepository.findById(id);
@@ -343,6 +356,7 @@ public class OrderServiceImpl implements OrderService {
             throw new RecordNotFoundException(String.format("Order not found for id => %d", id));
         }
     }
+
     private void updateBusinesses(Order order, OrderDto orderDto) {
         if (orderDto.getBusinesses() != null) {
             List<Business> updatedBusinesses = new ArrayList<>();
@@ -356,6 +370,7 @@ public class OrderServiceImpl implements OrderService {
             order.setBusinesses(updatedBusinesses);
         }
     }
+
     public PaginationResponse getAllPaginatedOrders(Integer pageNumber, Integer pageSize, OrderDto searchCriteria) {
         // Create a CriteriaBuilder instance from the entity manager
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -396,6 +411,7 @@ public class OrderServiceImpl implements OrderService {
         // Create and return the pagination response
         return createPaginationResponse(dtoList, pageNumber, pageSize, totalElements);
     }
+
     // Method to apply pagination settings to the query
     private void applyPagination(TypedQuery<?> query, Integer pageNumber, Integer pageSize) {
         // Calculate the index of the first result to retrieve for the current page
@@ -405,6 +421,7 @@ public class OrderServiceImpl implements OrderService {
         // Set the maximum number of results to retrieve (page size)
         query.setMaxResults(pageSize);
     }
+
     // Method to create a PaginationResponse object with paginated data and metadata
     private PaginationResponse createPaginationResponse(List<OrderDto> dtoList, Integer pageNumber, Integer pageSize, Long totalElements) {
         // Initialize a new PaginationResponse object
@@ -427,6 +444,7 @@ public class OrderServiceImpl implements OrderService {
         // Return the populated PaginationResponse object
         return paginationResponse;
     }
+
     // Method to map a list of Order entities to a list of OrderDto objects
     private List<OrderDto> mapAndSortInDescendingOrder(List<Order> orderList) {
         return orderList.stream()
@@ -437,6 +455,7 @@ public class OrderServiceImpl implements OrderService {
                 // Collect the mapped OrderDto objects into a list
                 .collect(Collectors.toList());
     }
+
     // Method to count the total number of elements (records) that match the search criteria
     private Long countTotalElements(CriteriaBuilder criteriaBuilder, OrderDto searchCriteria) {
         // Create a CriteriaQuery for Long to perform a count query
@@ -454,6 +473,7 @@ public class OrderServiceImpl implements OrderService {
         // Execute the countQuery and return the result (total count of matching records)
         return entityManager.createQuery(countQuery).getSingleResult();
     }
+
     // Method to build predicates based on the search criteria provided
     private List<Predicate> buildPredicates(CriteriaBuilder criteriaBuilder, Root<Order> orderRoot, CriteriaQuery<?> criteriaQuery, OrderDto searchCriteria) {
         List<Predicate> predicates = new ArrayList<>();
@@ -482,28 +502,33 @@ public class OrderServiceImpl implements OrderService {
 
         return predicates;
     }
+
     private <T> void addEqualPredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, T value, Path<T> path, Class<T> valueType) {
         if (value != null) {
             predicates.add(criteriaBuilder.equal(path, value));
         }
     }
+
     // Method to add a like predicate to the list of predicates if the value is present
     private void addLikePredicateIfPresent(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, String value, Path<String> path) {
         if (value != null && !value.trim().isEmpty()) {
             predicates.add(criteriaBuilder.like(path, "%" + value + "%"));
         }
     }
+
     // Method to add a predicate to filter by the user who created the order
     private void addCreatedByPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, User createdBy) {
         Join<Order, User> createdByJoin = orderRoot.join("createdBy");
         predicates.add(criteriaBuilder.like(createdByJoin.get("name"), "%" + createdBy.getName() + "%"));
     }
+
     // Method to add a predicate to filter by timestamp
     private void addTimeStampPredicate(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Root<Order> orderRoot, LocalDateTime timeStamp) {
         LocalDate userEnteredDate = timeStamp.toLocalDate();
         LocalDate currentLocalDate = LocalDate.now();
         predicates.add(criteriaBuilder.between(orderRoot.get("timeStamp").as(LocalDate.class), userEnteredDate, currentLocalDate));
     }
+
     // Method to add a predicate to filter by business names
     private void addBusinessPredicate(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery, List<Predicate> predicates, Root<Order> orderRoot, List<BusinessDto> businessesDto) {
         if (businessesDto != null && !businessesDto.isEmpty()) {
@@ -520,6 +545,7 @@ public class OrderServiceImpl implements OrderService {
             predicates.add(orderBusinessJoin.get("businessName").in(businessNames));
         }
     }
+
     public OrderDto toDto(Order order) {
 
         List<OrderItemsDto> orderItems = null;
@@ -639,10 +665,6 @@ public class OrderServiceImpl implements OrderService {
         model.addAttribute("branchNames", branchNamesString);
         model.addAttribute("product", order.getProduct());
         model.addAttribute("size", order.getSize());
-//        model.addAttribute("qty", order.getQuantity());
-//        model.addAttribute("rate", order.getRate());
-//        model.addAttribute("amount", order.getAmount());
-
         Double quantity = order.getQuantity();
         model.addAttribute("qty", quantity != null ? quantity.intValue() : 0);
         Double rate = order.getRate();

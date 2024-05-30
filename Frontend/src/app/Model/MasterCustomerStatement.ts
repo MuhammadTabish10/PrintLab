@@ -6,11 +6,11 @@ export interface MasterCustomerStatement {
   id: number | undefined | null;
   date: Date | undefined | null;
   time: string | undefined | null;
+  order: Order | undefined | null;
   debit: number | undefined | null;
   credit: number | undefined | null;
-  order: Order | undefined | null;
   balance: number | undefined | null;
   status: boolean | undefined | null;
   description: string | undefined | null;
-  orderPaymentHistory: OrderPaymentHistory | undefined | null;
+  paymentHistory: OrderPaymentHistory | undefined | null;
 }

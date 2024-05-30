@@ -125,73 +125,11 @@ public class CustomerServiceImpl implements CustomerService {
             existingCustomer.setNotes(customer.getNotes());
             existingCustomer.setShowLead(customer.isShowLead());
 
-            // Remove existing entities that are not present in the updated list
+            // Remove businesses not present in the updated list
             removeBusinessesNotPresent(existingCustomer.getCustomerBusinessName(), customer.getCustomerBusinessName());
 
             // Update or save associated businesses
-            List<Business> updatedBusinessList = new ArrayList<>();
-            for (Business business : customer.getCustomerBusinessName()) {
-                Business existingBusiness = null;
-                if (business.getId() != null) {
-                    // Find the corresponding existing business by ID
-                    Optional<Business> optionalExistingBusiness = existingCustomer.getCustomerBusinessName().stream()
-                            .filter(b -> b.getId().equals(business.getId()))
-                            .findFirst();
-                    if (optionalExistingBusiness.isPresent()) {
-                        existingBusiness = optionalExistingBusiness.get();
-                    }
-                }
-                if (existingBusiness == null) {
-                    // If business ID is not present or business not found, save it as a new one
-                    Business savedBusiness = businessRepository.save(business);
-                    // Set the customer for the new business
-                    savedBusiness.setCustomer(existingCustomer);
-                    existingCustomer.getCustomerBusinessName().add(savedBusiness);
-                    existingBusiness = savedBusiness;
-                }
-
-                // Update business details
-                existingBusiness.setBusinessName(business.getBusinessName());
-
-                removeBranchesNotPresent(existingBusiness.getBusinessBranchList(), business.getBusinessBranchList());
-
-
-                // Update or save associated branches
-                List<BusinessBranch> updatedBranchList = new ArrayList<>();
-                for (BusinessBranch branch : business.getBusinessBranchList()) {
-                    BusinessBranch existingBranch = null;
-                    if (branch.getId() != null) {
-                        // Find the corresponding existing branch by ID
-                        Optional<BusinessBranch> optionalExistingBranch = existingBusiness.getBusinessBranchList().stream()
-                                .filter(b -> b.getId().equals(branch.getId()))
-                                .findFirst();
-                        if (optionalExistingBranch.isPresent()) {
-                            existingBranch = optionalExistingBranch.get();
-                        }
-                    }
-                    if (existingBranch == null) {
-                        // If branch ID is not present or branch not found, save it as a new one
-                        BusinessBranch savedBranch = branchRepository.save(branch);
-                        // Set the business for the new branch
-                        savedBranch.setBusiness(existingBusiness);
-                        existingBusiness.getBusinessBranchList().add(savedBranch);
-                        existingBranch = savedBranch;
-                    }
-
-                    // Update branch details
-                    existingBranch.setBranchName(branch.getBranchName());
-                    existingBranch.setAddress(branch.getAddress());
-                    existingBranch.setCity(branch.getCity());
-                    existingBranch.setPointOfContact(branch.getPointOfContact());
-                    existingBranch.setPhoneNumber(branch.getPhoneNumber());
-
-                    updatedBranchList.add(existingBranch);
-                }
-                existingBusiness.setBusinessBranchList(updatedBranchList);
-                updatedBusinessList.add(existingBusiness);
-            }
-
-            existingCustomer.setCustomerBusinessName(updatedBusinessList);
+            updateBusinesses(existingCustomer, customer.getCustomerBusinessName());
 
             // Save and return updated customer
             Customer updatedCustomer = customerRepository.save(existingCustomer);
@@ -201,16 +139,57 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    private void updateBusinesses(Customer existingCustomer, List<Business> updatedBusinesses) {
+        for (Business updatedBusiness : updatedBusinesses) {
+            Business existingBusiness = findExistingBusiness(updatedBusiness.getId(), existingCustomer.getCustomerBusinessName());
+            if (existingBusiness == null) {
+                // If business ID is not present or business not found, save it as a new one
+                updatedBusiness.setCustomer(existingCustomer);
+                existingCustomer.getCustomerBusinessName().add(updatedBusiness);
+                updateBusinessBranches(updatedBusiness, updatedBusiness.getBusinessBranchList());
+            } else {
+                // Update business details
+                existingBusiness.setBusinessName(updatedBusiness.getBusinessName());
+                removeBranchesNotPresent(existingBusiness.getBusinessBranchList(), updatedBusiness.getBusinessBranchList());
+                updateBusinessBranches(existingBusiness, updatedBusiness.getBusinessBranchList());
+            }
+        }
+    }
+
+    private void updateBusinessBranches(Business existingBusiness, List<BusinessBranch> updatedBranches) {
+        for (BusinessBranch updatedBranch : updatedBranches) {
+            BusinessBranch existingBranch = findExistingBranch(updatedBranch.getId(), existingBusiness.getBusinessBranchList());
+            if (existingBranch == null) {
+                // If branch ID is not present or branch not found, save it as a new one
+                updatedBranch.setBusiness(existingBusiness);
+                existingBusiness.getBusinessBranchList().add(updatedBranch);
+            } else {
+                // Update branch details
+                existingBranch.setBranchName(updatedBranch.getBranchName());
+                existingBranch.setAddress(updatedBranch.getAddress());
+                existingBranch.setCity(updatedBranch.getCity());
+                existingBranch.setPointOfContact(updatedBranch.getPointOfContact());
+                existingBranch.setPhoneNumber(updatedBranch.getPhoneNumber());
+                existingBranch.setBusiness(existingBusiness);
+            }
+        }
+    }
+
+    private Business findExistingBusiness(Long businessId, List<Business> existingBusinesses) {
+        if (businessId == null) {
+            return null;
+        }
+        return existingBusinesses.stream()
+                .filter(b -> b.getId().equals(businessId))
+                .findFirst()
+                .orElse(null);
+    }
+
     private void removeBusinessesNotPresent(List<Business> existingBusinesses, List<Business> updatedBusinesses) {
         for (int i = existingBusinesses.size() - 1; i >= 0; i--) {
             Business existingBusiness = existingBusinesses.get(i);
-            boolean found = false;
-            for (Business updatedBusiness : updatedBusinesses) {
-                if (updatedBusiness.getId() != null && updatedBusiness.getId().equals(existingBusiness.getId())) {
-                    found = true;
-                    break;
-                }
-            }
+            boolean found = updatedBusinesses.stream().anyMatch(updatedBusiness ->
+                    updatedBusiness.getId() != null && updatedBusiness.getId().equals(existingBusiness.getId()));
             if (!found) {
                 businessRepository.delete(existingBusiness);
                 existingBusinesses.remove(existingBusiness);
@@ -218,23 +197,27 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    private BusinessBranch findExistingBranch(Long branchId, List<BusinessBranch> existingBranches) {
+        if (branchId == null) {
+            return null;
+        }
+        return existingBranches.stream()
+                .filter(b -> b.getId().equals(branchId))
+                .findFirst()
+                .orElse(null);
+    }
+
     private void removeBranchesNotPresent(List<BusinessBranch> existingBranches, List<BusinessBranch> updatedBranches) {
         for (int i = existingBranches.size() - 1; i >= 0; i--) {
             BusinessBranch existingBranch = existingBranches.get(i);
-            boolean found = false;
-            for (BusinessBranch updatedBranch : updatedBranches) {
-                if (updatedBranch.getId() != null && updatedBranch.getId().equals(existingBranch.getId())) {
-                    found = true;
-                    break;
-                }
-            }
+            boolean found = updatedBranches.stream().anyMatch(updatedBranch ->
+                    updatedBranch.getId() != null && updatedBranch.getId().equals(existingBranch.getId()));
             if (!found) {
                 branchRepository.delete(existingBranch);
                 existingBranches.remove(existingBranch);
             }
         }
     }
-
 
     public Customer toEntity(CustomerDto customerDto) {
         // Map Business objects

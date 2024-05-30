@@ -14,8 +14,8 @@ public class MasterCustomerStatementMapper {
     public MasterCustomerStatement toEntity(MasterCustomerStatementDto masterCustomerStatementDto){
         MasterCustomerStatement masterCustomerStatement = new MasterCustomerStatement();
         masterCustomerStatement.setId(masterCustomerStatementDto.getId());
-        masterCustomerStatement.setLocalDate(masterCustomerStatementDto.getLocalDate());
-        masterCustomerStatement.setLocalTime(masterCustomerStatementDto.getLocalTime());
+        masterCustomerStatement.setDate(masterCustomerStatementDto.getDate());
+        masterCustomerStatement.setTime(masterCustomerStatementDto.getTime());
         masterCustomerStatement.setDescription(masterCustomerStatementDto.getDescription());
 
         if (masterCustomerStatementDto.getOrder() != null) {
@@ -25,7 +25,7 @@ public class MasterCustomerStatementMapper {
         }
         masterCustomerStatement.setDebit(masterCustomerStatementDto.getDebit());
         masterCustomerStatement.setCredit(masterCustomerStatementDto.getCredit());
-        masterCustomerStatement.setAmount(masterCustomerStatementDto.getAmount());
+        masterCustomerStatement.setBalance(masterCustomerStatementDto.getBalance());
 
         if (masterCustomerStatementDto.getPaymentHistory() != null) {
             OrderPaymentHistory paymentHistory = new OrderPaymentHistory();
@@ -38,8 +38,8 @@ public class MasterCustomerStatementMapper {
     public MasterCustomerStatementDto toDto(MasterCustomerStatement masterCustomerStatement) {
         MasterCustomerStatementDto masterCustomerStatementDto = new MasterCustomerStatementDto();
         masterCustomerStatementDto.setId(masterCustomerStatement.getId());
-        masterCustomerStatementDto.setLocalDate(masterCustomerStatement.getLocalDate());
-        masterCustomerStatementDto.setLocalTime(masterCustomerStatement.getLocalTime());
+        masterCustomerStatementDto.setDate(masterCustomerStatement.getDate());
+        masterCustomerStatementDto.setTime(masterCustomerStatement.getTime());
         masterCustomerStatementDto.setDescription(masterCustomerStatement.getDescription());
 
         if (masterCustomerStatement.getOrder() != null) {
@@ -49,7 +49,7 @@ public class MasterCustomerStatementMapper {
         }
         masterCustomerStatementDto.setDebit(masterCustomerStatement.getDebit());
         masterCustomerStatementDto.setCredit(masterCustomerStatement.getCredit());
-        masterCustomerStatementDto.setAmount(masterCustomerStatement.getAmount());
+        masterCustomerStatementDto.setBalance(masterCustomerStatement.getBalance());
 
         if (masterCustomerStatement.getPaymentHistory() != null) {
             OrderPaymentHistoryDto paymentHistoryDto = new OrderPaymentHistoryDto();

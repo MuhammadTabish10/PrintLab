@@ -139,6 +139,8 @@ import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-g
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmation-screen/order-confirmation-screen.component';
 import { MasterCustomerStatementComponent } from './pages/customer/master-customer-statement/master-customer-statement.component';
+import { AddCustomerBusinessesComponent } from './pages/add-customer/add-customer-businesses/add-customer-businesses.component';
+import { CustomerStepperComponent } from './pages/add-customer/customer-stepper/customer-stepper.component';
 
 @NgModule({
   declarations: [
@@ -218,23 +220,21 @@ import { MasterCustomerStatementComponent } from './pages/customer/master-custom
     ViewUpingComponent,
     BusinessUnitAndProcessesComponent,
     ViewCustomerComponent,
-    // CreateJobComponent,
     JobRequestsComponent,
     ImageViewerComponent,
-    // GetAllJobsComponent,
     OrderStepsComponent,
     OrderOverViewComponent,
     OrderDesignComponent,
     HeadingComponent,
     JoinWithCommaSeparatedPipe,
     ProductRuleJobComponent,
-    // AddProductSizeComponent,
-    // DefineProductRuleManualComponent,
     JsonParsePipe,
     SizeFormatPipe,
     ProductRuleOfGroupSheetComponent,
     OrderConfirmationScreenComponent,
     MasterCustomerStatementComponent,
+    AddCustomerBusinessesComponent,
+    CustomerStepperComponent,
   ],
   imports: [
     BrowserModule,

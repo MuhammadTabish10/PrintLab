@@ -69,7 +69,18 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-statement>
-          <tr></tr>
+          <tr>
+            <td>{{ statement?.date }}</td>
+            <td>{{ statement?.time }}</td>
+            <td>{{ statement?.description }}</td>
+            <td *ngIf="statement.order">[PL-O-{{ statement.order?.id }}]</td>
+            <td *ngIf="statement.paymentHistory">
+              [TID: {{ statement.paymentHistory?.id }}]
+            </td>
+            <td>{{ statement?.debit }}</td>
+            <td>{{ statement?.credit }}</td>
+            <td>{{ statement?.balance }}</td>
+          </tr>
         </ng-template>
       </p-table>
     </div>

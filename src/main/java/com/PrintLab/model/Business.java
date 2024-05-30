@@ -17,15 +17,13 @@ public class Business {
     private Long id;
     private String businessName;
 
-    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    @JsonIgnore
     private List<BusinessBranch> businessBranchList;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     @ToString.Exclude
-    @JsonIgnore
     private Customer customer;
 
     @ManyToMany(mappedBy = "businesses")
@@ -35,6 +33,5 @@ public class Business {
 
     @ManyToMany(mappedBy = "business")
     @ToString.Exclude
-    @JsonIgnore
     private List<OrderPaymentHistory> orderPaymentHistoryList;
 }

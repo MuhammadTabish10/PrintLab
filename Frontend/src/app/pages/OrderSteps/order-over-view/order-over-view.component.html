@@ -1,6 +1,6 @@
 <div class="card flex justify-content-center">
   <p-toast></p-toast>
-  <p-accordion [multiple]="true" [activeIndex]="[0]">
+  <p-accordion [multiple]="true" [activeIndex]="[0, 1]">
     <p-accordionTab header="Details">
       <div class="container-fluid">
         <div class="row">
@@ -53,5 +53,212 @@
         </div>
       </div>
     </p-accordionTab>
+    <p-accordionTab header="Finance">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-4">
+            <h5 class="text-uppercase">Order Information</h5>
+            <table class="text-uppercase">
+              <tr>
+                <th>Order Total</th>
+                <td class="text-end">PKR {{ orderById.amount }}</td>
+              </tr>
+              <tr>
+                <th>Amount Received</th>
+                <td class="text-end">PKR {{ "" }}</td>
+              </tr>
+              <tr>
+                <th>Balance Due</th>
+                <td class="text-end">PKR {{ "" }}</td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-8 text-end">
+            <button class="btn btn-dark" type="button" (click)="show()">
+              Record Payment
+            </button>
+          </div>
+        </div>
+        <div class="row" *ngIf="orderPaymentHistoryList.length > 0">
+          <p-table
+            [value]="orderPaymentHistoryList"
+            [tableStyle]="{ 'min-width': '50rem' }"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>TimeStamp</th>
+                <th>Amount</th>
+                <th>Details</th>
+                <th>By</th>
+                <th>From</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-history>
+              <tr>
+                <td>{{ history.timestamp }}</td>
+                <td>{{ history.amount }}</td>
+                <td>{{ history.type }}</td>
+                <td>{{ history.paymentReceivedBy[0].name }}</td>
+                <td>
+                  {{ history.business[0].businessName + "[ " + history.businessBranch[0].branchName + " ]" }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-accordionTab>
   </p-accordion>
 </div>
+
+<!-- Record Payment Modal -->
+
+<p-dialog
+  header="Payment Received"
+  position="top"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '25vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="clear()"
+  [dismissableMask]="true"
+  [modal]="true"
+>
+  <form #historyForm="ngForm" (ngSubmit)="submit()">
+    <div class="row mx-auto my-3">
+      <div class="col-12">
+        <label class="d-block add-order-label m-0">Business</label>
+        <p-dropdown
+          [options]="orderById.businesses"
+          styleClass="w-100"
+          optionLabel="businessName"
+          [(ngModel)]="selectedBusiness"
+          [appendTo]="'body'"
+          name="business"
+          (ngModelChange)="getBranchList($event)"
+          #business="ngModel"
+          [required]="true"
+          [ngClass]="{
+            'ng-dirty ng-invalid':
+              business.invalid && (business.dirty || business.touched)
+          }"
+        >
+        </p-dropdown>
+        <div *ngIf="business.invalid && (business.dirty || business.touched)">
+          <div *ngIf="business.errors" class="text-danger m-1">
+            Business is required.
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <label class="d-block add-order-label m-0">Branch</label>
+        <p-dropdown
+          [options]="branchList"
+          styleClass="w-100"
+          optionLabel="branchName"
+          [(ngModel)]="selectedBranch"
+          [appendTo]="'body'"
+          name="branch"
+          #branch="ngModel"
+          [required]="true"
+          [ngClass]="{
+            'ng-dirty ng-invalid':
+              branch.invalid && (branch.dirty || branch.touched)
+          }"
+        >
+        </p-dropdown>
+        <div *ngIf="branch.invalid && (branch.dirty || branch.touched)">
+          <div *ngIf="branch.errors" class="text-danger m-1">
+            Branch is required.
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <label class="d-block add-order-label m-0">Description</label>
+        <textarea
+          class="w-100"
+          [(ngModel)]="paymentHistoryBody.description"
+          name="desc"
+          rows="5"
+          cols="30"
+          pInputTextarea
+          [autoResize]="true"
+        ></textarea>
+      </div>
+      <div class="col-12">
+        <label class="d-block add-order-label m-0">By</label>
+        <p-dropdown
+          [options]="userList"
+          styleClass="w-100"
+          optionLabel="name"
+          [(ngModel)]="selectedUser"
+          [appendTo]="'body'"
+          name="by"
+          #by="ngModel"
+          [required]="true"
+          [ngClass]="{
+            'ng-dirty ng-invalid': by.invalid && (by.dirty || by.touched)
+          }"
+        >
+        </p-dropdown>
+        <div *ngIf="by.invalid && (by.dirty || by.touched)">
+          <div *ngIf="by.errors" class="text-danger m-1">
+            Payment Received By is required.
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <label class="d-block add-order-label m-0">Type</label>
+        <p-dropdown
+          [options]="cashTypes?.productFieldValuesList"
+          styleClass="w-100"
+          optionLabel="name"
+          optionValue="name"
+          [(ngModel)]="paymentHistoryBody.type"
+          [appendTo]="'body'"
+          name="type"
+          #type="ngModel"
+          [required]="true"
+          [ngClass]="{
+            'ng-dirty ng-invalid': type.invalid && (type.dirty || type.touched)
+          }"
+        >
+        </p-dropdown>
+        <div *ngIf="type.invalid && (type.dirty || type.touched)">
+          <div *ngIf="type.errors" class="text-danger m-1">
+            Type is required.
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <label class="d-block add-order-label m-0">Amount</label>
+        <p-inputNumber
+          styleClass="custom"
+          [(ngModel)]="paymentHistoryBody.amount"
+          name="amount"
+          #amount="ngModel"
+          [required]="true"
+          [ngClass]="{
+            'ng-dirty ng-invalid':
+              amount.invalid && (amount.dirty || amount.touched)
+          }"
+        />
+        <div *ngIf="amount.invalid && (amount.dirty || amount.touched)">
+          <div *ngIf="amount.errors" class="text-danger m-1">
+            Amount is required.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end me-3">
+      <button
+        class="btn btn-dark"
+        type="submit"
+        [disabled]="!historyForm.valid"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+</p-dialog>

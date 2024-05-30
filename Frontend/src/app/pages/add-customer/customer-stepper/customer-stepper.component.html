@@ -1,0 +1,64 @@
+<div class="">
+  <ul class="nav nav-tabs" style="width: 100%">
+    <li class="nav-item" style="flex: 1">
+      <a
+        [ngClass]="
+          active === 'contactInfo'
+            ? 'bg-dark text-white'
+            : 'bg-light text-dark'
+        "
+        class="nav-link active rounded-0 text-center"
+        data-bs-toggle="tab"
+        href="#contactInfo"
+        (click)="active = 'contactInfo'"
+        >Contact Information</a
+      >
+    </li>
+    <li class="nav-item" style="flex: 1">
+      <a
+        [ngClass]="
+          active === 'business' ? 'bg-dark text-white' : 'bg-light text-dark'
+        "
+        class="nav-link rounded-0 text-center"
+        data-bs-toggle="tab"
+        href="#business"
+        (click)="active = 'business'"
+        >Business</a
+      >
+    </li>
+    <li class="nav-item" style="flex: 1">
+      <a
+        [ngClass]="
+          active === 'payment' ? 'bg-dark text-white' : 'bg-light text-dark'
+        "
+        class="nav-link rounded-0 text-center"
+        data-bs-toggle="tab"
+        href="#payment"
+        (click)="active = 'payment'"
+        >Payment</a
+      >
+    </li>
+    <li class="nav-item" style="flex: 1">
+      <a
+        [ngClass]="
+          active === 'statement' ? 'bg-dark text-white' : 'bg-light text-dark'
+        "
+        class="nav-link rounded-0 text-center"
+        data-bs-toggle="tab"
+        href="#statement"
+        (click)="active = 'statement'"
+        >Statement</a
+      >
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="contactInfo">
+      <app-add-customer></app-add-customer>
+    </div>
+    <div class="tab-pane fade" id="business">
+      <app-add-customer-businesses></app-add-customer-businesses>
+    </div>
+    <div class="tab-pane fade" id="payment"></div>
+    <div class="tab-pane fade" id="statement"></div>
+  </div>
+</div>

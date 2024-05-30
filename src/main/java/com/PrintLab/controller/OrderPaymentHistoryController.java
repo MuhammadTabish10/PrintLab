@@ -1,10 +1,8 @@
 package com.PrintLab.controller;
 
-import com.PrintLab.dto.OrderDto;
 import com.PrintLab.dto.OrderPaymentHistoryDto;
 import com.PrintLab.service.OrderPaymentHistoryService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +17,16 @@ public class OrderPaymentHistoryController {
         this.orderPaymentHistoryService = orderPaymentHistoryService;
     }
 
-    @PostMapping("/orderPaymentHistory")
+    @PostMapping("/save-order-payment-history")
     public ResponseEntity<OrderPaymentHistoryDto> createOrderHistory(@RequestBody OrderPaymentHistoryDto orderPaymentHistoryDto) {
         return ResponseEntity.ok(orderPaymentHistoryService.save(orderPaymentHistoryDto));
+    }
+    @PutMapping("/save-order-payment-history-by-order-id/{orderId}")
+    public ResponseEntity<OrderPaymentHistoryDto> createOrderHistoryInOrder(
+            @RequestBody OrderPaymentHistoryDto orderPaymentHistoryDto,
+            @PathVariable Long orderId) {
+        OrderPaymentHistoryDto savedOrderPaymentHistoryDto = orderPaymentHistoryService.saveOrderPaymentHistory(orderId, orderPaymentHistoryDto);
+        return ResponseEntity.ok(savedOrderPaymentHistoryDto);
     }
 
     @GetMapping("/orderPaymentHistory")
@@ -34,6 +39,11 @@ public class OrderPaymentHistoryController {
     public ResponseEntity<OrderPaymentHistoryDto> getOrderPaymentHistoryById(@PathVariable Long id) {
         OrderPaymentHistoryDto orderDto = orderPaymentHistoryService.findById(id);
         return ResponseEntity.ok(orderDto);
+    }
+    @GetMapping("/get-payment-history-by-order-id/{id}")
+    public ResponseEntity<List<OrderPaymentHistoryDto>> getOrderPaymentHistoryOrderById(@PathVariable Long id) {
+        List<OrderPaymentHistoryDto> orderPaymentHistoryDtoList = orderPaymentHistoryService.findByOrderId(id);
+        return ResponseEntity.ok(orderPaymentHistoryDtoList);
     }
 
     @GetMapping("/orderPaymentHistory-name/{name}")
@@ -48,7 +58,7 @@ public class OrderPaymentHistoryController {
         ResponseEntity.ok();
     }
 
-    @PutMapping("/orderPaymentHistory/{id}")
+    @PutMapping("/update-order-payment-history/{id}")
     public ResponseEntity<OrderPaymentHistoryDto> updateOrderPaymentHistoryById(@PathVariable Long id, @RequestBody OrderPaymentHistoryDto orderPaymentHistoryDto) {
         OrderPaymentHistoryDto updatedOrderDto = orderPaymentHistoryService.updateById(id, orderPaymentHistoryDto);
         return ResponseEntity.ok(updatedOrderDto);

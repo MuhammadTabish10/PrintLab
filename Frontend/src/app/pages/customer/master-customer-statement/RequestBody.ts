@@ -12,6 +12,6 @@ export const RequestBodyMasterCustomerStatement = {
     dateList: [],
     status: undefined,
     description: undefined,
-    orderPaymentHistory: undefined,
+    paymentHistory: undefined,
   }
 };

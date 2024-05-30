@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface OrderPaymentHistoryRepository extends JpaRepository<OrderPaymentHistory, Long> {
     List<OrderPaymentHistory> findByBusinessBusinessName(String businessName);
+
+    List<OrderPaymentHistory> findByOrderId(Long id);
 }

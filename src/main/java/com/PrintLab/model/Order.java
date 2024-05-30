@@ -118,6 +118,8 @@ public class Order {
     private List<OrderItems> orderItems;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
     private MasterCustomerStatement masterCustomerStatement;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)

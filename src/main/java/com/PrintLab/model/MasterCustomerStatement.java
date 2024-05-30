@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,18 +17,19 @@ public class MasterCustomerStatement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate localDate;
-    private LocalTime localTime;
+    private LocalDate date;
+    private LocalTime time;
     private String description;
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
     private Double debit;
     private Double credit;
-    private Double amount;
+    private Double balance;
     @JsonIgnore
     @OneToOne
     @JoinColumn(name = "orderPayment_id")
     private OrderPaymentHistory paymentHistory;
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    @ToString.Exclude
+    private Order order;
 }

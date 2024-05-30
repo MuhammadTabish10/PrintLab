@@ -73,6 +73,7 @@ import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-r
 import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
 import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmation-screen/order-confirmation-screen.component';
 import { MasterCustomerStatementComponent } from './pages/customer/master-customer-statement/master-customer-statement.component';
+import { CustomerStepperComponent } from './pages/add-customer/customer-stepper/customer-stepper.component';
 
 export const routes: Routes = [
   {
@@ -230,7 +231,7 @@ export const routes: Routes = [
   },
   {
     path: 'addCustomer',
-    component: AddCustomerComponent,
+    component: CustomerStepperComponent,
     canActivate: [AuthguardService]
   },
   {

@@ -1,0 +1,248 @@
+<p-toast></p-toast>
+<form class="was-validated" novalidate #customerBusinessForm="ngForm">
+  <p-accordion [multiple]="true" *ngIf="customerId">
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <span class="font-bold white-space-nowrap text-nowrap py-15">
+          Business Information
+        </span>
+      </ng-template>
+      <div class="d-flex justify-content-end mb-2">
+        <button class="btn btn-dark" type="button" (click)="showModal()">
+          <i class="pi pi-plus fs-6"></i>
+          Business
+        </button>
+      </div>
+
+      <div>
+        <p-accordion [multiple]="true">
+          <p-accordionTab
+            *ngFor="let business of businessList; let i = index"
+            [selected]="i === openTabIndex"
+            (onOpen)="openTabIndex = i"
+            (onClose)="openTabIndex = null"
+          >
+            <ng-template pTemplate="header">
+              <span class="ms-3 badge">
+                <p-badge
+                  [value]="business.businessBranchList?.length?.toString()"
+                  [style]="{ 'background-color': 'black' }"
+                ></p-badge>
+              </span>
+
+              <span
+                class="font-bold white-space-nowrap text-nowrap"
+                [ngClass]="{
+                  'p-accordion p-accordion-header:not(p-disabled)p-highlight p-accordion-header-link':
+                    i === openTabIndex
+                }"
+              >
+                {{ business?.businessName }}
+              </span>
+
+              <div class="d-flex justify-content-end align-items-center w-100">
+                <span
+                  class="pi pi-plus me-3"
+                  (click)="showModal(undefined, business)"
+                ></span>
+                <span
+                  class="pi pi-file-edit me-3"
+                  (click)="showModal(undefined, business, business.id!)"
+                ></span>
+                <span
+                  *ngIf="business.businessBranchList?.length === 0"
+                  class="pi pi-trash"
+                  (click)="deleteBusiness(i)"
+                ></span>
+              </div>
+            </ng-template>
+            <div class="card" *ngIf="business.businessBranchList">
+              <p-table
+                *ngIf="business.businessBranchList.length > 0"
+                [value]="business.businessBranchList"
+                [columns]="cols"
+                [reorderableColumns]="true"
+                [tableStyle]="{ 'min-width': '50rem' }"
+              >
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th style="width: 3rem"></th>
+                    <th
+                      class="col-2"
+                      *ngFor="let col of columns"
+                      pReorderableColumn
+                    >
+                      {{ col.header }}
+                    </th>
+                    <!-- Add Actions column header -->
+                    <th class="col-3 text-end" style="padding-right: 4.5rem">
+                      Actions
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template
+                  pTemplate="body"
+                  let-rowData
+                  let-columns="columns"
+                  let-index="rowIndex"
+                >
+                  <tr [pReorderableRow]="index">
+                    <td>
+                      <span class="pi pi-bars" pReorderableRowHandle></span>
+                    </td>
+                    <td *ngFor="let col of columns">
+                      <ng-container>
+                        {{ rowData[col.field] }}
+                      </ng-container>
+                    </td>
+                    <!-- Actions column -->
+                    <td class="text-end">
+                      <div
+                        class="btn-group mr-2"
+                        role="group"
+                        aria-label="Second group"
+                      >
+                        <button
+                          type="button"
+                          class="btn order-table-btn"
+                          (click)="showModal(rowData, business)"
+                        >
+                          <i class="fa-solid fa-pen"></i>&nbsp;Edit
+                        </button>
+                        <button
+                          type="button"
+                          class="btn order-table-btn"
+                          (click)="deleteBranchById(rowData.id)"
+                        >
+                          <i class="fa-solid fa-trash"></i>&nbsp;Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+  <div class="row justify-content-end mt-3 mb-3">
+    <div class="col-1 me-1">
+      <button
+        type="button"
+        class="btn btn-dark w-100"
+        [disabled]="!customerBusinessForm.valid"
+        (click)="addCustomer()"
+      >
+        {{ buttonName }}
+      </button>
+    </div>
+  </div>
+</form>
+
+<p-dialog
+  [header]="heading"
+  position="top"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '25vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onModalClose()"
+  [dismissableMask]="true"
+  [modal]="true"
+>
+  <form #businessForm="ngForm" (ngSubmit)="addToList()">
+    <div class="row mx-auto my-3">
+      <div class="col-12" *ngIf="mode === 'Business'">
+        <label class="d-block add-order-label m-0"
+          >This business will be associated with {{ customer.name }}.</label
+        >
+        <label class="d-block add-order-label m-0">Name</label>
+        <input
+          pInputText
+          [(ngModel)]="name"
+          name="category"
+          class="w-100"
+          required
+        />
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0 fw-bolder"
+            >This branch will be added to {{ business.businessName }}</label
+          >
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Name</label>
+          <input
+            pInputText
+            [(ngModel)]="branch.branchName"
+            name="branch"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Address</label>
+          <textarea
+            rows="3"
+            required
+            cols="30"
+            class="w-100"
+            name="address"
+            pInputTextarea
+            [autoResize]="true"
+            [(ngModel)]="branch.address"
+          ></textarea>
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">City</label>
+          <input
+            [(ngModel)]="branch.city"
+            pInputText
+            name="city"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Point of contact</label>
+          <input
+            [(ngModel)]="branch.pointOfContact"
+            pInputText
+            name="pointOfContact"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+      <div class="row mx-auto my-3" *ngIf="mode === 'Update'">
+        <div class="col-12">
+          <label class="d-block add-order-label m-0">Phone</label>
+          <input
+            [(ngModel)]="branch.phoneNumber"
+            pInputText
+            name="phoneNumber"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end me-3">
+      <button class="btn btn-dark" type="submit">Save</button>
+    </div>
+  </form>
+</p-dialog>

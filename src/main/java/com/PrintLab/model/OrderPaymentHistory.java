@@ -1,6 +1,5 @@
 package com.PrintLab.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,7 +18,6 @@ public class OrderPaymentHistory {
     private Long id;
     private LocalDateTime timeStamp;
     private Double amount;
-    private String detail;
     @ManyToMany
     @JoinTable(
             name = "payment_history_business",
@@ -45,14 +43,14 @@ public class OrderPaymentHistory {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     @ToString.Exclude
-    private List<User> user;
+    private List<User> paymentReceivedBy;
     @Column(columnDefinition = "TEXT")
     private String description;
     private String type;
     private Boolean status;
 
     @OneToOne(mappedBy = "paymentHistory", cascade = CascadeType.ALL)
-    private MasterCustomerStatement masterCustomerStatements;
+    private MasterCustomerStatement masterCustomerStatement;
 
     @ManyToOne
     @JoinColumn(name = "order_id")

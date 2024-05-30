@@ -114,11 +114,7 @@ export class AddCustomerComponent implements OnInit {
   }
 
   addCustomer() {
-    // this.customer.parentCustomerId = this.selectedParent ? this.selectedParent.id : null;
-    // const formattedDate = this.datePipe.transform(this.customer.asOf, 'yyyy-MM-dd');
-    // this.customer.asOf = formattedDate;
     this.customer.customerBusinessName = this.businessList;
-    
     this.customer.primaryPaymentMethod = JSON.stringify(this.customer.primaryPaymentMethod);
     const validated = this.validateEmail(this.customer.email)
     if (validated) {
@@ -126,7 +122,9 @@ export class AddCustomerComponent implements OnInit {
         this.customerService.updateCustomer(this.idFromQueryParam, this.customer) :
         this.customerService.postCustomer(this.customer);
       request.pipe(takeUntil(this.destroy$)).subscribe(
-        () => this.router.navigateByUrl('/customers'),
+        (res: any) => {
+          this.router.navigate(['/addCustomer'], { queryParams: { id: res.id } });
+        },
         (error: any) => {
           this.showError(error.error.error);
           this.visible = true;
@@ -170,7 +168,7 @@ export class AddCustomerComponent implements OnInit {
       this.customerService.getCustomerById(this.idFromQueryParam).subscribe(
         (res: Customer) => {
           this.customer = res;
-          
+
           if (this.customer.primaryPaymentMethod && typeof this.customer.primaryPaymentMethod === 'string') {
             try {
               const parsedArray = JSON.parse(this.customer.primaryPaymentMethod);
@@ -193,7 +191,7 @@ export class AddCustomerComponent implements OnInit {
             { field: 'pointOfContact', header: 'Point Of Contact' },
             { field: 'phoneNumber', header: 'Contact' },
           ];
-          
+
         }, error => {
           this.showError(error.error.error);
         });
@@ -285,7 +283,7 @@ export class AddCustomerComponent implements OnInit {
 
   deleteBranchById(id: number): void {
     this.businessList.forEach(business => {
-      
+
       const branchIndexToRemove = business.businessBranchList?.findIndex(branch => branch.id === id);
       if (branchIndexToRemove !== undefined && branchIndexToRemove !== -1) {
         business.businessBranchList?.splice(branchIndexToRemove, 1);
@@ -293,7 +291,7 @@ export class AddCustomerComponent implements OnInit {
     });
   }
   deleteBusiness(id: number): void {
-    
+
     const index = this.businessList.findIndex(business => business.id === id);
     if (index) {
       this.businessList?.splice(index, 1);
@@ -301,7 +299,7 @@ export class AddCustomerComponent implements OnInit {
   }
 
   addToList(): void {
-    
+
     if (this.mode === 'Business' && this.name) {
       // Find the highest existing id
       let maxId = 0;
@@ -402,7 +400,7 @@ export class AddCustomerComponent implements OnInit {
   private getUserList() {
     this.userService.getUsers().subscribe((users: User[]) => {
       this.userList = users.filter(user => this.hasUserRole(user, 'ROLE_USER'));
-      
+
     }, (error: BackendErrorResponse) => {
       this.showError(error.error.error);
     });

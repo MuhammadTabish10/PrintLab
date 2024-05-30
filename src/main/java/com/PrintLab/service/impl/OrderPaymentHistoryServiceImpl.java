@@ -1,15 +1,18 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.Mapper.OrderPaymentHistoryMapper;
-import com.PrintLab.dto.BusinessDto;
 import com.PrintLab.dto.OrderPaymentHistoryDto;
-import com.PrintLab.dto.OrderDto;
-import com.PrintLab.model.Business;
-import com.PrintLab.model.OrderPaymentHistory;
+import com.PrintLab.exception.RecordNotFoundException;
+import com.PrintLab.model.*;
+import com.PrintLab.repository.MasterCustomerStatementRepository;
 import com.PrintLab.repository.OrderPaymentHistoryRepository;
+import com.PrintLab.repository.OrderRepository;
 import com.PrintLab.service.OrderPaymentHistoryService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -19,12 +22,15 @@ import java.util.stream.Collectors;
 @Service
 public class OrderPaymentHistoryServiceImpl implements OrderPaymentHistoryService {
 
+    private final MasterCustomerStatementRepository masterCustomerStatementRepository;
     private final OrderPaymentHistoryRepository orderPaymentHistoryRepository;
     private final OrderPaymentHistoryMapper orderPaymentHistoryMapper;
-
-    public OrderPaymentHistoryServiceImpl(OrderPaymentHistoryRepository orderPaymentHistoryRepository, OrderPaymentHistoryMapper orderPaymentHistoryMapper) {
+    private final OrderRepository orderRepository;
+    public OrderPaymentHistoryServiceImpl(OrderPaymentHistoryRepository orderPaymentHistoryRepository, OrderPaymentHistoryMapper orderPaymentHistoryMapper, OrderRepository orderRepository, MasterCustomerStatementRepository masterCustomerStatementRepository) {
+        this.masterCustomerStatementRepository = masterCustomerStatementRepository;
         this.orderPaymentHistoryRepository = orderPaymentHistoryRepository;
         this.orderPaymentHistoryMapper = orderPaymentHistoryMapper;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -77,5 +83,50 @@ public class OrderPaymentHistoryServiceImpl implements OrderPaymentHistoryServic
             return orderPaymentHistoryMapper.toDto(updatedPaymentHistory);
         }
         return null;
+    }
+
+    @Override
+    public List<OrderPaymentHistoryDto> findByOrderId(Long id) {
+        List<OrderPaymentHistory> paymentHistoryList = orderPaymentHistoryRepository.findByOrderId(id);
+        if (paymentHistoryList.isEmpty()) {
+            throw new RecordNotFoundException("OrderPaymentHistory not found with id: " + id);
+        }
+        return paymentHistoryList.stream()
+                .map(orderPaymentHistoryMapper::toDto)
+                .collect(Collectors.toList());
+    }
+    @Override
+    @Transactional
+    public OrderPaymentHistoryDto saveOrderPaymentHistory(Long orderId, OrderPaymentHistoryDto orderPaymentHistoryDto) {
+        // Find the order by ID
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // Map DTO to entity
+        OrderPaymentHistory orderPaymentHistory = orderPaymentHistoryMapper.toEntity(orderPaymentHistoryDto);
+
+        // Set the order in the orderPaymentHistory
+        orderPaymentHistory.setOrder(order);
+
+        // Add orderPaymentHistory to the order's list
+        order.getOrderPaymentHistory().add(orderPaymentHistory);
+
+        // Save the orderPaymentHistory
+        OrderPaymentHistory savedOrderPaymentHistory = orderPaymentHistoryRepository.save(orderPaymentHistory);
+
+        MasterCustomerStatement customerStatement = MasterCustomerStatement.builder()
+                .date(LocalDate.now())
+                .time(LocalTime.now())
+                .description("Payment received from " + savedOrderPaymentHistory.getPaymentReceivedBy().stream().map(User::getName).collect(Collectors.joining(", ")))
+                .paymentHistory(savedOrderPaymentHistory)
+                .credit(order.getAmount())
+                .debit(savedOrderPaymentHistory.getAmount())
+                .balance(order.getAmount() - savedOrderPaymentHistory.getAmount())
+                .build();
+
+        masterCustomerStatementRepository.save(customerStatement);
+
+        // Map entity back to DTO
+        return orderPaymentHistoryMapper.toDto(savedOrderPaymentHistory);
     }
 }

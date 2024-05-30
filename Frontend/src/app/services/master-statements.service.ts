@@ -25,7 +25,7 @@ export class MasterStatementsService {
       params = params.set('page-number', 0);
       params = params.set('page-size', 10);
     }
-    return this.http.post<PaginationResponse<MasterCustomerStatement>>(`${this.BASE_URL}/get-all/customer-master-statements`, search ? search : {}, { params });
+    return this.http.post<PaginationResponse<MasterCustomerStatement>>(`${this.BASE_URL}/get-paginated-master-customer-statements`, search ? search : {}, { params });
   }
 
   //Post master statements of customer statements

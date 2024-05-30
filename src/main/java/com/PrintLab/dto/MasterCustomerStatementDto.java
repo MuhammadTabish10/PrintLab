@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -16,12 +17,13 @@ import java.util.List;
 public class MasterCustomerStatementDto {
 
     private Long id;
-    private LocalDate localDate;
-    private LocalTime localTime;
+    private LocalDate date;
+    private LocalTime time;
     private String description;
-    private OrderDto order;
     private Double debit;
     private Double credit;
-    private Double amount;
+    private Double balance;
+    private List<LocalDateTime> dateList;
     private OrderPaymentHistoryDto paymentHistory;
+    private OrderDto order;
 }

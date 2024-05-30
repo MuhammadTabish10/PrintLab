@@ -1,9 +1,10 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.MasterCustomerStatementDto;
-import com.PrintLab.dto.OrderPaymentHistoryDto;
+import com.PrintLab.dto.PaginationResponse;
 import com.PrintLab.service.MasterCustomerStatementService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,5 +46,16 @@ public class MasterCustomerStatementController {
     public ResponseEntity<MasterCustomerStatementDto> updateMasterCustomerStatementDtoById(@PathVariable Long id, @RequestBody MasterCustomerStatementDto masterCustomerStatementDto) {
         MasterCustomerStatementDto updatedCustomerSatement = masterCustomerStatementService.updateById(id, masterCustomerStatementDto);
         return ResponseEntity.ok(updatedCustomerSatement);
+    }
+
+    @PostMapping("/get-paginated-master-customer-statements")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<PaginationResponse> findAll(
+            @RequestParam(value = "page-number", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "page-size", defaultValue = "10", required = false) Integer pageSize,
+            @RequestBody MasterCustomerStatementDto masterCustomerStatementDto
+    ) {
+        PaginationResponse paginationResponse = masterCustomerStatementService.getAllPaginatedStatements(pageNumber, pageSize, masterCustomerStatementDto);
+        return ResponseEntity.ok(paginationResponse);
     }
 }

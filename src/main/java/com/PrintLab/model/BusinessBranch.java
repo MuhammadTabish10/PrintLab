@@ -1,6 +1,5 @@
 package com.PrintLab.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,12 +23,10 @@ public class BusinessBranch {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_id")
-    @JsonIgnore
     @ToString.Exclude
     private Business business;
 
     @ManyToMany(mappedBy = "businessBranch")
     @ToString.Exclude
-    @JsonIgnore
     private List<OrderPaymentHistory> orderPaymentHistoryList;
 }
