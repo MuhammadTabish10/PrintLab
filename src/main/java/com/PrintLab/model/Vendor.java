@@ -1,6 +1,7 @@
 package com.PrintLab.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -27,6 +28,7 @@ public class Vendor {
     private String contactNumber;
     private String email;
     private String address;
+    @Column(columnDefinition = "TEXT")
     private String notes;
     private Boolean status;
 
@@ -44,4 +46,17 @@ public class Vendor {
     )
     private List<BusinessUnitProcess> businessUnitProcesses;
 
+    private Double due;
+    private String secondaryEmail;
+    private String landmark;
+
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<VendorContacts> vendorContacts;
+
+    @OneToOne(mappedBy = "vendor", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
+    private VendorManagement vendorManagement;
 }

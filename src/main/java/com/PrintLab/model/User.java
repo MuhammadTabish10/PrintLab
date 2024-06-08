@@ -50,5 +50,15 @@ public class User {
     @ToString.Exclude
     @JsonIgnore
     private List<OrderPaymentHistory> orderPaymentHistoryList;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
+    private VendorManagement vendorManagement;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
+    private VendorContacts vendorContacts;
 }
 
