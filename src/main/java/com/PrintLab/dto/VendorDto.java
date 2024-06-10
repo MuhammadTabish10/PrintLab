@@ -1,5 +1,7 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.VendorContacts;
+import com.PrintLab.model.VendorManagement;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -27,4 +29,11 @@ public class VendorDto
 
     @ToString.Exclude
     private List<BusinessUnitProcessDto> businessUnitProcess;
+
+    private Double due;
+    private String secondaryEmail;
+    private String landmark;
+
+    private List<VendorContactsDto> vendorContacts;
+    private VendorManagementDto vendorManagement;
 }
