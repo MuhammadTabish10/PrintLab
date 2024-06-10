@@ -90,6 +90,10 @@ export class VendorComponent implements OnInit, OnDestroy {
     }
   }
 
+  onClickVendor(id:number){
+    this.router.navigate(["/vendor-management"], { queryParams: { id: id } });
+  }
+
   showError(error: any) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
     this.visible = true;

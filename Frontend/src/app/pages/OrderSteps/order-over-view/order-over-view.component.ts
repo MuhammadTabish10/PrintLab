@@ -104,7 +104,6 @@ export class OrderOverViewComponent implements OnInit {
   private getPaymentHistoryByOrderId(id: number): void {
     this.orderPaymentHistoryService.getPaymentHistoryByOrderId(id).subscribe(
       (data: OrderPaymentHistory[]) => {
-        debugger
         this.orderPaymentHistoryList = data;
         console.log(data);
       },
@@ -155,7 +154,6 @@ export class OrderOverViewComponent implements OnInit {
   }
 
   getBranchList(selectedBusiness: Business): void {
-    debugger
     this.branchList = [];
     if (selectedBusiness.businessBranchList?.length === 0) {
       return;

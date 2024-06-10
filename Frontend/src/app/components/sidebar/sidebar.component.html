@@ -111,6 +111,19 @@
           </a>
         </span>
       </li>
+      <li
+        class="settingOptions mt-2"
+        *ngIf="sessionStorageService.hasPermission('Configuration_Vendor')"
+      >
+        <span>
+          <a
+            class="sidebar-list-hover d-flex align-items-baseline-settings nav-link"
+            [routerLink]="['/vendors-list']"
+          >
+            <span class="nav-text">Vendor Management</span>
+          </a>
+        </span>
+      </li>
 
       <li
         *ngIf="sessionStorageService.hasPermission('Calculator')"

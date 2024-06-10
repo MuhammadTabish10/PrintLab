@@ -15,5 +15,6 @@ export class LoginService {
     let url = `${this._url}/login`
     return this.http.post(url, obj)
   }
+  
 
 }

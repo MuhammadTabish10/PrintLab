@@ -9,6 +9,7 @@
         #dt1
         [value]="vendorArray"
         dataKey="id"
+        [rowHover]="true"
         [globalFilterFields]="['name']"
       >
         <ng-template pTemplate="caption">
@@ -33,21 +34,21 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th class="text-center">Date Added</th>
-            <th class="text-center">Business Name</th>
+            <th class="text-center">ID</th>
+            <th class="text-center">Name</th>
             <th class="text-center">Point of Contact</th>
             <th class="text-center">Phone</th>
             <th class="text-center">Email</th>
             <th class="text-center">Address</th>
             <th class="text-center">Process</th>
             <th class="text-center">Notes</th>
-            <th class="text-center">Action</th>
+            <!-- <th class="text-center">Action</th> -->
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-vendor let-i="rowIndex">
-          <tr>
+          <tr class="clickable-row text-start" (click)="onClickVendor(vendor?.id)">
             <td class="text-center">
-              {{ vendor?.date }}
+              {{ vendor?.id }}
             </td>
             <td class="text-center">
               {{ vendor?.name }}
@@ -70,7 +71,7 @@
             <td class="text-center">
               {{ vendor?.notes }}
             </td>
-            <td class="text-center">
+            <!-- <td class="text-center">
               <div
                 class="btn-group"
                 role="group"
@@ -98,7 +99,7 @@
                   <i class="fa-solid fa-wallet"></i>&nbsp;Settlement
                 </button>
               </div>
-            </td>
+            </td> -->
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">

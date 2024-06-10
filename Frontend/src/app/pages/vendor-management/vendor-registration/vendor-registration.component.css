@@ -1,0 +1,54 @@
+.page-content {
+      background-color: #dddddd;
+    padding: 15px 0px 15px 30px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    margin: 10px 0;
+}
+
+.require{
+  display: block;
+}
+
+.vendor-form{
+  padding: 10px 30px;
+}
+
+.submit-btn {
+  color: #ffffff;
+  background: black !important;
+  border: 1px solid black !important;
+  padding: 0.24rem 1.25rem !important;
+  font-size: 1rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  border-radius: 4px !important;
+}
+
+.submit-btn:hover {
+  background-color: rgba(0, 0, 0, 0.788) !important;
+}
+
+*::ng-deep .p-inputtext,
+*::ng-deep .p-dropdown {
+  padding: 0.3rem 0.75rem !important;
+  border-radius: 1px !important;
+}
+
+*::ng-deep .p-fluid .p-inputtext {
+  width: 32.5% !important;
+}
+
+textarea {
+  resize: none !important;
+}
+
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+label{
+  display: block;
+}

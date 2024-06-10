@@ -8,6 +8,7 @@ import jwt_decode from 'jwt-decode';
 })
 export class AuthguardService implements CanActivate {
 
+  userRole:any
   constructor(private router: Router) { }
   get token(): string {
     return localStorage.getItem("token")!;
@@ -20,7 +21,8 @@ export class AuthguardService implements CanActivate {
 
       const decodedToken = this.getDecodedAccessToken(jwtToken);
       const userPermissions = decodedToken.PERMISSIONS;
-      const userRoles = decodedToken.ROLES;
+      this.userRole = decodedToken.ROLES;
+
 
       const url = state.url;
       let permission: any = {};
@@ -122,9 +124,17 @@ export class AuthguardService implements CanActivate {
       permissions: 'Configuration_Inventory'
     }
     const permissionConfiguration_Vendor = {
-      url: ['/vendor', '/addVendor', '/vendorSettlement', '/allSettlements','/vendor-management'],
-      permissions: 'Configuration_Vendor'
-    }
+      url: [
+        "/vendor",
+        "/addVendor",
+        "/vendorSettlement",
+        "/allSettlements",
+        "/vendor-management",
+        "/vendor-registration",
+        "/vendors-list",
+      ],
+      permissions: "Configuration_Vendor",
+    };
     const permissionConfiguration_CTP = {
       url: ['/ctp', '/addCtp'],
       permissions: 'Configuration_CTP'
@@ -227,5 +237,9 @@ export class AuthguardService implements CanActivate {
     }
 
     return true; // All segments match
+  }
+
+  getRole(){
+    return this.userRole[0]
   }
 }

@@ -32,7 +32,7 @@ export class CreateLeadComponent implements OnInit {
 
       },
       (error) => {
-        this.errorHandleService.showError(error.error.error);
+        this.errorHandleService.showError(error?.error?.error);
       }
     );
   }

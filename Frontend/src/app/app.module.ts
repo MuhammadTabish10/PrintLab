@@ -141,6 +141,10 @@ import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmat
 import { MasterCustomerStatementComponent } from './pages/customer/master-customer-statement/master-customer-statement.component';
 import { AddCustomerBusinessesComponent } from './pages/add-customer/add-customer-businesses/add-customer-businesses.component';
 import { CustomerStepperComponent } from './pages/add-customer/customer-stepper/customer-stepper.component';
+import { VendorManagementComponent } from './pages/vendor-management/vendor-management.component';
+import { RatingModule } from "primeng/rating";
+import { VendorRegistrationComponent } from './pages/vendor-management/vendor-registration/vendor-registration.component';
+import { VendorListComponent } from './pages/vendor-management/vendor-list/vendor-list.component';
 
 @NgModule({
   declarations: [
@@ -235,6 +239,9 @@ import { CustomerStepperComponent } from './pages/add-customer/customer-stepper/
     MasterCustomerStatementComponent,
     AddCustomerBusinessesComponent,
     CustomerStepperComponent,
+    VendorManagementComponent,
+    VendorRegistrationComponent,
+    VendorListComponent,
   ],
   imports: [
     BrowserModule,
@@ -282,6 +289,8 @@ import { CustomerStepperComponent } from './pages/add-customer/customer-stepper/
     BreadcrumbModule,
     PanelMenuModule,
     TriStateCheckboxModule,
+    CheckboxModule,
+    RatingModule
   ],
   providers: [AuthInterceptorProvider, InterceptorService, MessageService, ConfirmationService,
     provideRouter(routes, withHashLocation()), DatePipe],

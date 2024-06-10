@@ -1,0 +1,708 @@
+<div class="container-fluid">
+  <app-dashboard-head></app-dashboard-head>
+  <div class="mt-4">
+    <div class="flex justify-content-center p-tabmenu-nav-content" style="position: relative;">
+      <ul class="custom-tabmenu-nav">
+        <li class="content py-2 px-4">
+          <div class="text-container">
+            <p #copiedContent class="copied-content m-0">PL-V-1001</p>
+            <i class="pi pi-clone" (click)="copyToClipboard()"></i>
+          </div>
+          <p class="name m-0">Nadeem & Sons</p>
+        </li>
+        <ng-container *ngFor="let item of items; let i = index">
+          <ng-container *ngIf="userRole === 'ADMIN' || i < items.length - 2">
+            <li class="p-tabmenuitem"
+              [ngClass]="{'p-highlight': activeItem == item.label,'firstItem': item.label == 'Dashboard','lastItem': item.label == 'Management','restItem': item.label == 'Contact Details' || 'Notes' || 'Payments' || 'Vendor Statement'}">
+              <a class="p-menuitem-link"
+                [ngClass]="{'p-highlight': activeItem == item.label,'firstItem': item.label == 'Dashboard','lastItem': item.label == 'Management'}"
+                (click)="activeItem = item.label; num = i">{{ item.label }}</a>
+            </li>
+          </ng-container>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+  <div class="custom-breadcrumb">
+    <p><a routerLink="/vendor">Vendors</a> > {{'Nadeem & Sons'}}</p>
+  </div>
+  <div class="page-content">
+    <h4 *ngIf="activeItem != 'Payments'">{{activeItem}}</h4>
+    <h4 *ngIf="activeItem == 'Payments'">{{'Payment Clearance'}}</h4>
+  </div>
+  <div class="dashboard" *ngIf="activeItem == 'Dashboard'">
+    <div class="dashboard-content">
+      <p class="active m-0">{{'Active'}}</p>
+      <p-checkbox class="custom-checkbox" [(ngModel)]="checked" [binary]="true" inputId="binary" />
+      <i class="pi pi-lock"></i>
+    </div>
+    <p-rating [(ngModel)]="vendorRating" [cancel]="false" class="dashboard-rate"/>
+    <p>Since {{currentDate | date:'d MMM y'}}</p>
+    <div class="data-table">
+      <h5>ALL PROCESS PAYMENTS</h5>
+      <p-table styleClass="p-datatable-gridlines" [tableStyle]="{'max-width': '50rem'}" [value]="vendor">
+        <ng-template pTemplate="header">
+          <tr style="background-color: #cccccc;">
+            <th pSortableColumn="code" style="width:6rem">
+              Unit <p-sortIcon field="code" />
+            </th>
+            <th pSortableColumn="name" style="width:6rem">
+              Process <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="category" style="width:6rem">
+              Amount <p-sortIcon field="category" />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-vendor>
+          <tr>
+            <td>{{ vendor?.code }}</td>
+            <td>{{ vendor?.name }}</td>
+            <td>{{ vendor?.category }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class="data-table" style="margin-top: 30px;">
+      <h5>SNAPSHOT</h5>
+      <table class="styled-table">
+        <tr style="background-color: #cccccc;">
+          <td class="label">Total:</td>
+          <td class="value">PKR 203013</td>
+        </tr>
+        <tr style="background-color: #eeeeee;">
+          <td class="label">Balance Due:</td>
+          <td class="value">PKR 11000</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="contact-details" *ngIf="activeItem == 'Contact Details'">
+    <div class="dashboard-content" *ngIf="readonly">
+      <p class="active m-0">{{'Active'}}</p>
+      <p-checkbox class="custom-checkbox" [(ngModel)]="contactLockChecked" [binary]="true" inputId="binary" />
+      <i class="pi pi-lock"></i>
+    </div>
+    <form [formGroup]="vendorForm" (ngSubmit)="onEditVendor(vendorForm.value)" class="mt-6">
+      <div class="p-fluid p-formgrid grid">
+        <!-- Name -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Name{{readonly ? '' : '*'}}</strong></label>
+          <input pInputText id="email" type="text" formControlName="name" [placeholder]="readonly ? '' : 'Enter Name'"
+            [required]="true" [readonly]="readonly" [class.readonly]="readonly" />
+        </div>
+        <!-- Address -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Address</strong></label>
+          <textarea pInputTextarea type="text" [cols]="readonly?1:4" [rows]="readonly?1:3" formControlName="address"
+            [readonly]="readonly" [class.readonly]="readonly"></textarea>
+        </div>
+        <!-- Nearest Landmark -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Neareast Landmark / Direction{{readonly ? '' : '*'}}</strong></label>
+          <input pInputText id="email" type="text" formControlName="landmark"
+            [placeholder]="readonly ? '' : 'Enter landmark'" [required]="true" [readonly]="readonly"
+            [class.readonly]="readonly" />
+        </div>
+        <!-- Market -->
+        <div class="field col-2">
+          <label htmlFor="market"><strong>Market{{readonly ? '' : '*'}}</strong></label>
+          <p-dropdown appendTo="body" [options]="market" [placeholder]="readonly ? '' : 'Select Market'"
+            formControlName="market"
+            [ngClass]="{'ng-dirty':vendorForm.get('market')?.touched && vendorForm.get('market')?.invalid}"
+            [readonly]="readonly" [class.readonly]="readonly"></p-dropdown>
+        </div>
+        <!-- City -->
+        <div class="field col-2">
+          <label htmlFor="market"><strong>City{{readonly ? '' : '*'}}</strong></label>
+          <p-dropdown appendTo="body" [options]="cities" [placeholder]="readonly ? '' : 'Select City'"
+            formControlName="city"
+            [ngClass]="{'ng-dirty':vendorForm.get('city')?.touched && vendorForm.get('city')?.invalid}"
+            [readonly]="readonly" [class.readonly]="readonly"></p-dropdown>
+        </div>
+        <!-- Phone -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Phone</strong></label>
+          <input pInputText id="email" type="number" formControlName="phone"
+            [placeholder]="readonly ? '' : 'Enter Phone'" [readonly]="readonly" [class.readonly]="readonly" />
+        </div>
+        <!-- Primary Email -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Primary Email</strong></label>
+          <input pInputText id="email" type="email" formControlName="primaryEmail"
+            [placeholder]="readonly ? '' : 'Enter Primary Email'" [readonly]="readonly" [class.readonly]="readonly" />
+        </div>
+        <!-- Secondary Email -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Secondary Email</strong></label>
+          <input pInputText id="email" type="email" formControlName="secondaryEmail"
+            [placeholder]="readonly ? '' : 'Enter Secondary Email'" [readonly]="readonly" [class.readonly]="readonly" />
+        </div>
+      </div>
+      <div class="flex justify-content-end col-4 mt-2">
+        <button *ngIf="!readonly" pButton label="Update" type="Submit" class="mx-3 submit-btn add-btn"></button>
+      </div>
+    </form>
+  </div>
+  <div class="contact-list" *ngIf="activeItem == 'Contacts'">
+    <p-table class="contacts-table" #dt1 [value]="contacts" dataKey="id" [rows]="5" [loading]="loading"
+      [rowHover]="true" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between align-items-center sm:flex-row">
+          <span class="p-input-icon-left mb-0">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+              placeholder="Search by Contact Name" class="w-full search-input" />
+          </span>
+          <button pButton class="contact-btn" (click)="openContactDialog()">
+            <i class="pi pi-plus mr-2" style="font-weight:bold"></i> Contact
+          </button>
+        </div>
+        <h4 class="mb-1 mt-4">POINT OF CONTACTS</h4>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Name
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Destination
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              WhatsApp
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Phone
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Added By
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Status
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Lock
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Verified
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-data>
+        <tr>
+          <td>
+            {{data?.name}}
+          </td>
+          <td>
+            {{ data?.destination}}
+          </td>
+          <td>
+            {{ data?.whatsApp}}
+          </td>
+          <td>
+            {{ data?.phone }}
+          </td>
+          <td>
+            {{data?.addedBy}}
+
+          </td>
+          <td>
+            <span [ngClass]="data?.status">{{data?.status}}</span>
+          </td>
+          <td>
+            {{ data?.lock }}
+          </td>
+          <td>
+            {{ data?.verified }}
+          </td>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">No Data Found</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">Loading data. Please wait.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="vendor-statement" *ngIf="activeItem == 'Vendor Statement'">
+    <p-table class="contacts-table" [value]="contacts" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
+      [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+      <ng-template pTemplate="caption">
+        <h1 class="text-center">{{'Nadeem & Sons'}}</h1>
+        <h4 class="m-0 text-center">From {{currentDate | date:'d MMMM y'}} to {{currentDate | date:'d MMMM y'}}</h4>
+        <h4 class="m-0 text-center">Vendor Statement</h4>
+        <div class="flex justify-content-between align-items-end sm:flex-row mt-5">
+          <div class="flex justify-content-center align-items-end gap-2">
+            <div style="max-width: 300px;">
+              <label>From</label>
+              <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [(ngModel)]="fromDate"></p-calendar>
+            </div>
+            <div class="ml-4" style="max-width: 300px;">
+              <label>To</label>
+              <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [(ngModel)]="toDate"></p-calendar>
+            </div>
+            <button pButton class="contact-btn ml-4" label="Generate">
+            </button>
+          </div>
+          <div class="flex justify-content-center align-items-end">
+            <i class="pi pi-file-pdf"></i>
+            <button pButton class="contact-btn ml-2">
+              <i class="pi pi-angle-double-down mr-2"></i> Download
+            </button>
+          </div>
+
+        </div>
+        <h4 class="mb-1 mt-4">POINT OF CONTACTS</h4>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 4rem">
+            <div class="flex justify-content-center align-items-center">
+              Join Id
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Date
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Client
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Added By
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Product
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Size
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Process
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Type
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Debit
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Credit
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Balance
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-data>
+        <tr>
+          <td>
+            {{data?.joinId}}
+          </td>
+          <td>
+            {{ data?.date}}
+          </td>
+          <td>
+            {{ data?.client}}
+          </td>
+          <td>
+            {{ data?.addedBy }}
+          </td>
+          <td>
+            {{data?.product}}
+          </td>
+          <td>
+            {{data?.size}}
+          </td>
+          <td>
+            {{ data?.process }}
+          </td>
+          <td>
+            {{ data?.type }}
+          </td>
+          <td>
+            {{ data?.debit }}
+          </td>
+          <td>
+            {{ data?.credit }}
+          </td>
+          <td>
+            {{ data?.balance }}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">No Data Found</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">Loading data. Please wait.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="flex justify-content-end align-items-center mt-4">
+      <p class="balance">BALANCE:</p>
+      <p class="amount">{{'PKR 11,000'}}</p>
+    </div>
+  </div>
+  <div class="payments" *ngIf="activeItem == 'Payments'">
+    <p-table class="contacts-table" [value]="contacts" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
+      [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between align-items-center sm:flex-row">
+          <div class="vendor-payment">
+            <p class="pkr">PKR 11,000</p>
+            <p class="name">Nadeem & Sons</p>
+          </div>
+          <i class="pi pi-arrow-right-arrow-left"></i>
+          <div class="production-payment">
+            <p class="pkr">PKR 120,000</p>
+            <p class="name">Mr. Junaid Jadoon</p>
+          </div>
+        </div>
+        <h3 class="mb-0 mt-4">Credits Transactions</h3>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 4rem">
+            <div class="flex justify-content-center align-items-center">
+              Join ID
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Date
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Client
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Added by
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Product
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Size
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Process
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Type
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Debit
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Action
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-data>
+        <tr>
+          <td>
+            {{data?.joinId}}
+          </td>
+          <td>
+            {{ data?.timestamp}}
+          </td>
+          <td>
+            {{ data?.client}}
+          </td>
+          <td>
+            {{ data?.addedBy }}
+          </td>
+          <td>
+            {{data?.product}}
+
+          </td>
+          <td>
+            {{data?.size}}
+          </td>
+          <td>
+            {{ data?.process }}
+          </td>
+          <td>
+            {{ data?.type }}
+          </td>
+          <td>
+            {{ data?.debit }}
+          </td>
+          <td>
+            <a class="pay-link" (click)="onPay()">Pay</a>
+          </td>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">No Data Found</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">Loading data. Please wait.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="notes" *ngIf="activeItem == 'Notes'">
+    <p class="m-0"><span style="font-weight: 700;">Last saved on: </span> {{currentDate | date:'d MMM yyyy'}}</p>
+    <p-editor [(ngModel)]="vendorNotes" (ngModelChange)="onNotesChange($event)" [style]="{ height: '350px' }" />
+    <div class="flex justify-content-end align-items-end my-3">
+      <button pButton class="contact-btn" (click)="openContactDialog()" label="Save"></button>
+    </div>
+  </div>
+  <div class="management" *ngIf="activeItem == 'Management'">
+    <p class="m-0">Vendor Settings</p>
+    <div class="flex justify-content-between align-items-start">
+      <!-- UNLOCKED -->
+      <div class="fields">
+        <label htmlFor="Locked">{{vendorLockStatus?'Locked':'Unlocked'}}</label>
+        <p-inputSwitch [(ngModel)]="vendorLockStatus" (onChange)="onChangeVendorLockStatus($event)"/>
+      </div>
+      <!-- ACTIVE INACTIVE -->
+      <div class="fields">
+        <label htmlFor="Active">{{vendorActiveStatus?'Active':'In-active'}}</label>
+        <p-inputSwitch [(ngModel)]="vendorActiveStatus" (onChange)="onChangeVendorActiveStatus($event)"/>
+      </div>
+      <!-- UN-VERIFIED -->
+      <div class="fields">
+        <label htmlFor="Verified">{{vendorVerifiedStatus?'Verified':'Un-verified'}}</label>
+        <p-inputSwitch [(ngModel)]="vendorVerifiedStatus" (onChange)="onChangeVendorVerifiedStatus($event)"/>
+      </div>
+      <!-- RATING -->
+      <div class="fields">
+        <label htmlFor="Rating">Rating</label>
+        <p-rating [(ngModel)]="vendorRating" (onRate)="onChangeVendorRating($event)" [cancel]="false" />
+      </div>
+      <!-- SINCE -->
+      <div class="fields">
+        <label htmlFor="Since" class="m-0">Since</label>
+          <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [(ngModel)]="vendorTimeSamp" (onSelect)="onSelectVendorDate($event)"></p-calendar>
+      </div>
+      <!-- ADDED BY -->
+      <div class="fields">
+        <label htmlFor="Since" class="m-0"><strong>Added By</strong></label>
+          <p class="m-0" style="font-weight: 400;">{{'Mr Junaid Jadoon'}}</p>
+      </div>
+      <!-- TIMESTAMP -->
+      <div class="fields">
+        <label htmlFor="Since" class="m-0"><strong>Timestamp</strong></label>
+          <p class="m-0" style="font-weight: 400;">{{vendorTimeSamp | date : 'short'}}</p>
+      </div>
+    </div>
+    <p-table class="contacts-table mt-5" [value]="contacts" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
+      [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+      <ng-template pTemplate="caption">
+        <h5 class="mb-0 mt-4">Contact Setting</h5>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 4rem">
+            <div class="flex justify-content-center align-items-center">
+              Name
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Designation
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              WhatsApp
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Phone
+            </div>
+          </th>
+          <th style="min-width: 8rem">
+            <div class="flex justify-content-center align-items-center">
+              Added By
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Status
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Lock
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div class="flex justify-content-center align-items-center">
+              Verified
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-data>
+        <tr>
+          <td>
+            {{data?.name}}
+          </td>
+          <td>
+            {{ data?.designation}}
+          </td>
+          <td>
+            {{ data?.whatsApp}}
+          </td>
+          <td>
+            {{ data?.phone }}
+          </td>
+          <td>
+            {{data?.AddedBy}}
+          </td>
+          <td>
+            <p-inputSwitch [(ngModel)]="data.status" (onChange)="onChangeContactActiveStatus($event)" />
+          </td>
+          <td>
+            <p-inputSwitch [(ngModel)]="data.lock" (onChange)="onChangeContactLockStatus($event)" />
+          </td>
+          <td>
+            <p-inputSwitch [(ngModel)]="data.verified" (onChange)="onChangeContactVerifiedStatus($event)" />
+          </td>   
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">No Data Found</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">Loading data. Please wait.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+
+<!-- New Contact Dialog -->
+<p-dialog header="NEW CONTACT" [modal]="true" [(visible)]="contactDialog" [style]="{ width: '25rem' }">
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact(contactForm.value)" class="mt-6">
+    <div class="p-fluid p-formgrid grid">
+      <!-- Name -->
+      <div class="field col-12">
+        <label htmlFor="status"><strong>Vendor</strong></label>
+        <input pInputText id="email" type="text" formControlName="vendor" readonly="true"
+          class="readonly contact-input" />
+      </div>
+      <!-- Name -->
+      <div class="field col-12">
+        <label htmlFor="status"><strong>Name</strong></label>
+        <input pInputText id="email" class="contact-input" type="text" formControlName="name"
+          placeholder="Enter Name" />
+      </div>
+      <!-- WhatsApp -->
+      <div class="field col-12">
+        <label htmlFor="market"><strong>WhatsApp</strong></label>
+        <input pInputText id="whatsApp" class="contact-input" type="number" formControlName="whatsApp"
+          placeholder="Enter whatsApp Number" />
+      </div>
+      <!-- Phone -->
+      <div class="field col-12">
+        <label htmlFor="market"><strong>Phone</strong></label>
+        <input pInputText id="phone" class="contact-input" type="number" formControlName="phone"
+          placeholder="Enter phone Number" />
+      </div>
+      <!-- Destination -->
+      <div class="field col-12">
+        <label htmlFor="market"><strong>destination</strong></label>
+        <p-dropdown appendTo="body" class="contact-input" [options]="destinations" placeholder="Enter Destination"
+          formControlName="destination"></p-dropdown>
+      </div>
+    </div>
+    <div class="flex justify-content-end col-12 mt-2">
+      <button pButton label="Save" class="contact-input" type="Submit" class=" submit-btn add-btn"></button>
+    </div>
+  </form>
+</p-dialog>
+
+
+<!-- Payment Confirm Dialog -->
+<p-dialog [(visible)]="paymentDialog" [style]="{ width: '25rem' }" class="payment-dialog" [closable]="false">
+  <button pButton (click)="onClosePaymentDialog()" label="cancel" class="payment-dialog-btn btn-red"></button>
+  <div class="payment-dialog flex justify-content-between align-items-center flex-column sm:flex-row">
+    <div class="production-payment-dialog">
+      <p class="pkr">Mr. Junaid Jadoon</p>
+      <p class="name">- PKR 10,000</p>
+    </div>
+    <i class="pi pi-arrow-right-arrow-left"></i>
+    <div class="vendor-payment-dialog">
+      <p class="pkr">Nadeem & Sons</p>
+      <p class="name">+ PKR 11,000</p>
+    </div>
+  </div>
+  <button pButton label="Confirm" class="payment-dialog-btn btn-black"></button>
+</p-dialog>
+
+
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>

@@ -74,6 +74,9 @@ import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-g
 import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmation-screen/order-confirmation-screen.component';
 import { MasterCustomerStatementComponent } from './pages/customer/master-customer-statement/master-customer-statement.component';
 import { CustomerStepperComponent } from './pages/add-customer/customer-stepper/customer-stepper.component';
+import { VendorManagementComponent } from './pages/vendor-management/vendor-management.component';
+import { VendorRegistrationComponent } from './pages/vendor-management/vendor-registration/vendor-registration.component';
+import { VendorListComponent } from './pages/vendor-management/vendor-list/vendor-list.component';
 
 export const routes: Routes = [
   {
@@ -207,6 +210,21 @@ export const routes: Routes = [
   {
     path: 'vendor',
     component: VendorComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'vendor-management',
+    component: VendorManagementComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'vendor-registration',
+    component: VendorRegistrationComponent,
+    canActivate: [AuthguardService]
+  },
+  {
+    path: 'vendors-list',
+    component: VendorListComponent,
     canActivate: [AuthguardService]
   },
   {

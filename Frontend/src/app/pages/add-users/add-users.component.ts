@@ -83,7 +83,6 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   }
 
   addUser() {
-    debugger
     const obj = {
       email: this.email,
       name: this.nameValue,
