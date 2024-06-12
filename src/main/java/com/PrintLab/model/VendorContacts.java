@@ -1,7 +1,9 @@
 package com.PrintLab.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -20,20 +22,15 @@ public class VendorContacts {
     private String whatsapp;
     private String phone;
 
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    @ToString.Exclude
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "added_by_user_id")
+    private User addedBy;
+
     private Boolean status;
-    private Boolean isActive;
     private Boolean isVerified;
     private Boolean isLock;
-    private String addedBy;
 
     @ManyToOne
     @JoinColumn(name = "vendor_id")
-    @ToString.Exclude
-    @JsonIgnore
     private Vendor vendor;
 }

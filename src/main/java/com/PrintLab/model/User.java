@@ -36,7 +36,6 @@ public class User {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id")
-    @ToString.Exclude
     private Vendor vendor;
 
 
@@ -56,9 +55,5 @@ public class User {
     @JsonIgnore
     private VendorManagement vendorManagement;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    @JsonIgnore
-    private VendorContacts vendorContacts;
 }
 

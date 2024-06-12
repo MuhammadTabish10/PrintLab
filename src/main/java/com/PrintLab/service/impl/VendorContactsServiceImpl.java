@@ -1,9 +1,13 @@
 package com.PrintLab.service.impl;
 
 import com.PrintLab.dto.VendorContactsDto;
+import com.PrintLab.exception.RecordNotFoundException;
+import com.PrintLab.model.Vendor;
 import com.PrintLab.model.VendorContacts;
 import com.PrintLab.repository.VendorContactsRepository;
+import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.VendorContactsService;
+import com.PrintLab.utils.HelperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,22 +19,24 @@ public class VendorContactsServiceImpl implements VendorContactsService {
 
     @Autowired
     VendorContactsRepository vendorContactsRepository;
+    @Autowired
+    VendorRepository vendorRepository;
+    @Autowired
+    HelperUtils helperUtils;
 
     @Override
-    public VendorContacts save(VendorContactsDto vendorContactsDto) {
+    public VendorContactsDto save(VendorContactsDto vendorContactsDto) {
+        VendorContacts vendorContacts = toEntity(vendorContactsDto);
+        vendorContacts.setIsLock(false);
+        vendorContacts.setIsVerified(false);
+        vendorContacts.setStatus(false);
+        vendorContacts.setAddedBy(helperUtils.getCurrentUser());
 
-        VendorContacts existingVendorContacts = vendorContactsRepository.findByNameAndStatus(vendorContactsDto.getName(), true);
-        if (existingVendorContacts != null) {
-            return existingVendorContacts;
-        }
+        Vendor vendor = vendorRepository.findById(vendorContacts.getVendor().getId())
+                .orElseThrow(() -> new RecordNotFoundException("Vendor not found at id: " + vendorContacts.getVendor().getId()));
 
-        VendorContacts newVendorContacts = new VendorContacts();
-        newVendorContacts.setName(vendorContactsDto.getName());
-        newVendorContacts.setDesignation(vendorContactsDto.getDesignation());
-        newVendorContacts.setWhatsapp(vendorContactsDto.getWhatsapp());
-        newVendorContacts.setPhone(vendorContactsDto.getPhone());
-
-        return vendorContactsRepository.save(newVendorContacts);
+        vendorContacts.setVendor(vendor);
+        return toDto(vendorContactsRepository.save(vendorContacts));
     }
 
     @Override
@@ -55,7 +61,6 @@ public class VendorContactsServiceImpl implements VendorContactsService {
             VendorContacts vendorContacts = vendorContactsOptional.get();
 
             vendorContacts.setStatus(vendorContactsDto.getStatus());
-            vendorContacts.setIsActive(vendorContactsDto.getIsActive());
             vendorContacts.setIsVerified(vendorContactsDto.getIsVerified());
             vendorContacts.setIsLock(vendorContactsDto.getIsLock());
             return vendorContactsRepository.save(vendorContacts);
@@ -79,12 +84,11 @@ public class VendorContactsServiceImpl implements VendorContactsService {
                 .id(vendorContactsDto.getId())
                 .phone(vendorContactsDto.getPhone())
                 .designation(vendorContactsDto.getDesignation())
-                .isActive(vendorContactsDto.getIsActive())
                 .isVerified(vendorContactsDto.getIsVerified())
                 .whatsapp(vendorContactsDto.getWhatsapp())
                 .name(vendorContactsDto.getName())
                 .status(vendorContactsDto.getStatus())
-                .user(vendorContactsDto.getUser())
+                .addedBy(vendorContactsDto.getAddedBy())
                 .isLock(vendorContactsDto.getIsLock())
                 .addedBy(vendorContactsDto.getAddedBy())
                 .build();
@@ -95,12 +99,11 @@ public class VendorContactsServiceImpl implements VendorContactsService {
                 .id(vendorContacts.getId())
                 .phone(vendorContacts.getPhone())
                 .designation(vendorContacts.getDesignation())
-                .isActive(vendorContacts.getIsActive())
                 .isVerified(vendorContacts.getIsVerified())
                 .whatsapp(vendorContacts.getWhatsapp())
                 .name(vendorContacts.getName())
                 .status(vendorContacts.getStatus())
-                .user(vendorContacts.getUser())
+                .addedBy(vendorContacts.getAddedBy())
                 .isLock(vendorContacts.getIsLock())
                 .addedBy(vendorContacts.getAddedBy())
                 .build();

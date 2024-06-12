@@ -21,13 +21,8 @@ public class VendorContactsController {
 
     @PostMapping("/vendorContacts")
     public ResponseEntity<VendorContactsDto> saveVendorContacts(@RequestBody VendorContactsDto vendorContactsDto) {
-        VendorContacts savedVendorContacts = vendorContactsService.save(vendorContactsDto);
-        if (savedVendorContacts != null) {
-            VendorContactsDto savedDto = vendorContactsService.toDto(savedVendorContacts);
-            return ResponseEntity.ok(savedDto);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+       VendorContactsDto vendorContactsDto1 = vendorContactsService.save(vendorContactsDto);
+       return ResponseEntity.ok(vendorContactsDto1);
     }
 
     @GetMapping("/vendorContacts")

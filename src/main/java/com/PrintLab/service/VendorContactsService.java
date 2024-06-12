@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface VendorContactsService {
 
-    VendorContacts save(VendorContactsDto vendorContactsDto);
+    VendorContactsDto save(VendorContactsDto vendorContactsDto);
     List<VendorContacts> findAll();
     Optional<VendorContacts> findById(Long id);
     List<VendorContacts> findByName(String name);
