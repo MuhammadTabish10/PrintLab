@@ -62,5 +62,11 @@ public class VendorContactsController {
         vendorContactsService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/vendorContacts/{vendorId}")
+    public ResponseEntity<List<VendorContacts>> findByVendorId(@PathVariable Long vendorId) {
+        List<VendorContacts> vendorContactsList = vendorContactsService.findByVendorId(vendorId);
+        return ResponseEntity.ok(vendorContactsList);
+    }
 }
 

@@ -11,6 +11,7 @@ import com.PrintLab.service.VendorService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,8 @@ public class VendorServiceImpl implements VendorService {
     public VendorDto save(VendorDto vendorDto) {
         Vendor vendor = toVEntity(vendorDto);
         vendor.setStatus(true);
+        vendor.setTimeStamp(LocalDateTime.now());
+
         Vendor createdVendor = vendorRepository.save(vendor);
 
         List<User> productionUserList = vendor.getProductionUserList();
@@ -162,6 +165,15 @@ public class VendorServiceImpl implements VendorService {
             existingVendor.setNotes(vendor.getNotes());
             existingVendor.setLandmark(vendor.getLandmark());
             existingVendor.setSecondaryEmail(vendor.getSecondaryEmail());
+            existingVendor.setCity(vendor.getCity());
+            existingVendor.setMarket(vendor.getMarket());
+            existingVendor.setAddedBy(vendor.getAddedBy());
+            existingVendor.setIsActive(vendor.getIsActive());
+            existingVendor.setIsLock(vendor.getIsLock());
+            existingVendor.setTimeStamp(vendor.getTimeStamp());
+            existingVendor.setSince(vendor.getSince());
+            existingVendor.setIsVerified(vendor.getIsVerified());
+
 
             List<VendorProcess> existingVpValues = existingVendor.getVendorProcessList();
             List<VendorProcess> newVpValues = vendor.getVendorProcessList();
@@ -293,6 +305,15 @@ public class VendorServiceImpl implements VendorService {
                 .due(vendor.getDue())
                 .secondaryEmail(vendor.getSecondaryEmail())
                 .landmark(vendor.getLandmark())
+                .city(vendor.getCity())
+                .market(vendor.getMarket())
+                .addedBy(vendor.getAddedBy())
+                .isVerified(vendor.getIsVerified())
+                .isActive(vendor.getIsActive())
+                .isLock(vendor.getIsLock())
+                .rating(vendor.getRating())
+                .since(vendor.getSince())
+                .timeStamp(vendor.getTimeStamp())
                 .build();
     }
 
@@ -312,6 +333,15 @@ public class VendorServiceImpl implements VendorService {
                 .due(vendorDto.getDue())
                 .secondaryEmail(vendorDto.getSecondaryEmail())
                 .landmark(vendorDto.getLandmark())
+                .city(vendorDto.getCity())
+                .market(vendorDto.getMarket())
+                .addedBy(vendorDto.getAddedBy())
+                .isVerified(vendorDto.getIsVerified())
+                .isActive(vendorDto.getIsActive())
+                .isLock(vendorDto.getIsLock())
+                .rating(vendorDto.getRating())
+                .since(vendorDto.getSince())
+                .timeStamp(vendorDto.getTimeStamp())
                 .build();
 
         List<VendorProcess> vendorProcessList = new ArrayList<>();

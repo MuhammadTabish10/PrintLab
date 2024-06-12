@@ -1,14 +1,24 @@
+import { Vendor } from "./../../Model/Vendor";
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } from "rxjs";
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  Subject,
+  switchMap,
+  takeUntil,
+} from "rxjs";
 import { ErrorHandleService } from "src/app/services/error-handle.service";
 import { LeadService } from "../Leads/Service/lead.service";
 import { VendorService } from "src/app/services/vendor.service";
-import { Vendor } from "src/app/Model/Vendor";
 import { MessageService } from "primeng/api";
 import { AuthguardService } from "src/app/services/authguard.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Table } from "primeng/table";
+import { ProductDefinitionService } from "src/app/services/product-definition.service";
+import { FormValidationService } from "src/app/services/form-validation.service";
+import { BackendErrorResponse } from "src/app/Model/BackendErrorResponse";
 
 @Component({
   selector: "app-vendor-management",
@@ -18,16 +28,17 @@ import { Table } from "primeng/table";
 export class VendorManagementComponent {
   vendorForm!: FormGroup;
   contactForm!: FormGroup;
-  market: any;
-  cities: any;
-  idFromQueryParam: number | null | undefined;
+  market: any = [];
+  cities: any = [];
+  idFromQueryParam: any;
   private destroy$ = new Subject<void>();
   vendor: any;
+  vendors: Vendor[] = [];
   activeItem: any;
   num: number = 0;
   items: any;
   userRole: any;
-  checked: boolean = true;
+  checked: boolean = false;
   contactLockChecked: boolean = true;
   currentDate = new Date();
   readonly: boolean = false;
@@ -44,7 +55,11 @@ export class VendorManagementComponent {
   vendorActiveStatus: boolean = false;
   vendorVerifiedStatus: boolean = false;
   vendorRating: any;
-  vendorTimeSamp: any;
+  vendorTimeStamp: any;
+  vendorsData: any;
+
+  // vendorUpdate
+
   @ViewChild("filter") filter!: ElementRef;
   @ViewChild("copiedContent", { static: false }) textToCopy!: ElementRef;
   private notesSubject = new Subject<string>();
@@ -53,7 +68,10 @@ export class VendorManagementComponent {
     private leadService: LeadService,
     private roleService: AuthguardService,
     private route: ActivatedRoute,
-    private vendorService: VendorService
+    private vendorService: VendorService,
+    private messageService: MessageService,
+    private formService: FormValidationService,
+    private productFieldService: ProductDefinitionService
   ) {
     this.notesSubject
       .pipe(
@@ -75,17 +93,19 @@ export class VendorManagementComponent {
       market: new FormControl(null, Validators.required),
       city: new FormControl(null, Validators.required),
       phone: new FormControl(null),
-      primaryEmail: new FormControl(null),
+      email: new FormControl(null),
       secondaryEmail: new FormControl(null),
     });
 
     this.contactForm = new FormGroup({
       name: new FormControl(null),
-      vendor: new FormControl("Nadeem & Sons"),
+      vendor: new FormControl(this.vendor?.contactName),
       whatsApp: new FormControl(null),
       phone: new FormControl(null),
       destination: new FormControl(null),
     });
+
+    this.initializeProductFieldData();
 
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(
       (param: any) => {
@@ -129,6 +149,48 @@ export class VendorManagementComponent {
     this.userRole = this.roleService.getRole();
   }
 
+  // Get Product Field Values
+
+  private initializeProductFieldData(): void {
+    this.getMarketNames("MARKET");
+    this.getCityNames("CITY");
+  }
+
+  private getMarketNames(productName: string): void {
+    this.productFieldService
+      .searchProductField(productName)
+      .pipe(
+        map((res: any) =>
+          res[0]?.productFieldValuesList.map((item: any) => item.name)
+        )
+      )
+      .subscribe(
+        (marketNames: any[]) => {
+          this.market = marketNames;
+        },
+        (error: any) => {
+          this.errorHandleService.showError(error?.error?.error);
+        }
+      );
+  }
+  private getCityNames(productName: string): void {
+    this.productFieldService
+      .searchProductField(productName)
+      .pipe(
+        map((res: any) =>
+          res[0]?.productFieldValuesList.map((item: any) => item.name)
+        )
+      )
+      .subscribe(
+        (cityNames: any[]) => {
+          this.cities = cityNames;
+        },
+        (error: any) => {
+          this.errorHandleService.showError(error?.error?.error);
+        }
+      );
+  }
+
   onPay() {
     this.paymentDialog = true;
   }
@@ -152,6 +214,7 @@ export class VendorManagementComponent {
   // Management
   onChangeVendorLockStatus(value: any) {
     console.log(value);
+    this.vendorLockStatus = value.checked;
   }
 
   onChangeVendorActiveStatus(value: any) {
@@ -193,9 +256,32 @@ export class VendorManagementComponent {
     this.readonly = !this.readonly;
   }
 
-  onEditVendor(value: any) {}
+  // Edit Vendor Form
+  onEditVendor(value: any) {
+    console.log(value);
+    console.log(this.updateVendorFields(this.vendor,value));
+    console.log(this.vendor);
+
+    if (this.vendorForm.valid) {
+      const updatedVendor = this.updateVendorFields(this.vendor, value);
+      this.vendorService.updateVendor(this.idFromQueryParam,updatedVendor).subscribe((res:any)=>{
+        this.getVendorById(this.idFromQueryParam)
+        
+      })
+    } else {
+      this.formService.markFormGroupTouched(this.vendorForm);
+      this.alert();
+    }
+  }
 
   onSubmitContact(value: any) {}
+
+  updateVendorFields<T>(obj: T, updates: Partial<T>): T {
+    return {
+      ...obj,
+      ...updates,
+    };
+  }
 
   copyToClipboard() {
     const textToCopy =
@@ -220,7 +306,47 @@ export class VendorManagementComponent {
   getVendorById(id: number) {
     this.vendorService.getVendorById(id).subscribe((res: any) => {
       this.vendor = res;
+      this.vendorsData = res;
+      this.vendorForm.patchValue({
+        name: this.vendorsData?.contactName,
+        address: this.vendorsData?.address,
+        landmark: this.vendorsData?.landmark,
+        market: this.vendorsData?.market,
+        city: this.vendorsData?.city,
+        phone: this.vendorsData?.phone,
+        primaryEmail: this.vendorsData?.email,
+        secondaryEmail: this.vendorsData?.secondaryEmail,
+      });
+      this.checked = this.vendorsData?.isVerified;
+      this.vendorRating = this.vendorsData?.rating;
+      this.vendorLockStatus = this.vendorsData?.isLock;
+      this.vendorActiveStatus = this.vendorsData?.isActive;
+      this.vendorVerifiedStatus = this.vendorsData?.isVerified;
       console.log(res);
+    });
+  }
+
+  showError(error: any) {
+    this.messageService.add({
+      severity: "error",
+      summary: "Error",
+      detail: error.error.error,
+    });
+  }
+
+  success(){
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Successfully Updated.",
+    });
+  }
+
+  alert() {
+    this.messageService.add({
+      severity: "error",
+      summary: "Warning",
+      detail: "Please ensure that all required details are filled out.",
     });
   }
 

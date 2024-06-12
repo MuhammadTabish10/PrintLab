@@ -122,6 +122,21 @@
   margin-top: 20px;
 }
 
+.inactive {
+  background-color: #cf2a27;
+  padding: 0px 8px;
+  color: white !important;
+  margin-right: 10px !important;
+}
+
+.active {
+  background-color: #009e0f;
+  padding: 0px 8px;
+  color: white !important;
+  margin-right: 10px !important;
+}
+
+
 .notes,.management{
   margin-top: 25px;
   padding: 0px 20px;
@@ -177,8 +192,20 @@
   padding-left: 0px !important;
 }
 
+.readonly::ng-deep .p-dropdown .p-dropdown-label{
+  padding-left: 0px !important;
+}
+
 .readonly::ng-deep .p-dropdown .p-dropdown-trigger {
   display: none;
+}
+
+.readonly::ng-deep .p-inputtext{
+  padding: 0px !important;
+}
+
+small{
+  display: block !important;
 }
 
 .submit-btn {
@@ -211,7 +238,7 @@ textarea {
   resize: none !important;
 }
 
-.pi.pi-lock {
+.pi.pi-lock,.pi.pi-lock-open {
   font-size: 19px !important;
 }
 
@@ -227,6 +254,7 @@ p-rating::ng-deep .p-rating .p-rating-icon.p-rating-icon-active {
 
 .dashboard-rate::ng-deep .p-rating {
   margin-top: 5px !important;
+  gap: 1rem !important;
 }
 
 .data-table {
@@ -464,7 +492,7 @@ p-inputSwitch::ng-deep .p-inputswitch {
 
 p-inputSwitch::ng-deep .p-inputswitch.p-focus .p-inputswitch-slider{
   box-shadow: none !important;
-} 
+}
 
 p-inputSwitch::ng-deep .p-inputswitch .p-inputswitch-slider:before {
     background: #ffffff;

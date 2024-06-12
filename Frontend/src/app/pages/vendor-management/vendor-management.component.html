@@ -32,15 +32,15 @@
   </div>
   <div class="dashboard" *ngIf="activeItem == 'Dashboard'">
     <div class="dashboard-content">
-      <p class="active m-0">{{'Active'}}</p>
-      <p-checkbox class="custom-checkbox" [(ngModel)]="checked" [binary]="true" inputId="binary" />
-      <i class="pi pi-lock"></i>
+      <p class="m-0" [ngClass]="vendorActiveStatus?'active':'inactive'">{{vendorActiveStatus?'Active':'In-active'}}</p>
+      <p-checkbox class="custom-checkbox" [(ngModel)]="checked" [binary]="true" inputId="binary" [readonly]="true"/>
+      <i class="pi" [ngClass]="vendorLockStatus?'pi-lock':'pi-lock-open'" style="font-weight:700;"></i>
     </div>
-    <p-rating [(ngModel)]="vendorRating" [cancel]="false" class="dashboard-rate"/>
-    <p>Since {{currentDate | date:'d MMM y'}}</p>
+    <p-rating [(ngModel)]="vendorRating" [cancel]="false" [readonly]="true" class="dashboard-rate"/>
+    <p>Since {{vendorTimeStamp | date:'d MMM y'}}</p>
     <div class="data-table">
       <h5>ALL PROCESS PAYMENTS</h5>
-      <p-table styleClass="p-datatable-gridlines" [tableStyle]="{'max-width': '50rem'}" [value]="vendor">
+      <p-table styleClass="p-datatable-gridlines" [tableStyle]="{'max-width': '50rem'}" [value]="vendors">
         <ng-template pTemplate="header">
           <tr style="background-color: #cccccc;">
             <th pSortableColumn="code" style="width:6rem">
@@ -78,7 +78,7 @@
     </div>
   </div>
   <div class="contact-details" *ngIf="activeItem == 'Contact Details'">
-    <div class="dashboard-content" *ngIf="readonly">
+    <div class="dashboard-content" *ngIf="vendorLockStatus">
       <p class="active m-0">{{'Active'}}</p>
       <p-checkbox class="custom-checkbox" [(ngModel)]="contactLockChecked" [binary]="true" inputId="binary" />
       <i class="pi pi-lock"></i>
@@ -87,60 +87,72 @@
       <div class="p-fluid p-formgrid grid">
         <!-- Name -->
         <div class="field col-12">
-          <label htmlFor="status"><strong>Name{{readonly ? '' : '*'}}</strong></label>
-          <input pInputText id="email" type="text" formControlName="name" [placeholder]="readonly ? '' : 'Enter Name'"
-            [required]="true" [readonly]="readonly" [class.readonly]="readonly" />
+          <label htmlFor="status"><strong>Name{{vendorLockStatus ? '' : '*'}}</strong></label>
+          <input pInputText id="email" type="text" formControlName="name" [placeholder]="vendorLockStatus ? '' : 'Enter Name'"
+            [required]="true" [readonly]="vendorLockStatus" [class.readonly]="vendorLockStatus" [ngClass]="{'ng-dirty':vendorForm.get('name')?.touched && vendorForm.get('name')?.invalid}"/>
+            <small *ngIf="!vendorForm.get('name')?.valid && vendorForm.get('name')?.touched" class="text-red-500 require">
+              Required
+            </small>
         </div>
         <!-- Address -->
         <div class="field col-12">
           <label htmlFor="status"><strong>Address</strong></label>
-          <textarea pInputTextarea type="text" [cols]="readonly?1:4" [rows]="readonly?1:3" formControlName="address"
-            [readonly]="readonly" [class.readonly]="readonly"></textarea>
+          <textarea pInputTextarea type="text" [cols]="vendorLockStatus?1:4" [rows]="vendorLockStatus?1:3" formControlName="address"
+            [readonly]="vendorLockStatus" [class.readonly]="vendorLockStatus"></textarea>
         </div>
         <!-- Nearest Landmark -->
         <div class="field col-12">
-          <label htmlFor="status"><strong>Neareast Landmark / Direction{{readonly ? '' : '*'}}</strong></label>
-          <input pInputText id="email" type="text" formControlName="landmark"
-            [placeholder]="readonly ? '' : 'Enter landmark'" [required]="true" [readonly]="readonly"
-            [class.readonly]="readonly" />
+          <label htmlFor="status"><strong>Neareast Landmark / Direction{{vendorLockStatus ? '' : '*'}}</strong></label>
+          <input pInputText id="email" type="text" formControlName="landmark" [ngClass]="{'ng-dirty':vendorForm.get('landmark')?.touched && vendorForm.get('landmark')?.invalid}"
+            [placeholder]="vendorLockStatus ? '' : 'Enter landmark'" [required]="true" [readonly]="vendorLockStatus"
+            [class.readonly]="vendorLockStatus" />
+            <small *ngIf="!vendorForm.get('landmark')?.valid && vendorForm.get('landmark')?.touched" class="text-red-500 require">
+              Required
+            </small>
         </div>
         <!-- Market -->
         <div class="field col-2">
-          <label htmlFor="market"><strong>Market{{readonly ? '' : '*'}}</strong></label>
-          <p-dropdown appendTo="body" [options]="market" [placeholder]="readonly ? '' : 'Select Market'"
+          <label htmlFor="market"><strong>Market{{vendorLockStatus ? '' : '*'}}</strong></label>
+          <p-dropdown appendTo="body" [options]="market" [placeholder]="vendorLockStatus ? '' : 'Select Market'"
             formControlName="market"
             [ngClass]="{'ng-dirty':vendorForm.get('market')?.touched && vendorForm.get('market')?.invalid}"
-            [readonly]="readonly" [class.readonly]="readonly"></p-dropdown>
+            [readonly]="vendorLockStatus" [class.readonly]="vendorLockStatus" [ngClass]="{'ng-dirty':vendorForm.get('market')?.touched && vendorForm.get('market')?.invalid}"></p-dropdown>
+            <small *ngIf="!vendorForm.get('market')?.valid && vendorForm.get('market')?.touched" class="text-red-500">
+            Required
+          </small>
         </div>
         <!-- City -->
         <div class="field col-2">
-          <label htmlFor="market"><strong>City{{readonly ? '' : '*'}}</strong></label>
-          <p-dropdown appendTo="body" [options]="cities" [placeholder]="readonly ? '' : 'Select City'"
+          <label htmlFor="market"><strong>City{{vendorLockStatus ? '' : '*'}}</strong></label>
+          <p-dropdown appendTo="body" [options]="cities"  [placeholder]="vendorLockStatus ? '' : 'Select City'"
             formControlName="city"
             [ngClass]="{'ng-dirty':vendorForm.get('city')?.touched && vendorForm.get('city')?.invalid}"
-            [readonly]="readonly" [class.readonly]="readonly"></p-dropdown>
+            [readonly]="vendorLockStatus" [ngClass]="{'ng-dirty':vendorForm.get('city')?.touched && vendorForm.get('city')?.invalid}" [class.readonly]="vendorLockStatus"></p-dropdown>
+            <small *ngIf="!vendorForm.get('city')?.valid && vendorForm.get('city')?.touched" class="text-red-500">
+              Required
+            </small>
         </div>
         <!-- Phone -->
         <div class="field col-12">
           <label htmlFor="status"><strong>Phone</strong></label>
           <input pInputText id="email" type="number" formControlName="phone"
-            [placeholder]="readonly ? '' : 'Enter Phone'" [readonly]="readonly" [class.readonly]="readonly" />
+            [placeholder]="vendorLockStatus ? '' : 'Enter Phone'" [readonly]="vendorLockStatus" [class.readonly]="vendorLockStatus" />
         </div>
         <!-- Primary Email -->
         <div class="field col-12">
           <label htmlFor="status"><strong>Primary Email</strong></label>
-          <input pInputText id="email" type="email" formControlName="primaryEmail"
-            [placeholder]="readonly ? '' : 'Enter Primary Email'" [readonly]="readonly" [class.readonly]="readonly" />
+          <input pInputText id="email" type="email" formControlName="email"
+            [placeholder]="vendorLockStatus ? '' : 'Enter Primary Email'" [readonly]="vendorLockStatus" [class.readonly]="vendorLockStatus" />
         </div>
         <!-- Secondary Email -->
         <div class="field col-12">
           <label htmlFor="status"><strong>Secondary Email</strong></label>
           <input pInputText id="email" type="email" formControlName="secondaryEmail"
-            [placeholder]="readonly ? '' : 'Enter Secondary Email'" [readonly]="readonly" [class.readonly]="readonly" />
+            [placeholder]="vendorLockStatus ? '' : 'Enter Secondary Email'" [readonly]="vendorLockStatus" [class.readonly]="vendorLockStatus" />
         </div>
       </div>
       <div class="flex justify-content-end col-4 mt-2">
-        <button *ngIf="!readonly" pButton label="Update" type="Submit" class="mx-3 submit-btn add-btn"></button>
+        <button *ngIf="!vendorLockStatus" pButton label="Update" type="Submit" class="mx-3 submit-btn add-btn"></button>
       </div>
     </form>
   </div>
@@ -540,7 +552,7 @@
       <!-- SINCE -->
       <div class="fields">
         <label htmlFor="Since" class="m-0">Since</label>
-          <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [(ngModel)]="vendorTimeSamp" (onSelect)="onSelectVendorDate($event)"></p-calendar>
+          <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [(ngModel)]="vendorTimeStamp" (onSelect)="onSelectVendorDate($event)"></p-calendar>
       </div>
       <!-- ADDED BY -->
       <div class="fields">
@@ -550,7 +562,7 @@
       <!-- TIMESTAMP -->
       <div class="fields">
         <label htmlFor="Since" class="m-0"><strong>Timestamp</strong></label>
-          <p class="m-0" style="font-weight: 400;">{{vendorTimeSamp | date : 'short'}}</p>
+          <p class="m-0" style="font-weight: 400;">{{vendorTimeStamp | date : 'short'}}</p>
       </div>
     </div>
     <p-table class="contacts-table mt-5" [value]="contacts" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
@@ -627,7 +639,7 @@
           </td>
           <td>
             <p-inputSwitch [(ngModel)]="data.verified" (onChange)="onChangeContactVerifiedStatus($event)" />
-          </td>   
+          </td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">

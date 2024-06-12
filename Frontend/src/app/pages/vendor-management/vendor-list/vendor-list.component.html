@@ -51,13 +51,13 @@
             {{data?.id}}
           </td>
           <td>
-            {{ data?.name}}
+            {{ data?.contactName}}
           </td>
           <td >
             {{ data?.due}}
           </td>
           <td>
-            <span [ngClass]="data?.status ? 'active' : 'inactive'">{{ data?.status == true? 'Active':'In-active' }}</span>
+            <span [ngClass]="data?.isActive ? 'active' : 'inactive'">{{ data?.isActive == true? 'Active':'In-active' }}</span>
           </td>
         </tr>
       </ng-template>

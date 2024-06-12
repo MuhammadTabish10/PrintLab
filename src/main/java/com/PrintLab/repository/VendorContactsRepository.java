@@ -12,4 +12,6 @@ public interface VendorContactsRepository extends JpaRepository<VendorContacts, 
 
     List<VendorContacts> findByName(String name);
 
+
+    List<VendorContacts> findByVendorId(Long vendorId);
 }

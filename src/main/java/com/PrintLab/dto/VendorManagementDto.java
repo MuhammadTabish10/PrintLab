@@ -25,5 +25,5 @@ public class VendorManagementDto {
     private Date since;
     private User user;
     private LocalDateTime timeStamp;
-    private VendorDto vendor;
+    private Vendor vendor;
 }

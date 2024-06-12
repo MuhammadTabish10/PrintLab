@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -49,6 +51,15 @@ public class Vendor {
     private Double due;
     private String secondaryEmail;
     private String landmark;
+    private String city;
+    private String market;
+    private Boolean isLock;
+    private Boolean isActive;
+    private Boolean isVerified;
+    private Integer rating;
+    private Date since;
+    private LocalDateTime timeStamp;
+    private String addedBy;
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)
     @ToString.Exclude

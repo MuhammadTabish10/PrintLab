@@ -24,6 +24,7 @@ export class AuthguardService implements CanActivate {
       this.userRole = decodedToken.ROLES;
 
 
+
       const url = state.url;
       let permission: any = {};
       const permissionsObj = this.getPermissionsObj();
@@ -242,4 +243,6 @@ export class AuthguardService implements CanActivate {
   getRole(){
     return this.userRole[0]
   }
+
+
 }

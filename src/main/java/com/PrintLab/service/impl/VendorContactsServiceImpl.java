@@ -57,6 +57,7 @@ public class VendorContactsServiceImpl implements VendorContactsService {
             vendorContacts.setStatus(vendorContactsDto.getStatus());
             vendorContacts.setIsActive(vendorContactsDto.getIsActive());
             vendorContacts.setIsVerified(vendorContactsDto.getIsVerified());
+            vendorContacts.setIsLock(vendorContactsDto.getIsLock());
             return vendorContactsRepository.save(vendorContacts);
         } else {
             return null;
@@ -66,6 +67,11 @@ public class VendorContactsServiceImpl implements VendorContactsService {
     @Override
     public void delete(Long id) {
         vendorContactsRepository.deleteById(id);
+    }
+
+    @Override
+    public List<VendorContacts> findByVendorId(Long vendorId) {
+        return vendorContactsRepository.findByVendorId(vendorId);
     }
 
     public VendorContacts toEntity(VendorContactsDto vendorContactsDto){
@@ -79,6 +85,8 @@ public class VendorContactsServiceImpl implements VendorContactsService {
                 .name(vendorContactsDto.getName())
                 .status(vendorContactsDto.getStatus())
                 .user(vendorContactsDto.getUser())
+                .isLock(vendorContactsDto.getIsLock())
+                .addedBy(vendorContactsDto.getAddedBy())
                 .build();
     }
 
@@ -93,6 +101,8 @@ public class VendorContactsServiceImpl implements VendorContactsService {
                 .name(vendorContacts.getName())
                 .status(vendorContacts.getStatus())
                 .user(vendorContacts.getUser())
+                .isLock(vendorContacts.getIsLock())
+                .addedBy(vendorContacts.getAddedBy())
                 .build();
     }
 }

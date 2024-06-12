@@ -27,6 +27,7 @@ export class DashboardHeadComponent implements OnInit {
     const token = localStorage.getItem('token');
     const decodedToken = this.authService.getDecodedAccessToken(token!);
     this.userName = decodedToken.sub;
+
     this.role = decodedToken.ROLES[0];
     if (this.isCustomerSupport) {
       this.menuItems = [

@@ -17,9 +17,11 @@ public class VendorContactsDto {
     private String designation;
     private String whatsapp;
     private String phone;
+    private String addedBy;
     private User user;
     private Boolean status;
     private Boolean isActive;
     private Boolean isVerified;
+    private Boolean isLock;
     private VendorDto vendor;
 }

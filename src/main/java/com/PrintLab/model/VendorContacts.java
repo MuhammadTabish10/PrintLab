@@ -28,6 +28,8 @@ public class VendorContacts {
     private Boolean status;
     private Boolean isActive;
     private Boolean isVerified;
+    private Boolean isLock;
+    private String addedBy;
 
     @ManyToOne
     @JoinColumn(name = "vendor_id")

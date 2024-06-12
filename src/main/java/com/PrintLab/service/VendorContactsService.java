@@ -14,4 +14,6 @@ public interface VendorContactsService {
     List<VendorContacts> findByName(String name);
     VendorContacts update(Long id, VendorContactsDto vendorContactsDto);
     void delete(Long id);
+
+    List<VendorContacts> findByVendorId(Long vendorId);
 }
