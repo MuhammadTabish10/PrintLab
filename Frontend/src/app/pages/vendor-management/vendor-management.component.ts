@@ -214,8 +214,10 @@ export class VendorManagementComponent {
   }
 
   onNotesChange() {
+    const lastUpdatedDate = new Date()
     const updatedObj = this.updateVendorFields(this.vendor, {
       notes: this.vendorNotes,
+      since:lastUpdatedDate
     });
     this.vendorService
       .updateVendor(this.idFromQueryParam, updatedObj)

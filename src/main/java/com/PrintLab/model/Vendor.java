@@ -59,7 +59,7 @@ public class Vendor {
     private Boolean isActive;
     private Boolean isVerified;
     private Integer rating;
-    private Date since;
+    private LocalDate since;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

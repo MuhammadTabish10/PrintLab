@@ -311,7 +311,7 @@
         <tr>
           <th style="min-width: 4rem">
             <div class="flex justify-cont ent-c ente r a lign-items-center">
-              Join Id
+              Job Id
             </div>
           </th>
           <th style="min-width: 6rem">
@@ -442,7 +442,7 @@
         <tr>
           <th style="min-width: 4rem">
             <div class="flex justify-content-center align-items-center">
-              Join ID
+              Job ID
             </div>
           </th>
           <th style="min-width: 8rem">
@@ -543,7 +543,7 @@
 
   <!-- Notes -->
   <div class="notes" *ngIf="activeItem == 'Notes'">
-    <p class="m-0"><span style="font-weight: 700;">Last saved on: </span> {{currentDate | date:'d MMM yyyy'}}</p>
+    <p class="m-0" *ngIf="vendor?.since"><span style="font-weight: 700;">Last saved on: </span> {{vendor?.since | date:'d MMM yyyy'}}</p>
       <p-editor [(ngModel)]="vendorNotes" [style]="{ height: '320px' }" name="notes"></p-editor>
       <div class="flex justify-content-end align-items-end my-3">
         <button pButton class="contact-btn" type="submit" (click)="onNotesChange()" label="Save"></button>

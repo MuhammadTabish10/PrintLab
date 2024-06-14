@@ -173,6 +173,7 @@ public class VendorServiceImpl implements VendorService {
             existingVendor.setSince(vendor.getSince());
             existingVendor.setIsVerified(vendor.getIsVerified());
             existingVendor.setRating(vendor.getRating());
+            
 
 
 

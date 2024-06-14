@@ -42,7 +42,7 @@ public class VendorDto
     private Boolean isActive;
     private Boolean isVerified;
     private Integer rating;
-    private Date since;
+    private LocalDate since;
     private User user;
     private LocalDateTime timeStamp;
     private String addedBy;
