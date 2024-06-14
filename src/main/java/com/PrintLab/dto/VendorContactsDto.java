@@ -1,6 +1,7 @@
 package com.PrintLab.dto;
 
 import com.PrintLab.model.User;
+import com.PrintLab.model.Vendor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +21,5 @@ public class VendorContactsDto {
     private Boolean status;
     private Boolean isVerified;
     private Boolean isLock;
-    private VendorDto vendor;
+    private Vendor vendor;
 }

@@ -58,7 +58,7 @@ public class VendorContactsController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/vendorContacts/{vendorId}")
+    @GetMapping("/vendorContacts/vendor/{vendorId}")
     public ResponseEntity<List<VendorContacts>> findByVendorId(@PathVariable Long vendorId) {
         List<VendorContacts> vendorContactsList = vendorContactsService.findByVendorId(vendorId);
         return ResponseEntity.ok(vendorContactsList);

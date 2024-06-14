@@ -19,11 +19,14 @@ import { Table } from "primeng/table";
 import { ProductDefinitionService } from "src/app/services/product-definition.service";
 import { FormValidationService } from "src/app/services/form-validation.service";
 import { BackendErrorResponse } from "src/app/Model/BackendErrorResponse";
+import { Editor } from "primeng/editor";
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: "app-vendor-management",
   templateUrl: "./vendor-management.component.html",
   styleUrls: ["./vendor-management.component.css"],
+  providers: [DatePipe],
 })
 export class VendorManagementComponent {
   vendorForm!: FormGroup;
@@ -46,23 +49,26 @@ export class VendorManagementComponent {
   contactDialog: boolean = false;
   paymentDialog: boolean = false;
   loading: any;
-  destinations: any;
+  designations: any;
   fromDate: any;
   toDate: any;
-  vendorNotes: string | undefined;
+  vendorNotes: any = `<p>dasdasdasda</p>`;
+  notes: any;
+  vendorStatement: any;
   // Management
   vendorLockStatus: boolean = false;
   vendorActiveStatus: boolean = false;
   vendorVerifiedStatus: boolean = false;
   vendorRating: any;
   vendorTimeStamp: any;
+  vendorSinceDate:any
   vendorsData: any;
 
   // vendorUpdate
 
   @ViewChild("filter") filter!: ElementRef;
   @ViewChild("copiedContent", { static: false }) textToCopy!: ElementRef;
-  private notesSubject = new Subject<string>();
+  @ViewChild("editor") editor!: Editor;
   constructor(
     private errorHandleService: ErrorHandleService,
     private leadService: LeadService,
@@ -71,19 +77,9 @@ export class VendorManagementComponent {
     private vendorService: VendorService,
     private messageService: MessageService,
     private formService: FormValidationService,
-    private productFieldService: ProductDefinitionService
-  ) {
-    this.notesSubject
-      .pipe(
-        debounceTime(300), // Wait for 300ms pause in events
-        distinctUntilChanged(), // Only emit if value is different from the last
-        switchMap((notes) => {
-          this.onSaveNotes(notes);
-          return [];
-        })
-      )
-      .subscribe();
-  }
+    private productFieldService: ProductDefinitionService,
+    private datePipe: DatePipe
+  ) {}
 
   ngOnInit(): void {
     this.vendorForm = new FormGroup({
@@ -98,11 +94,11 @@ export class VendorManagementComponent {
     });
 
     this.contactForm = new FormGroup({
-      name: new FormControl(null),
-      vendor: new FormControl(this.vendor?.contactName),
-      whatsApp: new FormControl(null),
-      phone: new FormControl(null),
-      destination: new FormControl(null),
+      name: new FormControl(null, Validators.required),
+      vendor: new FormControl(null, Validators.required),
+      whatsApp: new FormControl(null, Validators.required),
+      phone: new FormControl(null, Validators.required),
+      designation: new FormControl(null, Validators.required),
     });
 
     this.initializeProductFieldData();
@@ -114,6 +110,7 @@ export class VendorManagementComponent {
 
         if (this.idFromQueryParam) {
           this.getVendorById(this.idFromQueryParam);
+          this.getVendorContactsByVendorId(this.idFromQueryParam);
         }
       },
       (error: any) => {
@@ -154,6 +151,7 @@ export class VendorManagementComponent {
   private initializeProductFieldData(): void {
     this.getMarketNames("MARKET");
     this.getCityNames("CITY");
+    this.getDesinationsNames("DESIGNATION");
   }
 
   private getMarketNames(productName: string): void {
@@ -167,6 +165,23 @@ export class VendorManagementComponent {
       .subscribe(
         (marketNames: any[]) => {
           this.market = marketNames;
+        },
+        (error: any) => {
+          this.errorHandleService.showError(error?.error?.error);
+        }
+      );
+  }
+  private getDesinationsNames(productName: string): void {
+    this.productFieldService
+      .searchProductField(productName)
+      .pipe(
+        map((res: any) =>
+          res[0]?.productFieldValuesList.map((item: any) => item.name)
+        )
+      )
+      .subscribe(
+        (designationNames: any[]) => {
+          this.designations = designationNames;
         },
         (error: any) => {
           this.errorHandleService.showError(error?.error?.error);
@@ -199,50 +214,129 @@ export class VendorManagementComponent {
     this.paymentDialog = false;
   }
 
-  onNotesChange(notes: string) {
-    this.notesSubject.next(notes);
-  }
-
-  onSaveNotes(notes: string) {
-    console.log(notes);
+  onNotesChange() {
+    console.log(this.vendorNotes);
+    this.notes = this.vendorNotes;
+    const updatedObj = this.updateVendorFields(this.vendor, {
+      notes: this.vendorNotes,
+    });
+    this.vendorService
+      .updateVendor(this.idFromQueryParam, updatedObj)
+      .subscribe((res: any) => {
+        this.getVendorById(this.idFromQueryParam);
+      });
   }
 
   openContactDialog() {
     this.contactDialog = true;
+    this.contactForm.patchValue({
+      vendor: this.vendor?.contactName,
+    });
   }
 
   // Management
   onChangeVendorLockStatus(value: any) {
-    console.log(value);
-    this.vendorLockStatus = value.checked;
+    const updatedObj = this.updateVendorFields(this.vendor, {
+      isLock: value?.checked,
+    });
+    this.vendorService
+      .updateVendor(this.idFromQueryParam, updatedObj)
+      .subscribe((res: any) => {
+        this.getVendorById(this.idFromQueryParam);
+      });
   }
 
   onChangeVendorActiveStatus(value: any) {
-    console.log(value);
+    const updatedObj = this.updateVendorFields(this.vendor, {
+      isActive: value?.checked,
+    });
+    this.vendorService
+      .updateVendor(this.idFromQueryParam, updatedObj)
+      .subscribe((res: any) => {
+        this.getVendorById(this.idFromQueryParam);
+      });
   }
 
   onChangeVendorVerifiedStatus(value: any) {
-    console.log(value);
+    const updatedObj = this.updateVendorFields(this.vendor, {
+      isVerified: value?.checked,
+    });
+    this.vendorService
+      .updateVendor(this.idFromQueryParam, updatedObj)
+      .subscribe((res: any) => {
+        this.getVendorById(this.idFromQueryParam);
+      });
   }
 
-  onChangeVendorRating(value: any) {
-    console.log(value);
+  onChangeVendorRating(data: any) {
+    console.log(data.value);
+
+    const updatedObj = this.updateVendorFields(this.vendor, {
+      rating: data?.value,
+    });
+    this.vendorService
+      .updateVendor(this.idFromQueryParam, updatedObj)
+      .subscribe((res: any) => {
+        this.getVendorById(this.idFromQueryParam);
+      });
   }
 
-  onSelectVendorDate(value: any) {
-    console.log(value);
+  onSelectVendorDate(data: any) {
+    const selectedDate = new Date(data);
+    const currentTime = new Date();
+
+    // Set the current time to the selected date
+    selectedDate.setHours(currentTime.getHours());
+    selectedDate.setMinutes(currentTime.getMinutes());
+    selectedDate.setSeconds(currentTime.getSeconds());
+
+    console.log(selectedDate);
+    
+    
+    const updatedObj = this.updateVendorFields(this.vendor, {
+      timeStamp: selectedDate.toISOString(),
+    });
+    this.vendorService
+      .updateVendor(this.idFromQueryParam, updatedObj)
+      .subscribe((res: any) => {
+        this.vendorSinceDate = null
+        this.getVendorById(this.idFromQueryParam);
+      });
   }
 
-  onChangeContactLockStatus(value: any) {
-    console.log(value);
+onChangeContactLockStatus(value: any,data:any,id:any) {
+  console.log(value,data,id);
+  
+    const updatedObj = this.updateVendorFields(data, {
+      isLock: value?.checked,
+    });
+    this.vendorService
+      .updateVendorContact(id, updatedObj)
+      .subscribe((res: any) => {
+        this.getVendorContactsByVendorId(this.idFromQueryParam);
+      });
   }
 
-  onChangeContactActiveStatus(value: any) {
-    console.log(value);
+  onChangeContactActiveStatus(value: any,data:any,id:any) {
+    const updatedObj = this.updateVendorFields(data, {
+      status: value?.checked,
+    });
+    this.vendorService
+      .updateVendorContact(id, updatedObj)
+      .subscribe((res: any) => {
+        this.getVendorContactsByVendorId(this.idFromQueryParam);
+      });
   }
 
-  onChangeContactVerifiedStatus(value: any) {
-    console.log(value);
+  onChangeContactVerifiedStatus(value: any,data:any,id:any) {
+    const updatedObj = this.updateVendorFields(data, {
+      isVerified: value?.checked,
+    });
+    this.vendorService
+      .updateVendorContact(id, updatedObj)
+      .subscribe((res: any) => {
+        this.getVendorContactsByVendorId(this.idFromQueryParam);
+      });
   }
 
   // Management End
@@ -259,22 +353,43 @@ export class VendorManagementComponent {
   // Edit Vendor Form
   onEditVendor(value: any) {
     console.log(value);
-    console.log(this.updateVendorFields(this.vendor,value));
+    console.log(this.updateVendorFields(this.vendor, value));
     console.log(this.vendor);
 
     if (this.vendorForm.valid) {
       const updatedVendor = this.updateVendorFields(this.vendor, value);
-      this.vendorService.updateVendor(this.idFromQueryParam,updatedVendor).subscribe((res:any)=>{
-        this.getVendorById(this.idFromQueryParam)
-        
-      })
+      this.vendorService
+        .updateVendor(this.idFromQueryParam, updatedVendor)
+        .subscribe((res: any) => {
+          this.getVendorById(this.idFromQueryParam);
+        });
     } else {
       this.formService.markFormGroupTouched(this.vendorForm);
       this.alert();
     }
   }
 
-  onSubmitContact(value: any) {}
+  onSubmitContact(contactDetails: any) {
+    if (this.contactForm.valid) {
+      const contactObj = {
+        name: contactDetails?.name,
+        designation: contactDetails?.designation,
+        whatsapp: contactDetails?.whatsApp,
+        phone: contactDetails?.phone,
+        vendor: {
+          id: this.idFromQueryParam,
+        },
+      };
+
+      this.vendorService.postVendorContact(contactObj).subscribe((res: any) => {
+        this.getVendorContactsByVendorId(this.idFromQueryParam);
+        this.contactDialog = false;
+      });
+    } else {
+      this.formService.markFormGroupTouched(this.contactForm);
+      this.alert();
+    }
+  }
 
   updateVendorFields<T>(obj: T, updates: Partial<T>): T {
     return {
@@ -317,12 +432,32 @@ export class VendorManagementComponent {
         primaryEmail: this.vendorsData?.email,
         secondaryEmail: this.vendorsData?.secondaryEmail,
       });
+     if (this.vendor.timeStamp && Array.isArray(this.vendor.timeStamp)) {
+       this.vendorTimeStamp = new Date(
+         this.vendor.timeStamp[0], // Year
+         this.vendor.timeStamp[1] - 1, // Month (0-based in JavaScript Date)
+         this.vendor.timeStamp[2], // Day
+         this.vendor.timeStamp[3], // Hour
+         this.vendor.timeStamp[4], // Minute
+         this.vendor.timeStamp[5] // Second
+       );
+     }
+      console.log(this.vendorTimeStamp);
+      
       this.checked = this.vendorsData?.isVerified;
       this.vendorRating = this.vendorsData?.rating;
       this.vendorLockStatus = this.vendorsData?.isLock;
       this.vendorActiveStatus = this.vendorsData?.isActive;
       this.vendorVerifiedStatus = this.vendorsData?.isVerified;
       console.log(res);
+    });
+  }
+
+  getVendorContactsByVendorId(id: any) {
+    this.vendorService.getVendorContactsByVendorId(id).subscribe((res: any) => {
+      this.contacts = res;
+      console.log(res);
+      
     });
   }
 
@@ -334,7 +469,7 @@ export class VendorManagementComponent {
     });
   }
 
-  success(){
+  success() {
     this.messageService.add({
       severity: "success",
       summary: "Success",

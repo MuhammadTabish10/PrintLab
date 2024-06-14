@@ -60,8 +60,13 @@ export class VendorService {
     return this.http.post(url, obj);
   }
 
-  getVendorContactsByVendorId(id:any) {
-    let url = `${this._url}/vendorContacts/${id}`;
+  getVendorContactsByVendorId(id: any) {
+    let url = `${this._url}/vendorContacts/vendor/${id}`;
     return this.http.get(url);
+  }
+
+  updateVendorContact(id: any, obj: any) {
+    let url = `${this._url}/vendorContacts/${id}`;
+    return this.http.put(url, obj);
   }
 }

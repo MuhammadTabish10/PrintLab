@@ -1,6 +1,7 @@
 package com.PrintLab.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,6 +31,8 @@ public class Vendor {
     private String contactNumber;
     private String email;
     private String address;
+
+    @Lob
     @Column(columnDefinition = "TEXT")
     private String notes;
     private Boolean status;
@@ -58,7 +61,11 @@ public class Vendor {
     private Boolean isVerified;
     private Integer rating;
     private Date since;
+
+    @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timeStamp;
+
     private String addedBy;
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL)

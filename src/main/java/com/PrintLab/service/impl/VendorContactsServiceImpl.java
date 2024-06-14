@@ -32,6 +32,7 @@ public class VendorContactsServiceImpl implements VendorContactsService {
         vendorContacts.setStatus(false);
         vendorContacts.setAddedBy(helperUtils.getCurrentUser());
 
+
         Vendor vendor = vendorRepository.findById(vendorContacts.getVendor().getId())
                 .orElseThrow(() -> new RecordNotFoundException("Vendor not found at id: " + vendorContacts.getVendor().getId()));
 
@@ -91,6 +92,7 @@ public class VendorContactsServiceImpl implements VendorContactsService {
                 .addedBy(vendorContactsDto.getAddedBy())
                 .isLock(vendorContactsDto.getIsLock())
                 .addedBy(vendorContactsDto.getAddedBy())
+                .vendor(vendorContactsDto.getVendor())
                 .build();
     }
 
@@ -106,6 +108,7 @@ public class VendorContactsServiceImpl implements VendorContactsService {
                 .addedBy(vendorContacts.getAddedBy())
                 .isLock(vendorContacts.getIsLock())
                 .addedBy(vendorContacts.getAddedBy())
+                .vendor(vendorContacts.getVendor())
                 .build();
     }
 }

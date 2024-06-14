@@ -38,7 +38,6 @@ public class VendorServiceImpl implements VendorService {
     public VendorDto save(VendorDto vendorDto) {
         Vendor vendor = toVEntity(vendorDto);
         vendor.setStatus(true);
-        vendor.setTimeStamp(LocalDateTime.now());
 
         Vendor createdVendor = vendorRepository.save(vendor);
 
@@ -173,6 +172,8 @@ public class VendorServiceImpl implements VendorService {
             existingVendor.setTimeStamp(vendor.getTimeStamp());
             existingVendor.setSince(vendor.getSince());
             existingVendor.setIsVerified(vendor.getIsVerified());
+            existingVendor.setRating(vendor.getRating());
+
 
 
             List<VendorProcess> existingVpValues = existingVendor.getVendorProcessList();
