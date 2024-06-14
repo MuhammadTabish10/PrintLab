@@ -30,6 +30,9 @@
     <h4 *ngIf="activeItem != 'Payments'">{{activeItem}}</h4>
     <h4 *ngIf="activeItem == 'Payments'">{{'Payment Clearance'}}</h4>
   </div>
+
+
+  <!-- Dashboard -->
   <div class="dashboard" *ngIf="activeItem == 'Dashboard'">
     <div class="dashboard-content">
       <p class="m-0" [ngClass]="vendorActiveStatus?'active':'inactive'">{{vendorActiveStatus?'Active':'In-active'}}</p>
@@ -61,7 +64,7 @@
             <td>{{ vendor?.category }}</td>
           </tr>
         </ng-template>
-      </p-table> ;
+      </p-table>
     </div>
     <div class="data-table" style="margin-top: 30px;">
       <h5>SNAPSHOT</h5>
@@ -77,6 +80,8 @@
       </table>
     </div>
   </div>
+
+<!-- Vendor Form Edit -->
   <div class="contact-details" *ngIf="activeItem == 'Contact Details'">
     <div class="dashboard-content" *ngIf="vendorLockStatus">
       <p class="m-0" [ngClass]="vendorActiveStatus?'active':'inactive'">{{vendorActiveStatus?'Active':'In-active'}}</p>
@@ -164,6 +169,8 @@
       </div>
     </form>
   </div>
+
+  <!-- Contacts -->
   <div class="contact-list" *ngIf="activeItem == 'Contacts'">
     <p-table class="contacts-table" #dt1 [value]="contacts" dataKey="id" [rows]="5" [loading]="loading"
       [rowHover]="true" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
