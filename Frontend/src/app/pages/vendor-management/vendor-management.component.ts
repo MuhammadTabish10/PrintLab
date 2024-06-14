@@ -106,7 +106,6 @@ export class VendorManagementComponent {
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(
       (param: any) => {
         this.idFromQueryParam = +param["id"] || null;
-        console.log("hello");
 
         if (this.idFromQueryParam) {
           this.getVendorById(this.idFromQueryParam);
@@ -215,8 +214,6 @@ export class VendorManagementComponent {
   }
 
   onNotesChange() {
-    console.log(this.vendorNotes);
-    this.notes = this.vendorNotes;
     const updatedObj = this.updateVendorFields(this.vendor, {
       notes: this.vendorNotes,
     });
@@ -269,7 +266,6 @@ export class VendorManagementComponent {
   }
 
   onChangeVendorRating(data: any) {
-    console.log(data.value);
 
     const updatedObj = this.updateVendorFields(this.vendor, {
       rating: data?.value,
@@ -290,7 +286,6 @@ export class VendorManagementComponent {
     selectedDate.setMinutes(currentTime.getMinutes());
     selectedDate.setSeconds(currentTime.getSeconds());
 
-    console.log(selectedDate);
     
     
     const updatedObj = this.updateVendorFields(this.vendor, {
@@ -305,7 +300,6 @@ export class VendorManagementComponent {
   }
 
 onChangeContactLockStatus(value: any,data:any,id:any) {
-  console.log(value,data,id);
   
     const updatedObj = this.updateVendorFields(data, {
       isLock: value?.checked,
@@ -352,9 +346,6 @@ onChangeContactLockStatus(value: any,data:any,id:any) {
 
   // Edit Vendor Form
   onEditVendor(value: any) {
-    console.log(value);
-    console.log(this.updateVendorFields(this.vendor, value));
-    console.log(this.vendor);
 
     if (this.vendorForm.valid) {
       const updatedVendor = this.updateVendorFields(this.vendor, value);
@@ -442,21 +433,19 @@ onChangeContactLockStatus(value: any,data:any,id:any) {
          this.vendor.timeStamp[5] // Second
        );
      }
-      console.log(this.vendorTimeStamp);
       
       this.checked = this.vendorsData?.isVerified;
+      this.vendorNotes = this.vendorsData?.notes;
       this.vendorRating = this.vendorsData?.rating;
       this.vendorLockStatus = this.vendorsData?.isLock;
       this.vendorActiveStatus = this.vendorsData?.isActive;
       this.vendorVerifiedStatus = this.vendorsData?.isVerified;
-      console.log(res);
     });
   }
 
   getVendorContactsByVendorId(id: any) {
     this.vendorService.getVendorContactsByVendorId(id).subscribe((res: any) => {
       this.contacts = res;
-      console.log(res);
       
     });
   }

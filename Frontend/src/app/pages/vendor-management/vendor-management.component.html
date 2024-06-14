@@ -249,7 +249,8 @@
             <i class="pi" [ngClass]="data?.isLock?'pi-lock':'pi-lock-open'" style="font-weight:700;"></i>
           </td>
           <td class="text-center">
-            <p-checkbox class="custom-checkbox" [(ngModel)]="data.isVerified" [binary]="true" inputId="binary" [disabled]="true"/>
+            <p-checkbox class="custom-checkbox" [(ngModel)]="data.isVerified" [binary]="true" inputId="binary"
+              [disabled]="true" />
           </td>
 
         </tr>
@@ -266,14 +267,17 @@
       </ng-template>
     </p-table>
   </div>
+
+
+  <!-- Vendor Statement -->
   <div class="vendor-statement" *ngIf="activeItem == 'Vendor Statement'">
-    <p-table class="contacts-table" [value]="vendorStatement" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-      [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+    <p-table class="contacts-table" [value]="vendorStatement" dataKey="id" [rows]="5" [loading]="loading"
+      [rowHover]="true" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
       <ng-template pTemplate="caption">
         <h1 class="text-center">{{'Nadeem & Sons'}}</h1>
         <h4 class="m-0 text-center">From {{currentDate | date:'d MMMM y'}} to {{currentDate | date:'d MMMM y'}}</h4>
         <h4 class="m-0 text-center">Vendor Statement</h4>
-        <div class="flex justify-content-between align-items-end sm:flex-row mt-5">
+        <div class="flex justify-content-between align-items-end sm:flex-row mt-5 mb-3">
           <div class="flex justify-content-center align-items-end gap-2">
             <div style="max-width: 300px;">
               <label>From</label>
@@ -284,7 +288,7 @@
               <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [(ngModel)]="toDate"></p-calendar>
             </div>
             <button pButton class="contact-btn ml-4" label="Generate">
-        </button>
+            </button>
           </div>
           <div class="flex justify-content-center align-items-end">
             <i class="pi pi-file-pdf"></i>
@@ -295,7 +299,7 @@
 
         </div>
         <!-- <h4 class="mb-1 mt-4">POINT OF CONTACTS</h4> -->
-        </ng-template>    
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <th style="min-width: 4rem">
@@ -303,7 +307,7 @@
               Join Id
             </div>
           </th>
-          <th style="min-width: 6rem">    
+          <th style="min-width: 6rem">
             <div class="flex justify-content-center align-items-center">
               Date
             </div>
@@ -400,17 +404,19 @@
       <ng-template pTemplate="loadingbody">
         <tr>
           <td style="text-align: start !important;" colspan="8">Loading data. Please wait.</td>
-         </tr>
-       </ng-template>
-     </p-table>
-     <div class="flex justify-content-end align-items-center mt-4">
-       <p class="balance">BALANCE:</p>
-       <p class="amount">{{'PKR 11,000'}}</p>
-     </div>
-   </div>
-   <div class="payments" *ngIf="activeItem == 'Payments'">
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="flex justify-content-end align-items-center mt-4">
+      <p class="balance">BALANCE:</p>
+      <p class="amount">{{'PKR 11,000'}}</p>
+    </div>
+  </div>
+
+  <!-- Payment -->
+  <div class="payments" *ngIf="activeItem == 'Payments'">
     <p-table class="contacts-table" [value]="contacts" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-[globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+      [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
       <ng-template pTemplate="caption">
         <div class="flex justify-content-between align-items-center sm:flex-row">
           <div class="vendor-payment">
@@ -527,13 +533,17 @@
       </ng-template>
     </p-table>
   </div>
+
+  <!-- Notes -->
   <div class="notes" *ngIf="activeItem == 'Notes'">
     <p class="m-0"><span style="font-weight: 700;">Last saved on: </span> {{currentDate | date:'d MMM yyyy'}}</p>
-    <p-editor [(ngModel)]="vendorNotes" lazy="true" [style]="{ height: '350px' }" />
-    <div class="flex justify-content-end align-items-end my-3">
-      <button pButton class="contact-btn" (click)="onNotesChange()" label="Save"></button>
-    </div>
+      <p-editor [(ngModel)]="vendorNotes" [style]="{ height: '320px' }" name="notes"></p-editor>
+      <div class="flex justify-content-end align-items-end my-3">
+        <button pButton class="contact-btn" type="submit" (click)="onNotesChange()" label="Save"></button>
+      </div>
   </div>
+
+  <!-- Management -->
   <div class="management" *ngIf="activeItem == 'Management'">
     <p class="m-0">Vendor Settings</p>
     <div class="flex justify-content-between align-items-start">
@@ -560,7 +570,7 @@
       <!-- SINCE -->
       <div class="fields">
         <label htmlFor="Since" class="m-0">Since</label>
-        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [(ngModel)]="vendorSinceDate" 
+        <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [(ngModel)]="vendorSinceDate"
           (onSelect)="onSelectVendorDate($event)"></p-calendar>
       </div>
       <!-- ADDED BY -->
@@ -647,7 +657,8 @@
             <p-inputSwitch [(ngModel)]="data.isLock" (onChange)="onChangeContactLockStatus($event,data,data?.id)" />
           </td>
           <td>
-            <p-inputSwitch [(ngModel)]="data.isVerified" (onChange)="onChangeContactVerifiedStatus($event,data,data?.id)" />
+            <p-inputSwitch [(ngModel)]="data.isVerified"
+              (onChange)="onChangeContactVerifiedStatus($event,data,data?.id)" />
           </td>
         </tr>
       </ng-template>

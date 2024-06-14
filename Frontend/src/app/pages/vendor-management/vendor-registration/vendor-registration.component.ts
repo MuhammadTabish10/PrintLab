@@ -82,7 +82,6 @@ export class VendorRegistrationComponent implements OnInit {
   }
 
   onRegisterVendor(vendorData: any) {
-    console.log(vendorData);
 
     if (this.vendorForm.valid) {
       const formValue = vendorData;
@@ -104,11 +103,10 @@ export class VendorRegistrationComponent implements OnInit {
         rating: null,
         addedBy:this.currentUserDetail?.username
       };
-      console.log(vendorObj);
 
       this.vendorService.postVendor(vendorObj).subscribe((res: any) => {
         this.vendorForm.reset();
-        // this.router.navigateByUrl("vendors-list")
+        this.router.navigateByUrl("vendors-list")
       });
     } else {
       this.alert();

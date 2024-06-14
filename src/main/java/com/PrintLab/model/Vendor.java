@@ -32,8 +32,7 @@ public class Vendor {
     private String email;
     private String address;
 
-    @Lob
-    @Column(columnDefinition = "TEXT")
+
     private String notes;
     private Boolean status;
 
