@@ -1,8 +1,12 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.User;
+import com.PrintLab.model.VendorContacts;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -27,4 +31,20 @@ public class VendorDto
 
     @ToString.Exclude
     private List<BusinessUnitProcessDto> businessUnitProcess;
+
+    private Double due;
+    private String secondaryEmail;
+    private String landmark;
+    private String city;
+    private String market;
+    private Boolean isLock;
+    private Boolean isActive;
+    private Boolean isVerified;
+    private Integer rating;
+    private LocalDate since;
+    private User user;
+    private LocalDateTime timeStamp;
+    private String addedBy;
+
+    private List<VendorContactsDto> vendorContacts;
 }

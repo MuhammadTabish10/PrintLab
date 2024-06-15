@@ -72,55 +72,58 @@ import { OrderStepsComponent } from './pages/OrderSteps/order-steps/order-steps.
 import { ProductRuleJobComponent } from './pages/Jobs/product-rule-job/product-rule-job.component';
 import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
 import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmation-screen/order-confirmation-screen.component';
+import { VendorRegistrationComponent } from './pages/vendor-management/vendor-registration/vendor-registration.component';
+import { VendorManagementComponent } from './pages/vendor-management/vendor-management.component';
+import { VendorListComponent } from './pages/vendor-management/vendor-list/vendor-list.component';
 
 export const routes: Routes = [
   {
-    path: '',
-    component: LoginFormComponent
+    path: "",
+    component: LoginFormComponent,
   },
   {
-    path: 'dashboard',
+    path: "dashboard",
     component: DashboardComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'user',
+    path: "user",
     component: UserComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addUser',
+    path: "addUser",
     component: AddUsersComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'orders',
+    path: "orders",
     component: OrdersComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'jobDesignerOrders',
+    path: "jobDesignerOrders",
     component: JobDesignerOrdersComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'jobProductionOrders',
+    path: "jobProductionOrders",
     component: JobProductionOrdersComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'jobPlateSetterOrders',
+    path: "jobPlateSetterOrders",
     component: JobPlateSetterOrdersComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'login',
-    component: LoginFormComponent
+    path: "login",
+    component: LoginFormComponent,
   },
   {
-    path: 'addOrder',
+    path: "addOrder",
     component: AddOrderComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   // {
   //   path: 'products',
@@ -128,284 +131,299 @@ export const routes: Routes = [
   //   canActivate: [AuthguardService]
   // },
   {
-    path: 'ProductRule',
+    path: "ProductRule",
     component: ProductRuleComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'viewProductRule',
+    path: "viewProductRule",
     component: ViewProductRuleComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addProductRule',
+    path: "addProductRule",
     component: AddProductRuleComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addProduct',
+    path: "addProduct",
     component: AddProductComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'viewProduct',
+    path: "viewProduct",
     component: ViewProductComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addProductField',
+    path: "addProductField",
     component: AddProductDefintionComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'productField',
+    path: "productField",
     component: ProductDefintionComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'paperMarket',
+    path: "paperMarket",
     component: PaperMarketComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addPaperMarket',
+    path: "addPaperMarket",
     component: AddPaperMarketComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'paperSize',
+    path: "paperSize",
     component: PaperSizeComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addPaperSize',
+    path: "addPaperSize",
     component: AddPaperSizeComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'pressMachine',
+    path: "pressMachine",
     component: PressMachineComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addPressMachine',
+    path: "addPressMachine",
     component: AddPressMachineComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'paper-sizes',
+    path: "paper-sizes",
     component: UpingComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addUping',
+    path: "addUping",
     component: AddUpingComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'vendor',
+    path: "vendor",
     component: VendorComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addVendor',
+    path: "vendor-management",
+    component: VendorManagementComponent,
+    canActivate: [AuthguardService],
+  },
+  {
+    path: "vendor-registration",
+    component: VendorRegistrationComponent,
+    canActivate: [AuthguardService],
+  },
+  {
+    path: "vendors-list",
+    component: VendorListComponent,
+    canActivate: [AuthguardService],
+  },
+  {
+    path: "addVendor",
     component: AddVendorComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'productProcess',
+    path: "productProcess",
     component: ProductProcessComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addProductProcess',
+    path: "addProductProcess",
     component: AddProductProcessComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'customers',
+    path: "customers",
     component: CustomerComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addCustomer',
+    path: "addCustomer",
     component: AddCustomerComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'settings',
+    path: "settings",
     component: SettingsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addSettings',
+    path: "addSettings",
     component: AddSettingsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'viewOrder',
+    path: "viewOrder",
     component: ViewOrderComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'calculator',
+    path: "calculator",
     component: CalculatorComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'paperStock',
+    path: "paperStock",
     component: PaperStockComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addPaperStock',
+    path: "addPaperStock",
     component: AddPaperStockComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'permission',
+    path: "permission",
     component: PermisionComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'ctp',
+    path: "ctp",
     component: CtpComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addCtp',
+    path: "addCtp",
     component: AddCtpComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'inventory',
+    path: "inventory",
     component: InventoryComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'addInventory',
+    path: "addInventory",
     component: AddInventoryComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'orderProcess',
+    path: "orderProcess",
     component: OrderProcessComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'transactions',
+    path: "transactions",
     component: TransactionsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'transactionRecord',
+    path: "transactionRecord",
     component: TransactionRecordComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'userPetyCash',
+    path: "userPetyCash",
     component: PetyCashComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'vendorSettlement',
+    path: "vendorSettlement",
     component: VendorSettlementComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'allSettlements',
+    path: "allSettlements",
     component: AllSettlementsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'allPettyCashRecords',
+    path: "allPettyCashRecords",
     component: AllPettyCashRecordsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'order-timeline',
+    path: "order-timeline",
     component: OrderTimeLineComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'get-binding-labours',
+    path: "get-binding-labours",
     component: GetBindingLaboursComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'add-binding-labour',
+    path: "add-binding-labour",
     component: AddBindingLaboursComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'get-lamination-vendors',
+    path: "get-lamination-vendors",
     component: LaminationVendorsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'add-lamination-vendor',
+    path: "add-lamination-vendor",
     component: AddLaminationVendorsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'get-uv-vendors',
+    path: "get-uv-vendors",
     component: GetUvVendorsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'add-uv-vendor',
+    path: "add-uv-vendor",
     component: AddUvVendorsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'product-categories',
+    path: "product-categories",
     component: ProductCategoriesComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'get-invoices',
+    path: "get-invoices",
     component: GetInvoicesComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'add-invoice',
+    path: "add-invoice",
     component: AddInvoiceComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'print-invoice',
+    path: "print-invoice",
     component: InvoicePrintComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'product-services',
+    path: "product-services",
     component: ProductServicesComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'get-leads',
+    path: "get-leads",
     component: GetLeadsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'create-lead',
+    path: "create-lead",
     component: CreateLeadComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'uping-view',
+    path: "uping-view",
     component: ViewUpingComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'business-unit',
+    path: "business-unit",
     component: BusinessUnitAndProcessesComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'viewCustomer',
+    path: "viewCustomer",
     component: ViewCustomerComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   // {
   //   path: 'creating-job',
@@ -413,9 +431,9 @@ export const routes: Routes = [
   //   canActivate: [AuthguardService]
   // },
   {
-    path: 'job-requests',
+    path: "job-requests",
     component: JobRequestsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   // {
   //   path: 'all-jobs',
@@ -423,24 +441,24 @@ export const routes: Routes = [
   //   canActivate: [AuthguardService]
   // },
   {
-    path: 'order-overview',
+    path: "order-overview",
     component: OrderStepsComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'add-product-rule-job',
+    path: "add-product-rule-job",
     component: ProductRuleJobComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'add-product-rule-group-sheet',
+    path: "add-product-rule-group-sheet",
     component: ProductRuleOfGroupSheetComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
   {
-    path: 'order-confirmation-screen',
+    path: "order-confirmation-screen",
     component: OrderConfirmationScreenComponent,
-    canActivate: [AuthguardService]
+    canActivate: [AuthguardService],
   },
 ];
 

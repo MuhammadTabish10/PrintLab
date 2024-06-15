@@ -1,0 +1,73 @@
+.page-content {
+      background-color: #dddddd;
+    padding: 15px 0px 15px 30px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    margin: 10px 0px;
+}
+
+.contacts-table::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  padding: 3px 3px !important;
+  text-transform: none !important;
+  background: #cccccc !important;
+  border: 1px solid rgb(52, 52, 52);
+  text-align: center !important;
+}
+
+.contacts-table::ng-deep .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td{
+  text-align: center !important;
+  font-weight: 600 !important;
+}
+
+.clickable-row{
+  cursor: pointer;
+}
+
+p-sorticon::ng-deep .p-element {
+  float: right !important;
+}
+
+.contacts-table::ng-deep .p-datatable .p-datatable-header {
+  background: transparent !important;
+  border: none !important;
+  padding-bottom: 0px;
+}
+
+.search-input.p-inputtext {
+  padding: 0.3rem 2.75rem !important;
+  width: 330px !important;
+  border-radius: 50px !important;
+}
+
+.vendor-list{
+  padding: 5px 10px;
+}
+
+.submit-btn {
+  color: #ffffff;
+  background: black !important;
+  border: 1px solid black !important;
+  padding: 0.24rem 1.25rem !important;
+  font-size: 1rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  border-radius: 4px !important;
+}
+
+.submit-btn:hover {
+  background-color: rgba(0, 0, 0, 0.788) !important;
+}
+
+.inactive {
+  background-color: #cf2a27;
+  padding: 0px 8px;
+  color: white !important;
+  margin-right: 10px !important;
+}
+
+.active {
+  background-color: #009e0f;
+  padding: 0px 8px;
+  color: white !important;
+  margin-right: 10px !important;
+}

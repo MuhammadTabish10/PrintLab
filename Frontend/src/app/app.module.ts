@@ -138,6 +138,10 @@ import { SizeFormatPipe } from './CustomPipes/size-format.pipe';
 import { ProductRuleOfGroupSheetComponent } from './pages/Jobs/product-rule-of-group-sheet/product-rule-of-group-sheet.component';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmation-screen/order-confirmation-screen.component';
+import { VendorRegistrationComponent } from './pages/vendor-management/vendor-registration/vendor-registration.component';
+import { VendorManagementComponent } from './pages/vendor-management/vendor-management.component';
+import { VendorListComponent } from './pages/vendor-management/vendor-list/vendor-list.component';
+import { RatingModule } from "primeng/rating";
 
 @NgModule({
   declarations: [
@@ -233,6 +237,9 @@ import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmat
     SizeFormatPipe,
     ProductRuleOfGroupSheetComponent,
     OrderConfirmationScreenComponent,
+    VendorManagementComponent,
+    VendorRegistrationComponent,
+    VendorListComponent,
   ],
   imports: [
     BrowserModule,
@@ -280,9 +287,17 @@ import { OrderConfirmationScreenComponent } from './pages/orders/order-confirmat
     BreadcrumbModule,
     PanelMenuModule,
     TriStateCheckboxModule,
+    CheckboxModule,
+    RatingModule,
   ],
-  providers: [AuthInterceptorProvider, InterceptorService, MessageService, ConfirmationService,
-    provideRouter(routes, withHashLocation()), DatePipe],
-  bootstrap: [AppComponent]
+  providers: [
+    AuthInterceptorProvider,
+    InterceptorService,
+    MessageService,
+    ConfirmationService,
+    provideRouter(routes, withHashLocation()),
+    DatePipe,
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
