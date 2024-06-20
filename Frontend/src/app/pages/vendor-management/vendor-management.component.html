@@ -8,7 +8,7 @@
             <p #copiedContent class="copied-content m-0">PL-V-1001</p>
             <i class="pi pi-clone" (click)="copyToClipboard()"></i>
           </div>
-          <p class="name m-0">{{vendor?.contactName}}</p>
+          <p class="name m-0">{{vendor?.name}}</p>
         </li>
         <ng-container *ngFor="let item of items; let i = index">
           <ng-container *ngIf="userRole === 'ADMIN' || i < items.length - 2">
@@ -24,7 +24,7 @@
     </div>
   </div>
   <div class="custom-breadcrumb">
-    <p><a routerLink="/vendors-list">Vendors</a> > {{vendor?.contactName}}</p>
+    <p><a routerLink="/vendors-list">Vendors</a> > {{vendor?.name}}</p>
   </div>
   <div class="page-content">
     <h4 *ngIf="activeItem != 'Payments'">{{activeItem}}</h4>
@@ -71,7 +71,7 @@
       <table class="styled-table">
         <tr style="background-color: #cccccc;">
           <td class="label">Total:</td>
-          <td class="value">PKR 203013</td>
+          <td class="value">PKR {{'203013' | number:'1.0-0'}}</td>
         </tr>
         <tr style="background-color: #eeeeee;">
           <td class="label">Balance Due:</td>
@@ -81,7 +81,7 @@
     </div>
   </div>
 
-<!-- Vendor Form Edit -->
+  <!-- Vendor Form Edit -->
   <div class="contact-details" *ngIf="activeItem == 'Contact Details'">
     <div class="dashboard-content" *ngIf="vendorLockStatus">
       <p class="m-0" [ngClass]="vendorActiveStatus?'active':'inactive'">{{vendorActiveStatus?'Active':'In-active'}}</p>
@@ -278,11 +278,12 @@
 
   <!-- Vendor Statement -->
   <div class="vendor-statement" *ngIf="activeItem == 'Vendor Statement'">
-    <p-table class="contacts-table" [value]="vendorStatement" dataKey="id" [rows]="5" [loading]="loading"
+    <p-table class="contacts-table" [value]="vendorsJobsProcess" dataKey="id" [rows]="5" [loading]="loading"
       [rowHover]="true" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
       <ng-template pTemplate="caption">
-        <h1 class="text-center">{{'Nadeem & Sons'}}</h1>
-        <h4 class="m-0 text-center">From {{currentDate | date:'d MMMM y'}} to {{currentDate | date:'d MMMM y'}}</h4>
+        <h1 class="text-center">{{vendor?.name}}</h1>
+        <h4 class="m-0 text-center">From {{vendorStatementFrom | date:'d MMMM y'}} to {{vendorStatementTo | date:'d MMMM
+          y'}}</h4>
         <h4 class="m-0 text-center">Vendor Statement</h4>
         <div class="flex justify-content-between align-items-end sm:flex-row mt-5 mb-3">
           <div class="flex justify-content-center align-items-end gap-2">
@@ -294,7 +295,8 @@
               <label>To</label>
               <p-calendar dateFormat="yy-mm-dd" [showIcon]="true" [(ngModel)]="toDate"></p-calendar>
             </div>
-            <button pButton class="contact-btn ml-4" label="Generate">
+            <button pButton class="contact-btn ml-4" (click)="onGenerateVendorStatement(fromDate,toDate)"
+              label="Generate">
             </button>
           </div>
           <div class="flex justify-content-center align-items-end">
@@ -368,38 +370,42 @@
       </ng-template>
       <ng-template pTemplate="body" let-data>
         <tr>
-          <td>
-            {{data?.joinId}}
+          <td class="text-center">
+            {{data?.id}}
           </td>
-          <td>
-            {{ data?.date}}
+          <td class="text-center">
+            {{ data?.dateAdded | date:'MMM d, y'}}
           </td>
-          <td>
+          <td class="text-center">
             {{ data?.client}}
           </td>
-          <td>
+          <td class="text-center">
             {{ data?.addedBy }}
           </td>
-          <td>
+          <td class="text-center">
             {{data?.product}}
           </td>
-          <td>
+          <td class="text-center">
             {{data?.size}}
           </td>
-          <td>
-            {{ data?.process }}
+          <td class="text-center">
+            {{ data?.processName }}
           </td>
-          <td>
-            {{ data?.type }}
+          <td class="text-center">
+            {{ data?.payment }}
           </td>
-          <td>
-            {{ data?.debit }}
+          <td class="text-center">
+            <ng-container *ngIf="data?.payment == 'Credit'">
+              PKR {{ data?.amount | number:'1.0-0'}}
+            </ng-container>
           </td>
-          <td>
-            {{ data?.credit }}
+          <td class="text-center">
+            <ng-container *ngIf="data?.payment == 'Cash' || data?.payment == 'Paid'">
+              PKR {{ data?.amount | number:'1.0-0'}}
+            </ng-container>
           </td>
-          <td>
-            {{ data?.balance }}
+          <td class="text-center">
+            PKR {{ data?.balance | number:'1.0-0'}}
           </td>
         </tr>
       </ng-template>
@@ -414,21 +420,23 @@
         </tr>
       </ng-template>
     </p-table>
-    <div class="flex justify-content-end align-items-center mt-4">
-      <p class="balance">BALANCE:</p>
-      <p class="amount">{{'PKR 11,000'}}</p>
+    <div class="flex justify-content-end align-items-center mt-4 mb-4">
+      <p class="balance text-center" style="min-width: 8rem">BALANCE:</p>
+      <p class="amount text-center" style="min-width: 8rem">PKR {{vendorsJobsProcess[vendorsJobsProcess?.length -
+        1]?.balance | number:'1.0-0'}}</p>
+
     </div>
   </div>
 
   <!-- Payment -->
   <div class="payments" *ngIf="activeItem == 'Payments'">
-    <p-table class="contacts-table" [value]="contacts" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true"
-      [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+    <p-table class="contacts-table" [value]="vendorStatement" dataKey="id" [rows]="5" [loading]="loading"
+      [rowHover]="true" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
       <ng-template pTemplate="caption">
         <div class="flex justify-content-between align-items-center sm:flex-row">
           <div class="vendor-payment">
-            <p class="pkr">PKR 11,000</p>
-            <p class="name">Nadeem & Sons</p>
+            <p class="pkr">PKR {{vendorsJobsProcess[vendorsJobsProcess?.length - 1]?.balance | number:'1.0-0'}}</p>
+            <p class="name">{{vendor?.name}}</p>
           </div>
           <i class="pi pi-arrow-right-arrow-left"></i>
           <div class="production-payment">
@@ -494,36 +502,35 @@
       </ng-template>
       <ng-template pTemplate="body" let-data>
         <tr>
-          <td>
-            {{data?.joinId}}
+          <td class="text-center">
+            {{data?.id}}
           </td>
-          <td>
-            {{ data?.timestamp}}
+          <td class="text-center">
+            {{ data?.dateAdded | date:'MMM d, y'}}
           </td>
-          <td>
+          <td class="text-center">
             {{ data?.client}}
           </td>
-          <td>
+          <td class="text-center">
             {{ data?.addedBy }}
           </td>
-          <td>
+          <td class="text-center">
             {{data?.product}}
-
           </td>
-          <td>
+          <td class="text-center">
             {{data?.size}}
           </td>
-          <td>
-            {{ data?.process }}
+          <td class="text-center">
+            {{ data?.processName }}
           </td>
-          <td>
-            {{ data?.type }}
+          <td class="text-center">
+            {{ data?.payment }}
           </td>
-          <td>
-            {{ data?.debit }}
+          <td class="text-center">
+            PKR {{ data?.amount | number:'1.0-0'}}
           </td>
-          <td>
-            <a class="pay-link" (click)="onPay()">Pay</a>
+          <td class="text-center">
+            <a class="pay-link" (click)="onPay(data?.amount,data,data?.id)"><strong>Pay</strong></a>
           </td>
 
         </tr>
@@ -543,11 +550,12 @@
 
   <!-- Notes -->
   <div class="notes" *ngIf="activeItem == 'Notes'">
-    <p class="m-0" *ngIf="vendor?.since"><span style="font-weight: 700;">Last saved on: </span> {{vendor?.since | date:'d MMM yyyy'}}</p>
-      <p-editor [(ngModel)]="vendorNotes" [style]="{ height: '320px' }" name="notes"></p-editor>
-      <div class="flex justify-content-end align-items-end my-3">
-        <button pButton class="contact-btn" type="submit" (click)="onNotesChange()" label="Save"></button>
-      </div>
+    <p class="m-0" *ngIf="vendor?.since"><span style="font-weight: 700;">Last saved on: </span> {{vendor?.since |
+      date:'d MMM yyyy'}}</p>
+    <p-editor [(ngModel)]="vendorNotes" [style]="{ height: '320px' }" name="notes"></p-editor>
+    <div class="flex justify-content-end align-items-end my-3">
+      <button pButton class="contact-btn" type="submit" (click)="onNotesChange()" label="Save"></button>
+    </div>
   </div>
 
   <!-- Management -->
@@ -748,15 +756,15 @@
   <div class="payment-dialog flex justify-content-between align-items-center flex-column sm:flex-row">
     <div class="production-payment-dialog">
       <p class="pkr">Mr. Junaid Jadoon</p>
-      <p class="name">- PKR 10,000</p>
+      <p class="name">- PKR {{amountToBePaid | number:'1.0-0'}}</p>
     </div>
     <i class="pi pi-arrow-right-arrow-left"></i>
     <div class="vendor-payment-dialog">
-      <p class="pkr">Nadeem & Sons</p>
-      <p class="name">+ PKR 11,000</p>
+      <p class="pkr">{{vendor?.name}}</p>
+      <p class="name">+ PKR {{amountToBePaid | number:'1.0-0'}}</p>
     </div>
   </div>
-  <button pButton label="Confirm" class="payment-dialog-btn btn-black"></button>
+  <button pButton label="Confirm" (click)="onConfirmPay()" class="payment-dialog-btn btn-black"></button>
 </p-dialog>
 
 

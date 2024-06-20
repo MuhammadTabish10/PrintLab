@@ -21,6 +21,7 @@ import { FormValidationService } from "src/app/services/form-validation.service"
 import { BackendErrorResponse } from "src/app/Model/BackendErrorResponse";
 import { Editor } from "primeng/editor";
 import { DatePipe } from "@angular/common";
+import { JobProcessServiceService } from "src/app/services/job-process-service.service";
 
 @Component({
   selector: "app-vendor-management",
@@ -61,8 +62,14 @@ export class VendorManagementComponent {
   vendorVerifiedStatus: boolean = false;
   vendorRating: any;
   vendorTimeStamp: any;
-  vendorSinceDate:any
+  vendorSinceDate: any;
   vendorsData: any;
+  vendorsJobsProcess: any;
+  amountToBePaid: any;
+  jobObj: any;
+  updatedJobId: any;
+  vendorStatementFrom: any;
+  vendorStatementTo: any;
 
   // vendorUpdate
 
@@ -78,7 +85,8 @@ export class VendorManagementComponent {
     private messageService: MessageService,
     private formService: FormValidationService,
     private productFieldService: ProductDefinitionService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private vendorProcessService: JobProcessServiceService
   ) {}
 
   ngOnInit(): void {
@@ -205,8 +213,33 @@ export class VendorManagementComponent {
       );
   }
 
-  onPay() {
+  onPay(paidAmount: any, obj: any, id: any) {
+    this.amountToBePaid = paidAmount;
+    this.updatedJobId = id;
+    this.jobObj = obj;
     this.paymentDialog = true;
+  }
+
+  onConfirmPay() {
+    const updatedObjForJobProcess = this.updateVendorFields(this.jobObj, {
+      amount: this.amountToBePaid,
+      payment: "Paid",
+      id: undefined,
+    });
+    const obj = this.updateVendorFields(this.jobObj, { isPaid: true });
+
+    this.vendorProcessService
+      .postJobProcess(updatedObjForJobProcess)
+      .subscribe((res: any) => {
+        this.vendorProcessService
+          .updateJobProcess(this.updatedJobId, obj)
+          .subscribe((res: any) => {
+            this.paymentDialog = false;
+            this.getVendorJobProcess(this.vendor?.name);
+            console.log(res);
+          });
+        console.log(res);
+      });
   }
 
   onClosePaymentDialog() {
@@ -214,10 +247,10 @@ export class VendorManagementComponent {
   }
 
   onNotesChange() {
-    const lastUpdatedDate = new Date()
+    const lastUpdatedDate = new Date();
     const updatedObj = this.updateVendorFields(this.vendor, {
       notes: this.vendorNotes,
-      since:lastUpdatedDate
+      since: lastUpdatedDate,
     });
     this.vendorService
       .updateVendor(this.idFromQueryParam, updatedObj)
@@ -229,7 +262,7 @@ export class VendorManagementComponent {
   openContactDialog() {
     this.contactDialog = true;
     this.contactForm.patchValue({
-      vendor: this.vendor?.contactName,
+      vendor: this.vendor?.name,
     });
   }
 
@@ -268,7 +301,6 @@ export class VendorManagementComponent {
   }
 
   onChangeVendorRating(data: any) {
-
     const updatedObj = this.updateVendorFields(this.vendor, {
       rating: data?.value,
     });
@@ -288,21 +320,18 @@ export class VendorManagementComponent {
     selectedDate.setMinutes(currentTime.getMinutes());
     selectedDate.setSeconds(currentTime.getSeconds());
 
-    
-    
     const updatedObj = this.updateVendorFields(this.vendor, {
       timeStamp: selectedDate.toISOString(),
     });
     this.vendorService
       .updateVendor(this.idFromQueryParam, updatedObj)
       .subscribe((res: any) => {
-        this.vendorSinceDate = null
+        this.vendorSinceDate = null;
         this.getVendorById(this.idFromQueryParam);
       });
   }
 
-onChangeContactLockStatus(value: any,data:any,id:any) {
-  
+  onChangeContactLockStatus(value: any, data: any, id: any) {
     const updatedObj = this.updateVendorFields(data, {
       isLock: value?.checked,
     });
@@ -313,7 +342,7 @@ onChangeContactLockStatus(value: any,data:any,id:any) {
       });
   }
 
-  onChangeContactActiveStatus(value: any,data:any,id:any) {
+  onChangeContactActiveStatus(value: any, data: any, id: any) {
     const updatedObj = this.updateVendorFields(data, {
       status: value?.checked,
     });
@@ -324,7 +353,7 @@ onChangeContactLockStatus(value: any,data:any,id:any) {
       });
   }
 
-  onChangeContactVerifiedStatus(value: any,data:any,id:any) {
+  onChangeContactVerifiedStatus(value: any, data: any, id: any) {
     const updatedObj = this.updateVendorFields(data, {
       isVerified: value?.checked,
     });
@@ -346,9 +375,79 @@ onChangeContactLockStatus(value: any,data:any,id:any) {
     this.readonly = !this.readonly;
   }
 
+  // Job Process Vendor
+  getVendorJobProcess(vendorName: any) {
+    this.vendorProcessService
+      .getJobProcessByName(vendorName)
+      .subscribe((res: any) => {
+        this.vendorsJobsProcess = res;
+        this.filterCreditPayments(res);
+        this.computeBalances(this.vendorsJobsProcess);
+        this.vendorStatementFrom = this.vendorsJobsProcess[0]?.dateAdded;
+        this.vendorStatementTo =
+          this.vendorsJobsProcess[
+            this.vendorsJobsProcess?.length - 1
+          ]?.dateAdded;
+        console.log(this.vendorsJobsProcess);
+        console.log(this.vendorStatement);
+      });
+  }
+
+  onGenerateVendorStatement(from: any, to: any) {
+    if (from && to) {
+      this.vendorStatementFrom = from;
+      this.vendorStatementTo = to;
+
+      const params = {
+        vendor: this.vendor?.name,
+        startDate: this.formatDate(from),
+        endDate: this.formatDate(to),
+      };
+
+      console.log(params);
+
+      this.vendorProcessService
+        .getJobProcessByNameAndDate(params)
+        .subscribe((res: any) => {
+          this.vendorsJobsProcess = res;
+          this.computeBalances(this.vendorsJobsProcess);
+          this.fromDate = "";
+          this.toDate = "";
+          console.log(res);
+        });
+    }else{
+      this.alert()
+    }
+  }
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
+  computeBalances(vedorsJobs: any[]): void {
+    let balance = 0;
+    this.vendorsJobsProcess = vedorsJobs.map((vedorsJobs) => {
+      if (vedorsJobs?.payment === "Credit") {
+        balance += vedorsJobs.amount;
+      }
+      if (vedorsJobs?.payment === "Paid") {
+        balance -= vedorsJobs.amount;
+      }
+      return { ...vedorsJobs, balance };
+    });
+  }
+
+  filterCreditPayments(vendorsJobs: any[]): any[] {
+    return (this.vendorStatement = vendorsJobs.filter(
+      (job) => job.payment === "Credit" && job?.isPaid === null
+    ));
+  }
+
   // Edit Vendor Form
   onEditVendor(value: any) {
-
     if (this.vendorForm.valid) {
       const updatedVendor = this.updateVendorFields(this.vendor, value);
       this.vendorService
@@ -416,7 +515,7 @@ onChangeContactLockStatus(value: any,data:any,id:any) {
       this.vendor = res;
       this.vendorsData = res;
       this.vendorForm.patchValue({
-        name: this.vendorsData?.contactName,
+        name: this.vendorsData?.name,
         address: this.vendorsData?.address,
         landmark: this.vendorsData?.landmark,
         market: this.vendorsData?.market,
@@ -425,30 +524,32 @@ onChangeContactLockStatus(value: any,data:any,id:any) {
         primaryEmail: this.vendorsData?.email,
         secondaryEmail: this.vendorsData?.secondaryEmail,
       });
-     if (this.vendor.timeStamp && Array.isArray(this.vendor.timeStamp)) {
-       this.vendorTimeStamp = new Date(
-         this.vendor.timeStamp[0], // Year
-         this.vendor.timeStamp[1] - 1, // Month (0-based in JavaScript Date)
-         this.vendor.timeStamp[2], // Day
-         this.vendor.timeStamp[3], // Hour
-         this.vendor.timeStamp[4], // Minute
-         this.vendor.timeStamp[5] // Second
-       );
-     }
-      
+      if (this.vendor.timeStamp && Array.isArray(this.vendor.timeStamp)) {
+        this.vendorTimeStamp = new Date(
+          this.vendor.timeStamp[0], // Year
+          this.vendor.timeStamp[1] - 1, // Month (0-based in JavaScript Date)
+          this.vendor.timeStamp[2], // Day
+          this.vendor.timeStamp[3], // Hour
+          this.vendor.timeStamp[4], // Minute
+          this.vendor.timeStamp[5] // Second
+        );
+      }
+      this.getVendorJobProcess(this.vendor?.name);
+
       this.checked = this.vendorsData?.isVerified;
       this.vendorNotes = this.vendorsData?.notes;
       this.vendorRating = this.vendorsData?.rating;
       this.vendorLockStatus = this.vendorsData?.isLock;
       this.vendorActiveStatus = this.vendorsData?.isActive;
       this.vendorVerifiedStatus = this.vendorsData?.isVerified;
+      console.log(this.vendor);
+
     });
   }
 
   getVendorContactsByVendorId(id: any) {
     this.vendorService.getVendorContactsByVendorId(id).subscribe((res: any) => {
       this.contacts = res;
-      
     });
   }
 

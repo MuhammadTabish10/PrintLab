@@ -86,7 +86,6 @@ export class ProductRuleComponent implements OnInit {
   }
 
   public getProductRule(pageState?: PaginatorState, body?: ProductRule): void {
-    debugger
     this.productRuleService.getProductRuleTable(pageState, body).subscribe(
       (res: PaginationResponse<ProductRule>) => {
         this.paginatedProductRule = res;
@@ -99,7 +98,6 @@ export class ProductRuleComponent implements OnInit {
     this.getProductRule(undefined, this.productRuleBody);
   }
   public onStatusChange(): void {
-    debugger
     if (this.selectedStatus === true) {
       this.productRuleBody.status = 'Active';
     } else if (this.selectedStatus === false) {

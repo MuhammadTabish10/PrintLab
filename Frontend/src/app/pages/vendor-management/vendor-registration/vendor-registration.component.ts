@@ -87,7 +87,7 @@ export class VendorRegistrationComponent implements OnInit {
       const formValue = vendorData;
 
       const vendorObj = {
-        contactName: formValue?.name,
+        name: formValue?.name,
         market: formValue?.market?.name,
         landmark: formValue?.landmark,
         city: formValue?.city?.name,
