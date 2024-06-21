@@ -429,6 +429,15 @@ p-sorticon::ng-deep .p-element {
   color: rgba(0, 0, 0, 0.687);
 }
 
+p-dialog::ng-deep .p-dialog .p-dialog-header {
+    border-bottom: 0 none;
+    background: #000000 !important;
+    color: white !important;
+    padding: 0.7rem;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
 .payment-dialog::ng-deep .p-dialog .p-dialog-header{
   display: none !important;
 }
