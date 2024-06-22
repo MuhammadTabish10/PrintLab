@@ -1,0 +1,76 @@
+<div class="body-position">
+  <app-dashboard-head></app-dashboard-head>
+
+  <div class="page-content">
+    <h4>Vendor Management System</h4>
+  </div>
+
+  <div class="vendor-list">
+    <p-table class="contacts-table" #dt1 [value]="vendorsData" dataKey="id" [rows]="5" [loading]="loading"
+      [rowHover]="true" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between align-items-center sm:flex-row">
+          <span class="p-input-icon-left mb-0">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+              placeholder="Search by Vendor Name" class="w-full search-input" />
+          </span>
+          <button pButton class="submit-btn" (click)="registerVendor()">
+            <i class="pi pi-plus mr-2" style="font-weight:bold"></i> New
+          </button>
+        </div>
+        <h4 class="mb-1 mt-4">POINT OF CONTACTS</h4>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 2rem">
+            <div>
+              ID
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div>
+              NAME
+            </div>
+          </th>
+          <th style="min-width: 6rem" pSortableColumn="due">
+            <div>
+              DUE <p-sortIcon field="due" />
+            </div>
+          </th>
+          <th style="min-width: 6rem">
+            <div>
+              STATUS
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-data>
+        <tr class="clickable-row text-start" (click)="onClickVendor(data?.id)">
+          <td>
+            {{data?.id}}
+          </td>
+          <td>
+            {{ data?.name}}
+          </td>
+          <td >
+            {{ data?.due}}
+          </td>
+          <td>
+            <span [ngClass]="data?.isActive ? 'active' : 'inactive'">{{ data?.isActive == true? 'Active':'In-active' }}</span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">No Data Found</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td style="text-align: start !important;" colspan="8">Loading data. Please wait.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <p-toast></p-toast>

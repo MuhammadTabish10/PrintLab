@@ -1,0 +1,77 @@
+<div class="body-position">
+  <app-dashboard-head></app-dashboard-head>
+
+  <div class="page-content">
+    <h4>Vendor Registration</h4>
+  </div>
+
+  <div class="vendor-form">
+    <form [formGroup]="vendorForm" (ngSubmit)="onRegisterVendor(vendorForm.value)" class="mt-6">
+      <div class="p-fluid p-formgrid grid">
+        <!-- Name -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Name *</strong></label>
+          <input pInputText id="email" type="text" formControlName="name" placeholder="Enter Name" [required]="true"
+            [ngClass]="{'ng-dirty':vendorForm.get('name')?.touched && vendorForm.get('name')?.invalid}" />
+          <small *ngIf="!vendorForm.get('name')?.valid && vendorForm.get('name')?.touched" class="text-red-500 require">
+            Required
+          </small>
+        </div>
+        <!-- Address -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Address</strong></label>
+          <textarea pInputTextarea type="text" [cols]="4" [rows]="3" formControlName="address"></textarea>
+        </div>
+        <!-- Nearest Landmark -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Neareast Landmark / Direction *</strong></label>
+          <input pInputText id="email" type="text" formControlName="landmark" placeholder="Enter landmark"
+            [required]="true"
+            [ngClass]="{'ng-dirty':vendorForm.get('landmark')?.touched && vendorForm.get('landmark')?.invalid}" />
+          <small *ngIf="!vendorForm.get('landmark')?.valid && vendorForm.get('landmark')?.touched" class="text-red-500 require">
+            Required
+          </small>
+        </div>
+
+        <!-- Market -->
+        <div class="field col-2">
+          <label htmlFor="market"><strong>Market *</strong></label>
+          <p-dropdown appendTo="body" [options]="market?.productFieldValuesList" optionLabel="name" placeholder="Select Market" formControlName="market"
+            [ngClass]="{'ng-dirty':vendorForm.get('market')?.touched && vendorForm.get('market')?.invalid}"></p-dropdown>
+          <small *ngIf="!vendorForm.get('market')?.valid && vendorForm.get('market')?.touched" class="text-red-500">
+            Required
+          </small>
+        </div>
+        <!-- City -->
+        <div class="field col-2">
+          <label htmlFor="market"><strong>City *</strong></label>
+          <p-dropdown appendTo="body" [options]="cities?.productFieldValuesList" placeholder="Select City" optionLabel="name" formControlName="city"
+            [ngClass]="{'ng-dirty':vendorForm.get('city')?.touched && vendorForm.get('city')?.invalid}"></p-dropdown>
+          <small *ngIf="!vendorForm.get('city')?.valid && vendorForm.get('city')?.touched" class="text-red-500">
+            Required
+          </small>
+        </div>
+        <!-- Phone -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Phone</strong></label>
+          <input pInputText id="email" type="number" formControlName="phone" placeholder="Enter Phone" />
+        </div>
+        <!-- Primary Email -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Primary Email</strong></label>
+          <input pInputText id="email" type="email" formControlName="primaryEmail" placeholder="Enter Primary Email" />
+        </div>
+        <!-- Secondary Email -->
+        <div class="field col-12">
+          <label htmlFor="status"><strong>Secondary Email</strong></label>
+          <input pInputText id="email" type="email" formControlName="secondaryEmail"
+            placeholder="Enter Secondary Email" />
+        </div>
+      </div>
+      <div class="flex justify-content-end col-4 mt-2">
+        <button pButton label="Submit" type="Submit" class="mx-3 submit-btn add-btn"></button>
+      </div>
+    </form>
+  </div>
+
+  <p-toast></p-toast>

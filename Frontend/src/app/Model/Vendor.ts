@@ -9,6 +9,12 @@ export interface Vendor {
   notes: string | undefined | null;
   status: boolean | undefined | null;
   vendorProcessList: VendorProcessList[];
+  isActive: boolean | undefined | null;
+  isVerified: boolean | undefined | null;
+  isLock: boolean | undefined | null;
+  timeStamp: any;
+  since: any;
+  rating: any;
 }
 
 export interface VendorProcessList {

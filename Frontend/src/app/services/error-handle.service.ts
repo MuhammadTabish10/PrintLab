@@ -11,4 +11,11 @@ export class ErrorHandleService {
   showError(error: string) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
   }
+
+  showSuccess(){
+    this.messageService.add({
+      severity: "success",
+      summary: "copied",
+    });
+  }
 }

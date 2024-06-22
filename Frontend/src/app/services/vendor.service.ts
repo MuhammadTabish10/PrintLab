@@ -3,56 +3,70 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/Environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class VendorService {
+  _url = environment.baseUrl;
 
-  _url = environment.baseUrl
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   postVendor(obj: any) {
-    let url = `${this._url}/vendor`
-    return this.http.post(url, obj)
+    let url = `${this._url}/vendor`;
+    return this.http.post(url, obj);
   }
 
   getVendor() {
-    let url = `${this._url}/vendor`
-    return this.http.get(url)
+    let url = `${this._url}/vendor`;
+    return this.http.get(url);
   }
   getVendorByProductProcess(processId: any) {
-    let url = `${this._url}/vendor/${processId}/product-process`
-    return this.http.get(url)
+    let url = `${this._url}/vendor/${processId}/product-process`;
+    return this.http.get(url);
   }
 
   deleteVendor(id: any) {
-    let url = `${this._url}/vendor/${id}`
-    return this.http.delete(url)
+    let url = `${this._url}/vendor/${id}`;
+    return this.http.delete(url);
   }
 
   deleteVendorProcess(id: any, processId: any) {
-    let url = `${this._url}/vendor/${id}/${processId}`
-    return this.http.delete(url)
+    let url = `${this._url}/vendor/${id}/${processId}`;
+    return this.http.delete(url);
   }
 
   getVendorById(id: any) {
-    let url = `${this._url}/vendor/${id}`
-    return this.http.get(url)
+    let url = `${this._url}/vendor/${id}`;
+    return this.http.get(url);
   }
 
   updateVendor(id: any, obj: any) {
-    let url = `${this._url}/vendor/${id}`
-    return this.http.put(url, obj)
+    let url = `${this._url}/vendor/${id}`;
+    return this.http.put(url, obj);
   }
 
   searchVendor(name: any) {
-    let url = `${this._url}/vendor/names/${name}`
-    return this.http.get(url)
+    let url = `${this._url}/vendor/names/${name}`;
+    return this.http.get(url);
   }
 
   getVendorByProductProcessName(process: string) {
     let url = `${this._url}/vendor/${process}/product-process-name`;
-    return this.http.get(url)
+    return this.http.get(url);
   }
 
+  // Vendor Contact Form
+  postVendorContact(obj: any) {
+    let url = `${this._url}/vendorContacts`;
+    return this.http.post(url, obj);
+  }
+
+  getVendorContactsByVendorId(id: any) {
+    let url = `${this._url}/vendorContacts/vendor/${id}`;
+    return this.http.get(url);
+  }
+
+  updateVendorContact(id: any, obj: any) {
+    let url = `${this._url}/vendorContacts/${id}`;
+    return this.http.put(url, obj);
+  }
 }

@@ -59,7 +59,7 @@
         </span>
       </li>
 
-      <li
+      <!-- <li
         *ngIf="sessionStorageService.hasPermission('JobDesigner')"
         class="mt-2"
       >
@@ -88,7 +88,7 @@
             Orders
           </a>
         </span>
-      </li>
+      </li> -->
 
       <li *ngIf="sessionStorageService.hasPermission('Customers')" class="mt-2">
         <span class="sidebar-list-hover d-flex align-items-baseline">
@@ -108,6 +108,13 @@
             [routerLink]="['/vendor']"
           >
             <span class="nav-text">Vendor</span>
+          </a>
+        </span>
+      </li>
+      <li class="settingOptions mt-2" *ngIf="sessionStorageService.hasPermission('Configuration_Vendor')">
+        <span>
+          <a class="sidebar-list-hover d-flex align-items-baseline-settings nav-link" [routerLink]="['/vendors-list']">
+            <span class="nav-text">Vendor Management</span>
           </a>
         </span>
       </li>

@@ -18,6 +18,8 @@ public class JobProcessedDetailsMapper {
                 .jobProcessed(entity.isJobProcessed())
                 .processName(entity.getProcessName())
                 .timeStamp(entity.getTimeStamp())
+                .dateAdded(entity.getDateAdded())
+                .isPaid(entity.getIsPaid())
                 .build();
     }
 
@@ -32,6 +34,8 @@ public class JobProcessedDetailsMapper {
         entity.setJobProcessed(dto.isJobProcessed());
         entity.setProcessName(dto.getProcessName());
         entity.setTimeStamp(dto.getTimeStamp());
+        entity.setDateAdded(dto.getDateAdded());
+        entity.setIsPaid(dto.getIsPaid());
         return entity;
     }
 }

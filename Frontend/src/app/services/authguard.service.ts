@@ -8,6 +8,7 @@ import jwt_decode from 'jwt-decode';
 })
 export class AuthguardService implements CanActivate {
 
+  userRole:any
   constructor(private router: Router) { }
   get token(): string {
     return localStorage.getItem("token")!;
@@ -20,7 +21,9 @@ export class AuthguardService implements CanActivate {
 
       const decodedToken = this.getDecodedAccessToken(jwtToken);
       const userPermissions = decodedToken.PERMISSIONS;
-      const userRoles = decodedToken.ROLES;
+      this.userRole = decodedToken.ROLES;
+
+
 
       const url = state.url;
       let permission: any = {};
@@ -122,9 +125,17 @@ export class AuthguardService implements CanActivate {
       permissions: 'Configuration_Inventory'
     }
     const permissionConfiguration_Vendor = {
-      url: ['/vendor', '/addVendor', '/vendorSettlement', '/allSettlements'],
-      permissions: 'Configuration_Vendor'
-    }
+      url: [
+        "/vendor",
+        "/addVendor",
+        "/vendorSettlement",
+        "/allSettlements",
+        "/vendor-management",
+        "/vendor-registration",
+        "/vendors-list",
+      ],
+      permissions: "Configuration_Vendor",
+    };
     const permissionConfiguration_CTP = {
       url: ['/ctp', '/addCtp'],
       permissions: 'Configuration_CTP'
@@ -185,6 +196,10 @@ export class AuthguardService implements CanActivate {
       url: ['/creating-job', '/job-requests', '/all-jobs'],
       permissions: 'Job'
     }
+    const masterStatements = {
+      url: ['/master-statements/customer'],
+      permissions: 'MasterStatements'
+    }
 
 
     return [
@@ -197,7 +212,7 @@ export class AuthguardService implements CanActivate {
       permissionConfiguration_Press_Machine, permissionConfiguration_Paper_Market_Rate,
       permissionConfiguration_Uping, permissionConfiguration_Product_Process, labourObj,
       laminationVendorObj, uvVendorObj, productCategoriesObj, productServicesObj, invoiceObj,
-      leadObj, businessUnitObj, Jobs
+      leadObj, businessUnitObj, Jobs, masterStatements
     ]
 
 
@@ -224,4 +239,10 @@ export class AuthguardService implements CanActivate {
 
     return true; // All segments match
   }
+
+  getRole(){
+    return this.userRole[0]
+  }
+
+
 }

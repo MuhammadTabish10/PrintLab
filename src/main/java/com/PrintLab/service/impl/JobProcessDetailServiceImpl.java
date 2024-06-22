@@ -2,14 +2,17 @@ package com.PrintLab.service.impl;
 
 import com.PrintLab.Mapper.JobProcessedDetailsMapper;
 import com.PrintLab.dto.JobProcessedDetailsDto;
+import com.PrintLab.dto.VendorSettlementDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.JobProcessedDetails;
+import com.PrintLab.model.VendorSettlement;
 import com.PrintLab.repository.JobProcessedDetailsRepository;
 import com.PrintLab.service.JobProcessedDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,6 +77,25 @@ public class JobProcessDetailServiceImpl implements JobProcessedDetailsService {
             throw new RecordNotFoundException(String.format("No job details found for product job ID %d", id));
         }
         return jobDetailsList.stream()
+                .map(jobProcessedDetailsMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<JobProcessedDetailsDto> getJobDetailsByVendor(String vendor) {
+        List<JobProcessedDetails> jobDetailsList = jobProcessedDetailsRepository.findByVendor(vendor);
+        if (jobDetailsList.isEmpty()) {
+            throw new RecordNotFoundException(String.format("No job details found for vendor %s", vendor));
+        }
+        return jobDetailsList.stream()
+                .map(jobProcessedDetailsMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<JobProcessedDetailsDto> getJobDetailsByVendorAndDateRange(String vendor, LocalDate startDate, LocalDate endDate) {
+        List<JobProcessedDetails> jobDetails = jobProcessedDetailsRepository.findByVendorAndDateRange(vendor, startDate, endDate);
+        return jobDetails.stream()
                 .map(jobProcessedDetailsMapper::toDto)
                 .collect(Collectors.toList());
     }

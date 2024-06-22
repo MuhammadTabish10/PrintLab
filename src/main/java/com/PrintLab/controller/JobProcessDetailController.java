@@ -3,10 +3,12 @@ package com.PrintLab.controller;
 import com.PrintLab.dto.JobProcessedDetailsDto;
 import com.PrintLab.service.JobProcessedDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -46,5 +48,21 @@ public class JobProcessDetailController {
     @GetMapping("/all")
     public ResponseEntity<List<JobProcessedDetailsDto>> getAllJobDetails() {
         return ResponseEntity.ok(jobProcessedDetailsService.getAllJobDetails());
+    }
+
+    @GetMapping("/vendor/{vendor}")
+    public ResponseEntity<List<JobProcessedDetailsDto>> getJobDetailsByVendor(@PathVariable String vendor) {
+        List<JobProcessedDetailsDto> jobDetails = jobProcessedDetailsService.getJobDetailsByVendor(vendor);
+        return ResponseEntity.ok(jobDetails);
+    }
+
+    @GetMapping("/vendor-by-date")
+    public ResponseEntity<List<JobProcessedDetailsDto>> getJobDetailsByVendorAndDateRange(
+            @RequestParam String vendor,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        List<JobProcessedDetailsDto> jobDetails = jobProcessedDetailsService.getJobDetailsByVendorAndDateRange(vendor, startDate, endDate);
+        return ResponseEntity.ok(jobDetails);
     }
 }

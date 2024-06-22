@@ -1,13 +1,8 @@
 package com.PrintLab.service.impl;
 
-import com.PrintLab.dto.UserDto;
-import com.PrintLab.dto.VendorDto;
-import com.PrintLab.dto.VendorProcessDto;
+import com.PrintLab.dto.*;
 import com.PrintLab.exception.RecordNotFoundException;
-import com.PrintLab.model.ProductProcess;
-import com.PrintLab.model.User;
-import com.PrintLab.model.Vendor;
-import com.PrintLab.model.VendorProcess;
+import com.PrintLab.model.*;
 import com.PrintLab.repository.ProductProcessRepository;
 import com.PrintLab.repository.UserRepository;
 import com.PrintLab.repository.VendorProcessRepository;
@@ -16,6 +11,7 @@ import com.PrintLab.service.VendorService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,6 +38,7 @@ public class VendorServiceImpl implements VendorService {
     public VendorDto save(VendorDto vendorDto) {
         Vendor vendor = toVEntity(vendorDto);
         vendor.setStatus(true);
+
         Vendor createdVendor = vendorRepository.save(vendor);
 
         List<User> productionUserList = vendor.getProductionUserList();
@@ -165,6 +162,20 @@ public class VendorServiceImpl implements VendorService {
             existingVendor.setEmail(vendor.getEmail());
             existingVendor.setAddress(vendor.getAddress());
             existingVendor.setNotes(vendor.getNotes());
+            existingVendor.setLandmark(vendor.getLandmark());
+            existingVendor.setSecondaryEmail(vendor.getSecondaryEmail());
+            existingVendor.setCity(vendor.getCity());
+            existingVendor.setMarket(vendor.getMarket());
+            existingVendor.setAddedBy(vendor.getAddedBy());
+            existingVendor.setIsActive(vendor.getIsActive());
+            existingVendor.setIsLock(vendor.getIsLock());
+            existingVendor.setTimeStamp(vendor.getTimeStamp());
+            existingVendor.setSince(vendor.getSince());
+            existingVendor.setIsVerified(vendor.getIsVerified());
+            existingVendor.setRating(vendor.getRating());
+            
+
+
 
             List<VendorProcess> existingVpValues = existingVendor.getVendorProcessList();
             List<VendorProcess> newVpValues = vendor.getVendorProcessList();
@@ -254,6 +265,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     public VendorDto toDto(Vendor vendor) {
+
         List<VendorProcessDto> vendorProcessDto = new ArrayList<>();
         for (VendorProcess vendorProcess : vendor.getVendorProcessList()) {
             VendorProcessDto dto = VendorProcessDto.builder()
@@ -292,11 +304,24 @@ public class VendorServiceImpl implements VendorService {
                 .notes(vendor.getNotes())
                 .status(vendor.getStatus())
                 .vendorProcessList(vendorProcessDto)
+                .due(vendor.getDue())
+                .secondaryEmail(vendor.getSecondaryEmail())
+                .landmark(vendor.getLandmark())
+                .city(vendor.getCity())
+                .market(vendor.getMarket())
+                .addedBy(vendor.getAddedBy())
+                .isVerified(vendor.getIsVerified())
+                .isActive(vendor.getIsActive())
+                .isLock(vendor.getIsLock())
+                .rating(vendor.getRating())
+                .since(vendor.getSince())
+                .timeStamp(vendor.getTimeStamp())
                 .build();
     }
 
 
     public Vendor toVEntity(VendorDto vendorDto) {
+
         Vendor vendor = Vendor.builder()
                 .id(vendorDto.getId())
                 .name(vendorDto.getName())
@@ -307,6 +332,18 @@ public class VendorServiceImpl implements VendorService {
                 .address(vendorDto.getAddress())
                 .notes(vendorDto.getNotes())
                 .status(vendorDto.getStatus())
+                .due(vendorDto.getDue())
+                .secondaryEmail(vendorDto.getSecondaryEmail())
+                .landmark(vendorDto.getLandmark())
+                .city(vendorDto.getCity())
+                .market(vendorDto.getMarket())
+                .addedBy(vendorDto.getAddedBy())
+                .isVerified(vendorDto.getIsVerified())
+                .isActive(vendorDto.getIsActive())
+                .isLock(vendorDto.getIsLock())
+                .rating(vendorDto.getRating())
+                .since(vendorDto.getSince())
+                .timeStamp(vendorDto.getTimeStamp())
                 .build();
 
         List<VendorProcess> vendorProcessList = new ArrayList<>();
@@ -327,7 +364,6 @@ public class VendorServiceImpl implements VendorService {
             vendorProcessList.add(vendorProcess);
         }
         vendor.setVendorProcessList(vendorProcessList);
-        // Map production user list
         List<User> productionUserList = new ArrayList<>();
         for (UserDto userDto : vendorDto.getProductionUserList()) {
             User user = userRepository.findById(userDto.getId())
@@ -339,4 +375,9 @@ public class VendorServiceImpl implements VendorService {
 
         return vendor;
     }
+
+
+
+
+
 }
