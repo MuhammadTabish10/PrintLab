@@ -32,10 +32,11 @@ public class ProductRuleServiceImpl implements ProductRuleService {
     private final BusinessUnitProcessRepository businessUnitProcessRepository;
     private final JobProcessedDetailsRepository jobProcessedDetailsRepository;
     private final EntityManager entityManager;
+    private final OrderRepository orderRepository;
 
     private final RoleServiceImpl roleService;
 
-    public ProductRuleServiceImpl(EntityManager entityManager, ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, ProductRulePaperStockRepository productRulePaperStockRepository, ProductRuleMapper productRuleMapper, BusinessUnitProcessRepository businessUnitProcessRepository, JobProcessedDetailsRepository jobProcessedDetailsRepository, RoleServiceImpl roleService) {
+    public ProductRuleServiceImpl(EntityManager entityManager, ProductRuleRepository productRuleRepository, VendorRepository vendorRepository, ProductRulePaperStockRepository productRulePaperStockRepository, ProductRuleMapper productRuleMapper, BusinessUnitProcessRepository businessUnitProcessRepository, JobProcessedDetailsRepository jobProcessedDetailsRepository, OrderRepository orderRepository, RoleServiceImpl roleService) {
         this.productRuleRepository = productRuleRepository;
         this.vendorRepository = vendorRepository;
         this.productRulePaperStockRepository = productRulePaperStockRepository;
@@ -43,6 +44,7 @@ public class ProductRuleServiceImpl implements ProductRuleService {
         this.businessUnitProcessRepository = businessUnitProcessRepository;
         this.jobProcessedDetailsRepository = jobProcessedDetailsRepository;
         this.entityManager = entityManager;
+        this.orderRepository = orderRepository;
         this.roleService = roleService;
     }
 
@@ -227,12 +229,24 @@ public class ProductRuleServiceImpl implements ProductRuleService {
                     processedDetails.setProcessName(processedDetailsDto.getProcessName());
                     processedDetails.setTimeStamp(processedDetailsDto.getTimeStamp());
                     processedDetails.setDescription(processedDetailsDto.getDescription());
+
+                    // Set the order entity if present in the DTO
+                    if (processedDetailsDto.getOrder() != null && processedDetailsDto.getOrder().getId() != null) {
+                        Long orderId = processedDetailsDto.getOrder().getId();
+
+                        com.PrintLab.model.Order order = orderRepository.findById(orderId)
+                                .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
+
+                        processedDetails.setOrder(order);
+                    }
+
                     updatedProcessedDetails.add(processedDetails);
                 }
             }
             existingProductRule.setProcessedDetailList(updatedProcessedDetails);
         }
     }
+
 
     private void updateProductRulePaperStocks(ProductRule existingProductRule, List<ProductRulePaperStockDto> updatedPaperStocks) {
         List<ProductRulePaperStock> existingPaperStocks = existingProductRule.getProductRulePaperStockList();

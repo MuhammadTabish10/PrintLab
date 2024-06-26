@@ -64,7 +64,7 @@ export class VendorManagementComponent {
   vendorTimeStamp: any;
   vendorSinceDate: any;
   vendorsData: any;
-  vendorsJobsProcess: any;
+  vendorsJobsProcess: any = [];
   amountToBePaid: any;
   jobObj: any;
   updatedJobId: any;
@@ -178,6 +178,7 @@ export class VendorManagementComponent {
         }
       );
   }
+
   private getDesinationsNames(productName: string): void {
     this.productFieldService
       .searchProductField(productName)
@@ -195,6 +196,7 @@ export class VendorManagementComponent {
         }
       );
   }
+  
   private getCityNames(productName: string): void {
     this.productFieldService
       .searchProductField(productName)
@@ -380,7 +382,8 @@ export class VendorManagementComponent {
     this.vendorProcessService
       .getJobProcessByName(vendorName)
       .subscribe((res: any) => {
-        this.vendorsJobsProcess = res;
+        if(res){
+          this.vendorsJobsProcess = res;
         this.filterCreditPayments(res);
         this.computeBalances(this.vendorsJobsProcess);
         this.vendorStatementFrom = this.vendorsJobsProcess[0]?.dateAdded;
@@ -390,7 +393,10 @@ export class VendorManagementComponent {
           ]?.dateAdded;
         console.log(this.vendorsJobsProcess);
         console.log(this.vendorStatement);
-      });
+        }
+      },(error=>{
+        console.log(error);
+      }));
   }
 
   onGenerateVendorStatement(from: any, to: any) {

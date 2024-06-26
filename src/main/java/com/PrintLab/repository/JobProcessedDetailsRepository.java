@@ -23,4 +23,7 @@ public interface JobProcessedDetailsRepository extends JpaRepository<JobProcesse
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
     );
+
+    @Query("SELECT j FROM JobProcessedDetails j WHERE j.order.id = :orderId AND j.payment IN :payments")
+    List<JobProcessedDetails> findByOrderIdAndPaymentIn(@Param("orderId") Long orderId, @Param("payments") List<String> payments);
 }

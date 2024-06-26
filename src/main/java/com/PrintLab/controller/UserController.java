@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> userDtoList = userService.getAll();
         return ResponseEntity.ok(userDtoList);
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/user/role/{role}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER')")
     public ResponseEntity<List<UserDto>> getUserByRole(@PathVariable String role) {
         List<UserDto> userDto = userService.getUsersByRole(role);
         return ResponseEntity.ok(userDto);

@@ -1,6 +1,7 @@
 package com.PrintLab.controller;
 
 import com.PrintLab.dto.JobProcessedDetailsDto;
+import com.PrintLab.model.JobProcessedDetails;
 import com.PrintLab.service.JobProcessedDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -64,5 +65,10 @@ public class JobProcessDetailController {
     ) {
         List<JobProcessedDetailsDto> jobDetails = jobProcessedDetailsService.getJobDetailsByVendorAndDateRange(vendor, startDate, endDate);
         return ResponseEntity.ok(jobDetails);
+    }
+
+    @GetMapping("/order/{orderId}")
+    public List<JobProcessedDetails> getJobProcessesByOrderId(@PathVariable Long orderId) {
+        return jobProcessedDetailsService.getJobProcessesByOrderId(orderId);
     }
 }

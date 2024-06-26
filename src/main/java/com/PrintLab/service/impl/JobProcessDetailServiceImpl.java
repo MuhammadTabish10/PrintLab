@@ -5,14 +5,19 @@ import com.PrintLab.dto.JobProcessedDetailsDto;
 import com.PrintLab.dto.VendorSettlementDto;
 import com.PrintLab.exception.RecordNotFoundException;
 import com.PrintLab.model.JobProcessedDetails;
+import com.PrintLab.model.Order;
+import com.PrintLab.model.Vendor;
 import com.PrintLab.model.VendorSettlement;
 import com.PrintLab.repository.JobProcessedDetailsRepository;
+import com.PrintLab.repository.OrderRepository;
+import com.PrintLab.repository.VendorRepository;
 import com.PrintLab.service.JobProcessedDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,10 +27,13 @@ public class JobProcessDetailServiceImpl implements JobProcessedDetailsService {
     private final JobProcessedDetailsRepository jobProcessedDetailsRepository;
     private final JobProcessedDetailsMapper jobProcessedDetailsMapper;
 
+    private final OrderRepository orderRepository;
+
     @Autowired
-    public JobProcessDetailServiceImpl(JobProcessedDetailsRepository jobProcessedDetailsRepository, JobProcessedDetailsMapper jobProcessedDetailsMapper) {
+    public JobProcessDetailServiceImpl(JobProcessedDetailsRepository jobProcessedDetailsRepository, JobProcessedDetailsMapper jobProcessedDetailsMapper, OrderRepository orderRepository) {
         this.jobProcessedDetailsRepository = jobProcessedDetailsRepository;
         this.jobProcessedDetailsMapper = jobProcessedDetailsMapper;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -38,6 +46,16 @@ public class JobProcessDetailServiceImpl implements JobProcessedDetailsService {
     @Override
     public JobProcessedDetailsDto createJobDetail(JobProcessedDetailsDto jobDetailDTO) {
         JobProcessedDetails jobDetail = jobProcessedDetailsMapper.toEntity(jobDetailDTO);
+
+        if(jobDetail.getOrder() != null){
+            Long orderId = jobDetail.getOrder().getId();
+
+            Order order = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
+
+            jobDetail.setOrder(order);
+        }
+
         jobDetail = jobProcessedDetailsRepository.save(jobDetail);
         return jobProcessedDetailsMapper.toDto(jobDetail);
     }
@@ -48,11 +66,23 @@ public class JobProcessDetailServiceImpl implements JobProcessedDetailsService {
                 .map(existingJobDetail -> {
                     JobProcessedDetails updatedJobDetail = jobProcessedDetailsMapper.toEntity(jobDetailDTO);
                     updatedJobDetail.setId(id);
+
+                    // Set the order entity if present in the DTO
+                    if (jobDetailDTO.getOrder() != null && jobDetailDTO.getOrder().getId() != null) {
+                        Long orderId = jobDetailDTO.getOrder().getId();
+
+                        Order order = orderRepository.findById(orderId)
+                                .orElseThrow(() -> new RecordNotFoundException("Order not found at id: " + orderId));
+
+                        updatedJobDetail.setOrder(order);
+                    }
+
                     updatedJobDetail = jobProcessedDetailsRepository.save(updatedJobDetail);
                     return jobProcessedDetailsMapper.toDto(updatedJobDetail);
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Job detail with ID " + id + " not found"));
     }
+
 
     @Override
     public void deleteJobDetail(Long id) {
@@ -98,6 +128,11 @@ public class JobProcessDetailServiceImpl implements JobProcessedDetailsService {
         return jobDetails.stream()
                 .map(jobProcessedDetailsMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<JobProcessedDetails> getJobProcessesByOrderId(Long orderId) {
+        return jobProcessedDetailsRepository.findByOrderIdAndPaymentIn(orderId, Arrays.asList("cash", "credit"));
     }
 
 

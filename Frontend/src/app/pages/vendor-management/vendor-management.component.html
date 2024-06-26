@@ -1,17 +1,17 @@
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="vendor">
   <app-dashboard-head></app-dashboard-head>
   <div class="mt-4">
     <div class="flex justify-content-center p-tabmenu-nav-content" style="position: relative;">
       <ul class="custom-tabmenu-nav">
         <li class="content py-2 px-4">
           <div class="text-container">
-            <p #copiedContent class="copied-content m-0">PL-V-1001</p>
+            <p #copiedContent class="copied-content m-0">PL-V-{{vendor?.id}}</p>
             <i class="pi pi-clone" (click)="copyToClipboard()"></i>
           </div>
           <p class="name m-0">{{vendor?.name}}</p>
         </li>
         <ng-container *ngFor="let item of items; let i = index">
-          <ng-container *ngIf="userRole === 'ADMIN' || i < items.length - 2">
+          <ng-container *ngIf="userRole === 'ADMIN' || i < items.length - 1">
             <li class="p-tabmenuitem"
               [ngClass]="{'p-highlight': activeItem == item.label,'firstItem': item.label == 'Dashboard','lastItem': item.label == 'Management','restItem': item.label == 'Contact Details' || 'Notes' || 'Payments' || 'Vendor Statement'}">
               <a class="p-menuitem-link"
@@ -282,7 +282,7 @@
       [rowHover]="true" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
       <ng-template pTemplate="caption">
         <h1 class="text-center">{{vendor?.name}}</h1>
-        <h4 class="m-0 text-center">From {{vendorStatementFrom | date:'d MMMM y'}} to {{vendorStatementTo | date:'d MMMM
+        <h4 class="m-0 text-center" *ngIf="vendorsJobsProcess?.length > 0">From {{vendorStatementFrom | date:'d MMMM y'}} to {{vendorStatementTo | date:'d MMMM
           y'}}</h4>
         <h4 class="m-0 text-center">Vendor Statement</h4>
         <div class="flex justify-content-between align-items-end sm:flex-row mt-5 mb-3">
@@ -420,7 +420,7 @@
         </tr>
       </ng-template>
     </p-table>
-    <div class="flex justify-content-end align-items-center mt-4 mb-4">
+    <div class="flex justify-content-end align-items-center mt-4 mb-4" *ngIf="vendorsJobsProcess?.length > 0">
       <p class="balance text-center" style="min-width: 8rem">BALANCE:</p>
       <p class="amount text-center" style="min-width: 8rem">PKR {{vendorsJobsProcess[vendorsJobsProcess?.length -
         1]?.balance | number:'1.0-0'}}</p>

@@ -8,4 +8,5 @@ export interface JobProcessedDetails {
   vendor: string | undefined | null;
   amount: number | undefined | null;
   id: number | undefined | null;
+  order:any;
 }

@@ -24,14 +24,14 @@ public class VendorController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT','ROLE_USER')")
     public ResponseEntity<List<VendorDto>> getAllVendors() {
         List<VendorDto> vendorDtoList = vendorService.getAll();
         return ResponseEntity.ok(vendorDtoList);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT','ROLE_USER')")
     public ResponseEntity<VendorDto> getVendorById(@PathVariable Long id) {
         VendorDto vendorDto = vendorService.findById(id);
         return ResponseEntity.ok(vendorDto);

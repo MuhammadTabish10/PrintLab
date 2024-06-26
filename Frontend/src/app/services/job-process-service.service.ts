@@ -20,6 +20,11 @@ export class JobProcessServiceService {
     return this.http.get(url, { params });
   }
 
+  getJobProcessByOrderIdAndPayment(orderId: any) {
+    let url = `${this._url}/job-details/order/${orderId}`;
+    return this.http.get(url);
+  }
+
   postJobProcess(obj: any) {
     let url = `${this._url}/job-details/create`;
     return this.http.post(url, obj);

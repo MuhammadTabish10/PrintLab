@@ -1,5 +1,6 @@
 package com.PrintLab.dto;
 
+import com.PrintLab.model.Order;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,5 +35,6 @@ public class JobProcessedDetailsDto {
     private LocalDate dateAdded;
 
     private Boolean isPaid;
+    private Order order;
 
 }

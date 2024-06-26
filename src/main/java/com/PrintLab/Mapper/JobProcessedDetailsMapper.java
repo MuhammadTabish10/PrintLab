@@ -20,6 +20,7 @@ public class JobProcessedDetailsMapper {
                 .timeStamp(entity.getTimeStamp())
                 .dateAdded(entity.getDateAdded())
                 .isPaid(entity.getIsPaid())
+                .order(entity.getOrder())
                 .build();
     }
 
@@ -36,6 +37,7 @@ public class JobProcessedDetailsMapper {
         entity.setTimeStamp(dto.getTimeStamp());
         entity.setDateAdded(dto.getDateAdded());
         entity.setIsPaid(dto.getIsPaid());
+        entity.setOrder(dto.getOrder());
         return entity;
     }
 }

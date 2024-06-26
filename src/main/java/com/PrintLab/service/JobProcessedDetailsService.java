@@ -1,6 +1,7 @@
 package com.PrintLab.service;
 
 import com.PrintLab.dto.JobProcessedDetailsDto;
+import com.PrintLab.model.JobProcessedDetails;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,4 +22,6 @@ public interface JobProcessedDetailsService {
     List<JobProcessedDetailsDto> getJobDetailsByVendor(String vendor);
 
     List<JobProcessedDetailsDto> getJobDetailsByVendorAndDateRange(String vendor, LocalDate startDate, LocalDate endDate);
+
+    List<JobProcessedDetails> getJobProcessesByOrderId(Long orderId);
 }

@@ -17,9 +17,9 @@ import { ProductRule } from 'src/app/Model/ProductRule';
 import { OrdersService } from 'src/app/services/orders.service';
 
 @Component({
-  selector: 'app-job-requests',
-  templateUrl: './job-requests.component.html',
-  styleUrls: ['./job-requests.component.css']
+  selector: "app-job-requests",
+  templateUrl: "./job-requests.component.html",
+  styleUrls: ["./job-requests.component.css"],
 })
 export class JobRequestsComponent implements OnInit {
   openTabIndex: number | number[] | null | undefined;
@@ -29,10 +29,7 @@ export class JobRequestsComponent implements OnInit {
   isCurrentTabFilled: boolean = false;
   orderById: Order | undefined;
   disabledTabs: boolean[] = [];
-  paymentMethods: { name: string }[] = [
-    { name: 'Cash' },
-    { name: 'Credit' }
-  ];
+  paymentMethods: { name: string }[] = [{ name: "Cash" }, { name: "Credit" }];
 
   constructor(
     private datePipe: DatePipe,
@@ -41,18 +38,22 @@ export class JobRequestsComponent implements OnInit {
     private authGuardService: AuthguardService,
     private errorHandleService: ErrorHandleService,
     private productRuleService: ProductRuleService,
-    private successMsgService: SuccessMessageService,
+    private successMsgService: SuccessMessageService
   ) {}
 
   @Input() jobProcessedActive: boolean = false;
 
   ngOnInit() {
-    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      this.idFromQueryParam = +params['id'] || null;
-      if (this.idFromQueryParam && this.jobProcessedActive) {
-        this.getProcessList(this.idFromQueryParam).then(() => this.handleRoles());
-      }
-    });
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        this.idFromQueryParam = +params["id"] || null;
+        if (this.idFromQueryParam && this.jobProcessedActive) {
+          this.getProcessList(this.idFromQueryParam).then(() =>
+            this.handleRoles()
+          );
+        }
+      });
   }
 
   /**
@@ -65,7 +66,9 @@ export class JobRequestsComponent implements OnInit {
       this.orderById = productionJob;
 
       if (productionJob) {
-        const productRuleJobs = await this.getProductRuleJobByName(productionJob.product!);
+        const productRuleJobs = await this.getProductRuleJobByName(
+          productionJob.product!
+        );
         if (productRuleJobs && productRuleJobs.length > 0) {
           this.productRule = productRuleJobs[0];
           this.initializeProcessedDetailList(this.productRule);
@@ -91,7 +94,9 @@ export class JobRequestsComponent implements OnInit {
    * @param productName The name of the product.
    * @returns A list of product rules.
    */
-  private async getProductRuleJobByName(productName: string): Promise<ProductRule[] | undefined> {
+  private async getProductRuleJobByName(
+    productName: string
+  ): Promise<ProductRule[] | undefined> {
     if (!productName) return undefined;
     return this.productRuleService.searchProduct(productName).toPromise();
   }
@@ -110,7 +115,7 @@ export class JobRequestsComponent implements OnInit {
       const remainingLength = processList.length - processedDetailList.length;
       processedDetailList = [
         ...processedDetailList,
-        ...this.createProcessedDetailList(remainingLength)
+        ...this.createProcessedDetailList(remainingLength),
       ];
     }
 
@@ -132,7 +137,10 @@ export class JobRequestsComponent implements OnInit {
       status: undefined,
       processName: undefined,
       timeStamp: undefined,
-      description: undefined
+      description: undefined,
+      order: {
+        id: this.idFromQueryParam,
+      },
     }));
   }
 
@@ -151,29 +159,68 @@ export class JobRequestsComponent implements OnInit {
    * @param index The index of the detail to update.
    * @param event The event triggering the submission.
    */
+  // submit(category: BusinessUnitProcessDto, index: number, event: EventTarget) {
+  //   if (this.productRule?.processedDetailList) {
+  //     this.productRule.processedDetailList[index].processName = category.process;
+
+  //     const currentTimeStamp = new Date().getTime();
+  //     const increasedTimeStamp = currentTimeStamp + (5 * 60 * 60 * 1000);
+  //     const newTimeStamp = new Date(increasedTimeStamp);
+  //     this.productRule.processedDetailList[index].timeStamp = newTimeStamp;
+
+  //     const filteredList = this.filterProcessDetailList(this.productRule.processedDetailList);
+
+  //     if (filteredList.length > 0) {
+  //       this.productRule.processedDetailList = filteredList;
+  //       this.productRuleService.updateProductRule(this.productRule.id!, this.productRule).subscribe(
+  //         (res: ProductRule) => {
+  //           this.handleRoles();
+  //           this.getProcessList(this.idFromQueryParam!);
+  //           this.successMsgService.showSuccess(`Job ${category.process!} processed successfully`);
+  //         },
+  //         (error: BackendErrorResponse) => {
+  //           this.errorHandleService.showError(error.error.error);
+  //         }
+  //       );
+  //     }
+  //   }
+  // }
+
   submit(category: BusinessUnitProcessDto, index: number, event: EventTarget) {
     if (this.productRule?.processedDetailList) {
-      this.productRule.processedDetailList[index].processName = category.process;
+      this.productRule.processedDetailList[index].processName =
+        category.process;
 
       const currentTimeStamp = new Date().getTime();
-      const increasedTimeStamp = currentTimeStamp + (5 * 60 * 60 * 1000);
+      const increasedTimeStamp = currentTimeStamp + 5 * 60 * 60 * 1000;
       const newTimeStamp = new Date(increasedTimeStamp);
       this.productRule.processedDetailList[index].timeStamp = newTimeStamp;
 
-      const filteredList = this.filterProcessDetailList(this.productRule.processedDetailList);
+      // Ensure the order property is correctly set
+      this.productRule.processedDetailList.forEach((detail) => {
+        detail.order = { id: this.idFromQueryParam };
+      });
+
+      const filteredList = this.filterProcessDetailList(
+        this.productRule.processedDetailList
+      );
 
       if (filteredList.length > 0) {
         this.productRule.processedDetailList = filteredList;
-        this.productRuleService.updateProductRule(this.productRule.id!, this.productRule).subscribe(
-          (res: ProductRule) => {
-            this.handleRoles();
-            this.getProcessList(this.idFromQueryParam!);
-            this.successMsgService.showSuccess(`Job ${category.process!} processed successfully`);
-          },
-          (error: BackendErrorResponse) => {
-            this.errorHandleService.showError(error.error.error);
-          }
-        );
+        this.productRuleService
+          .updateProductRule(this.productRule.id!, this.productRule)
+          .subscribe(
+            (res: ProductRule) => {
+              this.handleRoles();
+              this.getProcessList(this.idFromQueryParam!);
+              this.successMsgService.showSuccess(
+                `Job ${category.process!} processed successfully`
+              );
+            },
+            (error: BackendErrorResponse) => {
+              this.errorHandleService.showError(error.error.error);
+            }
+          );
       }
     }
   }
@@ -183,8 +230,12 @@ export class JobRequestsComponent implements OnInit {
    * @param details The list of process details.
    * @returns A filtered list of process details.
    */
-  private filterProcessDetailList(details: JobProcessedDetails[]): JobProcessedDetails[] {
-    return details.filter(detail => detail.amount !== null && detail.amount !== undefined);
+  private filterProcessDetailList(
+    details: JobProcessedDetails[]
+  ): JobProcessedDetails[] {
+    return details.filter(
+      (detail) => detail.amount !== null && detail.amount !== undefined
+    );
   }
 
   /**
@@ -192,7 +243,7 @@ export class JobRequestsComponent implements OnInit {
    * @returns The user role.
    */
   private decodeToken(): string {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const decodedToken = this.authGuardService.getDecodedAccessToken(token!);
     return decodedToken.ROLES[0];
   }
@@ -202,8 +253,11 @@ export class JobRequestsComponent implements OnInit {
    */
   private handleRoles() {
     const role = this.decodeToken();
-    if (role !== 'ADMIN' && this.productRule?.processedDetailList?.length) {
-      this.disabledTabs = this.productRule.processedDetailList.map(process => !!process.jobProcessed) || [];
+    if (role !== "ADMIN" && this.productRule?.processedDetailList?.length) {
+      this.disabledTabs =
+        this.productRule.processedDetailList.map(
+          (process) => !!process.jobProcessed
+        ) || [];
     }
   }
 }

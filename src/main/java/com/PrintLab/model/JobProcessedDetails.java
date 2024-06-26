@@ -45,4 +45,9 @@ public class JobProcessedDetails {
     @JsonIgnore
     @ToString.Exclude
     private ProductRule productRule;
+
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

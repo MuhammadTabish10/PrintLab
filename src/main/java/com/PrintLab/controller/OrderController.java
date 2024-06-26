@@ -26,7 +26,7 @@ public class OrderController {
     }
 
     @GetMapping("/order")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION', 'ROLE_DESIGNER', 'ROLE_PLATE_SETTER','ROLE_CUSTOMER_SUPPORT','ROLE_USER')")
     public ResponseEntity<List<OrderDto>> getAllOrders() {
         List<OrderDto> orderList = orderService.getAll();
         return ResponseEntity.ok(orderList);
