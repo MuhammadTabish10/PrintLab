@@ -29,7 +29,7 @@ public class VendorDto
 
     private List<UserDto> productionUserList;
 
-    @ToString.Exclude
+
     private List<BusinessUnitProcessDto> businessUnitProcess;
 
     private Double due;

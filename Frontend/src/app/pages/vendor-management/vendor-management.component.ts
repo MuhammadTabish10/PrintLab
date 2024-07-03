@@ -70,6 +70,8 @@ export class VendorManagementComponent {
   updatedJobId: any;
   vendorStatementFrom: any;
   vendorStatementTo: any;
+  totalAmount: any;
+  allProcessPayments: any;
 
   // vendorUpdate
 
@@ -196,7 +198,7 @@ export class VendorManagementComponent {
         }
       );
   }
-  
+
   private getCityNames(productName: string): void {
     this.productFieldService
       .searchProductField(productName)
@@ -379,24 +381,81 @@ export class VendorManagementComponent {
 
   // Job Process Vendor
   getVendorJobProcess(vendorName: any) {
-    this.vendorProcessService
-      .getJobProcessByName(vendorName)
-      .subscribe((res: any) => {
-        if(res){
+    this.vendorProcessService.getJobProcessByName(vendorName).subscribe(
+      (res: any) => {
+        if (res) {
           this.vendorsJobsProcess = res;
-        this.filterCreditPayments(res);
-        this.computeBalances(this.vendorsJobsProcess);
-        this.vendorStatementFrom = this.vendorsJobsProcess[0]?.dateAdded;
-        this.vendorStatementTo =
-          this.vendorsJobsProcess[
-            this.vendorsJobsProcess?.length - 1
-          ]?.dateAdded;
-        console.log(this.vendorsJobsProcess);
-        console.log(this.vendorStatement);
+          this.processPayments(res);
+          this.filterCreditPayments(res);
+          this.computeBalances(this.vendorsJobsProcess);
+          this.vendorStatementFrom = this.vendorsJobsProcess[0]?.dateAdded;
+          this.vendorStatementTo =
+            this.vendorsJobsProcess[
+              this.vendorsJobsProcess?.length - 1
+            ]?.dateAdded;
+          console.log(this.vendorsJobsProcess);
+          console.log(this.vendorStatement);
         }
-      },(error=>{
+      },
+      (error) => {
         console.log(error);
-      }));
+      }
+    );
+  }
+
+  processPayments(data: any[]) {
+    const groupedData: {
+      [key: string]: {
+        processName: string;
+        categories: string[];
+        amount: number;
+      };
+    } = {};
+
+    // Iterate through each item in the data array
+    data.forEach((item) => {
+      const processName = item.processName;
+      const category =
+        item.order && item.order.category
+          ? item.order.category
+          : "Uncategorized"; // Default category if not provided
+
+      // Initialize the entry for this processName if not already initialized
+      if (!groupedData[processName]) {
+        groupedData[processName] = {
+          processName: processName,
+          categories: [],
+          amount: 0,
+        };
+      }
+
+      // Add the category to the list if it's not already included
+      if (!groupedData[processName].categories.includes(category)) {
+        groupedData[processName].categories.push(category);
+      }
+
+      // Add the amount to the sum for this processName
+      groupedData[processName].amount += item.amount;
+    });
+
+    // Convert groupedData into an array of objects
+    const result = Object.values(groupedData).map((entry) => ({
+      processName: entry.processName,
+      categories: entry.categories.join(", "), // Concatenate categories into a string
+      amount: entry.amount,
+    }));
+
+    // Calculate total amount
+    const totalAmount = result.reduce(
+      (total, entry) => total + entry.amount,
+      0
+    );
+
+    this.totalAmount = totalAmount;
+
+    this.allProcessPayments = result;
+
+    console.log(result);
   }
 
   onGenerateVendorStatement(from: any, to: any) {
@@ -421,9 +480,15 @@ export class VendorManagementComponent {
           this.toDate = "";
           console.log(res);
         });
-    }else{
-      this.alert()
+    } else {
+      this.alert();
     }
+  }
+
+  onDownloadExcelFile(){
+    this.vendorProcessService.getExcelFileOfJobDetails(this.vendorsJobsProcess).subscribe((res:any)=>{
+      this.vendorProcessService.downloadExcelFile(res,"vendorStatement.xlsx")
+    })
   }
 
   formatDate(date: Date): string {
@@ -549,7 +614,6 @@ export class VendorManagementComponent {
       this.vendorActiveStatus = this.vendorsData?.isActive;
       this.vendorVerifiedStatus = this.vendorsData?.isVerified;
       console.log(this.vendor);
-
     });
   }
 

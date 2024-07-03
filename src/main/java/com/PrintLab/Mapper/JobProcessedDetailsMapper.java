@@ -21,6 +21,7 @@ public class JobProcessedDetailsMapper {
                 .dateAdded(entity.getDateAdded())
                 .isPaid(entity.getIsPaid())
                 .order(entity.getOrder())
+                .balance(entity.getBalance())
                 .build();
     }
 
@@ -38,6 +39,7 @@ public class JobProcessedDetailsMapper {
         entity.setDateAdded(dto.getDateAdded());
         entity.setIsPaid(dto.getIsPaid());
         entity.setOrder(dto.getOrder());
+        entity.setBalance(dto.getBalance());
         return entity;
     }
 }

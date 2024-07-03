@@ -37,4 +37,6 @@ public class JobProcessedDetailsDto {
     private Boolean isPaid;
     private Order order;
 
+    private Double balance;
+
 }

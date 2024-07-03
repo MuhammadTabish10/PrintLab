@@ -3,6 +3,7 @@ package com.PrintLab.service;
 import com.PrintLab.dto.JobProcessedDetailsDto;
 import com.PrintLab.model.JobProcessedDetails;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface JobProcessedDetailsService {
     List<JobProcessedDetailsDto> getJobDetailsByVendorAndDateRange(String vendor, LocalDate startDate, LocalDate endDate);
 
     List<JobProcessedDetails> getJobProcessesByOrderId(Long orderId);
+
+    ByteArrayInputStream exportJobDetailsToExcel(List<JobProcessedDetailsDto> jobDetails);
 }

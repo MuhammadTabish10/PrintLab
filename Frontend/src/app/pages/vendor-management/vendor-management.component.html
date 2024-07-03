@@ -11,7 +11,7 @@
           <p class="name m-0">{{vendor?.name}}</p>
         </li>
         <ng-container *ngFor="let item of items; let i = index">
-          <ng-container *ngIf="userRole === 'ADMIN' || i < items.length - 1">
+          <ng-container *ngIf="userRole === 'ADMIN' || i < items.length - 2">
             <li class="p-tabmenuitem"
               [ngClass]="{'p-highlight': activeItem == item.label,'firstItem': item.label == 'Dashboard','lastItem': item.label == 'Management','restItem': item.label == 'Contact Details' || 'Notes' || 'Payments' || 'Vendor Statement'}">
               <a class="p-menuitem-link"
@@ -43,7 +43,7 @@
     <p>Since <strong>{{vendorTimeStamp | date:'d MMM y'}}</strong></p>
     <div class="data-table">
       <h5>ALL PROCESS PAYMENTS</h5>
-      <p-table styleClass="p-datatable-gridlines" [tableStyle]="{'max-width': '50rem'}" [value]="vendors">
+      <p-table styleClass="p-datatable-gridlines" [tableStyle]="{'max-width': '50rem'}" [value]="allProcessPayments">
         <ng-template pTemplate="header">
           <tr style="background-color: #cccccc;">
             <th pSortableColumn="code" style="width:6rem">
@@ -57,11 +57,11 @@
             </th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-vendor>
+        <ng-template pTemplate="body" let-processPayment>
           <tr>
-            <td>{{ vendor?.code }}</td>
-            <td>{{ vendor?.name }}</td>
-            <td>{{ vendor?.category }}</td>
+            <td>{{ processPayment?.categories }}</td>
+            <td>{{ processPayment?.processName }}</td>
+            <td>PKR {{ processPayment?.amount | number:'1.0-0'}}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -71,11 +71,12 @@
       <table class="styled-table">
         <tr style="background-color: #cccccc;">
           <td class="label">Total:</td>
-          <td class="value">PKR {{'203013' | number:'1.0-0'}}</td>
+          <td class="value">PKR {{totalAmount | number:'1.0-0'}}</td>
         </tr>
         <tr style="background-color: #eeeeee;">
           <td class="label">Balance Due:</td>
-          <td class="value">PKR 11000</td>
+          <td class="value">PKR {{vendorsJobsProcess[vendorsJobsProcess?.length -
+          1]?.balance | number:'1.0-0'}}</td>
         </tr>
       </table>
     </div>
@@ -301,7 +302,7 @@
           </div>
           <div class="flex justify-content-center align-items-end">
             <i class="pi pi-file-pdf"></i>
-            <button pButton class="contact-btn ml-2">
+            <button pButton class="contact-btn ml-2" (click)="onDownloadExcelFile()">
               <i class="pi pi-angle-double-down mr-2"></i> Download
             </button>
           </div>
@@ -371,22 +372,22 @@
       <ng-template pTemplate="body" let-data>
         <tr>
           <td class="text-center">
-            {{data?.id}}
+            {{data?.order?.id}}
           </td>
           <td class="text-center">
             {{ data?.dateAdded | date:'MMM d, y'}}
           </td>
           <td class="text-center">
-            {{ data?.client}}
+            {{ data?.order?.customer?.name}}
           </td>
           <td class="text-center">
-            {{ data?.addedBy }}
+            {{ data?.order?.createdBy?.name }}
           </td>
           <td class="text-center">
-            {{data?.product}}
+            {{data?.order?.product}}
           </td>
           <td class="text-center">
-            {{data?.size}}
+            {{data?.order?.size}}
           </td>
           <td class="text-center">
             {{ data?.processName }}
@@ -503,22 +504,22 @@
       <ng-template pTemplate="body" let-data>
         <tr>
           <td class="text-center">
-            {{data?.id}}
+            {{data?.order?.id}}
           </td>
           <td class="text-center">
             {{ data?.dateAdded | date:'MMM d, y'}}
           </td>
           <td class="text-center">
-            {{ data?.client}}
+            {{ data?.order?.customer?.name}}
           </td>
           <td class="text-center">
-            {{ data?.addedBy }}
+            {{ data?.order?.createdBy?.name }}
           </td>
           <td class="text-center">
-            {{data?.product}}
+            {{data?.order?.product}}
           </td>
           <td class="text-center">
-            {{data?.size}}
+            {{data?.order?.size}}
           </td>
           <td class="text-center">
             {{ data?.processName }}

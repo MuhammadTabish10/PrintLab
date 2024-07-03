@@ -31,10 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
@@ -52,8 +49,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemsMapper orderItemsMapper;
     private final BusinessAndBranchMapper businessAndBranchMapper;
     private final PdfGenerationService pdfGenerationService;
+    private final ProductRuleRepository productRuleRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, OrderItemsRepository orderItemsRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper, BusinessAndBranchMapper businessAndBranchMapper, PdfGenerationService pdfGenerationService) {
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository, BusinessRepository businessRepository, EntityManager entityManager, UserRepository userRepository, OrderItemsRepository orderItemsRepository, EmailUtils emailUtils, OrderItemsMapper orderItemsMapper, BusinessAndBranchMapper businessAndBranchMapper, PdfGenerationService pdfGenerationService, ProductRuleRepository productRuleRepository) {
         this.customerRepository = customerRepository;
         this.businessRepository = businessRepository;
         this.orderRepository = orderRepository;
@@ -64,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
         this.orderItemsMapper = orderItemsMapper;
         this.businessAndBranchMapper = businessAndBranchMapper;
         this.pdfGenerationService = pdfGenerationService;
+        this.productRuleRepository = productRuleRepository;
     }
 
 
@@ -171,6 +170,8 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> optionalOrder = orderRepository.findById(id);
         if (optionalOrder.isPresent()) {
             Order existingOrder = optionalOrder.get();
+
+
             if (existingOrder.getType().equalsIgnoreCase("auto")) {
                 updateOrderTypeAuto(existingOrder, orderDto);
             } else {
@@ -178,6 +179,7 @@ public class OrderServiceImpl implements OrderService {
                 updateOrderItems(existingOrder, toEntity(orderDto));
             }
             updateBusinesses(existingOrder, orderDto);
+
             Order updatedOrder = orderRepository.save(existingOrder);
             return toDto(updatedOrder);
         } else {
@@ -200,6 +202,8 @@ public class OrderServiceImpl implements OrderService {
         existingOrder.setJobColorsBack(orderDto.getJobColorsBack());
         existingOrder.setProvidedDesign(orderDto.getProvidedDesign());
         existingOrder.setUrl(orderDto.getUrl());
+        existingOrder.setCategory(orderDto.getCategory());
+        existingOrder.setProductRuleId(orderDto.getProductRuleId());
         existingOrder.setCustomer(customerRepository.findById(orderDto.getCustomer().getId())
                 .orElseThrow(() -> new RecordNotFoundException("Customer not found at id => " + orderDto.getCustomer().getId())));
     }
@@ -209,6 +213,7 @@ public class OrderServiceImpl implements OrderService {
         productionJob.setBusinessCategory(productionJobDto.getBusinessCategory());
         productionJob.setProductionUser(productionJobDto.getProductionUser());
         productionJob.setProductCategory(productionJobDto.getProductCategory());
+        productionJob.setCategory(productionJobDto.getCategory());
         productionJob.setProduct(productionJobDto.getProduct());
         productionJob.setDescription(productionJobDto.getDescription());
         productionJob.setQuantity(productionJobDto.getQuantity());
@@ -235,6 +240,7 @@ public class OrderServiceImpl implements OrderService {
         productionJob.setTimeStamp(productionJobDto.getTimeStamp());
         productionJob.setStatus(productionJobDto.getStatus());
         productionJob.setCreatedBy(productionJobDto.getCreatedBy());
+        productionJob.setProductRuleId(productionJobDto.getProductRuleId());
     }
 
     private void updateOrderItems(Order existingOrder, Order order) {
@@ -559,12 +565,14 @@ public class OrderServiceImpl implements OrderService {
                 .productRule(order.getProductRule())
                 .createdBy(order.getCreatedBy())
                 .type(order.getType())
+                .productRuleId(order.getProductRuleId())
                 .customer(customerRepository.findById(order.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .businesses(order.getBusinesses().stream()
                         .map(businessAndBranchMapper::toBusinessDto)
                         .collect(Collectors.toList()))
                 .orderItems(orderItems)
+                .category(order.getCategory())
                 .build();
     }
 
@@ -604,12 +612,14 @@ public class OrderServiceImpl implements OrderService {
                 .assignedBy(orderDto.getAssignedBy())
                 .createdBy(orderDto.getCreatedBy())
                 .type(orderDto.getType())
+                .category(orderDto.getCategory())
                 .customer(customerRepository.findById(orderDto.getCustomer().getId())
                         .orElseThrow(() -> new RecordNotFoundException("Customer not found")))
                 .businesses(orderDto.getBusinesses().stream()
                         .map(businessAndBranchMapper::toBusinessEntity)
                         .collect(Collectors.toList()))
                 .orderItems(orderItems)
+                .productRuleId(orderDto.getProductRuleId())
                 .build();
     }
 

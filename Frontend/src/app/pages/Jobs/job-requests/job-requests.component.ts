@@ -260,4 +260,41 @@ export class JobRequestsComponent implements OnInit {
         ) || [];
     }
   }
+
+  // getProcessedDetailIndex(): number {
+  //   if (!this.productRule?.processedDetailList) {
+  //     return -1;
+  //   }
+  //   return this.productRule.processedDetailList.findIndex(
+  //     (detail) => detail?.order?.id === this.idFromQueryParam
+  //   );
+  // }
+
+  // get processedDetailProperty() {
+  //   const index = this.getProcessedDetailIndex();
+  //   if (
+  //     this.productRule &&
+  //     this.productRule.processedDetailList &&
+  //     index >= 0 &&
+  //     index < this.productRule.processedDetailList.length
+  //   ) {
+  //     return this.productRule.processedDetailList[index];
+  //   }
+  //   return {};
+  // }
+
+  // set processedDetailProperty(value: Partial<JobProcessedDetails>) {
+  //   const index = this.getProcessedDetailIndex();
+  //   if (
+  //     this.productRule &&
+  //     this.productRule.processedDetailList &&
+  //     index >= 0 &&
+  //     index < this.productRule.processedDetailList.length
+  //   ) {
+  //     this.productRule.processedDetailList[index] = {
+  //       ...this.productRule.processedDetailList[index],
+  //       ...value,
+  //     };
+  //   }
+  // }
 }

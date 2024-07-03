@@ -116,4 +116,8 @@ public class Order {
     @ToString.Exclude
     @JsonIgnore
     private List<OrderItems> orderItems;
+
+
+    private Long productRuleId;
+    private String category;
 }

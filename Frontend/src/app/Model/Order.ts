@@ -61,6 +61,9 @@ export interface Order {
   orderItems?: OrderItem[];
   processedDetailList: JobProcessedDetails[];
   processList?: BusinessUnitProcessDto[];
+  productRuleId?: any;
+  category? : any;
+
 }
 export interface OrderItem {
   id: number | undefined | null;

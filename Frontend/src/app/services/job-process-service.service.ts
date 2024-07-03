@@ -34,4 +34,17 @@ export class JobProcessServiceService {
     let url = `${this._url}/job-details/update/${id}`;
     return this.http.put(url, obj);
   }
+
+  getExcelFileOfJobDetails(obj?: any) {
+    let url = `${this._url}/job-details/export`;
+    return this.http.post(url, obj, { responseType: "blob" as "json" });
+  }
+
+  downloadExcelFile(data: any, filename: string) {
+    const blob = new Blob([data], { type: "application/xlsx" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
 }

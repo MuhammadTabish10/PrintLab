@@ -26,14 +26,17 @@ public class BusinessUnitProcess {
             inverseJoinColumns = @JoinColumn(name = "vendor_id")
     )
     @JsonIgnore
+    @ToString.Exclude // Exclude from toString() to prevent recursion
     private List<Vendor> vendors;
 
     @ManyToOne
     @JoinColumn(name = "business_unit_category_id")
-    @ToString.Exclude
+    @ToString.Exclude // Exclude from toString() to prevent recursion
     private BusinessUnitCategory category;
 
     @ManyToMany(mappedBy = "processList")
     @JsonIgnore
+    @ToString.Exclude // Exclude from toString() to prevent recursion
     private List<ProductRule> productRuleList;
 }
+

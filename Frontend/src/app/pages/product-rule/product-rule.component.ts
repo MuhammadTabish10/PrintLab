@@ -90,7 +90,7 @@ export class ProductRuleComponent implements OnInit {
       (res: PaginationResponse<ProductRule>) => {
         this.paginatedProductRule = res;
       }, (error: BackendErrorResponse) => {
-        this.errorService.showError(error.error.error);
+        this.errorService.showError(error?.error?.error);
       });
   }
   public clearSearch() {

@@ -4,11 +4,15 @@ import com.PrintLab.dto.JobProcessedDetailsDto;
 import com.PrintLab.model.JobProcessedDetails;
 import com.PrintLab.service.JobProcessedDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -70,5 +74,18 @@ public class JobProcessDetailController {
     @GetMapping("/order/{orderId}")
     public List<JobProcessedDetails> getJobProcessesByOrderId(@PathVariable Long orderId) {
         return jobProcessedDetailsService.getJobProcessesByOrderId(orderId);
+    }
+
+    @PostMapping("/export")
+    public ResponseEntity<InputStreamResource> exportJobDetailsToExcel(@RequestBody List<JobProcessedDetailsDto> jobDetails) {
+        ByteArrayInputStream in = jobProcessedDetailsService.exportJobDetailsToExcel(jobDetails);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=job_details.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(in));
     }
 }

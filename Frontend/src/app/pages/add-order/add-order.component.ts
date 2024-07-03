@@ -76,7 +76,7 @@ export class AddOrderComponent implements OnInit {
     frontColor: 'Select Front Color',
     backColor: 'Select Back Color',
   };
-  productRuleId: number = 0;
+  productRuleId: any ;
   currentUserDetail: any;
 
   customerList: Customer[] = [];
@@ -166,6 +166,8 @@ export class AddOrderComponent implements OnInit {
   getOrderById(id: number) {
     this.orderService.getOrderById(id).subscribe(res => {
       this.job = res;
+      console.log(this.job);
+      
       if (this.job.quantity && this.job.orderItems) {
         const lastIndex = this.job.orderItems.length - 1;
         this.calculateTotalQty(lastIndex);
@@ -250,8 +252,12 @@ export class AddOrderComponent implements OnInit {
         jobColorsFront: +this.jobFrontValue.name,
         jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null,
         type: this.orderType,
-        customer: { id: +this.selectedCustomer! } || { id: 0 }
-      }
+        customer: { id: +this.selectedCustomer! } || { id: 0 },
+        productRuleId: this.productRuleId,
+      };
+
+      console.log(obj);
+
       this.orderService.addOrder(obj, this.currentUserDetail.userId).subscribe(res => {
         this.router.navigateByUrl('/orders')
       }, error => {
@@ -277,8 +283,12 @@ export class AddOrderComponent implements OnInit {
         jobColorsFront: +this.jobFrontValue.name,
         jobColorsBack: this.jobBackValue ? +this.jobBackValue.name : null,
         type: this.orderType,
-        customer: { id: +this.selectedCustomer! } || { id: 0 }
-      }
+        customer: { id: +this.selectedCustomer! } || { id: 0 },
+        productRuleId:this.productRuleId
+      };
+
+      console.log(obj);
+      
       this.orderService.updateOrder(this.idFromQueryParam, obj).subscribe(res => {
         this.router.navigateByUrl('/orders')
       }, error => {
@@ -293,7 +303,10 @@ export class AddOrderComponent implements OnInit {
     this.emptyAllFields()
     this.cdr.detectChanges();
 
-    this.productRuleId = title.id!;
+    console.log(title);
+    
+
+  
     this.productName = title.productName;
     this.machineId = title.pressMachine?.id!;
     this.paperStock = title.productRulePaperStockList ? title.productRulePaperStockList : null;
@@ -671,12 +684,13 @@ export class AddOrderComponent implements OnInit {
   }
 
   transformProductCategory(): void {
-    // this.job.businessCategory = this.categoryList.find(item => item.id === this.job.businessCategory)?.name;
+    this.job.category = this.categoryList.find(item => item.id === this.job.businessCategory)?.name;
   }
 
   assignJobProperties(): void {
     this.job.type = this.orderType;
     this.job.customer = this.findCustomerById(this.selectedCustomer);
+    this.job.productRuleId = this.productRuleId;
     this.selectedBusinesses.forEach(business => {
       business.businessBranchList = this.selectedBranches;
     });
@@ -703,7 +717,8 @@ export class AddOrderComponent implements OnInit {
       this.sizeBoolean.isPredefinedSize = productRule.predefined!;
       this.sizeBoolean.isCustomSize = productRule.custom!;
 
-      console.log(this.sizeValue);
+      this.productRuleId = productRule?.id;
+      console.log(this.sizeValue,name,productRule,this.productRuleId);
     }
   }
   getSize(name: string): void {

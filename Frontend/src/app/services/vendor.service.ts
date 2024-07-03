@@ -69,4 +69,6 @@ export class VendorService {
     let url = `${this._url}/vendorContacts/${id}`;
     return this.http.put(url, obj);
   }
+
+  
 }

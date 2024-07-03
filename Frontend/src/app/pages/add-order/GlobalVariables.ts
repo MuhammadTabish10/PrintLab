@@ -9,6 +9,7 @@ export const GlobalVariables = {
     sizeCategory: undefined,
     size: undefined,
     gsm: undefined,
+    category:undefined,
     quantity: undefined,
     amount: undefined,
     jobColorsFront: undefined,
@@ -57,5 +58,6 @@ export const GlobalVariables = {
     processedDetailList: [],
     businesses:[],
     orderItems:[],
+    productRuleId: undefined
   }
 };

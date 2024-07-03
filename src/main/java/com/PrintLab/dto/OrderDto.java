@@ -1,6 +1,7 @@
 package com.PrintLab.dto;
 
 import com.PrintLab.model.Customer;
+import com.PrintLab.model.ProductRule;
 import com.PrintLab.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,4 +71,6 @@ public class OrderDto
     private Date expiryDate;
     private String sendTo;
     private List<OrderItemsDto> orderItems;
+    private Long productRuleId;
+    private String category;
 }
