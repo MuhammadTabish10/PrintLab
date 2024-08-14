@@ -32,14 +32,14 @@ public class ProductFieldValuesController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductFieldValuesDto>> getAllProductField() {
         List<ProductFieldValuesDto> productFieldValuesDtoList = productFieldValuesService.getAll();
         return ResponseEntity.ok(productFieldValuesDtoList);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductFieldValuesDto> getProductFieldById(@PathVariable Long id) {
         try {
             ProductFieldValuesDto productFieldValuesDto = productFieldValuesService.findById(id);

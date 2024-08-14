@@ -21,40 +21,40 @@ public class PressMachineController
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PressMachineDto> createPressMachine(@RequestBody PressMachineDto pressMachineDto) {
         return ResponseEntity.ok(pressMachineService.save(pressMachineDto));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PressMachineDto>> getPressMachine(){
         return ResponseEntity.ok(pressMachineService.getAll());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PressMachineDto> getPressMachineById(@PathVariable Long id){
         PressMachineDto pressMachineDto = pressMachineService.findById(id);
         return ResponseEntity.ok(pressMachineDto);
     }
 
     @GetMapping("/{id}/paper-size")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PressMachineDto>> getPressMachineByPaperSizeId(@PathVariable Long id) {
         List<PressMachineDto> pressMachineDtoList = pressMachineService.getPressMachineByPaperSizeId(id);
         return ResponseEntity.ok(pressMachineDtoList);
     }
 
     @GetMapping("/name/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PressMachineDto> getPressMachineByName(@PathVariable String name) {
         PressMachineDto pressMachineDtoList = pressMachineService.findByName(name);
         return ResponseEntity.ok(pressMachineDtoList);
     }
 
     @GetMapping("/names/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PressMachineDto>> getPressMachinesByName(@PathVariable String name) {
         List<PressMachineDto> pressMachineDtoList = pressMachineService.searchByName(name);
         return ResponseEntity.ok(pressMachineDtoList);

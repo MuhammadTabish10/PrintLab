@@ -44,14 +44,14 @@ public class LeadController {
     }
 
     @GetMapping("/get-lead-by-id/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<LeadDto> getLeadById(@PathVariable Long id) {
         LeadDto leadDto = leadService.findById(id);
         return ResponseEntity.ok(leadDto);
     }
 
     @GetMapping("/leads-by-like-search")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<LeadDto>> getAllLeadByLikeSearch(
             @RequestParam(required = false) String contactName,
             @RequestParam(required = false) String companyName
@@ -61,7 +61,7 @@ public class LeadController {
     }
 
     @GetMapping("/leads-by-companyName")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<LeadDto>> getAllLeadByCompanyName(
             @RequestParam(required = false) String companyName
     ) {

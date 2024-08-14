@@ -20,34 +20,34 @@ public class ProductDefinitionController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductDefinitionDto> saveProductionDefinition(@RequestBody ProductDefinitionDto productDefinitionDto) {
         return ResponseEntity.ok(productDefinitionService.save(productDefinitionDto));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductDefinitionDto>> getAllProductDefinition() {
         List<ProductDefinitionDto> productDefinitionDtoList = productDefinitionService.getAll();
         return ResponseEntity.ok(productDefinitionDtoList);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductDefinitionDto> getProductDefinitionById(@PathVariable Long id) {
         ProductDefinitionDto productDefinitionDto = productDefinitionService.findById(id);
         return ResponseEntity.ok(productDefinitionDto);
     }
 
     @GetMapping("/title/{title}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductDefinitionDto> getProductDefinitionByTitle(@PathVariable String title) {
         ProductDefinitionDto productDefinitionDto = productDefinitionService.findByTitle(title);
         return ResponseEntity.ok(productDefinitionDto);
     }
 
     @GetMapping("/titles/{title}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductDefinitionDto>> getAllProductDefinitionsByTitle(@PathVariable String title) {
         List<ProductDefinitionDto> productProcessDtoList = productDefinitionService.searchByTitle(title);
         return ResponseEntity.ok(productProcessDtoList);

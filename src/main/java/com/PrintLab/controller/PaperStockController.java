@@ -18,27 +18,27 @@ public class PaperStockController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PaperStockDto> createPaperStock(@RequestBody PaperStockDto paperStockDto) {
         return ResponseEntity.ok(paperStockService.save(paperStockDto));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PaperStockDto>> getAllPaperStock() {
         List<PaperStockDto> paperStockDtoList = paperStockService.getAll();
         return ResponseEntity.ok(paperStockDtoList);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PaperStockDto> getPaperStockById(@PathVariable Long id) {
         PaperStockDto paperStockDto = paperStockService.findById(id);
         return ResponseEntity.ok(paperStockDto);
     }
 
     @GetMapping("/names/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PaperStockDto>> getPaperStockByName(@PathVariable String name) {
         List<PaperStockDto> paperStockDtoList = paperStockService.searchByName(name);
         return ResponseEntity.ok(paperStockDtoList);

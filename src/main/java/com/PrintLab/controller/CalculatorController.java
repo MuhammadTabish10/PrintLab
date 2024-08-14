@@ -20,7 +20,7 @@ public class CalculatorController {
     }
 
     @PostMapping("/printlab-calculator")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT', 'ROLE_PRODUCTION')")
     public ResponseEntity<Map<String, Double>> calculateMoq(@RequestBody Calculator calculator) {
         Map<String,Double> result = calculatorService.CalculateMoq(calculator);
         return ResponseEntity.ok(result);

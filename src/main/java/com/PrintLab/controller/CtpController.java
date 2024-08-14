@@ -18,20 +18,20 @@ public class CtpController {
     }
 
     @PostMapping("/ctp")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<CtpDto> createCtp(@RequestBody CtpDto ctpDto) {
         return ResponseEntity.ok(ctpService.save(ctpDto));
     }
 
     @GetMapping("/ctp")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<CtpDto>> getAllCtp() {
         List<CtpDto> ctpList = ctpService.getAll();
         return ResponseEntity.ok(ctpList);
     }
 
     @GetMapping("/ctp/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<CtpDto> getCtpById(@PathVariable Long id) {
         CtpDto ctpDto = ctpService.getById(id);
         return ResponseEntity.ok(ctpDto);

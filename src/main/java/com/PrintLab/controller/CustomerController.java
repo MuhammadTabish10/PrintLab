@@ -18,7 +18,7 @@ public class CustomerController {
     CustomerService customerService;
 
     @PostMapping("/customer")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<CustomerDto> saveCustomer(@RequestBody CustomerDto customerDto) {
         CustomerDto savedCustomer = customerService.save(customerDto);
         return ResponseEntity.ok(savedCustomer);

@@ -33,21 +33,21 @@ public class InvoiceController {
     }
 
     @GetMapping("/get-invoice")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<InvoiceDto>> findAll() {
         List<InvoiceDto> invoiceDtoList = invoiceService.findAll();
         return ResponseEntity.ok(invoiceDtoList);
     }
 
     @GetMapping("/get-invoice-by-id/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<InvoiceDto> getInvoiceById(@PathVariable Long id) {
         InvoiceDto invoiceDto = invoiceService.findById(id);
         return ResponseEntity.ok(invoiceDto);
     }
 
     @GetMapping("/invoice/{invoiceNo}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<InvoiceDto>> getAllInvoiceByInvoiceNo(@PathVariable Long invoiceNo) {
         List<InvoiceDto> invoiceDtoList = invoiceService.searchByInvoiceNo(invoiceNo);
         return ResponseEntity.ok(invoiceDtoList);

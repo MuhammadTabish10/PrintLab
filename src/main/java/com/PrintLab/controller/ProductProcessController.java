@@ -19,34 +19,34 @@ public class ProductProcessController
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductProcessDto> createProductProcess(@RequestBody ProductProcessDto productProcessDto){
         return ResponseEntity.ok(productProcessService.save(productProcessDto));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductProcessDto>> getAllProductProcess() {
         List<ProductProcessDto> productProcessDto = productProcessService.getAll();
         return ResponseEntity.ok(productProcessDto);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductProcessDto> getProductProcessById(@PathVariable Long id) {
         ProductProcessDto productProcessDto = productProcessService.findById(id);
         return ResponseEntity.ok(productProcessDto);
     }
 
     @GetMapping("/name/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductProcessDto> getProductProcessByName(@PathVariable String name) {
         ProductProcessDto productProcessDto = productProcessService.findByName(name);
         return ResponseEntity.ok(productProcessDto);
     }
 
     @GetMapping("/names/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductProcessDto>> getProductProcessesByName(@PathVariable String name) {
         List<ProductProcessDto> productProcessDtoList = productProcessService.searchByName(name);
         return ResponseEntity.ok(productProcessDtoList);

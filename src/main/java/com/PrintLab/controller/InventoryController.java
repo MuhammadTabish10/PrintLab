@@ -25,21 +25,21 @@ public class InventoryController {
     }
 
     @GetMapping("/inventory")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<InventoryDto>> getAllInventory() {
         List<InventoryDto> inventoryList = inventoryService.getAll();
         return ResponseEntity.ok(inventoryList);
     }
 
     @GetMapping("/inventory/paper-stock/{stock}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<InventoryDto>> getAllInventoryByPaperStock(@PathVariable String stock) {
         List<InventoryDto> inventoryDtoList = inventoryService.searchByPaperStock(stock);
         return ResponseEntity.ok(inventoryDtoList);
     }
 
     @GetMapping("/inventory/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<InventoryDto> getInventoryById(@PathVariable Long id) {
         InventoryDto inventoryDto = inventoryService.findById(id);
         return ResponseEntity.ok(inventoryDto);

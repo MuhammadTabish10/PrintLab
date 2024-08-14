@@ -19,20 +19,20 @@ public class ProductAndServiceController {
     }
 
     @PostMapping("/product-and-service")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductAndServiceDto> createProductAndService(@RequestBody ProductAndServiceDto productAndServiceDto) {
         return ResponseEntity.ok(productAndServiceService.save(productAndServiceDto));
     }
 
     @GetMapping("/product-and-service")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductAndServiceDto>> getAllProductAndService() {
         List<ProductAndServiceDto> productAndServiceList = productAndServiceService.getAll();
         return ResponseEntity.ok(productAndServiceList);
     }
 
     @GetMapping("/product-and-service/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductAndServiceDto> getProductAndServiceById(@PathVariable Long id) {
         ProductAndServiceDto productAndServiceDto = productAndServiceService.findById(id);
         return ResponseEntity.ok(productAndServiceDto);

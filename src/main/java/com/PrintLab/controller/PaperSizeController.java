@@ -20,34 +20,34 @@ public class PaperSizeController
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PaperSizeDto> createPaperSize(@RequestBody PaperSizeDto paperSizeDto) {
         return ResponseEntity.ok(paperSizeService.save(paperSizeDto));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PaperSizeDto>> getAllPaperSize() {
         List<PaperSizeDto> paperSizeDtoList = paperSizeService.getAll();
         return ResponseEntity.ok(paperSizeDtoList);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PaperSizeDto> getPaperSizeById(@PathVariable Long id) {
         PaperSizeDto paperSizeDto = paperSizeService.findById(id);
         return ResponseEntity.ok(paperSizeDto);
     }
 
     @GetMapping("/label/{label}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PaperSizeDto> getPaperSizeByLabel(@PathVariable String label) {
         PaperSizeDto paperSizeDtoList = paperSizeService.findByLabel(label);
         return ResponseEntity.ok(paperSizeDtoList);
     }
 
     @GetMapping("/labels/{label}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PaperSizeDto>> getPaperSizesByLabel(@PathVariable String label) {
         List<PaperSizeDto> paperSizeDtoList = paperSizeService.searchByLabel(label);
         return ResponseEntity.ok(paperSizeDtoList);

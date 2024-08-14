@@ -25,13 +25,13 @@ public class ProductRuleController {
     }
 
     @GetMapping("/product-rule/check-title")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<Boolean> checkTitle(@RequestParam String productName, @RequestParam String type) {
         return ResponseEntity.ok(productRuleService.checkTitle(productName, type));
     }
 
     @GetMapping("/product-rule")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductRuleDto>> getAllProductRule() {
         List<ProductRuleDto> productRuleDtoList = productRuleService.getAllProductRule();
         return ResponseEntity.ok(productRuleDtoList);
@@ -45,7 +45,7 @@ public class ProductRuleController {
     }
 
     @GetMapping("/product-rule/names")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductRuleDto>> getProductRuleByName(@RequestParam String productName) {
         List<ProductRuleDto> productRuleDtoList = productRuleService.searchByName(productName);
         return ResponseEntity.ok(productRuleDtoList);
@@ -53,7 +53,7 @@ public class ProductRuleController {
 
 
     @GetMapping("/product-rule/all-groupSheet")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductRuleDto>> getAllProductRuleByGroupSheetIsTrue() {
         List<ProductRuleDto> productRuleDtoList = productRuleService.getAllProductRuleInGroupSheet();
         return ResponseEntity.ok(productRuleDtoList);
@@ -85,7 +85,7 @@ public class ProductRuleController {
     }
 
     @GetMapping("/product-rule-by-type/{type}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductRuleDto>> getProductRuleByType(@RequestParam String type) {
         List<ProductRuleDto> productRuleDtoList = productRuleService.findAllByType(type);
         return ResponseEntity.ok(productRuleDtoList);
