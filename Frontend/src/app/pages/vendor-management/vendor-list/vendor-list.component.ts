@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subject, takeUntil } from 'rxjs';
@@ -26,6 +26,15 @@ export class VendorListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getVendors()
+  }
+
+  navigateWithData() {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        data: ['hello','usman','asdasdas']
+      }
+    };
+    this.router.navigate(['/vendor'], navigationExtras);
   }
 
   getVendors() {

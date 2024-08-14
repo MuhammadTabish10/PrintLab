@@ -29,7 +29,7 @@ public class UV_VendorController {
         return ResponseEntity.ok(uvVendorDtoList);
     }
     @GetMapping("/uv-vendor/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<UV_VendorDto> getVendorById(@PathVariable Long id) {
         UV_VendorDto uvVendorDto = uvVendorService.findById(id);
         return ResponseEntity.ok(uvVendorDto);
@@ -50,7 +50,7 @@ public class UV_VendorController {
     }
 
     @PutMapping("/uv-vendor/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<UV_VendorDto> updateVendor(@PathVariable Long id, @RequestBody UV_Vendor uvVendor) {
         UV_VendorDto updatedVendor = uvVendorService.updateVendor(id, uvVendor);
         return ResponseEntity.ok(updatedVendor);

@@ -20,20 +20,20 @@ public class UpingController
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<UpingDto> createUping(@RequestBody UpingDto upingDto) {
         return ResponseEntity.ok(upingService.save(upingDto));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<List<UpingDto>> getAllUping() {
         List<UpingDto> upingDtoList = upingService.getAll();
         return ResponseEntity.ok(upingDtoList);
     }
 
     @GetMapping("/page")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<PaginationResponse> getAllPaginatedUping(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "15", required = false) Integer pageSize
@@ -43,21 +43,21 @@ public class UpingController
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<UpingDto> getUpingById(@PathVariable Long id) {
         UpingDto upingDto = upingService.findById(id);
         return ResponseEntity.ok(upingDto);
     }
 
     @GetMapping("/{id}/paper-size")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<List<UpingDto>> getUpingByPaperSizeId(@PathVariable Long id) {
         List<UpingDto> upingDtoList = upingService.getUpingByPaperSizeId(id);
         return ResponseEntity.ok(upingDtoList);
     }
 
     @GetMapping("/product-sizes/{size}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<PaginationResponse> getUpingByProductSize(
             @PathVariable String size,
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
@@ -75,7 +75,7 @@ public class UpingController
     }
 
     @GetMapping("/product-size/{size}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<UpingDto> getUpingByProductSize(@PathVariable String size) {
         UpingDto upingDto = upingService.findByProductSize(size);
         return ResponseEntity.ok(upingDto);
@@ -96,7 +96,7 @@ public class UpingController
     }
 
     @PostMapping("/upload")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PRODUCTION')")
     public ResponseEntity<List<UpingDto>> upload(@RequestParam("file") MultipartFile multipartFile) {
         List<UpingDto> updatedUpingDto = upingService.uploadFile(multipartFile);
         return ResponseEntity.ok(updatedUpingDto);

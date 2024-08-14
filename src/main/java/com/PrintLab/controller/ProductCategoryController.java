@@ -18,34 +18,34 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/product-category")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductCategoryDto> createProductCategory(@RequestBody ProductCategoryDto productCategoryDto) {
         return ResponseEntity.ok(productCategoryService.save(productCategoryDto));
     }
 
     @GetMapping("/product-category")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductCategoryDto>> getAllProductCategory() {
         List<ProductCategoryDto> productCategoryList = productCategoryService.getAll();
         return ResponseEntity.ok(productCategoryList);
     }
 
     @GetMapping("/product-sub-category-by/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<ProductCategoryDto>> getAllSubCategoryByCategory(@PathVariable Long id) {
         List<ProductCategoryDto> productCategoryDtoList = productCategoryService.searchByCategory(id);
         return ResponseEntity.ok(productCategoryDtoList);
     }
 
     @GetMapping("/product-category/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<ProductCategoryDto> getCtpById(@PathVariable Long id) {
         ProductCategoryDto productCategoryDto = productCategoryService.findById(id);
         return ResponseEntity.ok(productCategoryDto);
     }
 
     @DeleteMapping("/product-category/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<String> deleteCtp(@PathVariable Long id) {
         productCategoryService.deleteById(id);
         return ResponseEntity.ok().build();

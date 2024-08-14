@@ -29,7 +29,7 @@ public class BindingLabourController {
         return ResponseEntity.ok(bindingLabourDtoList);
     }
     @GetMapping("/binding-labour/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<BindingLabourDto> getLabourById(@PathVariable Long id) {
         BindingLabourDto bindingLabourDto = bindingLabourService.findById(id);
         return ResponseEntity.ok(bindingLabourDto);

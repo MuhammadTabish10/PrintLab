@@ -36,7 +36,7 @@ public class PaperMarketRatesController
     }
 
     @GetMapping("/paper-market-rates/page")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PaginationResponse> getAllPaperMarketRates(
             @RequestParam(value = "page-number", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "page-size", defaultValue = "15", required = false) Integer pageSize
@@ -46,7 +46,7 @@ public class PaperMarketRatesController
     }
 
     @GetMapping("/paper-market-rates")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PaperMarketRatesDto>> getAllPaperMarketRates() {
         List<PaperMarketRatesDto> paperMarketRatesDtoList = marketRatesService.getAll();
         return ResponseEntity.ok(paperMarketRatesDtoList);
@@ -54,14 +54,14 @@ public class PaperMarketRatesController
 
 
     @GetMapping("/paper-market-rates/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PaperMarketRatesDto> getPaperMarketRatesById(@PathVariable Long id) {
         PaperMarketRatesDto paperMarketRatesDto = marketRatesService.findById(id);
         return ResponseEntity.ok(paperMarketRatesDto);
     }
 
     @GetMapping("/paper-market-rates/paper-stock/{stock}")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<PaperMarketRatesDto> getPaperMarketRatesByPaperStock(@PathVariable String stock) {
         PaperMarketRatesDto paperMarketRatesDto = marketRatesService.findByPaperStock(stock);
 
@@ -69,14 +69,14 @@ public class PaperMarketRatesController
     }
 
     @GetMapping("/paper-market-rates/paper-stock/gsm")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<Integer>> getPaperStockAllGsm(@RequestParam(name = "paperStock") String paperStock) {
         List<Integer> gsmList = marketRatesService.getDistinctGSMForPaperStock(paperStock);
         return ResponseEntity.ok(gsmList);
     }
 
     @GetMapping("/paper-market-rates/paper-stocks/{stock}")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PaperMarketRatesDto>> getAllPaperMarketRateByPaperStock(@PathVariable String stock) {
         List<PaperMarketRatesDto> paperMarketRatesDtoList = marketRatesService.searchByPaperStock(stock);
         return ResponseEntity.ok(paperMarketRatesDtoList);
@@ -97,7 +97,7 @@ public class PaperMarketRatesController
     }
 
     @GetMapping("/paper-market-rates/paper-stock")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<List<PaperMarketRatesDto>> getPaperRatesByStock(@RequestParam String paperStock) {
         List<PaperMarketRatesDto> paperMarketRatesDtoList = marketRatesService.findAllPaperMarketRatesByPaperStock(paperStock);
         return ResponseEntity.ok(paperMarketRatesDtoList);

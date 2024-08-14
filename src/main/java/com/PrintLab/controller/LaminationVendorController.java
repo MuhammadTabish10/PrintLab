@@ -28,7 +28,7 @@ public class LaminationVendorController {
         return ResponseEntity.ok(bindingLabourDtoList);
     }
     @GetMapping("/lamination-vendor/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCTION')")
     public ResponseEntity<LaminationVendorDto> getVendorById(@PathVariable Long id) {
         LaminationVendorDto laminationVendorDto = laminationVendorService.findById(id);
         return ResponseEntity.ok(laminationVendorDto);

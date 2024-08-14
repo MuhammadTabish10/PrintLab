@@ -32,6 +32,7 @@ export class VendorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getVendors();
+    console.log(history.state.data);
   }
 
   getVendors() {

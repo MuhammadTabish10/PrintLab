@@ -89,7 +89,7 @@ public class OrderController {
     }
 
     @PostMapping("/order/assignUser")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER_SUPPORT', 'ROLE_PRODUCTION')")
     public ResponseEntity<OrderDto> assignUserToOrder(
             @RequestParam Long orderId,
             @RequestParam Long userId,
