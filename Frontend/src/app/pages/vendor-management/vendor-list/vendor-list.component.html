@@ -5,8 +5,6 @@
     <h4>Vendor Management System</h4>
   </div>
 
-  <button (click)="navigateWithData()">Click me</button>
-
   <div class="vendor-list">
     <p-table class="contacts-table" #dt1 [value]="vendorsData" dataKey="id" [rows]="5" [loading]="loading"
       [rowHover]="true" [globalFilterFields]="['name']" styleClass="p-datatable-gridlines" responsiveLayout="scroll">

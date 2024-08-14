@@ -28,14 +28,7 @@ export class VendorListComponent implements OnInit, OnDestroy {
     this.getVendors()
   }
 
-  navigateWithData() {
-    const navigationExtras: NavigationExtras = {
-      state: {
-        data: ['hello','usman','asdasdas']
-      }
-    };
-    this.router.navigate(['/vendor'], navigationExtras);
-  }
+
 
   getVendors() {
     this.vendorService
